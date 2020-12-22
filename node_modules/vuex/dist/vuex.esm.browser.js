@@ -1,6 +1,6 @@
-/**
- * vuex v3.1.1
- * (c) 2019 Evan You
+/*!
+ * vuex v3.6.0
+ * (c) 2020 Evan You
  * @license MIT
  */
 function applyMixin (Vue) {
@@ -57,7 +57,11 @@ function devtoolPlugin (store) {
 
   store.subscribe((mutation, state) => {
     devtoolHook.emit('vuex:mutation', mutation, state);
-  });
+  }, { prepend: true });
+
+  store.subscribeAction((action, state) => {
+    devtoolHook.emit('vuex:action', action, state);
+  }, { prepend: true });
 }
 
 /**
@@ -68,6 +72,45 @@ function devtoolPlugin (store) {
  * @param {Function} f
  * @return {*}
  */
+function find (list, f) {
+  return list.filter(f)[0]
+}
+
+/**
+ * Deep copy the given object considering circular structure.
+ * This function caches all nested objects and its copies.
+ * If it detects circular structure, use cached copy to avoid infinite loop.
+ *
+ * @param {*} obj
+ * @param {Array<Object>} cache
+ * @return {*}
+ */
+function deepCopy (obj, cache = []) {
+  // just return if obj is immutable value
+  if (obj === null || typeof obj !== 'object') {
+    return obj
+  }
+
+  // if obj is hit, it is in circular structure
+  const hit = find(cache, c => c.original === obj);
+  if (hit) {
+    return hit.copy
+  }
+
+  const copy = Array.isArray(obj) ? [] : {};
+  // put the copy into cache at first
+  // because we want to refer it in recursive deepCopy
+  cache.push({
+    original: obj,
+    copy
+  });
+
+  Object.keys(obj).forEach(key => {
+    copy[key] = deepCopy(obj[key], cache);
+  });
+
+  return copy
+}
 
 /**
  * forEach for object
@@ -122,6 +165,10 @@ class Module {
 
   getChild (key) {
     return this._children[key]
+  }
+
+  hasChild (key) {
+    return key in this._children
   }
 
   update (rawModule) {
@@ -208,9 +255,34 @@ class ModuleCollection {
   unregister (path) {
     const parent = this.get(path.slice(0, -1));
     const key = path[path.length - 1];
-    if (!parent.getChild(key).runtime) return
+    const child = parent.getChild(key);
+
+    if (!child) {
+      {
+        console.warn(
+          `[vuex] trying to unregister module '${key}', which is ` +
+          `not registered`
+        );
+      }
+      return
+    }
+
+    if (!child.runtime) {
+      return
+    }
 
     parent.removeChild(key);
+  }
+
+  isRegistered (path) {
+    const parent = this.get(path.slice(0, -1));
+    const key = path[path.length - 1];
+
+    if (parent) {
+      return parent.hasChild(key)
+    }
+
+    return false
   }
 }
 
@@ -316,6 +388,7 @@ class Store {
     this._modulesNamespaceMap = Object.create(null);
     this._subscribers = [];
     this._watcherVM = new Vue();
+    this._makeLocalGettersCache = Object.create(null);
 
     // bind commit and dispatch to self
     const store = this;
@@ -381,9 +454,13 @@ class Store {
         handler(payload);
       });
     });
-    this._subscribers.forEach(sub => sub(mutation, this.state));
+
+    this._subscribers
+      .slice() // shallow copy to prevent iterator invalidation if subscriber synchronously calls unsubscribe
+      .forEach(sub => sub(mutation, this.state));
 
     if (
+      
       options && options.silent
     ) {
       console.warn(
@@ -411,6 +488,7 @@ class Store {
 
     try {
       this._actionSubscribers
+        .slice() // shallow copy to prevent iterator invalidation if subscriber synchronously calls unsubscribe
         .filter(sub => sub.before)
         .forEach(sub => sub.before(action, this.state));
     } catch (e) {
@@ -424,28 +502,42 @@ class Store {
       ? Promise.all(entry.map(handler => handler(payload)))
       : entry[0](payload);
 
-    return result.then(res => {
-      try {
-        this._actionSubscribers
-          .filter(sub => sub.after)
-          .forEach(sub => sub.after(action, this.state));
-      } catch (e) {
-        {
-          console.warn(`[vuex] error in after action subscribers: `);
-          console.error(e);
+    return new Promise((resolve, reject) => {
+      result.then(res => {
+        try {
+          this._actionSubscribers
+            .filter(sub => sub.after)
+            .forEach(sub => sub.after(action, this.state));
+        } catch (e) {
+          {
+            console.warn(`[vuex] error in after action subscribers: `);
+            console.error(e);
+          }
         }
-      }
-      return res
+        resolve(res);
+      }, error => {
+        try {
+          this._actionSubscribers
+            .filter(sub => sub.error)
+            .forEach(sub => sub.error(action, this.state, error));
+        } catch (e) {
+          {
+            console.warn(`[vuex] error in error action subscribers: `);
+            console.error(e);
+          }
+        }
+        reject(error);
+      });
     })
   }
 
-  subscribe (fn) {
-    return genericSubscribe(fn, this._subscribers)
+  subscribe (fn, options) {
+    return genericSubscribe(fn, this._subscribers, options)
   }
 
-  subscribeAction (fn) {
+  subscribeAction (fn, options) {
     const subs = typeof fn === 'function' ? { before: fn } : fn;
-    return genericSubscribe(subs, this._actionSubscribers)
+    return genericSubscribe(subs, this._actionSubscribers, options)
   }
 
   watch (getter, cb, options) {
@@ -490,6 +582,16 @@ class Store {
     resetStore(this);
   }
 
+  hasModule (path) {
+    if (typeof path === 'string') path = [path];
+
+    {
+      assert(Array.isArray(path), `module path must be a string or an Array.`);
+    }
+
+    return this._modules.isRegistered(path)
+  }
+
   hotUpdate (newOptions) {
     this._modules.update(newOptions);
     resetStore(this, true);
@@ -503,9 +605,11 @@ class Store {
   }
 }
 
-function genericSubscribe (fn, subs) {
+function genericSubscribe (fn, subs, options) {
   if (subs.indexOf(fn) < 0) {
-    subs.push(fn);
+    options && options.prepend
+      ? subs.unshift(fn)
+      : subs.push(fn);
   }
   return () => {
     const i = subs.indexOf(fn);
@@ -532,12 +636,14 @@ function resetStoreVM (store, state, hot) {
 
   // bind store public getters
   store.getters = {};
+  // reset local getters cache
+  store._makeLocalGettersCache = Object.create(null);
   const wrappedGetters = store._wrappedGetters;
   const computed = {};
   forEachValue(wrappedGetters, (fn, key) => {
     // use computed to leverage its lazy-caching mechanism
     // direct inline function use will lead to closure preserving oldVm.
-    // using partial to return function with only arguments preserved in closure enviroment.
+    // using partial to return function with only arguments preserved in closure environment.
     computed[key] = partial(fn, store);
     Object.defineProperty(store.getters, key, {
       get: () => store._vm[key],
@@ -581,6 +687,9 @@ function installModule (store, rootState, path, module, hot) {
 
   // register in namespace map
   if (module.namespaced) {
+    if (store._modulesNamespaceMap[namespace] && true) {
+      console.error(`[vuex] duplicate namespace ${namespace} for the namespaced module ${path.join('/')}`);
+    }
     store._modulesNamespaceMap[namespace] = module;
   }
 
@@ -589,6 +698,13 @@ function installModule (store, rootState, path, module, hot) {
     const parentState = getNestedState(rootState, path.slice(0, -1));
     const moduleName = path[path.length - 1];
     store._withCommit(() => {
+      {
+        if (moduleName in parentState) {
+          console.warn(
+            `[vuex] state field "${moduleName}" was overridden by a module with the same name at "${path.join('.')}"`
+          );
+        }
+      }
       Vue.set(parentState, moduleName, module.state);
     });
   }
@@ -631,7 +747,7 @@ function makeLocalContext (store, namespace, path) {
 
       if (!options || !options.root) {
         type = namespace + type;
-        if (!store._actions[type]) {
+        if ( !store._actions[type]) {
           console.error(`[vuex] unknown local action type: ${args.type}, global type: ${type}`);
           return
         }
@@ -647,7 +763,7 @@ function makeLocalContext (store, namespace, path) {
 
       if (!options || !options.root) {
         type = namespace + type;
-        if (!store._mutations[type]) {
+        if ( !store._mutations[type]) {
           console.error(`[vuex] unknown local mutation type: ${args.type}, global type: ${type}`);
           return
         }
@@ -674,26 +790,28 @@ function makeLocalContext (store, namespace, path) {
 }
 
 function makeLocalGetters (store, namespace) {
-  const gettersProxy = {};
+  if (!store._makeLocalGettersCache[namespace]) {
+    const gettersProxy = {};
+    const splitPos = namespace.length;
+    Object.keys(store.getters).forEach(type => {
+      // skip if the target getter is not match this namespace
+      if (type.slice(0, splitPos) !== namespace) return
 
-  const splitPos = namespace.length;
-  Object.keys(store.getters).forEach(type => {
-    // skip if the target getter is not match this namespace
-    if (type.slice(0, splitPos) !== namespace) return
+      // extract local getter type
+      const localType = type.slice(splitPos);
 
-    // extract local getter type
-    const localType = type.slice(splitPos);
-
-    // Add a port to the getters proxy.
-    // Define as getter property because
-    // we do not want to evaluate the getters in this time.
-    Object.defineProperty(gettersProxy, localType, {
-      get: () => store.getters[type],
-      enumerable: true
+      // Add a port to the getters proxy.
+      // Define as getter property because
+      // we do not want to evaluate the getters in this time.
+      Object.defineProperty(gettersProxy, localType, {
+        get: () => store.getters[type],
+        enumerable: true
+      });
     });
-  });
+    store._makeLocalGettersCache[namespace] = gettersProxy;
+  }
 
-  return gettersProxy
+  return store._makeLocalGettersCache[namespace]
 }
 
 function registerMutation (store, type, handler, local) {
@@ -705,7 +823,7 @@ function registerMutation (store, type, handler, local) {
 
 function registerAction (store, type, handler, local) {
   const entry = store._actions[type] || (store._actions[type] = []);
-  entry.push(function wrappedActionHandler (payload, cb) {
+  entry.push(function wrappedActionHandler (payload) {
     let res = handler.call(store, {
       dispatch: local.dispatch,
       commit: local.commit,
@@ -713,7 +831,7 @@ function registerAction (store, type, handler, local) {
       state: local.state,
       rootGetters: store.getters,
       rootState: store.state
-    }, payload, cb);
+    }, payload);
     if (!isPromise(res)) {
       res = Promise.resolve(res);
     }
@@ -754,9 +872,7 @@ function enableStrictMode (store) {
 }
 
 function getNestedState (state, path) {
-  return path.length
-    ? path.reduce((state, key) => state[key], state)
-    : state
+  return path.reduce((state, key) => state[key], state)
 }
 
 function unifyObjectStyle (type, payload, options) {
@@ -794,6 +910,9 @@ function install (_Vue) {
  */
 const mapState = normalizeNamespace((namespace, states) => {
   const res = {};
+  if ( !isValidMap(states)) {
+    console.error('[vuex] mapState: mapper parameter must be either an Array or an Object');
+  }
   normalizeMap(states).forEach(({ key, val }) => {
     res[key] = function mappedState () {
       let state = this.$store.state;
@@ -824,6 +943,9 @@ const mapState = normalizeNamespace((namespace, states) => {
  */
 const mapMutations = normalizeNamespace((namespace, mutations) => {
   const res = {};
+  if ( !isValidMap(mutations)) {
+    console.error('[vuex] mapMutations: mapper parameter must be either an Array or an Object');
+  }
   normalizeMap(mutations).forEach(({ key, val }) => {
     res[key] = function mappedMutation (...args) {
       // Get the commit method from store
@@ -851,6 +973,9 @@ const mapMutations = normalizeNamespace((namespace, mutations) => {
  */
 const mapGetters = normalizeNamespace((namespace, getters) => {
   const res = {};
+  if ( !isValidMap(getters)) {
+    console.error('[vuex] mapGetters: mapper parameter must be either an Array or an Object');
+  }
   normalizeMap(getters).forEach(({ key, val }) => {
     // The namespace has been mutated by normalizeNamespace
     val = namespace + val;
@@ -858,7 +983,7 @@ const mapGetters = normalizeNamespace((namespace, getters) => {
       if (namespace && !getModuleByNamespace(this.$store, 'mapGetters', namespace)) {
         return
       }
-      if (!(val in this.$store.getters)) {
+      if ( !(val in this.$store.getters)) {
         console.error(`[vuex] unknown getter: ${val}`);
         return
       }
@@ -878,6 +1003,9 @@ const mapGetters = normalizeNamespace((namespace, getters) => {
  */
 const mapActions = normalizeNamespace((namespace, actions) => {
   const res = {};
+  if ( !isValidMap(actions)) {
+    console.error('[vuex] mapActions: mapper parameter must be either an Array or an Object');
+  }
   normalizeMap(actions).forEach(({ key, val }) => {
     res[key] = function mappedAction (...args) {
       // get dispatch function from store
@@ -917,9 +1045,21 @@ const createNamespacedHelpers = (namespace) => ({
  * @return {Object}
  */
 function normalizeMap (map) {
+  if (!isValidMap(map)) {
+    return []
+  }
   return Array.isArray(map)
     ? map.map(key => ({ key, val: key }))
     : Object.keys(map).map(key => ({ key, val: map[key] }))
+}
+
+/**
+ * Validate whether given map is valid or not
+ * @param {*} map
+ * @return {Boolean}
+ */
+function isValidMap (map) {
+  return Array.isArray(map) || isObject(map)
 }
 
 /**
@@ -948,22 +1088,113 @@ function normalizeNamespace (fn) {
  */
 function getModuleByNamespace (store, helper, namespace) {
   const module = store._modulesNamespaceMap[namespace];
-  if (!module) {
+  if ( !module) {
     console.error(`[vuex] module namespace not found in ${helper}(): ${namespace}`);
   }
   return module
 }
 
-var index_esm = {
+// Credits: borrowed code from fcomb/redux-logger
+
+function createLogger ({
+  collapsed = true,
+  filter = (mutation, stateBefore, stateAfter) => true,
+  transformer = state => state,
+  mutationTransformer = mut => mut,
+  actionFilter = (action, state) => true,
+  actionTransformer = act => act,
+  logMutations = true,
+  logActions = true,
+  logger = console
+} = {}) {
+  return store => {
+    let prevState = deepCopy(store.state);
+
+    if (typeof logger === 'undefined') {
+      return
+    }
+
+    if (logMutations) {
+      store.subscribe((mutation, state) => {
+        const nextState = deepCopy(state);
+
+        if (filter(mutation, prevState, nextState)) {
+          const formattedTime = getFormattedTime();
+          const formattedMutation = mutationTransformer(mutation);
+          const message = `mutation ${mutation.type}${formattedTime}`;
+
+          startMessage(logger, message, collapsed);
+          logger.log('%c prev state', 'color: #9E9E9E; font-weight: bold', transformer(prevState));
+          logger.log('%c mutation', 'color: #03A9F4; font-weight: bold', formattedMutation);
+          logger.log('%c next state', 'color: #4CAF50; font-weight: bold', transformer(nextState));
+          endMessage(logger);
+        }
+
+        prevState = nextState;
+      });
+    }
+
+    if (logActions) {
+      store.subscribeAction((action, state) => {
+        if (actionFilter(action, state)) {
+          const formattedTime = getFormattedTime();
+          const formattedAction = actionTransformer(action);
+          const message = `action ${action.type}${formattedTime}`;
+
+          startMessage(logger, message, collapsed);
+          logger.log('%c action', 'color: #03A9F4; font-weight: bold', formattedAction);
+          endMessage(logger);
+        }
+      });
+    }
+  }
+}
+
+function startMessage (logger, message, collapsed) {
+  const startMessage = collapsed
+    ? logger.groupCollapsed
+    : logger.group;
+
+  // render
+  try {
+    startMessage.call(logger, message);
+  } catch (e) {
+    logger.log(message);
+  }
+}
+
+function endMessage (logger) {
+  try {
+    logger.groupEnd();
+  } catch (e) {
+    logger.log('—— log end ——');
+  }
+}
+
+function getFormattedTime () {
+  const time = new Date();
+  return ` @ ${pad(time.getHours(), 2)}:${pad(time.getMinutes(), 2)}:${pad(time.getSeconds(), 2)}.${pad(time.getMilliseconds(), 3)}`
+}
+
+function repeat (str, times) {
+  return (new Array(times + 1)).join(str)
+}
+
+function pad (num, maxLength) {
+  return repeat('0', maxLength - num.toString().length) + num
+}
+
+var index = {
   Store,
   install,
-  version: '3.1.1',
+  version: '3.6.0',
   mapState,
   mapMutations,
   mapGetters,
   mapActions,
-  createNamespacedHelpers
+  createNamespacedHelpers,
+  createLogger
 };
 
-export default index_esm;
-export { Store, install, mapState, mapMutations, mapGetters, mapActions, createNamespacedHelpers };
+export default index;
+export { Store, createLogger, createNamespacedHelpers, install, mapActions, mapGetters, mapMutations, mapState };

@@ -13,6 +13,7 @@
             <br />Mutations
             <v-icon color="purple" dark>fas fa-dna</v-icon>
 
+            <!--
             <v-radio-group v-model="mutationOptions" row>
               <v-radio
                 label="All"
@@ -65,6 +66,7 @@
                 "
               ></v-radio>
             </v-radio-group>
+
 
             <v-layout v-if="showSNV" justify-center row>
               <v-flex xs4>
@@ -221,6 +223,7 @@
                 ></v-autocomplete>
               </v-flex>
             </v-layout>
+            -->
 
             <v-autocomplete
               v-model="genes"
@@ -280,7 +283,7 @@
             <br />Drugs
             <v-icon color="blue">fas fa-pills</v-icon>
             <v-radio-group v-model="drugUsage" row>
-              <v-radio label="All" value="all"></v-radio>
+              <!--<v-radio label="All" value="all"></v-radio>-->
               <v-radio label="Used" value="used"></v-radio>
               <v-radio label="Recommended" value="recommended"></v-radio>
             </v-radio-group>
@@ -353,13 +356,26 @@
       </v-flex>
 
       <v-flex d-flex xs12 sm6 md6>
+        <v-select
+          prepend-icon="fas fa-map-marker-alt"
+          v-model="select"
+          :hint="`${select.desc}`"
+          :items="items"
+          item-text="mode"
+          item-value="desc"
+          label="Select"
+          persistent-hint
+          return-object
+          single-line
+        ></v-select>
+        <!--
         <div v-if="localQuery === false">
           <v-switch
             class="subheading font-weight-light"
             prepend-icon="fas fa-map-marker-alt"
             color="blue"
-            v-model="localQuery"
-            :label="`Local`"
+            v-model="localQueryValue"
+            :label="`local`"
             @change="federatedQueryDialog = true"
           ></v-switch>
         </div>
@@ -369,14 +385,26 @@
               class="subheading font-weight-medium"
               color="yellow"
               prepend-icon="fas fa-compress-arrows-alt"
-              v-model="localQuery"
-              :label="`bwHealthCloud`"
+              v-model="localQueryValue"
+              :label="`federated`"
             ></v-switch>
           </strong>
         </div>
+        -->
       </v-flex>
 
       <v-flex d-flex xs12 sm6 md6>
+        <v-btn
+          class="subheading font-weight-regular"
+          block
+          dark
+          large
+          slot="activator"
+          color="blue accent-3"
+          @click="submitQuery"
+          >Submit Query</v-btn
+        >
+        <!--
         <v-tooltip top>
           <v-btn
             v-if="this.getQueryParametersDiagnosis"
@@ -402,6 +430,7 @@
           >
           <span>then 'blue' to submit your bwHC query</span>
         </v-tooltip>
+        -->
       </v-flex>
 
       <v-dialog v-model="federatedQueryDialog" width="500">
@@ -440,6 +469,7 @@
 
 <script>
 import axios from "axios";
+import { dirname } from "path";
 
 export default {
   props: [
@@ -469,18 +499,49 @@ export default {
     showSCNV: false,
     showSV: false,
 
-    drugUsage: "all",
+    drugUsage: "used",
     diagnosis: Array(),
+
+    select: { mode: "local", desc: "query mode is set to on site" },
+    items: [
+      { mode: "local", desc: "query mode is set to on site" },
+      { mode: "federated", desc: "query mode is set to bwHealthCloud wide" },
+    ],
 
     federatedQueryDialog: false,
   }),
 
   methods: {
     async submitQuery() {
+
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${localStorage.token}`;
+
+      let mutatedGenes = Array();
+      if (this.genes) {
+        for (var i = 0; i < this.genes.length; i++) {
+          mutatedGenes.push(
+            this.genes[i].substr(0, this.genes[i].indexOf(" "))
+          );
+        }
+      }
+
       let diagnosis = Array();
       if (this.diagnosis) {
         for (var i = 0; i < this.diagnosis.length; i++) {
-          diagnosis.push(this.diagnosis[i].slice(0, 5));
+          diagnosis.push(
+            this.diagnosis[i].substr(0, this.diagnosis[i].indexOf(" "))
+          );
+        }
+      }
+
+      let responses = Array();
+      if (this.responses) {
+        for (var i = 0; i < this.responses.length; i++) {
+          responses.push(
+            this.responses[i].substr(0, this.responses[i].indexOf(" "))
+          );
         }
       }
 
@@ -493,17 +554,16 @@ export default {
 
       if (this.queryId == undefined) {
         let request = {
-          //mode: this.localQuery,
-          mode: "local",
+          mode: this.select.mode,
           parameters: {
             diagnoses: diagnosis,
-            mutatedGenes: [],
-            medicationsWithUsage: [],
-            responses: [],
+            mutatedGenes: mutatedGenes,
+            medicationsWithUsage: this.selectedDrugs,
+            //responses: [],
             //mutation:[{genes:this.genes,variant:{type:"SNV"}}],
             //medicationsWithUsage: [{usage:"recommended",drug:"something"}],
             //drugs:[{usage:"recommended",drug:"something"}],
-            //responses: this.responses
+            responses: responses,
           },
 
           /*
@@ -519,42 +579,45 @@ export default {
           */
         };
 
+        //alert(JSON.stringify(request));
+
         let Response = await axios.post(
-          process.env.baseUrl + process.env.port + `/bwhc/mtb/api/query`,
+          process.env.baseUrl + process.env.port + `/bwhc/mtb/api/query/`,
           request
         );
 
-        /*
-        alert("QUERY PANEL " + JSON.stringify(request));
-        alert("QUERY RESPONSE " + JSON.stringify(Response));
-        */
+        //alert("QUERY PANEL " + JSON.stringify(request));
+        //alert("QUERY RESPONSE " + JSON.stringify(Response));
 
         this.$router.push(`/results/${Response.data.id}`);
+
       } else {
+        
         let request = {
-          mode: this.localQuery,
+          mode: this.select.mode,
           id: this.queryId,
           parameters: {
-            diagnosis: diagnosis,
-            mutatedGenes: [],
-            medicationsWithUsage: [],
-            responses: [],
+            diagnoses: diagnosis,
+            mutatedGenes: mutatedGenes,
+            medicationsWithUsage: this.selectedDrugs,
+            //responses: [],
             //mutation:[{genes:this.genes,variant:{type:"SNV"}}],
             //medicationsWithUsage: [{usage:"recommended",drug:"something"}],
             //drugs:[{usage:"recommended",drug:"something"}],
-            //responses: this.responses
+            responses: responses,
           },
         };
 
-        alert(JSON.stringify(request));
+        //alert(JSON.stringify(request));
 
-        let Response = await axios.put(
+        let Response = await axios.post(
           process.env.baseUrl +
             process.env.port +
             `/bwhc/mtb/api/query/` +
             this.queryId,
           request
         );
+        //alert(JSON.stringify(Response));
         this.$router.push(`/results/${Response.data.id}`);
         window.location.reload(true);
       }
@@ -576,7 +639,9 @@ export default {
 
     addDrugs(drug, usage) {
       //const index = this.drugs.indexOf(drug);
-      this.selectedDrugs.push({ drug, usage });
+      let code = drug.substr(0, drug.indexOf(" "));
+      this.selectedDrugs.push({ code, usage });
+      //alert(JSON.stringify(this.selectedDrugs));
     },
 
     removeDrugs(item) {
@@ -590,7 +655,7 @@ export default {
     },
 
     setQueryParams(item) {
-      //this.mutations = this.getQueryParametersMutations;
+      this.mutations = this.getQueryParametersMutations;
       this.diagnosis = this.getQueryParametersDiagnosis;
       this.drugs = this.getQueryParametersDrugs;
       this.responses = this.getQueryParametersResponses;

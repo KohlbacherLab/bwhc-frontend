@@ -1,103 +1,74 @@
 <template>
-  <v-responsive>
-    <v-container fluid grid-list-md>
-      <userPanel />
-      <v-flex>
-        <h3 class="display-3">
-          <strong>bwHealthCloud</strong> data validation
-        </h3>
+  <v-container fluid grid-list-md>
+    <userPanel />
+    <v-flex>
+      <h3 class="display-3"><strong>bwHealthCloud</strong> data validation</h3>
 
-        <span class="subheading font-weight-light">
-          <v-btn
-            dark
-            icon
-            color="blue accent-2"
-            align-end
-            @click="$router.push('/')"
-          >
-            <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-          >Patients with incoherent data are listed below.
-          <strong @click="$router.push('help')">Help?</strong>
-        </span>
-        <v-divider class="my-3"></v-divider>
-      </v-flex>
-
-      <v-layout wrap>
-        <v-flex d-flex xs12 sm6 md4>
-          <v-card
-            class="mx-auto"
-            flat
-            color="orange darken-1"
-            dark
-            max-width="400"
-          >
-            <v-card-text class="headline font-weight-thin">
-              <strong>{{ countPatients }}</strong>
-              <br />Patients
-              <v-icon color="orange accent-1" dark>fas fa-street-view</v-icon>
-            </v-card-text>
-          </v-card>
-        </v-flex>
-      </v-layout>
-
-      <v-divider class="my-3"></v-divider>
-
-      <v-form fluid>
-        <!--
-        <v-card-title>
-          <v-spacer></v-spacer>
-          <v-text-field
-            v-model="search"
-            append-icon="fas fa-search"
-            label="search"
-            single-line
-            hide-details
-          ></v-text-field>
-        </v-card-title>
-        -->
-        <v-data-table
-          :headers="headerConditions"
-          :items="itemsPatients"
-          :search="search"
+      <span class="subheading font-weight-light">
+        <v-btn
+          dark
+          icon
+          color="blue accent-2"
+          align-end
+          @click="$router.push('/main')"
         >
-          <template slot="items" slot-scope="props">
-            <td @click="routeToPatient(props.item.id)">{{ props.item.id }}</td>
-
-            <td @click="routeToPatient(props.item.id)">
-              {{ props.item.gender }}
-            </td>
-            <td @click="routeToPatient(props.item.id)">
-              {{ props.item.birthDate }}
-            </td>
-            <td @click="routeToPatient(props.item.id)">
-              {{ props.item.managingZPM }}
-            </td>
-            <td @click="routeToPatient(props.item.id)">
-              {{ props.item.insurance }}
-            </td>
-
-            <td class="text-xs-right">
-              <v-icon small @click="functionalityNotAvailable"
-                >fas fa-trash</v-icon
-              >
-            </td>
-          </template>
-        </v-data-table>
-      </v-form>
-
+          <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
+        >Patients with incoherent data are listed below.
+        <strong @click="$router.push('help')">Help?</strong>
+      </span>
       <v-divider class="my-3"></v-divider>
+    </v-flex>
 
-      <v-btn
-        class="ma-2 font-weight-bold"
-        tile
-        x-large
-        color="red accent-3"
-        dark
-        @click="feedbackDialog = true"
-        >Feedback</v-btn
-      >
-    </v-container>
-  </v-responsive>
+    <v-layout wrap>
+      <v-flex d-flex xs12 sm6 md3>
+        <v-card
+          class="mx-auto"
+          flat
+          color="orange darken-1"
+          dark
+          max-width="400"
+          v-ripple="{ center: true }"
+        >
+          <v-card-text class="headline font-weight-thin">
+            <p>
+              <v-icon color="orange accent-1" dark>fas fa-street-view</v-icon>
+            </p>
+            <strong>{{ countPatients }}</strong>
+            <br />Patients
+          </v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
+    <v-divider class="my-3"></v-divider>
+    <v-card-title class="headline font-weight-light">Patient List</v-card-title>
+    <v-data-table
+      :headers="headerConditions"
+      :items="itemsPatients"
+      :search="search"
+    >
+      <template slot="items" slot-scope="props">
+        <td @click="routeToPatient(props.item.id)">{{ props.item.id }}</td>
+
+        <td @click="routeToPatient(props.item.id)">
+          {{ props.item.gender }}
+        </td>
+        <td @click="routeToPatient(props.item.id)">
+          {{ props.item.birthDate }}
+        </td>
+        <td @click="routeToPatient(props.item.id)">
+          {{ props.item.managingZPM }}
+        </td>
+        <td @click="routeToPatient(props.item.id)">
+          {{ props.item.insurance }}
+        </td>
+
+        <td class="text-xs-right">
+          <v-icon small @click="functionalityNotAvailable">fas fa-trash</v-icon>
+        </td>
+      </template>
+    </v-data-table>
+    <v-divider class="my-3"></v-divider>
+  </v-container>
 </template>
 
 <script>
@@ -254,16 +225,26 @@ export default {
     },
   },
 
-  async asyncData({ params, error }) {
-    let patients = await axios.get(
-      process.env.baseUrl + process.env.port + process.env.patient
-    );
-    // alert(JSON.stringify(patients.data.entries));
+  async asyncData({ params, redirect, error }) {
+    axios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${localStorage.token}`;
 
-    return {
-      itemsPatients: patients.data.entries,
-      countPatients: patients.data.total,
-    };
+    try {
+      let patients = await axios.get(
+        process.env.baseUrl + process.env.port + process.env.patient
+      );
+      // alert(JSON.stringify(patients.data.entries));
+
+      return {
+        itemsPatients: patients.data.entries,
+        countPatients: patients.data.total,
+      };
+    } catch (err) {
+      if (err.response.status === 401) {
+        return redirect("/");
+      }
+    }
   },
 };
 </script>

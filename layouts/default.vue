@@ -1,23 +1,36 @@
  <template>
   <v-app light>
+    <!--
     <v-navigation-drawer v-model="drawer" :clipped="clipped" fixed app>
       <v-list v-if="hasToken">
-        <v-list-tile v-for="(item, i) in itemsLoggedIn" :key="i" :to="item.to" router exact>
+        <v-list-tile
+          v-for="(item, i) in itemsLoggedIn"
+          :key="i"
+          :to="item.to"
+          router
+          exact
+        >
           <v-list-tile-action>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title v-text="item.title"/>
+            <v-list-tile-title v-text="item.title" />
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
-       <v-list v-else>
-        <v-list-tile v-for="(item, i) in items" :key="i" :to="item.to" router exact>
+      <v-list v-else>
+        <v-list-tile
+          v-for="(item, i) in items"
+          :key="i"
+          :to="item.to"
+          router
+          exact
+        >
           <v-list-tile-action>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title v-text="item.title"/>
+            <v-list-tile-title v-text="item.title" />
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -27,10 +40,11 @@
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title class="headline" v-text="title" />
     </v-toolbar>
+        -->
 
     <v-content>
       <v-container>
-        <nuxt/>
+        <nuxt />
       </v-container>
     </v-content>
 
@@ -49,47 +63,60 @@
 import axios from "axios";
 import { mapGetters } from "vuex";
 
+import Navbar from "~/components/Navbar";
+
 export default {
   data() {
     return {
-      clipped: true,
-      drawer: true,
-      fixed: true,
+      clipped: false,
+      drawer: false,
+      fixed: false,
       items: [
         {
           icon: "fas fa-cloud",
           title: "bwHC Project",
-          to: "/"
-        }
+          to: "/",
+        },
       ],
       itemsLoggedIn: [
         {
           icon: "fas fa-check-double",
           title: "Quality Control",
-          to: "/quality"
+          to: "/quality",
         },
         {
           icon: "fas fa-server",
           title: "Data Validation",
-          to: "/validate"
+          to: "/validate",
         },
         {
           icon: "fas fa-search",
           title: "Query Portal",
-          to: "/query"
-        }
+          to: "/query",
+        },
+        {
+          icon: "fas fa-user-shield",
+          title: "User Management",
+          to: "/users",
+        },
+        {
+          icon: "fas fa-microscope",
+          title: "Test",
+          to: "/test",
+        },
       ],
       miniVariant: false,
       right: true,
       rightDrawer: true,
-      title: 'bwHealthCloud',
-      gender: [],
-      age: [25, 65],
+      title: "bwHealthCloud",
+      genders: [],
+      ageRange: [25, 65],
       vitalStatus: [],
-      therapyDuration: [6, 60],
-      evidenceLevel: [],
-      icons: ["fab fa-twitter", "fab fa-linkedin"]
     };
+  },
+
+  components: {
+    Navbar,
   },
 
   computed: {
@@ -97,26 +124,28 @@ export default {
       authenticated: "auth/authenticated",
       token: "auth/secret",
       user: "auth/user",
-      hasToken: "auth/hasToken"
-    })
+      hasToken: "auth/hasToken",
+    }),
   },
+  
   methods: {
     async filterQuery() {
       //alert(JSON.stringify(this.queryGenes));
+      //alert(ageRange);
       let request = {
-        gender: this.gender,
-        age: this.age,
+        genders: this.genders,
+        ageRange: this.ageRange,
         vitalStatus: this.vitalStatus,
-        therapyDuration : this.therapyDuration,
+        therapyDuration: this.therapyDuration,
       };
 
-      alert(JSON.stringify(request));
+      //alert(JSON.stringify(request));
       let Response = await axios.post(
-        `http://localhost:6060/bwhc/mtb/query`,
+        `http://localhost:90/bwhc/mtb/query`,
         request
       );
-      alert(JSON.stringify(Response.data));
-    }
-  }
+      //alert(JSON.stringify(Response.data));
+    },
+  },
 };
 </script>

@@ -7,19 +7,13 @@
           <strong>bwHealthCloud</strong> quality control stats
         </h3>
 
-        <!-- Temporary Password Protection
-        <v-flex xs12 sm2>
-          <v-text-field v-model="password" label="Password?" type="password" outline></v-text-field>
-        </v-flex>
-        -->
-
         <span class="subheading subheading font-weight-thin">
           <v-btn
             dark
             icon
             color="blue accent-2"
             align-end
-            @click="$router.push('/')"
+            @click="$router.push('/main')"
           >
             <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
           >Local and Global ZPM statistics are shown below.
@@ -28,7 +22,7 @@
         <v-divider class="my-3"></v-divider>
       </v-flex>
       <v-layout wrap>
-        <v-flex d-flex xs12 sm6 md4>
+        <v-flex d-flex xs12 sm6 md3>
           <v-card
             class="mx-auto"
             flat
@@ -38,12 +32,14 @@
             v-ripple="{ center: true }"
           >
             <v-card-text class="headline font-weight-thin">
+              <p>
+                <v-icon color="deep-orange accent-1" dark
+                  >fas fa-street-view</v-icon
+                >
+              </p>
               <strong>{{ localReport.data.patientTotal }}</strong>
               <br />
-              Patients in ZPM {{ localReport.data.zpm }}
-              <v-icon color="deep-orange accent-1" dark
-                >fas fa-street-view</v-icon
-              >
+              Patients in {{ localReport.data.zpm }}
             </v-card-text>
           </v-card>
         </v-flex>
@@ -194,26 +190,6 @@
 
       <v-divider class="my-3"></v-divider>
 
-      <!--
-       <v-flex d-flex xs12 sm6 md4>
-        <v-card
-          class="mx-auto"
-          flat
-          color="orange darken-1"
-          dark
-          max-width="400"
-        >
-          <v-card-text class="headline font-weight-thin">
-            <strong>{{ globalReport.data.patientTotal }}</strong>
-            <br />
-            Patients in ZPM {{ globalReport.data.zpms }}
-            <v-icon color="orange accent-1" dark>nature_people</v-icon>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-      <br />
-      -->
-
       <v-icon color="blue accent-2">fas fa-globe-europe</v-icon>
 
       <v-card-title class="title font-weight-light"
@@ -362,16 +338,6 @@
         </v-flex>
       </v-layout>
       <v-divider class="my-3"></v-divider>
-
-      <v-btn
-        class="ma-2 font-weight-bold"
-        tile
-        x-large
-        color="red accent-3"
-        dark
-        @click="feedbackDialog = true"
-        >Feedback</v-btn
-      >
     </v-container>
     <template></template>
   </v-responsive>
@@ -402,85 +368,100 @@ export default {
     },
   },
 
-  async asyncData({ params, error }) {
-    let localReport = await axios.get(
-      process.env.baseUrl +
-        process.env.port +
-        process.env.reporting +
-        "/LocalQCReport",
-      { withCredentials: true }
-    );
+  async asyncData({ params, redirect, error }) {
+    axios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${localStorage.token}`;
 
-    //alert(JSON.stringify(localReport.data));
+    try {
+      let localReport = await axios.get(
+        process.env.baseUrl +
+          process.env.port +
+          process.env.reporting +
+          "/LocalQCReport"
+      );
+      let globalReport = await axios.get(
+        process.env.baseUrl +
+          process.env.port +
+          process.env.reporting +
+          "/GlobalQCReport"
+      );
 
-    let globalReport = await axios.get(
-      process.env.baseUrl +
-        process.env.port +
-        process.env.reporting +
-        "/GlobalQCReport",
-      { withCredentials: true }
-    );
+      // LOCAL COMPLETION STATUS
+      let rawLocalCompletionStats = Array();
+      if (localReport.data.completionStats) {
+        for (var i = 0; i < localReport.data.completionStats.length; i++) {
+          let item = {
+            id: localReport.data.completionStats[i].level,
+            patient: localReport.data.completionStats[i].frequency,
+          };
+          rawLocalCompletionStats.push(item);
+        }
+      }
 
-    // LOCAL COMPLETION STATUS
-    let rawLocalCompletionStats = Array();
-    for (var i = 0; i < localReport.data.completionStats.length; i++) {
-      let item = {
-        id: localReport.data.completionStats[i].level,
-        patient: localReport.data.completionStats[i].frequency,
+      // LOCAL AVERAGE DURATIONS
+      let rawLocalAverageDurations = Array();
+      if (localReport.data.averageDurations) {
+        for (var i = 0; i < localReport.data.averageDurations.length; i++) {
+          let item = {
+            id: localReport.data.averageDurations[i].timeSpan,
+            patient: localReport.data.averageDurations[i].duration,
+          };
+          rawLocalAverageDurations.push(item);
+        }
+      }
+
+      // GLOBAL COMPLETION STATS
+      let rawGlobalCompletionStats = Array();
+      if (globalReport.data.completionStats) {
+        for (var i = 0; i < globalReport.data.completionStats.length; i++) {
+          let item = {
+            id: globalReport.data.completionStats[i].level,
+            patient: globalReport.data.completionStats[i].frequency,
+          };
+          rawGlobalCompletionStats.push(item);
+        }
+      }
+
+      // GLOBAL AVERAGE DURATIONS
+      let rawGlobalAverageDurations = Array();
+      if (globalReport.data.averageDurations) {
+        for (var i = 0; i < globalReport.data.averageDurations.length; i++) {
+          let item = {
+            id: globalReport.data.averageDurations[i].timeSpan,
+            patient: globalReport.data.averageDurations[i].duration,
+          };
+          rawGlobalAverageDurations.push(item);
+        }
+      }
+
+      // GLOBAL CONSTITUENT REPORTS
+      let rawGlobalConstituentReports = Array();
+      if (globalReport.data.constituentReports) {
+        for (var i = 0; i < globalReport.data.constituentReports.length; i++) {
+          let item = {
+            id: globalReport.data.constituentReports[i].timeSpan,
+            patient: globalReport.data.constituentReports[i].duration,
+          };
+          rawGlobalConstituentReports.push(item);
+        }
+      }
+
+      return {
+        localReport,
+        localCompletionStats: rawLocalCompletionStats,
+        localAverageDurations: rawLocalAverageDurations,
+
+        globalReport,
+        globalCompletionStats: rawGlobalCompletionStats,
+        globalAverageDurations: rawGlobalAverageDurations,
+        globalConstituentReports: rawGlobalConstituentReports,
       };
-      rawLocalCompletionStats.push(item);
+    } catch (err) {
+      if (err.response.status === 401) {
+        return redirect("/");
+      }
     }
-
-    // LOCAL AVERAGE DURATIONS
-    let rawLocalAverageDurations = Array();
-    for (var i = 0; i < localReport.data.averageDurations.length; i++) {
-      let item = {
-        id: localReport.data.averageDurations[i].timeSpan,
-        patient: localReport.data.averageDurations[i].duration,
-      };
-      rawLocalAverageDurations.push(item);
-    }
-
-    // GLOBAL COMPLETION STATS
-    let rawGlobalCompletionStats = Array();
-    for (var i = 0; i < globalReport.data.completionStats.length; i++) {
-      let item = {
-        id: globalReport.data.completionStats[i].level,
-        patient: globalReport.data.completionStats[i].frequency,
-      };
-      rawGlobalCompletionStats.push(item);
-    }
-
-    // GLOBAL AVERAGE DURATIONS
-    let rawGlobalAverageDurations = Array();
-    for (var i = 0; i < globalReport.data.averageDurations.length; i++) {
-      let item = {
-        id: globalReport.data.averageDurations[i].timeSpan,
-        patient: globalReport.data.averageDurations[i].duration,
-      };
-      rawGlobalAverageDurations.push(item);
-    }
-
-    // GLOBAL CONSTITUENT REPORTS
-    let rawGlobalConstituentReports = Array();
-    for (var i = 0; i < globalReport.data.constituentReports.length; i++) {
-      let item = {
-        id: globalReport.data.constituentReports[i].timeSpan,
-        patient: globalReport.data.constituentReports[i].duration,
-      };
-      rawGlobalConstituentReports.push(item);
-    }
-
-    return {
-      localReport,
-      localCompletionStats: rawLocalCompletionStats,
-      localAverageDurations: rawLocalAverageDurations,
-
-      globalReport,
-      globalCompletionStats: rawGlobalCompletionStats,
-      globalAverageDurations: rawGlobalAverageDurations,
-      globalConstituentReports: rawGlobalConstituentReports,
-    };
   },
 };
 </script>

@@ -1,21 +1,26 @@
 <template>
   <v-responsive>
     <v-container fluid grid-list-md>
-      <userPanel/>
-      <v-layout align-center>
+      <userPanel />
         <v-flex>
-          <h3 class="display-3">
-            <strong>bwHealthCloud</strong> help
-          </h3>
+          <h3 class="display-3"><strong>bwHealthCloud</strong> help</h3>
 
           <span class="subheading font-weight-light">
-             <v-btn dark icon color="blue accent-2" align-end @click="goBack">
-            <v-icon dark>fas fa-arrow-left</v-icon></v-btn> Help will be here soon.
+            <v-btn
+              dark
+              icon
+              color="blue accent-2"
+              align-end
+              @click="$router.push('/main')"
+            >
+              <v-icon dark>fas fa-arrow-left</v-icon></v-btn
+            >
+            Help will be here soon.
           </span>
 
           <v-divider class="my-3"></v-divider>
 
-          <v-container style="max-width: 600px;">
+          <v-container style="max-width: 600px">
             <v-timeline dense clipped>
               <v-timeline-item
                 fill-dot
@@ -60,31 +65,69 @@
                 <span>TODAY</span>
               </v-timeline-item>
 
-              <v-timeline-item class="mb-3" color="grey" icon-color="grey lighten-2" small>
+              <v-timeline-item class="mb-3" color="purple" small>
                 <v-layout justify-space-between>
-                  <v-chip class="white--text ml-0" color="purple" label small>DEV</v-chip>
+                  <v-chip class="white--text ml-0" color="purple" label small
+                    >DEV</v-chip
+                  >
                   <v-flex xs7>bwHC Development is in progress.</v-flex>
-                  <v-flex xs5 text-xs-right>Apr 2019</v-flex>
+                  <v-flex xs5 text-xs-right>Dec 2020</v-flex>
                 </v-layout>
               </v-timeline-item>
 
-              <v-timeline-item class="mb-3" small>
+              <v-timeline-item class="mb-3" color="grey" small>
                 <v-layout justify-space-between>
-                  <v-flex xs7>bwHC User Stories has been completed and shared with the partners.</v-flex>
+                  <v-flex xs7>bwHC Meeting in Stuttgart.</v-flex>
+                  <v-flex xs5 text-xs-right>Feb 2020</v-flex>
+                </v-layout>
+              </v-timeline-item>
+
+              <v-timeline-item class="mb-3" color="grey" small>
+                <v-layout justify-space-between>
+                  <v-flex xs7>bwHC Patient Entry Portal v1 completed.</v-flex>
+                  <v-flex xs5 text-xs-right>Mar 2019</v-flex>
+                </v-layout>
+              </v-timeline-item>
+
+              <v-timeline-item class="mb-3" color="grey" small>
+                <v-layout justify-space-between>
+                  <v-flex xs7>bwHC Query Portal v2 completed.</v-flex>
+                  <v-flex xs5 text-xs-right>Sep 2018</v-flex>
+                </v-layout>
+              </v-timeline-item>
+
+              <v-timeline-item class="mb-3" color="grey" small>
+                <v-layout justify-space-between>
+                  <v-flex xs7>bwHC Query Portal v1 completed.</v-flex>
+                  <v-flex xs5 text-xs-right>May 2018</v-flex>
+                </v-layout>
+              </v-timeline-item>
+
+              <v-timeline-item class="mb-3" color="grey" small>
+                <v-layout justify-space-between>
+                  <v-flex xs7
+                    >bwHC User Stories has been completed and shared with the
+                    partners.</v-flex
+                  >
                   <v-flex xs5 text-xs-right>Feb 2018</v-flex>
                 </v-layout>
               </v-timeline-item>
 
               <v-timeline-item class="mb-3" color="grey" small>
                 <v-layout justify-space-between>
-                  <v-flex xs7>bwHC first consortium meeting took place in Tübingen.</v-flex>
+                  <v-flex xs7
+                    >bwHC first consortium meeting took place in
+                    Tübingen.</v-flex
+                  >
                   <v-flex xs5 text-xs-right>Dec 2018</v-flex>
                 </v-layout>
               </v-timeline-item>
 
               <v-timeline-item class="mb-3" color="grey" small>
                 <v-layout justify-space-between>
-                  <v-flex xs7>bwHC Specification Document shared with partners.</v-flex>
+                  <v-flex xs7
+                    >bwHC Specification Document shared with partners.</v-flex
+                  >
                   <v-flex xs5 text-xs-right>Oct 2018</v-flex>
                 </v-layout>
               </v-timeline-item>
@@ -98,9 +141,7 @@
             </v-timeline>
           </v-container>
         </v-flex>
-      </v-layout>
       <v-divider class="my-3"></v-divider>
-      <navPanel/>
     </v-container>
   </v-responsive>
 </template>
@@ -114,18 +155,17 @@ export default {
     events: [],
     input: null,
     nonce: 0,
-    lorem: `Lorem ipsum dolor sit amet, mel at clita quando. Te sit oratio vituperatoribus, nam ad ipsum posidonium mediocritatem, explicari dissentiunt cu mea. Repudiare disputationi vim in, mollis iriure nec cu, alienum argumentum ius ad. Pri eu justo aeque torquatos.`
   }),
 
   components: {
     userPanel,
-    navPanel
+    navPanel,
   },
 
   computed: {
     timeline() {
       return this.events.slice().reverse();
-    }
+    },
   },
 
   methods: {
@@ -139,17 +179,17 @@ export default {
           (match, contents, offset) => {
             return ` ${contents
               .split(" ")
-              .map(v => v.charAt(0))
+              .map((v) => v.charAt(0))
               .join("")}`;
           }
-        )
+        ),
       });
 
       this.input = null;
     },
     goBack() {
       return window.history.back();
-    }
-  }
+    },
+  },
 };
 </script>

@@ -18,6 +18,7 @@ export default ({
         secret(state) {
             return state.token
         },
+        // this function is necessary for the sidebar menu
         hasToken(state) {
             if(state.token)
             return true
@@ -37,8 +38,9 @@ export default ({
     actions: {
         async login({ dispatch }, credentials) {
             //alert("login function");
+            //alert("Credentials: "+JSON.stringify(credentials));
             let response = await axios.post(process.env.baseUrl + process.env.port +`/bwhc/user/api/login`, credentials)
-            //alert("Cookie: "+ JSON.stringify(response.data.access_token));
+            //alert("Token: "+ JSON.stringify(response.data.access_token));
             return dispatch('attempt', response.data.access_token)
         },
 
@@ -61,7 +63,7 @@ export default ({
             /*
             return axios.post('auth/logout').then(() => {
                 commit('SET_TOKEN', null)
-                commit('SET_USER', null)
+                commit('SET_USER', null) 
             })
             */
             commit('SET_TOKEN', null),

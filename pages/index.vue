@@ -36,7 +36,6 @@
                   ></v-text-field>
                 </v-flex>
               </v-layout>
-              <small>* forgot password?</small>
             </v-container>
             <v-divider></v-divider>
             <v-card-actions>
@@ -55,16 +54,6 @@
     </v-tab>
     <v-divider class="my-3"></v-divider>
 
-    <!--
-    <v-btn
-      class="ma-2 font-weight-bold"
-      tile
-      x-large
-      color="cyan accent-3"
-      light
-      @click="$router.push('login')"
-      >Login</v-btn
-    >-->
     <v-btn
       class="ma-2 font-weight-bold"
       tile
@@ -73,15 +62,6 @@
       light
       @click="loginDialog = true"
       >Login</v-btn
-    >
-
-    <h3 class="font-weight-medium">
-      <br />
-      Have no account then
-      <u @click="$router.push('request')"> send a request!</u>
-
-      <br />
-    </h3>
 
     <v-divider class="my-3"></v-divider>
     <v-layout row wrap>
@@ -172,17 +152,6 @@
         </v-layout>
       </v-flex>
     </v-layout>
-    <v-divider class="my-3"></v-divider>
-
-    <v-btn
-      class="ma-2 font-weight-bold"
-      tile
-      x-large
-      color="red accent-3"
-      dark
-      @click="feedbackDialog = true"
-      >Feedback</v-btn
-    >
   </v-container>
 </template>
 
@@ -193,7 +162,6 @@ import { mapActions } from "vuex";
 export default {
   data: () => ({
     loginDialog: false,
-    lorem: `Lorem ipsum dolor sit amet, mel at clita quando. Te sit oratio vituperatoribus, nam ad ipsum posidonium mediocritatem, explicari dissentiunt cu mea. Repudiare disputationi vim in, mollis iriure nec cu, alienum argumentum ius ad. Pri eu justo aeque torquatos.`,
   }),
 
   components: {
@@ -203,46 +171,45 @@ export default {
   methods: {
     ...mapActions({
       login: "auth/login",
+      logout: "auth/logout",
+      hasToken: "auth/hasToken",
     }),
 
-    check() {
-      alert("testing");
-    },
-
     submit() {
-      //alert("submit clicked");
       if (this.username !== "" && this.password !== "") {
         let request = {
           username: this.username,
           password: this.password,
         };
-        this.login(request);
         this.login(request)
           .then(() => {
             if (this.$route.query) {
               this.$router.push(this.$route.query);
+              let toast = this.$toasted.success("Login Successful!", {
+                theme: "bubble",
+                icon: "check_circle",
+                position: "top-center",
+                duration: 3000,
+              });
             }
             this.$router.push(`/main/`);
           })
           .catch((e) => {
-            this.$toast
-              .error("Error logging in", { icon: "error" })
-              .goAway(800);
+            let toast = this.$toasted.show(
+              "Error! Invalid username or password. ",
+              {
+                theme: "bubble",
+                icon: "error",
+                position: "top-center",
+                duration: 3000,
+              }
+            );
+      if (!store.state.authUser) {
+        return redirect('/main')
+      }
+            this.$router.push(`/`);
           });
       }
-    },
-
-    submit2() {
-      //alert("submit clicked");
-      let request = {
-        username: this.username,
-        password: this.password,
-      };
-      //alert(JSON.stringify(request));
-      this.login(request);
-      this.login(request).then(() => {
-        this.$router.push(`/main/`);
-      });
     },
   },
 };

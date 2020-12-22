@@ -2,9 +2,6 @@
   <v-layout row justify>
     <!-- 
     <v-layout row justify-end>
-    -->
-
-    <!--
         <v-btn icon large dark color="yellow darken-3" @click="$router.push('help')">
           <v-icon>directions_run</v-icon>
         </v-btn>
@@ -23,7 +20,7 @@
       <v-btn
         class="ma-2 font-weight-bold"
         tile
-        x-large
+        small
         slot="activator"
         color="light-blue darken-3"
         dark
@@ -37,14 +34,13 @@
       <v-btn
         class="ma-2 font-weight-bold"
         tile
-        x-large
+        small
         slot="activator"
         color="cyan darken-3"
         dark
         @click="$router.push('/validate')"
         >Data Validation</v-btn
       >
-
       <span>click here to check bwHC data validation</span>
     </v-tooltip>
 
@@ -52,7 +48,21 @@
       <v-btn
         class="ma-2 font-weight-bold"
         tile
-        x-large
+        small
+        slot="activator"
+        color="indigo darken-1"
+        dark
+        @click="$router.push('/users')"
+        >Admin
+      </v-btn>
+      <span>click here to use bwHC admin view</span>
+    </v-tooltip>
+
+    <v-tooltip bottom>
+      <v-btn
+        class="ma-2 font-weight-bold"
+        tile
+        small
         slot="activator"
         color="teal darken-3"
         dark
@@ -61,5 +71,15 @@
       </v-btn>
       <span>click here to submit your bwHC query</span>
     </v-tooltip>
+
+    <v-btn
+      class="ma-2 font-weight-bold"
+      tile
+      small
+      color="red accent-3"
+      dark
+      @click="logout()"
+      >Logout</v-btn
+    >
   </v-layout>
 </template>

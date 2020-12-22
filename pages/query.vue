@@ -5,32 +5,20 @@
       <v-flex>
         <h3 class="display-3"><strong>bwHealthCloud</strong> query portal</h3>
 
-        <!-- Temporary Password Protection
-        <v-flex xs12 sm2>
-          <v-text-field v-model="password" label="Password?" type="password" outline></v-text-field>
-        </v-flex>
-         -->
-
         <span class="subheading subheading font-weight-thin">
           <v-btn
             dark
             icon
             color="blue accent-2"
             align-end
-            @click="$router.push('/')"
+            @click="$router.push('/main')"
           >
             <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-          >Submitting a query is easy, check different query fields and select
-          necessary parameters and click 'Submit New Query' button. If no
-          selection is made from the catalogues, then query portal will return
-          everything.
+          >If nothing is selected, query will return everything.
           <strong @click="$router.push('help')">Help?</strong>
         </span>
         <v-divider class="my-3"></v-divider>
       </v-flex>
-      <!--
-        v-if="password === 'bwhc'"
-        -->
 
       <queryPanel
         v-bind:genesCat="genesCat"
@@ -44,16 +32,6 @@
         clipped-right
       />
       <v-divider class="my-3"></v-divider>
-
-      <v-btn
-        class="ma-2 font-weight-bold"
-        tile
-        x-large
-        color="red accent-3"
-        dark
-        @click="feedbackDialog = true"
-        >Feedback</v-btn
-      >
     </v-container>
   </v-responsive>
 </template>
@@ -64,10 +42,8 @@ import axios from "axios";
 import { dirname } from "path";
 
 import userPanel from "~/components/userPanel";
-import navPanel from "~/components/navPanel";
 import queryPanel from "~/components/queryPanel";
 
-let serverBaseURL = process.env.baseUrl + process.env.port + `/bwhc/mtb`;
 let seen = true;
 
 export default {
@@ -120,7 +96,6 @@ export default {
 
   components: {
     userPanel,
-    navPanel,
     queryPanel,
   },
 
@@ -134,105 +109,84 @@ export default {
         queryType: false,
       };
     },
-    /*
-    items() {
-      return this.genes.map(gene => {
-        const name =
-          gene.name.length > this.nameLimit
-            ? gene.name.slice(0, this.nameLimit) + "..."
-            : gene.name;
-
-        return Object.assign({}, gene, { name });
-      });
-    }
-    */
   },
 
-  /* eski versiyon
+  async asyncData({ params, redirect, error }) {
+    axios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${localStorage.token}`;
 
-  async asyncData({ params, error }) {
-     
-    let catalogs = await axios.get(process.env.baseUrl+`:80/bwhc/mtb/query/catalogs`);
-    console.log(JSON.stringify(catalogs));
-
-    let diagnosisCat = Array();
-
-    for (var i = 0; i < catalogs.data.icd10.length; i++) {
-      diagnosisCat.push(
-        catalogs.data.icd10[i].code + " - " + catalogs.data.icd10[i].display
+    try {
+      let diagnosisCatRaw = await axios.get(
+        process.env.baseUrl +
+          process.env.port +
+          process.env.coding +
+          "/ICD-10-GM"
       );
-    }
+      console.log(JSON.stringify(diagnosisCatRaw));
 
-    return {
-      diagnosisCat,
-      genesCat: catalogs.data.genes,
-      drugsCat: catalogs.data.drugs,
-      responsesCat: catalogs.data.responses
-    };
-  },
-
-  */
-
-  async asyncData({ params, error }) {
-    let diagnosisCatRaw = await axios.get(
-      process.env.baseUrl + process.env.port + process.env.coding + "/ICD-10-GM"
-    );
-    console.log(JSON.stringify(diagnosisCatRaw));
-
-    let genesCatRaw = await axios.get(
-      process.env.baseUrl + process.env.port + process.env.coding + "/HGNC"
-    );
-
-    let drugsCatRaw = await axios.get(
-      process.env.baseUrl + process.env.port + process.env.coding + "/ATC"
-    );
-
-    let responsesCatRaw = await axios.get(
-      process.env.baseUrl + process.env.port + process.env.valueSet + "/RECIST"
-    );
-
-    let diagnosisCat = Array();
-    let genesCat = Array();
-    let drugsCat = Array();
-    let responsesCat = Array();
-
-    for (var i = 0; i < diagnosisCatRaw.data.entries.length; i++) {
-      diagnosisCat.push(
-        diagnosisCatRaw.data.entries[i].code +
-          " - " +
-          diagnosisCatRaw.data.entries[i].display
+      let genesCatRaw = await axios.get(
+        process.env.baseUrl + process.env.port + process.env.coding + "/HGNC"
       );
-    }
 
-    for (var i = 0; i < genesCatRaw.data.entries.length; i++) {
-      genesCat.push(
-        genesCatRaw.data.entries[i].symbol +
-          " - " +
-          genesCatRaw.data.entries[i].name
+      let drugsCatRaw = await axios.get(
+        process.env.baseUrl + process.env.port + process.env.coding + "/ATC"
       );
-    }
 
-    for (var i = 0; i < drugsCatRaw.data.entries.length; i++) {
-      drugsCat.push(
-        drugsCatRaw.data.entries[i].code +
-          " - " +
-          drugsCatRaw.data.entries[i].name
+      let responsesCatRaw = await axios.get(
+        process.env.baseUrl +
+          process.env.port +
+          process.env.valueSet +
+          "/RECIST"
       );
-    }
-    for (var i = 0; i < responsesCatRaw.data.concepts.length; i++) {
-      responsesCat.push(
-        responsesCatRaw.data.concepts[i].code +
-          " - " +
-          responsesCatRaw.data.concepts[i].display
-      );
-    }
 
-    return {
-      diagnosisCat,
-      genesCat,
-      drugsCat,
-      responsesCat,
-    };
+      let diagnosisCat = Array();
+      let genesCat = Array();
+      let drugsCat = Array();
+      let responsesCat = Array();
+
+      for (var i = 0; i < diagnosisCatRaw.data.entries.length; i++) {
+        diagnosisCat.push(
+          diagnosisCatRaw.data.entries[i].code +
+            " - " +
+            diagnosisCatRaw.data.entries[i].display
+        );
+      }
+
+      for (var i = 0; i < genesCatRaw.data.entries.length; i++) {
+        genesCat.push(
+          genesCatRaw.data.entries[i].symbol +
+            " - " +
+            genesCatRaw.data.entries[i].name
+        );
+      }
+
+      for (var i = 0; i < drugsCatRaw.data.entries.length; i++) {
+        drugsCat.push(
+          drugsCatRaw.data.entries[i].code +
+            " - " +
+            drugsCatRaw.data.entries[i].name
+        );
+      }
+      for (var i = 0; i < responsesCatRaw.data.concepts.length; i++) {
+        responsesCat.push(
+          responsesCatRaw.data.concepts[i].code +
+            " - " +
+            responsesCatRaw.data.concepts[i].display
+        );
+      }
+
+      return {
+        diagnosisCat,
+        genesCat,
+        drugsCat,
+        responsesCat,
+      };
+    } catch (err) {
+      if (err.status === 401) {
+        return redirect("/");
+      }
+    }
   },
 
   methods: {
@@ -253,8 +207,6 @@ export default {
           //responses: this.responses
         },
       };
-
-      alert("here is the " + request);
 
       let Response = await axios.post(
         process.env.baseUrl + process.env.port + process.env.query,
@@ -293,14 +245,10 @@ export default {
         parameters: {
           diagnosis: diagnosis,
           mutatedGenes,
-          //mutation:[{genes:this.genes,variant:{type:"SNV"}}],
           medicationsWithUsage: [{ usage: "recommended", drug: "something" }],
-          //drugs:[{usage:"recommended",drug:"something"}],
           responses: this.responses,
         },
       };
-
-      //alert("QUERY VIEW " +JSON.stringify(request));
 
       let Response = await axios.post(
         process.env.baseUrl + process.env.port + process.env.query,
@@ -311,19 +259,11 @@ export default {
     },
 
     addDrug() {
-      //var drugToAdd = { drug: this.drugs, usage: this.selectedDrugUsage };
       var obj = {
         drug: this.drugs[this.drugs.length - 1],
         usage: this.selectedDrugUsage,
       };
       this.drugQuery.push(obj);
-
-      //alert(JSON.stringify(this.drugQuery));
-    },
-
-    testJson() {
-      //alert("axios");
-      //TODO:
     },
 
     resetForm() {
@@ -334,22 +274,6 @@ export default {
         this.$refs[f].reset();
       });
     },
-
-    /*
-    submit(event) {
-      const request = {
-        diagnosis: this.diagnosis,
-        //genes: this.genes,
-        //drugs: this.drugs,
-        //responses: this.responses,
-        local: this.localQuery
-      };
-      this.$router.push(`results/${this.diagnosis}`);
-    },
-    clear() {
-      this.$refs.form.reset();
-    }
-    */
   },
 
   watch: {

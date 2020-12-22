@@ -4,7 +4,7 @@ const pkg = require('./package')
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 module.exports = {
-  mode: 'spa',
+  ssr: false,
 
   /*
   ** Headers of the page
@@ -30,7 +30,7 @@ module.exports = {
   env: {
 
     baseUrl: process.env.BASE_URL || 'http://localhost',
-    port: process.env.port || ':90',
+    port: process.env.port || ':9000',
 
     query: process.env.query || '/bwhc/mtb/api/query',
     coding: process.env.coding || '/bwhc/catalogs/api/Coding',
@@ -38,7 +38,11 @@ module.exports = {
     patient: process.env.patient || '/bwhc/mtb/api/data/qc/Patient',
     dataQualityReport: process.env.dataQualityReport || '/bwhc/mtb/api/data/DataQualityReport',
     mtbFile: process.env.mtbFile || '/bwhc/mtb/api/data/MTBFile',
-    reporting: process.env.reporting || '/bwhc/mtb/api/reporting'
+    reporting: process.env.reporting || '/bwhc/mtb/api/reporting',
+
+    users: process.env.users || '/bwhc/user/api/users',
+    me: process.env.me || '/bwhc/user/api/whoami',
+    logout: process.env.logout || '/bwhc/user/api/logout'
 
   },
 
@@ -54,16 +58,18 @@ module.exports = {
       login: '/',
       logout: '/',
       callback: '/',
-      home: '/'
+      home: '/main'
     },
     strategies: {
       local: {
         token: {
-          required: false,
+          required: true,
           type: false
         },
         endpoints: {
-          login: { url: process.env.BASE_URL + process.env.port + '/bwhc/user/api/login', method: 'post' },
+          login: { url: process.env.BASE_URL + process.env.port + '/bwhc/user/api/login', method: 'post', propertyName: 'custom' },
+          //user: {url: process.env.BASE_URL + process.env.port + '/bwhc/user/api/whoami', method: 'get', propertyName: 'data'},
+          logout: { url: process.env.BASE_URL + process.env.port + '/bwhc/user/api/logout', method: 'delete' }
         }
       }
     }
@@ -92,7 +98,9 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
-    'nuxt-material-design-icons'
+    'nuxt-material-design-icons',
+    '@nuxtjs/toast'
+
   ],
   /*
   ** Build configuration
