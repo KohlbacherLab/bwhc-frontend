@@ -185,35 +185,45 @@ export default {
     } catch (err) {
       if (err.status === 401) {
         return redirect("/");
+      } else if (err.response.status === 403) {
+        return redirect("/403");
       }
     }
   },
 
   methods: {
     async submitQuery() {
-      let diagnosis = Array();
-      for (var i = 0; i < this.diagnosis.length; i++) {
-        diagnosis.push(this.diagnosis[i].slice(0, 5));
+      try {
+        let diagnosis = Array();
+        for (var i = 0; i < this.diagnosis.length; i++) {
+          diagnosis.push(this.diagnosis[i].slice(0, 5));
+        }
+
+        let request = {
+          //mode: this.localQuery,
+          mode: "Local",
+          parameters: {
+            diagnosis: diagnosis,
+            //mutation:[{genes:this.genes,variant:{type:"SNV"}}],
+            //medicationsWithUsage: [{usage:"recommended",drug:"something"}],
+            //drugs:[{usage:"recommended",drug:"something"}],
+            //responses: this.responses
+          },
+        };
+
+        let Response = await axios.post(
+          process.env.baseUrl + process.env.port + process.env.query,
+          request
+        );
+
+        this.$router.push(`/results/${Response.data.id}`);
+      } catch (err) {
+        if (err.status === 401) {
+          return redirect("/");
+        } else if (err.response.status === 403) {
+          return redirect("/403");
+        }
       }
-
-      let request = {
-        //mode: this.localQuery,
-        mode: "Local",
-        parameters: {
-          diagnosis: diagnosis,
-          //mutation:[{genes:this.genes,variant:{type:"SNV"}}],
-          //medicationsWithUsage: [{usage:"recommended",drug:"something"}],
-          //drugs:[{usage:"recommended",drug:"something"}],
-          //responses: this.responses
-        },
-      };
-
-      let Response = await axios.post(
-        process.env.baseUrl + process.env.port + process.env.query,
-        request
-      );
-
-      this.$router.push(`/results/${Response.data.id}`);
     },
 
     goBack() {

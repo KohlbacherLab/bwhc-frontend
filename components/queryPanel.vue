@@ -513,60 +513,60 @@ export default {
 
   methods: {
     async submitQuery() {
-
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${localStorage.token}`;
 
-      let mutatedGenes = Array();
-      if (this.genes) {
-        for (var i = 0; i < this.genes.length; i++) {
-          mutatedGenes.push(
-            this.genes[i].substr(0, this.genes[i].indexOf(" "))
-          );
+      try {
+        let mutatedGenes = Array();
+        if (this.genes) {
+          for (var i = 0; i < this.genes.length; i++) {
+            mutatedGenes.push(
+              this.genes[i].substr(0, this.genes[i].indexOf(" "))
+            );
+          }
         }
-      }
 
-      let diagnosis = Array();
-      if (this.diagnosis) {
-        for (var i = 0; i < this.diagnosis.length; i++) {
-          diagnosis.push(
-            this.diagnosis[i].substr(0, this.diagnosis[i].indexOf(" "))
-          );
+        let diagnosis = Array();
+        if (this.diagnosis) {
+          for (var i = 0; i < this.diagnosis.length; i++) {
+            diagnosis.push(
+              this.diagnosis[i].substr(0, this.diagnosis[i].indexOf(" "))
+            );
+          }
         }
-      }
 
-      let responses = Array();
-      if (this.responses) {
-        for (var i = 0; i < this.responses.length; i++) {
-          responses.push(
-            this.responses[i].substr(0, this.responses[i].indexOf(" "))
-          );
+        let responses = Array();
+        if (this.responses) {
+          for (var i = 0; i < this.responses.length; i++) {
+            responses.push(
+              this.responses[i].substr(0, this.responses[i].indexOf(" "))
+            );
+          }
         }
-      }
 
-      let queryParameters = Array();
-      if (this.queryParameters) {
-        for (var i = 0; i < this.queryParameters.length; i++) {
-          queryParameters.push(this.queryParameters[i].slice(0, 5));
+        let queryParameters = Array();
+        if (this.queryParameters) {
+          for (var i = 0; i < this.queryParameters.length; i++) {
+            queryParameters.push(this.queryParameters[i].slice(0, 5));
+          }
         }
-      }
 
-      if (this.queryId == undefined) {
-        let request = {
-          mode: this.select.mode,
-          parameters: {
-            diagnoses: diagnosis,
-            mutatedGenes: mutatedGenes,
-            medicationsWithUsage: this.selectedDrugs,
-            //responses: [],
-            //mutation:[{genes:this.genes,variant:{type:"SNV"}}],
-            //medicationsWithUsage: [{usage:"recommended",drug:"something"}],
-            //drugs:[{usage:"recommended",drug:"something"}],
-            responses: responses,
-          },
+        if (this.queryId == undefined) {
+          let request = {
+            mode: this.select.mode,
+            parameters: {
+              diagnoses: diagnosis,
+              mutatedGenes: mutatedGenes,
+              medicationsWithUsage: this.selectedDrugs,
+              //responses: [],
+              //mutation:[{genes:this.genes,variant:{type:"SNV"}}],
+              //medicationsWithUsage: [{usage:"recommended",drug:"something"}],
+              //drugs:[{usage:"recommended",drug:"something"}],
+              responses: responses,
+            },
 
-          /*
+            /*
           user: "Myself",
           parameters: {
             diagnosis: diagnosis,
@@ -577,49 +577,54 @@ export default {
             federated: this.localQuery
           }
           */
-        };
+          };
 
-        //alert(JSON.stringify(request));
+          //alert(JSON.stringify(request));
 
-        let Response = await axios.post(
-          process.env.baseUrl + process.env.port + `/bwhc/mtb/api/query/`,
-          request
-        );
+          let Response = await axios.post(
+            process.env.baseUrl + process.env.port + `/bwhc/mtb/api/query/`,
+            request
+          );
 
-        //alert("QUERY PANEL " + JSON.stringify(request));
-        //alert("QUERY RESPONSE " + JSON.stringify(Response));
+          //alert("QUERY PANEL " + JSON.stringify(request));
+          //alert("QUERY RESPONSE " + JSON.stringify(Response));
 
-        this.$router.push(`/results/${Response.data.id}`);
+          this.$router.push(`/results/${Response.data.id}`);
+        } else {
+          let request = {
+            mode: this.select.mode,
+            id: this.queryId,
+            parameters: {
+              diagnoses: diagnosis,
+              mutatedGenes: mutatedGenes,
+              medicationsWithUsage: this.selectedDrugs,
+              //responses: [],
+              //mutation:[{genes:this.genes,variant:{type:"SNV"}}],
+              //medicationsWithUsage: [{usage:"recommended",drug:"something"}],
+              //drugs:[{usage:"recommended",drug:"something"}],
+              responses: responses,
+            },
+          };
 
-      } else {
-        
-        let request = {
-          mode: this.select.mode,
-          id: this.queryId,
-          parameters: {
-            diagnoses: diagnosis,
-            mutatedGenes: mutatedGenes,
-            medicationsWithUsage: this.selectedDrugs,
-            //responses: [],
-            //mutation:[{genes:this.genes,variant:{type:"SNV"}}],
-            //medicationsWithUsage: [{usage:"recommended",drug:"something"}],
-            //drugs:[{usage:"recommended",drug:"something"}],
-            responses: responses,
-          },
-        };
+          //alert(JSON.stringify(request));
 
-        //alert(JSON.stringify(request));
-
-        let Response = await axios.post(
-          process.env.baseUrl +
-            process.env.port +
-            `/bwhc/mtb/api/query/` +
-            this.queryId,
-          request
-        );
-        //alert(JSON.stringify(Response));
-        this.$router.push(`/results/${Response.data.id}`);
-        window.location.reload(true);
+          let Response = await axios.post(
+            process.env.baseUrl +
+              process.env.port +
+              `/bwhc/mtb/api/query/` +
+              this.queryId,
+            request
+          );
+          //alert(JSON.stringify(Response));
+          this.$router.push(`/results/${Response.data.id}`);
+          window.location.reload(true);
+        }
+      } catch (err) {
+        if (err.status === 401) {
+          this.$router.push("/");
+        } else if (err.response.status === 403) {
+          this.$router.push("/403");
+        }
       }
     },
 

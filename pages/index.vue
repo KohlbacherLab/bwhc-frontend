@@ -29,6 +29,7 @@
                 </v-flex>
                 <v-flex xs12>
                   <v-text-field
+                    @keydown.enter="submit"
                     v-model="password"
                     label="Password*"
                     type="password"
@@ -62,6 +63,7 @@
       light
       @click="loginDialog = true"
       >Login</v-btn
+    >
 
     <v-divider class="my-3"></v-divider>
     <v-layout row wrap>
@@ -162,6 +164,8 @@ import { mapActions } from "vuex";
 export default {
   data: () => ({
     loginDialog: false,
+    username: "",
+    password: "",
   }),
 
   components: {
@@ -173,9 +177,36 @@ export default {
       login: "auth/login",
       logout: "auth/logout",
       hasToken: "auth/hasToken",
+      admin: "auth/admin",
+      documentarist: "auth/documentarist",
+      global: "auth/global",
+      local: "auth/local",
+      mtb: "auth/mtb",
+      researcher: "auth/researcher",
     }),
 
-    submit() {
+    async submit2() {
+      try {
+        let response = await this.$auth.loginWith("local", {
+          data: {
+            username: this.username,
+            password: this.password,
+          },
+        });
+
+        this.$axios.setToken(response.data.access_token);
+
+        alert(response.data.access_token);
+
+        alert(JSON.stringify(response));
+
+        this.$router.push("/main/");
+      } catch (e) {
+        this.error = e.response.data.message;
+      }
+    },
+
+    async submit() {
       if (this.username !== "" && this.password !== "") {
         let request = {
           username: this.username,
@@ -204,9 +235,9 @@ export default {
                 duration: 3000,
               }
             );
-      if (!store.state.authUser) {
-        return redirect('/main')
-      }
+            if (!store.state.authUser) {
+              return redirect("/main");
+            }
             this.$router.push(`/`);
           });
       }

@@ -6,7 +6,7 @@ const util = {
         // Do something
     },
     myFunction3 () {
-        alert("zort");
+        // Do something
     }
 }
 

@@ -38,41 +38,13 @@ module.exports = {
     patient: process.env.patient || '/bwhc/mtb/api/data/qc/Patient',
     dataQualityReport: process.env.dataQualityReport || '/bwhc/mtb/api/data/DataQualityReport',
     mtbFile: process.env.mtbFile || '/bwhc/mtb/api/data/MTBFile',
+    mtbFileView: process.env.mtbFileView ||  '/bwhc/mtb/api/data/MTBFileView',
     reporting: process.env.reporting || '/bwhc/mtb/api/reporting',
 
     users: process.env.users || '/bwhc/user/api/users',
     me: process.env.me || '/bwhc/user/api/whoami',
     logout: process.env.logout || '/bwhc/user/api/logout'
 
-  },
-
-
-  axios: {
-    //baseUrl: process.env.BASE_URL || 'TBA',
-    //browserBaseURL: process.env.BASE_URL || 'TBA'
-  },
-
-
-  auth: {
-    redirect: {
-      login: '/',
-      logout: '/',
-      callback: '/',
-      home: '/main'
-    },
-    strategies: {
-      local: {
-        token: {
-          required: true,
-          type: false
-        },
-        endpoints: {
-          login: { url: process.env.BASE_URL + process.env.port + '/bwhc/user/api/login', method: 'post', propertyName: 'custom' },
-          //user: {url: process.env.BASE_URL + process.env.port + '/bwhc/user/api/whoami', method: 'get', propertyName: 'data'},
-          logout: { url: process.env.BASE_URL + process.env.port + '/bwhc/user/api/logout', method: 'delete' }
-        }
-      }
-    }
   },
 
   /*
@@ -99,8 +71,9 @@ module.exports = {
   */
   modules: [
     'nuxt-material-design-icons',
-    '@nuxtjs/toast'
-
+    '@nuxtjs/toast',
+    '@nuxtjs/axios',
+    '@nuxtjs/auth-next'
   ],
   /*
   ** Build configuration
@@ -113,16 +86,6 @@ module.exports = {
         import: ["~assets/style/variables.styl"]
       }
     },
-
-    axios: {
-      baseURL: 'http://localhost:6060',
-      proxyHeaders: false,
-      credentials: false
-    },
-
-    /*
-    ** You can extend webpack config here
-    */
 
     extend(config, ctx) {
 

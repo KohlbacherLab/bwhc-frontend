@@ -24,8 +24,22 @@
         slot="activator"
         color="light-blue darken-3"
         dark
-        @click="$router.push('/quality')"
-        >Quality Check</v-btn
+        @click="$router.push('/quality_local')"
+        >Local Quality Check</v-btn
+      >
+      <span>click here to check local quality control stats</span>
+    </v-tooltip>
+
+    <v-tooltip bottom>
+      <v-btn
+        class="ma-2 font-weight-bold"
+        tile
+        small
+        slot="activator"
+        color="light-blue darken-3"
+        dark
+        @click="$router.push('/quality_global')"
+        >bwHC wide Quality Check</v-btn
       >
       <span>click here to check bwHC quality control stats</span>
     </v-tooltip>

@@ -63,8 +63,6 @@
 import axios from "axios";
 import { mapGetters } from "vuex";
 
-import Navbar from "~/components/Navbar";
-
 export default {
   data() {
     return {
@@ -116,7 +114,6 @@ export default {
   },
 
   components: {
-    Navbar,
   },
 
   computed: {

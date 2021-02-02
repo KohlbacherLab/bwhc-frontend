@@ -84,6 +84,7 @@
           color="purple lighten-2"
           dark
           max-width="400"
+          v-ripple="{ center: true }"
         >
           <v-card-text class="headline font-weight-thin">
             <p><v-icon color="purple" dark>fas fa-street-view</v-icon></p>
@@ -100,6 +101,7 @@
           color="indigo lighten-2"
           dark
           max-width="400"
+          v-ripple="{ center: true }"
         >
           <v-card-text class="headline font-weight-thin">
             <p><v-icon color="indigo" dark>fas fa-file-medical</v-icon></p>
@@ -116,11 +118,12 @@
           color="blue lighten-2"
           dark
           max-width="400"
+          v-ripple="{ center: true }"
         >
           <v-card-text class="headline font-weight-thin">
             <p><v-icon color="blue">fas fa-comment-medical</v-icon></p>
             <strong>{{ itemsRecommendations.length }}</strong>
-            <br />Therapy Recommendations
+            <br />Recommendations
           </v-card-text>
         </v-card>
       </v-flex>
@@ -132,6 +135,7 @@
           color="cyan lighten-2"
           dark
           max-width="400"
+          v-ripple="{ center: true }"
         >
           <v-card-text class="headline font-weight-thin">
             <p><v-icon color="cyan">fas fa-stethoscope</v-icon></p>
@@ -144,7 +148,7 @@
 
     <v-divider class="my-3"></v-divider>
 
-    <v-tabs color="transparent" fixed-tabs icons-and-text>
+    <v-tabs color="blue-grey lighten-5" fixed-tabs icons-and-text>
       <v-tab class="subheading font-weight-regular" :key="cases"
         >Patients</v-tab
       >
@@ -152,7 +156,7 @@
         >Molecular Therapies</v-tab
       >
       <v-tab class="subheading font-weight-regular" :key="recommendations"
-        >Therapy Recommendations</v-tab
+        >Recommendations</v-tab
       >
       <v-tab class="subheading font-weight-regular" :key="genomics"
         >NGS Summaries</v-tab
@@ -213,6 +217,7 @@
             :items="itemsTherapies"
           >
             <template slot="items" slot-scope="props">
+              <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
               <td>{{ props.item.status }}</td>
               <td>{{ props.item.recordedOn }}</td>
               <td>{{ props.item.basedOn }}</td>
@@ -227,6 +232,7 @@
                   </div>
                 </td>
                 -->
+              </tr>
             </template>
             <v-alert :value="true" color="error" icon="warning"
               >Your search for "{{ search }}" found no results.</v-alert
@@ -243,6 +249,7 @@
             :items="itemsRecommendations"
           >
             <template slot="items" slot-scope="props">
+              <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
               <td>{{ props.item.diagnosis }}</td>
               <td>{{ props.item.issuedOn }}</td>
               <!--
@@ -251,6 +258,7 @@
               <td>{{ props.item.medication }}</td>
               <td>{{ props.item.priority }}</td>
               <td>{{ props.item.levelOfEvidence }}</td>
+              </tr>
             </template>
             <v-alert :value="true" color="error" icon="warning"
               >Your search for "{{ search }}" found no results.</v-alert
@@ -267,6 +275,7 @@
             :items="itemsGenomicReports"
           >
             <template slot="items" slot-scope="props">
+               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
               <!--
                   <td>
                   {{ props.item.diagnosis.code }} -
@@ -284,6 +293,7 @@
               <td>{{ props.item.specimenType }}</td>
               <td>{{ props.item.sequencingType }}</td>
               <td>{{ props.item.tumorCellContent }}</td>
+               </tr>
             </template>
             <v-alert :value="true" color="error" icon="warning"
               >Your search for "{{ search }}" found no results.</v-alert

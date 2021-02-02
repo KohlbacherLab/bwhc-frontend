@@ -24,7 +24,7 @@
         <v-card
           class="mx-auto"
           flat
-          color="orange darken-1"
+          color="orange darken-3"
           dark
           max-width="400"
           v-ripple="{ center: true }"
@@ -56,12 +56,8 @@
           {{ props.item.birthDate }}
         </td>
         <td @click="routeToPatient(props.item.id)">
-          {{ props.item.managingZPM }}
+          {{ props.item.numberOfIssues }}
         </td>
-        <td @click="routeToPatient(props.item.id)">
-          {{ props.item.insurance }}
-        </td>
-
         <td class="text-xs-right">
           <v-icon small @click="functionalityNotAvailable">fas fa-trash</v-icon>
         </td>
@@ -130,16 +126,10 @@ export default {
         value: "birthDate",
       },
       {
-        text: "Managing ZPM",
+        text: "Number of Issues",
         align: "left",
         sortable: true,
-        value: "managingZPM",
-      },
-      {
-        text: "Insurance",
-        align: "left",
-        sortable: true,
-        value: "insurance",
+        value: "numberOfIssues",
       },
       {
         text: "Actions",
@@ -234,8 +224,6 @@ export default {
       let patients = await axios.get(
         process.env.baseUrl + process.env.port + process.env.patient
       );
-      // alert(JSON.stringify(patients.data.entries));
-
       return {
         itemsPatients: patients.data.entries,
         countPatients: patients.data.total,
@@ -243,7 +231,9 @@ export default {
     } catch (err) {
       if (err.response.status === 401) {
         return redirect("/");
-      }
+      } else if (err.response.status === 403) {
+        return redirect("/403");
+      } 
     }
   },
 };

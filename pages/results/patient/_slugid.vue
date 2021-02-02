@@ -1223,7 +1223,7 @@ export default {
     };
     rawLastGuidelineTherapy.push(item);
 
-    // ECOG STATUS
+    // ECOG STATU
     let rawEcogStatus = Array();
     if (mtbFile.data.ecogStatus) {
       for (var i = 0; i < mtbFile.data.ecogStatus.length; i++) {
