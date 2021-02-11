@@ -20,6 +20,7 @@
     </v-flex>
 
     <v-divider class="my-3"></v-divider>
+    <div id="patientCard"></div>
     <v-layout>
       <v-card
         flat
@@ -126,7 +127,7 @@
     <v-btn
       small
       icon
-      @click="$vuetify.goTo('#issues', options)"
+      @click="$vuetify.goTo('#patientCard', options)"
       flat
       color="grey"
     >
@@ -158,7 +159,7 @@
     <v-btn
       small
       icon
-      @click="$vuetify.goTo('#issues', options)"
+      @click="$vuetify.goTo('#patientCard', options)"
       flat
       color="grey"
     >
@@ -194,7 +195,7 @@
     <v-btn
       small
       icon
-      @click="$vuetify.goTo('#issues', options)"
+      @click="$vuetify.goTo('#patientCard', options)"
       flat
       color="grey"
     >
@@ -222,7 +223,7 @@
     <v-btn
       small
       icon
-      @click="$vuetify.goTo('#issues', options)"
+      @click="$vuetify.goTo('#patientCard', options)"
       flat
       color="grey"
     >
@@ -254,7 +255,7 @@
     <v-btn
       small
       icon
-      @click="$vuetify.goTo('#issues', options)"
+      @click="$vuetify.goTo('#patientCard', options)"
       flat
       color="grey"
     >
@@ -287,7 +288,7 @@
     <v-btn
       small
       icon
-      @click="$vuetify.goTo('#issues', options)"
+      @click="$vuetify.goTo('#patientCard', options)"
       flat
       color="grey"
     >
@@ -321,7 +322,7 @@
     <v-btn
       small
       icon
-      @click="$vuetify.goTo('#issues', options)"
+      @click="$vuetify.goTo('#patientCard', options)"
       flat
       color="grey"
     >
@@ -336,26 +337,281 @@
     <v-data-table
       :headers="headerNgsReports"
       :items="ngsReports"
+      :expand="expand"
       hide-default-header
       hide-default-footer
     >
       <template slot="items" slot-scope="props">
-        <tr>
+        <tr @click="props.expanded = !props.expanded">
           <td>{{ props.item.id }}</td>
           <td>{{ props.item.specimen }}</td>
           <td>{{ props.item.issueDate }}</td>
           <td>{{ props.item.sequencingType }}</td>
-          <td>{{ props.item.metadata }}</td>
           <td>{{ props.item.tumorCellContent }}</td>
           <td>{{ props.item.brcaness }}</td>
           <td>{{ props.item.microSatelliteInstabilities }}</td>
           <td>{{ props.item.tumorMutationalBurden }}</td>
-          <td>{{ props.item.simpleVariants }}</td>
-          <td>{{ props.item.copyNumberVariants }}</td>
-          <td>{{ props.item.dnaFusions }}</td>
-          <td>{{ props.item.rnaFusions }}</td>
-          <td>{{ props.item.rnaSeqs }}</td>
+          <td class="text-xs-right">
+            <v-icon color="blue" small>fas fa-info-circle</v-icon>
+          </td>
         </tr>
+      </template>
+      <template v-slot:expand="props">
+        <v-card color="grey lighten-3" flat light left>
+          <v-card-title>Metadata </v-card-title>
+        </v-card>
+
+        <v-card flat>
+          <v-data-table
+            :headers="headerMetadata"
+            :items="props.item.metadata"
+            hide-default-header
+            hide-default-footer
+            hide-actions
+          >
+            <template slot="items" slot-scope="props">
+              <tr>
+                <td>
+                  {{ props.item.kitType }}
+                </td>
+                <td>
+                  {{ props.item.kitManufacturer }}
+                </td>
+                <td>
+                  {{ props.item.sequencer }}
+                </td>
+                <td>
+                  {{ props.item.referenceGenome }}
+                </td>
+                <td>
+                  {{ props.item.pipeline }}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card>
+        <v-card color="grey lighten-3" flat light left>
+          <v-card-title>Simple Variants </v-card-title>
+        </v-card>
+
+        <v-card flat>
+          <v-data-table
+            :headers="headerSimpleVariants"
+            :items="props.item.simpleVariants"
+            hide-default-header
+            hide-default-footer
+            hide-actions
+          >
+            <template slot="items" slot-scope="props">
+              <tr>
+                <td>
+                  {{ props.item.chromosome }}
+                </td>
+                <td>
+                  {{ props.item.gene }}
+                </td>
+                <td>
+                  {{ props.item.startEnd }}
+                </td>
+                <td>
+                  {{ props.item.refAllele }}
+                </td>
+                <td>
+                  {{ props.item.altAllele }}
+                </td>
+                <td>
+                  {{ props.item.functionalAnnotation }}
+                </td>
+                <td>
+                  {{ props.item.dnaChange }}
+                </td>
+                <td>
+                  {{ props.item.aminoAcidChange }}
+                </td>
+                <td>
+                  {{ props.item.readDepth }}
+                </td>
+                <td>
+                  {{ props.item.allelicFrequency }}
+                </td>
+                <td>
+                  {{ props.item.cosmicId }}
+                </td>
+                <td>
+                  {{ props.item.dbSNPId }}
+                </td>
+                <td>
+                  {{ props.item.interpretation }}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card>
+
+        <v-card color="grey lighten-3" flat light left>
+          <v-card-title>Copy Number Variants </v-card-title>
+        </v-card>
+        <v-card flat>
+          <v-data-table
+            :headers="headerCNVs"
+            :items="props.item.copyNumberVariants"
+            hide-default-header
+            hide-default-footer
+            hide-actions
+          >
+            <template slot="items" slot-scope="props">
+              <tr>
+                <td>
+                  {{ props.item.chromosome }}
+                </td>
+                <td>
+                  {{ props.item.startRange }}
+                </td>
+                <td>
+                  {{ props.item.endRange }}
+                </td>
+                <td>
+                  {{ props.item.totalCopyNumber }}
+                </td>
+                <td>
+                  {{ props.item.relativeCopyNumber }}
+                </td>
+                <td>
+                  {{ props.item.cnA }}
+                </td>
+                <td>
+                  {{ props.item.cnB }}
+                </td>
+                <td>
+                  {{ props.item.reportedAffectedGenes }}
+                </td>
+                <td>
+                  {{ props.item.reportedFocality }}
+                </td>
+                <td>
+                  {{ props.item.type }}
+                </td>
+                <td>
+                  {{ props.item.copyNumberNeutralLoH }}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card>
+
+        <v-card color="grey lighten-3" flat light left>
+          <v-card-title>DNA Fusions </v-card-title>
+        </v-card>
+        <v-card flat>
+          <v-data-table
+            :headers="headerDNAFusions"
+            :items="props.item.dnaFusions"
+            hide-default-header
+            hide-default-footer
+            hide-actions
+          >
+            <template slot="items" slot-scope="props">
+              <tr>
+                <td>
+                  {{ props.item.representation }}
+                </td>
+                <td>
+                  {{ props.item.reportedNumReads }}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card>
+
+        <v-card color="grey lighten-3" flat light left>
+          <v-card-title>RNA Fusions </v-card-title>
+        </v-card>
+        <v-card flat>
+          <v-data-table
+            :headers="headerRNAFusions"
+            :items="props.item.rnaFusions"
+            hide-default-header
+            hide-default-footer
+            hide-actions
+          >
+            <template slot="items" slot-scope="props">
+              <tr>
+                <td>
+                  {{ props.item.representation }}
+                </td>
+                <td>
+                  {{ props.item.position5pr }}
+                </td>
+                <td>
+                  {{ props.item.strand5pr }}
+                </td>
+                <td>
+                  {{ props.item.position3pr }}
+                </td>
+                <td>
+                  {{ props.item.strand3pr }}
+                </td>
+                <td>
+                  {{ props.item.effect }}
+                </td>
+                <td>
+                  {{ props.item.cosmicId }}
+                </td>
+                <td>
+                  {{ props.item.reportedNumReads }}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card>
+
+        <v-card color="grey lighten-3" flat light left>
+          <v-card-title>RNA Seqs </v-card-title>
+        </v-card>
+        <v-card flat>
+          <v-data-table
+            :headers="headerRNASeqs"
+            :items="props.item.rnaSeqs"
+            hide-default-header
+            hide-default-footer
+            hide-actions
+          >
+            <template slot="items" slot-scope="props">
+              <tr>
+                <td>
+                  {{ props.item.entrezId }}
+                </td>
+                <td>
+                  {{ props.item.ensemblId }}
+                </td>
+                <td>
+                  {{ props.item.gene }}
+                </td>
+                <td>
+                  {{ props.item.transcriptId }}
+                </td>
+                <td>
+                  {{ props.item.fragmentsPerKilobaseMillion }}
+                </td>
+                <td>
+                  {{ props.item.fromNGS }}
+                </td>
+                <td>
+                  {{ props.item.tissueCorrectedExpression }}
+                </td>
+                <td>
+                  {{ props.item.rawCounts }}
+                </td>
+                <td>
+                  {{ props.item.librarySize }}
+                </td>
+                <td>
+                  {{ props.item.cohortRanking }}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card>
       </template>
     </v-data-table>
     <v-btn
@@ -377,76 +633,80 @@
     <v-data-table
       :headers="headerCarePlans"
       :items="carePlans"
+      :expand="expand"
       hide-default-header
       hide-default-footer
     >
       <template slot="items" slot-scope="props">
-        <tr>
+        <tr @click="props.expanded = !props.expanded">
           <td>{{ props.item.id }}</td>
           <td>{{ props.item.icd10 }}</td>
           <td>{{ props.item.issuedOn }}</td>
-          <td>{{ props.item.protocol }}</td>
-          <td>{{ props.item.geneticCounsellingRecommendation }}</td>
-          <td>{{ props.item.inclusionInStudyRecommendation }}</td>
           <td>{{ props.item.targetAvailable }}</td>
-          <td class="text-xs-center">
-            <v-icon color="blue" small @click="extendCarePlans = true"
-              >fas fa-info-circle</v-icon
-            >
+          <td class="text-xs-right">
+            <v-icon color="blue" small>fas fa-info-circle</v-icon>
           </td>
           <!--
           <td>{{ props.item.therapyRecommendations }}</td> -->
         </tr>
       </template>
+      <template v-slot:expand="props">
+        <v-card color="grey lighten-3" flat light left>
+          <v-card-title
+            ><v-icon color="blue" class="mr-3">fas fa-info-circle</v-icon>
+            <p>
+              <strong> Protocol</strong> {{ props.item.protocol }} <br />
+              <strong>Genetic Counselling Recommendation</strong>
+              {{ props.item.geneticCounsellingRecommendation }} <br />
+              <strong>Inclusion In Study Recommendation</strong>
+              {{ props.item.inclusionInStudyRecommendation }}
+            </p>
+          </v-card-title>
+        </v-card>
+
+        <v-card flat>
+          <v-data-table
+            :headers="headerTherapyRecommendations"
+            :items="props.item.therapyRecommendations"
+            hide-default-header
+            hide-default-footer
+            hide-actions
+          >
+            <template slot="items" slot-scope="props">
+              <tr>
+                <td>
+                  {{ props.item.id }}
+                </td>
+                <td>
+                  {{ props.item.icd10 }}
+                </td>
+                <td>
+                  {{ props.item.medication }}
+                </td>
+                <td>
+                  {{ props.item.priority }}
+                </td>
+                <td>
+                  {{ props.item.levelOfEvidence }}
+                </td>
+                <td>
+                  {{ props.item.supportingVariants }}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card>
+      </template>
     </v-data-table>
     <v-btn
       small
       icon
-      @click="$vuetify.goTo('#issues', options)"
+      @click="$vuetify.goTo('#patientCard', options)"
       flat
       color="grey"
     >
       <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
     </v-btn>
-
-    <v-dialog v-model="extendCarePlans">
-      <v-card>
-        <v-card-title class="headline grey lighten-2" primary-title>
-          <strong>Therapy Recommendations</strong></v-card-title
-        >
-
-        <v-data-table
-         :headers="headerTherapyRecommendations"
-          :items="carePlans"
-          hide-default-header
-          hide-default-footer
-        >
-          <template slot="items" slot-scope="props" >
-            <tr v-for="(item,i) in props.item.therapyRecommendations.length"
-    :key="i">
-              <td>{{ props.item.therapyRecommendations[i].id }}</td>
-              <td>{{ props.item.therapyRecommendations[i].patient }}</td>
-              <td>{{ props.item.therapyRecommendations[i].icd10 }}</td>
-              <td>{{ props.item.therapyRecommendations[i].medication }}</td>
-              <td>{{ props.item.therapyRecommendations[i].priority }}</td>
-              <td>{{ props.item.therapyRecommendations[i].levelOfEvidence }}</td>
-              <td>{{ props.item.therapyRecommendations[i].supportingVariants }}</td>
-            </tr>
-          </template>
-        </v-data-table>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="black"
-            type="extendCarePlans"
-            :disabled="invalid"
-            flat
-            @click="extendCarePlans = false"
-            >Close</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
 
     <!-- CLAIM STATUS VIEW -->
     <div id="claimResponses"></div>
@@ -476,7 +736,7 @@
     <v-btn
       small
       icon
-      @click="$vuetify.goTo('#issues', options)"
+      @click="$vuetify.goTo('#patientCard', options)"
       flat
       color="grey"
     >
@@ -518,7 +778,7 @@
     <v-btn
       small
       icon
-      @click="$vuetify.goTo('#issues', options)"
+      @click="$vuetify.goTo('#patientCard', options)"
       flat
       color="grey"
     >
@@ -526,17 +786,6 @@
     </v-btn>
 
     <v-divider class="my-3"></v-divider>
-    <!--
-    <v-btn
-      class="ma-2 font-weight-bold"
-      tile
-      small
-      color="red accent-3"
-      dark
-      @click="logout()"
-      >Logout</v-btn
-    >
-    -->
   </v-container>
 </template>
 
@@ -547,7 +796,7 @@ import userPanel from "~/components/userPanel";
 
 export default {
   data: () => ({
-    extendCarePlans: false,
+    expand: true,
     headerIssues: [
       {
         text: "Severity",
@@ -844,12 +1093,6 @@ export default {
         value: "sequencingType",
       },
       {
-        text: "Metadata",
-        align: "left",
-        sortable: true,
-        value: "metadata",
-      },
-      {
         text: "Tumor Cell Content",
         align: "left",
         sortable: true,
@@ -874,34 +1117,322 @@ export default {
         value: "tumorMutationalBurden",
       },
       {
-        text: "Simple Variants",
+        text: "Expand NGS Report Details",
+        align: "right",
+        sortable: false,
+        value: "",
+      },
+    ],
+
+    headerMetadata: [
+      {
+        text: "Kit Type",
         align: "left",
         sortable: true,
-        value: "simpleVariants",
+        value: "kitType",
       },
       {
-        text: "Copy Number Variants",
+        text: "Kit Manufacturer",
         align: "left",
         sortable: true,
-        value: "copyNumberVariants",
+        value: "kitManufacturer",
       },
       {
-        text: "DNA Fusions",
+        text: "Sequencer",
         align: "left",
         sortable: true,
-        value: "dnaFusions",
+        value: "sequencer",
       },
       {
-        text: "RNA Fusions",
+        text: "Ref. Genome",
         align: "left",
         sortable: true,
-        value: "rnaFusions",
+        value: "referenceGenome",
       },
       {
-        text: "RNA Seqs",
+        text: "Pipeline",
         align: "left",
         sortable: true,
-        value: "rnaSeqs",
+        value: "pipeline",
+      },
+    ],
+
+    headerSimpleVariants: [
+      {
+        text: "Chr",
+        align: "left",
+        sortable: true,
+        value: "chromosome",
+      },
+      {
+        text: "Gene",
+        align: "left",
+        sortable: true,
+        value: "gene",
+      },
+      {
+        text: "Start/End",
+        align: "left",
+        sortable: true,
+        value: "startEnd",
+      },
+      {
+        text: "Ref. Allele",
+        align: "left",
+        sortable: true,
+        value: "refAllele",
+      },
+      {
+        text: "Alt Allele",
+        align: "left",
+        sortable: true,
+        value: "altAllele",
+      },
+      {
+        text: "Functional Annotation",
+        align: "left",
+        sortable: true,
+        value: "functionalAnnotation",
+      },
+      {
+        text: "DNA Change",
+        align: "left",
+        sortable: true,
+        value: "dnaChange",
+      },
+      {
+        text: "Amino Acid Change",
+        align: "left",
+        sortable: true,
+        value: "aminoAcidChange",
+      },
+      {
+        text: "Read Depth",
+        align: "left",
+        sortable: true,
+        value: "readDepth",
+      },
+      {
+        text: "Allelic Freq.",
+        align: "left",
+        sortable: true,
+        value: "readDepth",
+      },
+      {
+        text: "COSMIC ID",
+        align: "left",
+        sortable: true,
+        value: "cosmicId",
+      },
+      {
+        text: "dbSNP ID",
+        align: "left",
+        sortable: true,
+        value: "dbSNPId",
+      },
+      {
+        text: "Interpretation",
+        align: "left",
+        sortable: true,
+        value: "interpretation",
+      },
+    ],
+
+    headerCNVs: [
+      {
+        text: "Chr",
+        align: "left",
+        sortable: true,
+        value: "chromosome",
+      },
+      {
+        text: "Start Range",
+        align: "left",
+        sortable: true,
+        value: "startRange",
+      },
+      {
+        text: "End",
+        align: "left",
+        sortable: true,
+        value: "endRange",
+      },
+      {
+        text: "Total Copy Number",
+        align: "left",
+        sortable: true,
+        value: "totalCopyNumber",
+      },
+      {
+        text: "Relative Copy Number",
+        align: "left",
+        sortable: true,
+        value: "relativeCopyNumber",
+      },
+      {
+        text: "CNA",
+        align: "left",
+        sortable: true,
+        value: "cnA",
+      },
+      {
+        text: "CNB",
+        align: "left",
+        sortable: true,
+        value: "cnB",
+      },
+      {
+        text: "Reported Affected Genes",
+        align: "left",
+        sortable: true,
+        value: "reportedAffectedGenes",
+      },
+      {
+        text: "Reported Focality",
+        align: "left",
+        sortable: true,
+        value: "reportedFocality",
+      },
+      {
+        text: "Type",
+        align: "left",
+        sortable: true,
+        value: "type",
+      },
+      {
+        text: "Copy Number Neutral LoH",
+        align: "left",
+        sortable: true,
+        value: "copyNumberNeutralLoH",
+      },
+    ],
+
+    headerDNAFusions: [
+      {
+        text: "Representation",
+        align: "left",
+        sortable: true,
+        value: "representation",
+      },
+      {
+        text: "Reported Number of Reads",
+        align: "left",
+        sortable: true,
+        value: "reportedNumReads",
+      },
+    ],
+
+    headerRNAFusions: [
+      {
+        text: "Representation",
+        align: "left",
+        sortable: true,
+        value: "representation",
+      },
+      {
+        text: "5' Pos.",
+        align: "left",
+        sortable: true,
+        value: "position5pr",
+      },
+      {
+        text: "5' Strand",
+        align: "left",
+        sortable: true,
+        value: "strand5pr",
+      },
+      {
+        text: "3' Pos.",
+        align: "left",
+        sortable: true,
+        value: "position3pr",
+      },
+      {
+        text: "3' Strand",
+        align: "left",
+        sortable: true,
+        value: "strand3pr",
+      },
+      {
+        text: "Effect",
+        align: "left",
+        sortable: true,
+        value: "effect",
+      },
+      {
+        text: "COSMIC ID",
+        align: "left",
+        sortable: true,
+        value: "cosmicId",
+      },
+      {
+        text: "Reported Number of Reads",
+        align: "left",
+        sortable: true,
+        value: "reportedNumReads",
+      },
+    ],
+
+    headerRNASeqs: [
+      {
+        text: "Entrez ID",
+        align: "left",
+        sortable: true,
+        value: "entrezId",
+      },
+      {
+        text: "Ensembl ID",
+        align: "left",
+        sortable: true,
+        value: "ensemblId",
+      },
+      {
+        text: "Gene",
+        align: "left",
+        sortable: true,
+        value: "gene",
+      },
+      {
+        text: "Transcript ID",
+        align: "left",
+        sortable: true,
+        value: "transcriptId",
+      },
+      {
+        text: "Fragments / kBaseMillion",
+        align: "left",
+        sortable: true,
+        value: "fragmentsPerKilobaseMillion",
+      },
+      {
+        text: "From NGS",
+        align: "left",
+        sortable: true,
+        value: "fromNGS",
+      },
+      {
+        text: "Tissue Corrected Expression",
+        align: "left",
+        sortable: true,
+        value: "tissueCorrectedExpression",
+      },
+      {
+        text: "Raw Counts",
+        align: "left",
+        sortable: true,
+        value: "rawCounts",
+      },
+      {
+        text: "Library Size",
+        align: "left",
+        sortable: true,
+        value: "librarySize",
+      },
+      {
+        text: "Cohort Ranking",
+        align: "left",
+        sortable: true,
+        value: "cohortRanking",
       },
     ],
 
@@ -925,34 +1456,16 @@ export default {
         value: "issuedOn",
       },
       {
-        text: "Protocol",
-        align: "left",
-        sortable: true,
-        value: "protocol",
-      },
-      {
-        text: "Genetic Counselling Recommendation",
-        align: "left",
-        sortable: true,
-        value: "geneticCounsellingRecommendation",
-      },
-      {
-        text: "Inclusion In Study Recommendation",
-        align: "left",
-        sortable: true,
-        value: "inclusionInStudyRecommendation",
-      },
-      {
         text: "Target Available",
         align: "left",
         sortable: true,
         value: "targetAvailable",
       },
       {
-        text: "Therapy Recommendations",
-        align: "left",
-        sortable: true,
-        value: "therapyRecommendations",
+        text: "Expand Care Plan Details",
+        align: "right",
+        sortable: false,
+        value: "",
       },
     ],
 
@@ -962,12 +1475,6 @@ export default {
         align: "left",
         sortable: true,
         value: "id",
-      },
-      {
-        text: "Patient",
-        align: "left",
-        sortable: true,
-        value: "patient",
       },
       {
         text: "ICD-10",
@@ -1169,13 +1676,6 @@ export default {
       );
 
       //console.log(JSON.stringify(dataQualityReport));
-
-      let mtbFile = await axios.get(
-        process.env.baseUrl +
-          process.env.port +
-          process.env.mtbFile +
-          `/${params.id}`
-      );
 
       let mtbFileView = await axios.get(
         process.env.baseUrl +

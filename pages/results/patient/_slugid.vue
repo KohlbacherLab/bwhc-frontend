@@ -12,7 +12,7 @@
 
     <v-divider class="my-3"></v-divider>
     <div id="patientCard"></div>
-    <v-flex xs12>
+    <v-layout>
       <v-card
         flat
         :color="genderCheck(patient.gender)"
@@ -33,7 +33,7 @@
                 >
                 <span>Date of Birth</span>
               </v-tooltip>
-              <span class="heading mr-2">{{ birthDate }}</span>
+              <span class="heading mr-2">{{ patient.birthDate }}</span>
               <span class="mr-2">·</span>
               <v-tooltip top>
                 <v-icon slot="activator" class="mr-1"
@@ -42,19 +42,23 @@
                 <span>Managing ZPM</span>
                 <span>Age</span>
               </v-tooltip>
-              <span class="subheading mr-2">{{ managingZPM }}</span>
+              <span class="subheading mr-2">{{ patient.managingZPM }}</span>
               <span class="mr-2">·</span>
               <v-tooltip top>
                 <v-icon slot="activator" class="mr-1">fas fa-shield-alt</v-icon>
                 <span>Insurance</span>
               </v-tooltip>
-              <span class="subheading mr-2">{{ insurance }}</span>
+              <span class="subheading mr-2">{{ patient.insurance }}</span>
             </v-list-tile>
           </v-layout>
         </v-card-actions>
-        <v-card-title>Patient ID: {{ patientId }} </v-card-title>
+        <v-card-title
+          >Consent: {{ patient.consentStatus }} <br />
+          First Referral Date: {{ patient.firstReferralDate }} <br />
+          Patient ID: {{ patient.id }}
+        </v-card-title>
       </v-card>
-    </v-flex>
+    </v-layout>
     <br />
     <v-flex>
       <v-btn flat fab dark medium color="red accent-3" @click="snackbar = true">
@@ -77,7 +81,7 @@
       </v-snackbar>
     </v-flex>
 
-    <!-- DIAGNOSES -->
+    <!-- DIAGNOSES VIEW -->
     <div id="diagnoses"></div>
 
     <v-divider class="my-3"></v-divider>
@@ -92,13 +96,13 @@
         <tr>
           <td>{{ props.item.id }}</td>
           <td>{{ props.item.recordedOn }}</td>
-          <td>{{ props.item.icd10.display }}</td>
+          <td>{{ props.item.icd10 }}</td>
           <td>{{ props.item.icdO3T }}</td>
           <td>
-            {{ props.item.whoGrade.code }} - {{ props.item.whoGrade.system }}
+            {{ props.item.whoGrade }}
           </td>
-          <td>{{ props.item.histologyReports }}</td>
           <td>{{ props.item.statusHistory }}</td>
+          <td>{{ props.item.guidelineTreatmentStatus }}</td>
         </tr>
       </template>
     </v-data-table>
@@ -112,7 +116,7 @@
       <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
     </v-btn>
 
-    <!-- FAMILY MEMBER DIAGNOSES -->
+    <!-- FAMILY MEMBER DIAGNOSES VIEW -->
     <div id="familyMemberDiagnoses"></div>
 
     <v-divider class="my-3"></v-divider>
@@ -129,8 +133,7 @@
         <tr>
           <td>{{ props.item.id }}</td>
           <td>
-            {{ props.item.relationship.code }} -
-            {{ props.item.relationship.system }}
+            {{ props.item.relationship }}
           </td>
         </tr>
       </template>
@@ -145,24 +148,29 @@
       <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
     </v-btn>
 
-    <!-- PREVIOUS GUIDELINE THERAPY -->
-    <div id="previousGuidelineTherapy"></div>
+    <!-- GUIDELINE THERAPY VIEW -->
+    <div id="guidelineTherapies"></div>
 
     <v-divider class="my-3"></v-divider>
     <v-card-title class="headline font-weight-light"
-      >Previous Guideline Therapies</v-card-title
+      >Guideline Therapies</v-card-title
     >
     <v-data-table
-      :headers="headerPreviousGuidelineTherapies"
-      :items="previousGuidelineTherapies"
+      :headers="headerGuidelineTherapies"
+      :items="guidelineTherapies"
       hide-default-header
       hide-default-footer
     >
       <template slot="items" slot-scope="props">
         <tr>
           <td>{{ props.item.id }}</td>
+          <td>{{ props.item.diagnosis }}</td>
           <td>{{ props.item.therapyLine }}</td>
+          <td>{{ props.item.period }}</td>
           <td>{{ props.item.medication }}</td>
+          <td>{{ props.item.reasonStopped }}</td>
+          <td>{{ props.item.response }}</td>
+          <td>{{ props.item.progressionDate }}</td>
         </tr>
       </template>
     </v-data-table>
@@ -176,39 +184,7 @@
       <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
     </v-btn>
 
-    <!-- LAST GUIDELINE THERAPY -->
-    <div id="lastGuidelineTherapy"></div>
-
-    <v-divider class="my-3"></v-divider>
-    <v-card-title class="headline font-weight-light"
-      >Last Guideline Therapy</v-card-title
-    >
-    <v-data-table
-      :headers="headerLastGuidelineTherapy"
-      :items="lastGuidelineTherapy"
-      hide-default-header
-      hide-default-footer
-    >
-      <template slot="items" slot-scope="props">
-        <tr>
-          <td>{{ props.item.id }}</td>
-          <td>{{ props.item.therapyLine }}</td>
-          <!-- <td>{{ props.item.period.start }}</td> -->
-          <td>{{ props.item.medication }}</td>
-        </tr>
-      </template>
-    </v-data-table>
-    <v-btn
-      small
-      icon
-      @click="$vuetify.goTo('#patientCard', options)"
-      flat
-      color="grey"
-    >
-      <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
-    </v-btn>
-
-    <!-- ECOG STATUS -->
+    <!-- ECOG STATUS VIEW -->
     <div id="ecogStatus"></div>
 
     <v-divider class="my-3"></v-divider>
@@ -221,9 +197,8 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
-          <td>{{ props.item.id }}</td>
-          <td>{{ props.item.effectiveDate }}</td>
-          <td>{{ props.item.value.code }} - {{ props.item.value.system }}</td>
+          <td>{{ props.item.date }}</td>
+          <td>{{ props.item.value }}</td>
         </tr>
       </template>
     </v-data-table>
@@ -237,7 +212,7 @@
       <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
     </v-btn>
 
-    <!-- SPECIMENS -->
+    <!-- SPECIMENS VIEW -->
     <div id="specimens"></div>
 
     <v-divider class="my-3"></v-divider>
@@ -251,11 +226,11 @@
       <template slot="items" slot-scope="props">
         <tr>
           <td>{{ props.item.id }}</td>
-          <td>{{ props.item.icd10.code }} - {{ props.item.icd10.display }}</td>
+          <td>{{ props.item.icd10 }}</td>
           <td>{{ props.item.type }}</td>
-          <td>{{ props.item.collection.date }}</td>
-          <td>{{ props.item.collection.localization }}</td>
-          <td>{{ props.item.collection.method }}</td>
+          <td>{{ props.item.collectionDate }}</td>
+          <td>{{ props.item.localization }}</td>
+          <td>{{ props.item.collectionMethod }}</td>
         </tr>
       </template>
     </v-data-table>
@@ -269,8 +244,41 @@
       <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
     </v-btn>
 
-    <!-- HISTOLOGY REPORTS -->
-    <div id="specimens"></div>
+    <!-- MOLECULAR PATHOLOGY FINDINGS VIEW -->
+    <div id="molecularPathologyFindings"></div>
+
+    <v-divider class="my-3"></v-divider>
+    <v-card-title class="headline font-weight-light"
+      >Molecular Pathology Findings</v-card-title
+    >
+    <v-data-table
+      :headers="headerMolecularPathologyFindings"
+      :items="molecularPathologyFindings"
+      hide-default-header
+      hide-default-footer
+    >
+      <template slot="items" slot-scope="props">
+        <tr>
+          <td>{{ props.item.id }}</td>
+          <td>{{ props.item.specimen }}</td>
+          <td>{{ props.item.performingInstitute }}</td>
+          <td>{{ props.item.issuedOn }}</td>
+          <td>{{ props.item.note }}</td>
+        </tr>
+      </template>
+    </v-data-table>
+    <v-btn
+      small
+      icon
+      @click="$vuetify.goTo('#patientCard', options)"
+      flat
+      color="grey"
+    >
+      <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
+    </v-btn>
+
+    <!-- HISTOLOGY REPORTS VIEW -->
+    <div id="histologyReports"></div>
 
     <v-divider class="my-3"></v-divider>
     <v-card-title class="headline font-weight-light"
@@ -287,7 +295,8 @@
           <td>{{ props.item.id }}</td>
           <td>{{ props.item.specimen }}</td>
           <td>{{ props.item.issuedOn }}</td>
-          <!-- <td>{{ props.item.icdO3M.code }} - {{ props.item.icdO3M.display }}</td> -->
+          <td>{{ props.item.tumorMorphology }}</td>
+          <td>{{ props.item.tumorCellContent }}</td>
           <td>{{ props.item.note }}</td>
         </tr>
       </template>
@@ -302,7 +311,7 @@
       <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
     </v-btn>
 
-    <!-- NGS REPORTS -->
+    <!-- NGS REPORTS VIEW -->
     <div id="ngsReports"></div>
 
     <v-divider class="my-3"></v-divider>
@@ -310,22 +319,281 @@
     <v-data-table
       :headers="headerNgsReports"
       :items="ngsReports"
+      :expand="expand"
       hide-default-header
       hide-default-footer
     >
       <template slot="items" slot-scope="props">
-        <tr>
+        <tr @click="props.expanded = !props.expanded">
           <td>{{ props.item.id }}</td>
           <td>{{ props.item.specimen }}</td>
           <td>{{ props.item.issueDate }}</td>
           <td>{{ props.item.sequencingType }}</td>
-          <td>{{ props.item.metadata }}</td>
           <td>{{ props.item.tumorCellContent }}</td>
           <td>{{ props.item.brcaness }}</td>
-          <td>{{ props.item.msi }}</td>
-          <td>{{ props.item.tmb }}</td>
-          <td>{{ props.item.simpleVariants }}</td>
+          <td>{{ props.item.microSatelliteInstabilities }}</td>
+          <td>{{ props.item.tumorMutationalBurden }}</td>
+          <td class="text-xs-right">
+            <v-icon color="blue" small>fas fa-info-circle</v-icon>
+          </td>
         </tr>
+      </template>
+      <template v-slot:expand="props">
+        <v-card color="grey lighten-3" flat light left>
+          <v-card-title>Metadata </v-card-title>
+        </v-card>
+
+        <v-card flat>
+          <v-data-table
+            :headers="headerMetadata"
+            :items="props.item.metadata"
+            hide-default-header
+            hide-default-footer
+            hide-actions
+          >
+            <template slot="items" slot-scope="props">
+              <tr>
+                <td>
+                  {{ props.item.kitType }}
+                </td>
+                <td>
+                  {{ props.item.kitManufacturer }}
+                </td>
+                <td>
+                  {{ props.item.sequencer }}
+                </td>
+                <td>
+                  {{ props.item.referenceGenome }}
+                </td>
+                <td>
+                  {{ props.item.pipeline }}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card>
+        <v-card color="grey lighten-3" flat light left>
+          <v-card-title>Simple Variants </v-card-title>
+        </v-card>
+
+        <v-card flat>
+          <v-data-table
+            :headers="headerSimpleVariants"
+            :items="props.item.simpleVariants"
+            hide-default-header
+            hide-default-footer
+            hide-actions
+          >
+            <template slot="items" slot-scope="props">
+              <tr>
+                <td>
+                  {{ props.item.chromosome }}
+                </td>
+                <td>
+                  {{ props.item.gene }}
+                </td>
+                <td>
+                  {{ props.item.startEnd }}
+                </td>
+                <td>
+                  {{ props.item.refAllele }}
+                </td>
+                <td>
+                  {{ props.item.altAllele }}
+                </td>
+                <td>
+                  {{ props.item.functionalAnnotation }}
+                </td>
+                <td>
+                  {{ props.item.dnaChange }}
+                </td>
+                <td>
+                  {{ props.item.aminoAcidChange }}
+                </td>
+                <td>
+                  {{ props.item.readDepth }}
+                </td>
+                <td>
+                  {{ props.item.allelicFrequency }}
+                </td>
+                <td>
+                  {{ props.item.cosmicId }}
+                </td>
+                <td>
+                  {{ props.item.dbSNPId }}
+                </td>
+                <td>
+                  {{ props.item.interpretation }}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card>
+
+        <v-card color="grey lighten-3" flat light left>
+          <v-card-title>Copy Number Variants </v-card-title>
+        </v-card>
+        <v-card flat>
+          <v-data-table
+            :headers="headerCNVs"
+            :items="props.item.copyNumberVariants"
+            hide-default-header
+            hide-default-footer
+            hide-actions
+          >
+            <template slot="items" slot-scope="props">
+              <tr>
+                <td>
+                  {{ props.item.chromosome }}
+                </td>
+                <td>
+                  {{ props.item.startRange }}
+                </td>
+                <td>
+                  {{ props.item.endRange }}
+                </td>
+                <td>
+                  {{ props.item.totalCopyNumber }}
+                </td>
+                <td>
+                  {{ props.item.relativeCopyNumber }}
+                </td>
+                <td>
+                  {{ props.item.cnA }}
+                </td>
+                <td>
+                  {{ props.item.cnB }}
+                </td>
+                <td>
+                  {{ props.item.reportedAffectedGenes }}
+                </td>
+                <td>
+                  {{ props.item.reportedFocality }}
+                </td>
+                <td>
+                  {{ props.item.type }}
+                </td>
+                <td>
+                  {{ props.item.copyNumberNeutralLoH }}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card>
+
+        <v-card color="grey lighten-3" flat light left>
+          <v-card-title>DNA Fusions </v-card-title>
+        </v-card>
+        <v-card flat>
+          <v-data-table
+            :headers="headerDNAFusions"
+            :items="props.item.dnaFusions"
+            hide-default-header
+            hide-default-footer
+            hide-actions
+          >
+            <template slot="items" slot-scope="props">
+              <tr>
+                <td>
+                  {{ props.item.representation }}
+                </td>
+                <td>
+                  {{ props.item.reportedNumReads }}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card>
+
+        <v-card color="grey lighten-3" flat light left>
+          <v-card-title>RNA Fusions </v-card-title>
+        </v-card>
+        <v-card flat>
+          <v-data-table
+            :headers="headerRNAFusions"
+            :items="props.item.rnaFusions"
+            hide-default-header
+            hide-default-footer
+            hide-actions
+          >
+            <template slot="items" slot-scope="props">
+              <tr>
+                <td>
+                  {{ props.item.representation }}
+                </td>
+                <td>
+                  {{ props.item.position5pr }}
+                </td>
+                <td>
+                  {{ props.item.strand5pr }}
+                </td>
+                <td>
+                  {{ props.item.position3pr }}
+                </td>
+                <td>
+                  {{ props.item.strand3pr }}
+                </td>
+                <td>
+                  {{ props.item.effect }}
+                </td>
+                <td>
+                  {{ props.item.cosmicId }}
+                </td>
+                <td>
+                  {{ props.item.reportedNumReads }}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card>
+
+        <v-card color="grey lighten-3" flat light left>
+          <v-card-title>RNA Seqs </v-card-title>
+        </v-card>
+        <v-card flat>
+          <v-data-table
+            :headers="headerRNASeqs"
+            :items="props.item.rnaSeqs"
+            hide-default-header
+            hide-default-footer
+            hide-actions
+          >
+            <template slot="items" slot-scope="props">
+              <tr>
+                <td>
+                  {{ props.item.entrezId }}
+                </td>
+                <td>
+                  {{ props.item.ensemblId }}
+                </td>
+                <td>
+                  {{ props.item.gene }}
+                </td>
+                <td>
+                  {{ props.item.transcriptId }}
+                </td>
+                <td>
+                  {{ props.item.fragmentsPerKilobaseMillion }}
+                </td>
+                <td>
+                  {{ props.item.fromNGS }}
+                </td>
+                <td>
+                  {{ props.item.tissueCorrectedExpression }}
+                </td>
+                <td>
+                  {{ props.item.rawCounts }}
+                </td>
+                <td>
+                  {{ props.item.librarySize }}
+                </td>
+                <td>
+                  {{ props.item.cohortRanking }}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card>
       </template>
     </v-data-table>
     <v-btn
@@ -338,41 +606,7 @@
       <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
     </v-btn>
 
-    <!-- RECOMMENDATIONS -->
-    <div id="recommendations"></div>
-
-    <v-divider class="my-3"></v-divider>
-    <v-card-title class="headline font-weight-light"
-      >Recommendations</v-card-title
-    >
-
-    <v-data-table
-      :headers="headerRecommendations"
-      :items="recommendations"
-      hide-default-header
-      hide-default-footer
-    >
-      <template slot="items" slot-scope="props">
-        <tr>
-          <td>{{ props.item.id }}</td>
-          <td>{{ props.item.issuedOn }}</td>
-          <td>{{ props.item.medication }}</td>
-          <td>{{ props.item.priority }}</td>
-          <td>{{ props.item.levelOfEvidence }}</td>
-        </tr>
-      </template>
-    </v-data-table>
-    <v-btn
-      small
-      icon
-      @click="$vuetify.goTo('#patientCard', options)"
-      flat
-      color="grey"
-    >
-      <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
-    </v-btn>
-
-    <!-- CARE PLANS -->
+    <!-- CARE PLANS VIEW -->
     <div id="carePlans"></div>
 
     <v-divider class="my-3"></v-divider>
@@ -381,18 +615,69 @@
     <v-data-table
       :headers="headerCarePlans"
       :items="carePlans"
+      :expand="expand"
       hide-default-header
       hide-default-footer
     >
       <template slot="items" slot-scope="props">
-        <tr>
+        <tr @click="props.expanded = !props.expanded">
           <td>{{ props.item.id }}</td>
+          <td>{{ props.item.icd10 }}</td>
           <td>{{ props.item.issuedOn }}</td>
-          <td>{{ props.item.description }}</td>
-          <td>{{ props.item.recommendations }}</td>
-          <td>{{ props.item.geneticCounsellingRequest }}</td>
-          <td>{{ props.item.rebiopsyRequests }}</td>
+          <td>{{ props.item.targetAvailable }}</td>
+          <td class="text-xs-right">
+            <v-icon color="blue" small>fas fa-info-circle</v-icon>
+          </td>
+          <!--
+          <td>{{ props.item.therapyRecommendations }}</td> -->
         </tr>
+      </template>
+      <template v-slot:expand="props">
+        <v-card color="grey lighten-3" flat light left>
+          <v-card-title
+            ><v-icon color="blue" class="mr-3">fas fa-info-circle</v-icon>
+            <p>
+              <strong> Protocol</strong> {{ props.item.protocol }} <br />
+              <strong>Genetic Counselling Recommendation</strong>
+              {{ props.item.geneticCounsellingRecommendation }} <br />
+              <strong>Inclusion In Study Recommendation</strong>
+              {{ props.item.inclusionInStudyRecommendation }}
+            </p>
+          </v-card-title>
+        </v-card>
+
+        <v-card flat>
+          <v-data-table
+            :headers="headerTherapyRecommendations"
+            :items="props.item.therapyRecommendations"
+            hide-default-header
+            hide-default-footer
+            hide-actions
+          >
+            <template slot="items" slot-scope="props">
+              <tr>
+                <td>
+                  {{ props.item.id }}
+                </td>
+                <td>
+                  {{ props.item.icd10 }}
+                </td>
+                <td>
+                  {{ props.item.medication }}
+                </td>
+                <td>
+                  {{ props.item.priority }}
+                </td>
+                <td>
+                  {{ props.item.levelOfEvidence }}
+                </td>
+                <td>
+                  {{ props.item.supportingVariants }}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card>
       </template>
     </v-data-table>
     <v-btn
@@ -405,100 +690,7 @@
       <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
     </v-btn>
 
-    <!-- GENETIC COUNSELLING REQUESTS -->
-    <div id="geneticCounsellingRequests"></div>
-
-    <v-divider class="my-3"></v-divider>
-    <v-card-title class="headline font-weight-light"
-      >Genetic Counselling Requests</v-card-title
-    >
-
-    <v-data-table
-      :headers="headerGeneticCounsellingRequests"
-      :items="geneticCounsellingRequests"
-      hide-default-header
-      hide-default-footer
-    >
-      <template slot="items" slot-scope="props">
-        <tr>
-          <td>{{ props.item.id }}</td>
-          <td>{{ props.item.issuedOn }}</td>
-        </tr>
-      </template>
-    </v-data-table>
-    <v-btn
-      small
-      icon
-      @click="$vuetify.goTo('#patientCard', options)"
-      flat
-      color="grey"
-    >
-      <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
-    </v-btn>
-
-    <!-- REBIOPSY REQUESTS -->
-    <div id="rebiopsyRequests"></div>
-
-    <v-divider class="my-3"></v-divider>
-    <v-card-title class="headline font-weight-light"
-      >Rebiopsy Requests</v-card-title
-    >
-
-    <v-data-table
-      :headers="headerRebiopsyRequests"
-      :items="rebiopsyRequests"
-      hide-default-header
-      hide-default-footer
-    >
-      <template slot="items" slot-scope="props">
-        <tr>
-          <td>{{ props.item.id }}</td>
-          <td>{{ props.item.specimen }}</td>
-          <td>{{ props.item.issuedOn }}</td>
-        </tr>
-      </template>
-    </v-data-table>
-    <v-btn
-      small
-      icon
-      @click="$vuetify.goTo('#patientCard', options)"
-      flat
-      color="grey"
-    >
-      <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
-    </v-btn>
-
-    <!-- CLAIMS -->
-    <div id="claims"></div>
-
-    <v-divider class="my-3"></v-divider>
-    <v-card-title class="headline font-weight-light">Claims</v-card-title>
-
-    <v-data-table
-      :headers="headerClaims"
-      :items="claims"
-      hide-default-header
-      hide-default-footer
-    >
-      <template slot="items" slot-scope="props">
-        <tr>
-          <td>{{ props.item.id }}</td>
-          <td>{{ props.item.issuedOn }}</td>
-          <td>{{ props.item.therapy }}</td>
-        </tr>
-      </template>
-    </v-data-table>
-    <v-btn
-      small
-      icon
-      @click="$vuetify.goTo('#patientCard', options)"
-      flat
-      color="grey"
-    >
-      <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
-    </v-btn>
-
-    <!-- CLAIM RESPONSES -->
+    <!-- CLAIM STATUS VIEW -->
     <div id="claimResponses"></div>
 
     <v-divider class="my-3"></v-divider>
@@ -507,16 +699,17 @@
     >
 
     <v-data-table
-      :headers="headerClaimResponses"
-      :items="claimResponses"
+      :headers="headerClaimStatus"
+      :items="claimStatus"
       hide-default-header
       hide-default-footer
     >
       <template slot="items" slot-scope="props">
         <tr>
           <td>{{ props.item.id }}</td>
-          <td>{{ props.item.claim }}</td>
-          <td>{{ props.item.issuedOn }}</td>
+          <td>{{ props.item.therapy }}</td>
+          <td>{{ props.item.issueDate }}</td>
+          <td>{{ props.item.responseDate }}</td>
           <td>{{ props.item.status }}</td>
           <td>{{ props.item.reason }}</td>
         </tr>
@@ -532,7 +725,7 @@
       <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
     </v-btn>
 
-    <!-- MOLECULAR THERAPIES -->
+    <!-- MOLECULAR THERAPIES VIEW -->
     <div id="molecularTherapies"></div>
 
     <v-divider class="my-3"></v-divider>
@@ -549,42 +742,18 @@
       <template slot="items" slot-scope="props">
         <tr>
           <td>{{ props.item.id }}</td>
+          <td>{{ props.item.diagnosis }}</td>
+          <td>{{ props.item.status }}</td>
           <td>{{ props.item.recordedOn }}</td>
-          <td>{{ props.item.basedOn }}</td>
+          <td>{{ props.item.recommendation }}</td>
           <td>{{ props.item.period }}</td>
+          <td>{{ props.item.notDoneReason }}</td>
           <td>{{ props.item.medication }}</td>
+          <td>{{ props.item.reasonStopped }}</td>
           <td>{{ props.item.dosage }}</td>
           <td>{{ props.item.note }}</td>
-          <td>{{ props.item.status }}</td>
-        </tr>
-      </template>
-    </v-data-table>
-    <v-btn
-      small
-      icon
-      @click="$vuetify.goTo('#patientCard', options)"
-      flat
-      color="grey"
-    >
-      <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
-    </v-btn>
-
-    <!-- RESPONSES -->
-    <div id="responses"></div>
-    <v-divider class="my-3"></v-divider>
-    <v-card-title class="headline font-weight-light">Responses</v-card-title>
-    <v-data-table
-      :headers="headerResponses"
-      :items="responses"
-      hide-default-header
-      hide-default-footer
-    >
-      <template slot="items" slot-scope="props">
-        <tr>
-          <td>{{ props.item.id }}</td>
-          <td>{{ props.item.therapy }}</td>
-          <td>{{ props.item.effectiveDate }}</td>
-          <td>{{ props.item.value.code }} - {{ props.item.value.system }}</td>
+          <td>{{ props.item.response }}</td>
+          <td>{{ props.item.progressionDate }}</td>
         </tr>
       </template>
     </v-data-table>
@@ -626,6 +795,7 @@ export default {
     return {
       search: "",
       snackbar: false,
+      extendCarePlans: false,
       y: "top",
       headerDiagnoses: [
         {
@@ -647,7 +817,7 @@ export default {
           value: "icd10",
         },
         {
-          text: "ICD-O-3 Topology",
+          text: "ICD-O-3-T",
           align: "left",
           sortable: true,
           value: "icdO3T",
@@ -659,16 +829,16 @@ export default {
           value: "whoGrade",
         },
         {
-          text: "Histology Reports",
-          align: "left",
-          sortable: true,
-          value: "histologyReports",
-        },
-        {
           text: "Status History",
           align: "left",
           sortable: true,
           value: "statusHistory",
+        },
+        {
+          text: "Guideline Treatment Status",
+          align: "left",
+          sortable: true,
+          value: "guidelineTreatmentStatus",
         },
       ],
 
@@ -687,7 +857,7 @@ export default {
         },
       ],
 
-      headerPreviousGuidelineTherapies: [
+      headerGuidelineTherapies: [
         {
           text: "ID",
           align: "left",
@@ -695,25 +865,10 @@ export default {
           value: "id",
         },
         {
-          text: "Therapy Line",
+          text: "Diagnosis",
           align: "left",
           sortable: true,
-          value: "therapyLine",
-        },
-        {
-          text: "Medication",
-          align: "left",
-          sortable: true,
-          value: "medication",
-        },
-      ],
-
-      headerLastGuidelineTherapy: [
-        {
-          text: "ID",
-          align: "left",
-          sortable: true,
-          value: "id",
+          value: "diagnosis",
         },
         {
           text: "Therapy Line",
@@ -733,15 +888,27 @@ export default {
           sortable: true,
           value: "medication",
         },
+        {
+          text: "Reason Stopped",
+          align: "left",
+          sortable: true,
+          value: "reasonStopped",
+        },
+        {
+          text: "Response",
+          align: "left",
+          sortable: true,
+          value: "response",
+        },
+        {
+          text: "Progression Date",
+          align: "left",
+          sortable: true,
+          value: "progressionDate",
+        },
       ],
 
       headerEcogStatus: [
-        {
-          text: "ID",
-          align: "left",
-          sortable: true,
-          value: "id",
-        },
         {
           text: "Effective Date",
           align: "left",
@@ -779,19 +946,52 @@ export default {
           text: "Collection Date",
           align: "left",
           sortable: true,
-          value: "collection",
+          value: "collectionDate",
         },
         {
-          text: "Specimen Localization",
+          text: "Localization",
           align: "left",
           sortable: true,
-          value: "collection",
+          value: "localization",
         },
         {
           text: "Collection Method",
           align: "left",
           sortable: true,
-          value: "collection",
+          value: "collectionMethod",
+        },
+      ],
+
+      headerMolecularPathologyFindings: [
+        {
+          text: "ID",
+          align: "left",
+          sortable: true,
+          value: "id",
+        },
+        {
+          text: "Specimen",
+          align: "left",
+          sortable: true,
+          value: "specimen",
+        },
+        {
+          text: "Performing Institute",
+          align: "left",
+          sortable: true,
+          value: "performingInstitute",
+        },
+        {
+          text: "Issued On",
+          align: "left",
+          sortable: true,
+          value: "issuedOn",
+        },
+        {
+          text: "Note",
+          align: "left",
+          sortable: true,
+          value: "note",
         },
       ],
 
@@ -815,10 +1015,16 @@ export default {
           value: "issuedOn",
         },
         {
-          text: "ICD-O-3 Morphology",
+          text: "Tumor Morphology",
           align: "left",
           sortable: true,
-          value: "icdO3M",
+          value: "tumorMorphology",
+        },
+        {
+          text: "Tumor Cell Content",
+          align: "left",
+          sortable: true,
+          value: "tumorCellContent",
         },
         {
           text: "Note",
@@ -854,12 +1060,6 @@ export default {
           value: "sequencingType",
         },
         {
-          text: "Metadata",
-          align: "left",
-          sortable: true,
-          value: "metadata",
-        },
-        {
           text: "Tumor Cell Content",
           align: "left",
           sortable: true,
@@ -872,26 +1072,338 @@ export default {
           value: "brcaness",
         },
         {
-          text: "MSI",
+          text: "Micro Satellite Instabilities",
           align: "left",
           sortable: true,
-          value: "msi",
+          value: "microSatelliteInstabilities",
         },
         {
-          text: "TMB",
+          text: "Tumor Mutational Burden",
           align: "left",
           sortable: true,
-          value: "tmb",
+          value: "tumorMutationalBurden",
         },
         {
-          text: "Simple Variants",
-          align: "left",
-          sortable: true,
-          value: "simpleVariants",
+          text: "Expand NGS Report Details",
+          align: "right",
+          sortable: false,
+          value: "",
         },
       ],
 
-      headerRecommendations: [
+      headerMetadata: [
+        {
+          text: "Kit Type",
+          align: "left",
+          sortable: true,
+          value: "kitType",
+        },
+        {
+          text: "Kit Manufacturer",
+          align: "left",
+          sortable: true,
+          value: "kitManufacturer",
+        },
+        {
+          text: "Sequencer",
+          align: "left",
+          sortable: true,
+          value: "sequencer",
+        },
+        {
+          text: "Ref. Genome",
+          align: "left",
+          sortable: true,
+          value: "referenceGenome",
+        },
+        {
+          text: "Pipeline",
+          align: "left",
+          sortable: true,
+          value: "pipeline",
+        },
+      ],
+
+      headerSimpleVariants: [
+        {
+          text: "Chr",
+          align: "left",
+          sortable: true,
+          value: "chromosome",
+        },
+        {
+          text: "Gene",
+          align: "left",
+          sortable: true,
+          value: "gene",
+        },
+        {
+          text: "Start/End",
+          align: "left",
+          sortable: true,
+          value: "startEnd",
+        },
+        {
+          text: "Ref. Allele",
+          align: "left",
+          sortable: true,
+          value: "refAllele",
+        },
+        {
+          text: "Alt Allele",
+          align: "left",
+          sortable: true,
+          value: "altAllele",
+        },
+        {
+          text: "Functional Annotation",
+          align: "left",
+          sortable: true,
+          value: "functionalAnnotation",
+        },
+        {
+          text: "DNA Change",
+          align: "left",
+          sortable: true,
+          value: "dnaChange",
+        },
+        {
+          text: "Amino Acid Change",
+          align: "left",
+          sortable: true,
+          value: "aminoAcidChange",
+        },
+        {
+          text: "Read Depth",
+          align: "left",
+          sortable: true,
+          value: "readDepth",
+        },
+        {
+          text: "Allelic Freq.",
+          align: "left",
+          sortable: true,
+          value: "readDepth",
+        },
+        {
+          text: "COSMIC ID",
+          align: "left",
+          sortable: true,
+          value: "cosmicId",
+        },
+        {
+          text: "dbSNP ID",
+          align: "left",
+          sortable: true,
+          value: "dbSNPId",
+        },
+        {
+          text: "Interpretation",
+          align: "left",
+          sortable: true,
+          value: "interpretation",
+        },
+      ],
+
+      headerCNVs: [
+        {
+          text: "Chr",
+          align: "left",
+          sortable: true,
+          value: "chromosome",
+        },
+        {
+          text: "Start Range",
+          align: "left",
+          sortable: true,
+          value: "startRange",
+        },
+        {
+          text: "End",
+          align: "left",
+          sortable: true,
+          value: "endRange",
+        },
+        {
+          text: "Total Copy Number",
+          align: "left",
+          sortable: true,
+          value: "totalCopyNumber",
+        },
+        {
+          text: "Relative Copy Number",
+          align: "left",
+          sortable: true,
+          value: "relativeCopyNumber",
+        },
+        {
+          text: "CNA",
+          align: "left",
+          sortable: true,
+          value: "cnA",
+        },
+        {
+          text: "CNB",
+          align: "left",
+          sortable: true,
+          value: "cnB",
+        },
+        {
+          text: "Reported Affected Genes",
+          align: "left",
+          sortable: true,
+          value: "reportedAffectedGenes",
+        },
+        {
+          text: "Reported Focality",
+          align: "left",
+          sortable: true,
+          value: "reportedFocality",
+        },
+        {
+          text: "Type",
+          align: "left",
+          sortable: true,
+          value: "type",
+        },
+        {
+          text: "Copy Number Neutral LoH",
+          align: "left",
+          sortable: true,
+          value: "copyNumberNeutralLoH",
+        },
+      ],
+
+      headerDNAFusions: [
+        {
+          text: "Representation",
+          align: "left",
+          sortable: true,
+          value: "representation",
+        },
+        {
+          text: "Reported Number of Reads",
+          align: "left",
+          sortable: true,
+          value: "reportedNumReads",
+        },
+      ],
+
+      headerRNAFusions: [
+        {
+          text: "Representation",
+          align: "left",
+          sortable: true,
+          value: "representation",
+        },
+        {
+          text: "5' Pos.",
+          align: "left",
+          sortable: true,
+          value: "position5pr",
+        },
+        {
+          text: "5' Strand",
+          align: "left",
+          sortable: true,
+          value: "strand5pr",
+        },
+        {
+          text: "3' Pos.",
+          align: "left",
+          sortable: true,
+          value: "position3pr",
+        },
+        {
+          text: "3' Strand",
+          align: "left",
+          sortable: true,
+          value: "strand3pr",
+        },
+        {
+          text: "Effect",
+          align: "left",
+          sortable: true,
+          value: "effect",
+        },
+        {
+          text: "COSMIC ID",
+          align: "left",
+          sortable: true,
+          value: "cosmicId",
+        },
+        {
+          text: "Reported Number of Reads",
+          align: "left",
+          sortable: true,
+          value: "reportedNumReads",
+        },
+      ],
+
+      headerRNASeqs: [
+        {
+          text: "Entrez ID",
+          align: "left",
+          sortable: true,
+          value: "entrezId",
+        },
+        {
+          text: "Ensembl ID",
+          align: "left",
+          sortable: true,
+          value: "ensemblId",
+        },
+        {
+          text: "Gene",
+          align: "left",
+          sortable: true,
+          value: "gene",
+        },
+        {
+          text: "Transcript ID",
+          align: "left",
+          sortable: true,
+          value: "transcriptId",
+        },
+        {
+          text: "Fragments / kBaseMillion",
+          align: "left",
+          sortable: true,
+          value: "fragmentsPerKilobaseMillion",
+        },
+        {
+          text: "From NGS",
+          align: "left",
+          sortable: true,
+          value: "fromNGS",
+        },
+        {
+          text: "Tissue Corrected Expression",
+          align: "left",
+          sortable: true,
+          value: "tissueCorrectedExpression",
+        },
+        {
+          text: "Raw Counts",
+          align: "left",
+          sortable: true,
+          value: "rawCounts",
+        },
+        {
+          text: "Library Size",
+          align: "left",
+          sortable: true,
+          value: "librarySize",
+        },
+        {
+          text: "Cohort Ranking",
+          align: "left",
+          sortable: true,
+          value: "cohortRanking",
+        },
+      ],
+
+      headerCarePlans: [
         {
           text: "ID",
           align: "left",
@@ -899,10 +1411,43 @@ export default {
           value: "id",
         },
         {
+          text: "ICD-10",
+          align: "left",
+          sortable: true,
+          value: "icd10",
+        },
+        {
           text: "Issued On",
           align: "left",
           sortable: true,
           value: "issuedOn",
+        },
+        {
+          text: "Target Available",
+          align: "left",
+          sortable: true,
+          value: "targetAvailable",
+        },
+        {
+          text: "Expand Care Plan Details",
+          align: "right",
+          sortable: false,
+          value: "",
+        },
+      ],
+
+      headerTherapyRecommendations: [
+        {
+          text: "ID",
+          align: "left",
+          sortable: true,
+          value: "id",
+        },
+        {
+          text: "ICD-10",
+          align: "left",
+          sortable: true,
+          value: "icd10",
         },
         {
           text: "Medication",
@@ -917,100 +1462,25 @@ export default {
           value: "priority",
         },
         {
-          text: "Level Of Evidence",
+          text: "Level of Evidence",
           align: "left",
           sortable: true,
           value: "levelOfEvidence",
         },
+        {
+          text: "Supporting Variants",
+          align: "left",
+          sortable: true,
+          value: "supportingVariants",
+        },
       ],
 
-      headerCarePlans: [
+      headerClaimStatus: [
         {
           text: "ID",
           align: "left",
           sortable: true,
           value: "id",
-        },
-        {
-          text: "Issued On",
-          align: "left",
-          sortable: true,
-          value: "issuedOn",
-        },
-        {
-          text: "Description",
-          align: "left",
-          sortable: true,
-          value: "description",
-        },
-        {
-          text: "Recommendations",
-          align: "left",
-          sortable: true,
-          value: "recommendations",
-        },
-        {
-          text: "Genetic Counselling Request",
-          align: "left",
-          sortable: true,
-          value: "geneticCounsellingRequest",
-        },
-        {
-          text: "Rebiopsy Request",
-          align: "left",
-          sortable: true,
-          value: "rebiopsyRequests",
-        },
-      ],
-
-      headerGeneticCounsellingRequests: [
-        {
-          text: "ID",
-          align: "left",
-          sortable: true,
-          value: "id",
-        },
-        {
-          text: "Issued On",
-          align: "left",
-          sortable: true,
-          value: "issuedOn",
-        },
-      ],
-
-      headerRebiopsyRequests: [
-        {
-          text: "ID",
-          align: "left",
-          sortable: true,
-          value: "id",
-        },
-        {
-          text: "Specimen",
-          align: "left",
-          sortable: true,
-          value: "specimen",
-        },
-        {
-          text: "Issued On",
-          align: "left",
-          sortable: true,
-          value: "issuedOn",
-        },
-      ],
-
-      headerClaims: [
-        {
-          text: "ID",
-          align: "left",
-          sortable: true,
-          value: "id",
-        },
-        {
-          text: "Issued On",
-          align: "left",
-          sortable: true,
-          value: "issuedOn",
         },
         {
           text: "Therapy",
@@ -1018,26 +1488,17 @@ export default {
           sortable: true,
           value: "therapy",
         },
-      ],
-
-      headerClaimResponses: [
         {
-          text: "ID",
+          text: "Issue Date",
           align: "left",
           sortable: true,
-          value: "id",
+          value: "issueDate",
         },
         {
-          text: "Patient",
+          text: "Response Date",
           align: "left",
           sortable: true,
-          value: "patient",
-        },
-        {
-          text: "Issued On",
-          align: "left",
-          sortable: true,
-          value: "issuedOn",
+          value: "responseDate",
         },
         {
           text: "Status",
@@ -1061,16 +1522,28 @@ export default {
           value: "id",
         },
         {
+          text: "Diagnosis",
+          align: "left",
+          sortable: true,
+          value: "diagnosis",
+        },
+        {
+          text: "Status",
+          align: "left",
+          sortable: true,
+          value: "status",
+        },
+        {
           text: "Recorded On",
           align: "left",
           sortable: true,
           value: "recordedOn",
         },
         {
-          text: "Based On",
+          text: "Recommendation",
           align: "left",
           sortable: true,
-          value: "basedOn",
+          value: "recommendation",
         },
         {
           text: "Period",
@@ -1079,10 +1552,22 @@ export default {
           value: "period",
         },
         {
+          text: "Not Done Reason",
+          align: "left",
+          sortable: true,
+          value: "notDoneReason",
+        },
+        {
           text: "Medication",
           align: "left",
           sortable: true,
           value: "medication",
+        },
+        {
+          text: "Reason Stopped",
+          align: "left",
+          sortable: true,
+          value: "reasonStopped",
         },
         {
           text: "Dosage",
@@ -1097,37 +1582,16 @@ export default {
           value: "note",
         },
         {
-          text: "Status",
+          text: "Response",
           align: "left",
           sortable: true,
-          value: "status",
-        },
-      ],
-
-      headerResponses: [
-        {
-          text: "ID",
-          align: "left",
-          sortable: true,
-          value: "id",
+          value: "response",
         },
         {
-          text: "Therapy",
+          text: "Progression Date",
           align: "left",
           sortable: true,
-          value: "therapy",
-        },
-        {
-          text: "Effective Date",
-          align: "left",
-          sortable: true,
-          value: "effectiveDate",
-        },
-        {
-          text: "Value (Code - System)",
-          align: "left",
-          sortable: true,
-          value: "value",
+          value: "progressionDate",
         },
       ],
     };
@@ -1153,8 +1617,14 @@ export default {
 
     genderCheck(gender) {
       if (gender == "male") return "blue";
+      else if (gender == "Männlich") return "blue";
       else if (gender == "female") return "pink";
+      else if (gender == "Weiblich") return "pink";
       else return "gray";
+    },
+
+    displayTherapyRecommendations() {
+      this.extendCarePlans = false;
     },
   },
 
@@ -1167,248 +1637,235 @@ export default {
 
     let mtbFile = await axios.get(`${serverBaseURL}/${slug}/MTBFile/${id}`);
 
-    // DIAGNOSES
+    let mtbFileView = await axios.get(
+      `${serverBaseURL}/${slug}/MTBFileView/${id}`
+    );
+
+    // DIAGNOSES VIEW
+
     let rawDiagnoses = Array();
-    if (mtbFile.data.diagnoses) {
-      for (var i = 0; i < mtbFile.data.diagnoses.length; i++) {
+    if (mtbFileView.data.diagnoses) {
+      for (var i = 0; i < mtbFileView.data.diagnoses.length; i++) {
         let item = {
-          id: mtbFile.data.diagnoses[i].id,
-          patient: mtbFile.data.diagnoses[i].patient,
-          recordedOn: mtbFile.data.diagnoses[i].recordedOn,
-          icd10: mtbFile.data.diagnoses[i].icd10,
-          whoGrade: mtbFile.data.diagnoses[i].whoGrade,
-          histologyReports: mtbFile.data.diagnoses[i].histologyReports,
-          statusHistory: mtbFile.data.diagnoses[i].statusHistory,
+          id: mtbFileView.data.diagnoses[i].id,
+          patient: mtbFileView.data.diagnoses[i].patient,
+          recordedOn: mtbFileView.data.diagnoses[i].recordedOn,
+          icd10: mtbFileView.data.diagnoses[i].icd10,
+          icdO3T: mtbFileView.data.diagnoses[i].icdO3T,
+          whoGrade: mtbFileView.data.diagnoses[i].whoGrade,
+          statusHistory: mtbFileView.data.diagnoses[i].statusHistory,
+          guidelineTreatmentStatus:
+            mtbFileView.data.diagnoses[i].guidelineTreatmentStatus,
         };
         rawDiagnoses.push(item);
       }
     }
 
-    // FAMILY MEMBER DIAGNOSES
+    // FAMILY MEMBER DIAGNOSES VIEW
+
     let rawFamilyMemberDiagnoses = Array();
-    if (mtbFile.data.familyMemberDiagnoses) {
-      for (var i = 0; i < mtbFile.data.familyMemberDiagnoses.length; i++) {
+    if (mtbFileView.data.familyMemberDiagnoses) {
+      for (var i = 0; i < mtbFileView.data.familyMemberDiagnoses.length; i++) {
         let item = {
-          id: mtbFile.data.familyMemberDiagnoses[i].id,
-          patient: mtbFile.data.familyMemberDiagnoses[i].patient,
-          relationship: mtbFile.data.familyMemberDiagnoses[i].relationship,
+          id: mtbFileView.data.familyMemberDiagnoses[i].id,
+          patient: mtbFileView.data.familyMemberDiagnoses[i].patient,
+          relationship: mtbFileView.data.familyMemberDiagnoses[i].relationship,
         };
         rawFamilyMemberDiagnoses.push(item);
       }
     }
 
-    // PREVIOUS GUIDELINE THERAPIES
-    let rawPreviousGuidelineTherapies = Array();
-    if (mtbFile.data.previousGuidelineTherapies) {
-      for (var i = 0; i < mtbFile.data.previousGuidelineTherapies.length; i++) {
+    // GUIDELINE THERAPIES VIEW
+
+    let rawGuidelineTherapies = Array();
+    if (mtbFileView.data.guidelineTherapies) {
+      for (var i = 0; i < mtbFileView.data.guidelineTherapies.length; i++) {
         let item = {
-          id: mtbFile.data.previousGuidelineTherapies[i].id,
-          patient: mtbFile.data.previousGuidelineTherapies[i].patient,
-          therapyLine: mtbFile.data.previousGuidelineTherapies[i].therapyLine,
-          medication: mtbFile.data.previousGuidelineTherapies[i].medication,
+          id: mtbFileView.data.guidelineTherapies[i].id,
+          diagnosis: mtbFileView.data.guidelineTherapies[i].diagnosis,
+          therapyLine: mtbFileView.data.guidelineTherapies[i].therapyLine,
+          period: mtbFileView.data.guidelineTherapies[i].period,
+          medication: mtbFileView.data.guidelineTherapies[i].medication,
+          reasonStopped: mtbFileView.data.guidelineTherapies[i].reasonStopped,
+          response: mtbFileView.data.guidelineTherapies[i].response,
+          progressionDate:
+            mtbFileView.data.guidelineTherapies[i].progressionDate,
         };
-        rawPreviousGuidelineTherapies.push(item);
+        rawGuidelineTherapies.push(item);
       }
     }
 
-    // LAST GUIDELINE THERAPIES
-    let rawLastGuidelineTherapy = Array();
+    // ECOG STATUS VIEW
 
-    let item = {
-      id: mtbFile.data.lastGuidelineTherapy.id,
-      patient: mtbFile.data.lastGuidelineTherapy.patient,
-      therapyLine: mtbFile.data.lastGuidelineTherapy.therapyLine,
-      period: mtbFile.data.lastGuidelineTherapy.period,
-      medication: mtbFile.data.lastGuidelineTherapy.medication,
-    };
-    rawLastGuidelineTherapy.push(item);
-
-    // ECOG STATU
     let rawEcogStatus = Array();
-    if (mtbFile.data.ecogStatus) {
-      for (var i = 0; i < mtbFile.data.ecogStatus.length; i++) {
+    if (mtbFileView.data.ecogStatus) {
+      for (var i = 0; i < mtbFileView.data.ecogStatus.values.length; i++) {
         let item = {
-          id: mtbFile.data.ecogStatus[i].id,
-          patient: mtbFile.data.ecogStatus[i].patient,
-          effectiveDate: mtbFile.data.ecogStatus[i].effectiveDate,
-          value: mtbFile.data.ecogStatus[i].value,
+          date: mtbFileView.data.ecogStatus.values[i].date,
+          value: mtbFileView.data.ecogStatus.values[i].value,
         };
         rawEcogStatus.push(item);
       }
     }
 
-    // SPECIMENS
+    // SPECIMENS VIEW
+
     let rawSpecimens = Array();
-    if (mtbFile.data.specimens) {
-      for (var i = 0; i < mtbFile.data.specimens.length; i++) {
+    if (mtbFileView.data.specimens) {
+      for (var i = 0; i < mtbFileView.data.specimens.length; i++) {
         let item = {
-          id: mtbFile.data.specimens[i].id,
-          patient: mtbFile.data.specimens[i].patient,
-          icd10: mtbFile.data.specimens[i].icd10,
-          type: mtbFile.data.specimens[i].type,
-          collection: mtbFile.data.specimens[i].collection,
+          id: mtbFileView.data.specimens[i].id,
+          icd10: mtbFileView.data.specimens[i].icd10,
+          type: mtbFileView.data.specimens[i].type,
+          collectionDate: mtbFileView.data.specimens[i].collectionDate,
+          localization: mtbFileView.data.specimens[i].localization,
+          collectionMethod: mtbFileView.data.specimens[i].collectionMethod,
         };
         rawSpecimens.push(item);
       }
     }
 
-    // HISTOLOGY REPORTS
-    let rawHistologyReports = Array();
-    if (mtbFile.data.histologyReports) {
-      for (var i = 0; i < mtbFile.data.histologyReports.length; i++) {
+    // MOLECULAR PATHOLOGY FINDINGS VIEW
+
+    let rawMolecularPathologyFindings = Array();
+    if (mtbFileView.data.molecularPathologyFindings) {
+      for (
+        var i = 0;
+        i < mtbFileView.data.molecularPathologyFindings.length;
+        i++
+      ) {
         let item = {
-          id: mtbFile.data.histologyReports[i].id,
-          patient: mtbFile.data.histologyReports[i].patient,
-          specimen: mtbFile.data.histologyReports[i].specimen,
-          issuedOn: mtbFile.data.histologyReports[i].issuedOn,
-          icdO3M: mtbFile.data.histologyReports[i].icdO3M,
-          note: mtbFile.data.histologyReports[i].note,
+          id: mtbFileView.data.molecularPathologyFindings[i].id,
+          specimen: mtbFileView.data.molecularPathologyFindings[i].specimen,
+          performingInstitute:
+            mtbFileView.data.molecularPathologyFindings[i].performingInstitute,
+          issuedOn: mtbFileView.data.molecularPathologyFindings[i].issuedOn,
+          note: mtbFileView.data.molecularPathologyFindings[i].note,
+        };
+        rawMolecularPathologyFindings.push(item);
+      }
+    }
+
+    // HISTOLOGY REPORTS VIEW
+
+    let rawHistologyReports = Array();
+    if (mtbFileView.data.histologyReports) {
+      for (var i = 0; i < mtbFileView.data.histologyReports.length; i++) {
+        let item = {
+          id: mtbFileView.data.histologyReports[i].id,
+          specimen: mtbFileView.data.histologyReports[i].specimen,
+          issuedOn: mtbFileView.data.histologyReports[i].issuedOn,
+          tumorMorphology: mtbFileView.data.histologyReports[i].tumorMorphology,
+          tumorCellContent:
+            mtbFileView.data.histologyReports[i].tumorCellContent,
+          note: mtbFileView.data.histologyReports[i].note,
         };
         rawHistologyReports.push(item);
       }
     }
 
-    // NGS REPORTS
+    // NGS REPORTS VIEW
     let rawNgsReports = Array();
-    if (mtbFile.data.ngsReports) {
-      for (var i = 0; i < mtbFile.data.ngsReports.length; i++) {
+    if (mtbFileView.data.ngsReports) {
+      for (var i = 0; i < mtbFileView.data.ngsReports.length; i++) {
         let item = {
-          id: mtbFile.data.ngsReports[i].id,
-          patient: mtbFile.data.ngsReports[i].patient,
-          specimen: mtbFile.data.ngsReports[i].specimen,
-          issueDate: mtbFile.data.ngsReports[i].issueDate,
-          sequencingType: mtbFile.data.ngsReports[i].sequencingType,
-          metadata: mtbFile.data.ngsReports[i].metadata,
-          tumorCellContent: mtbFile.data.ngsReports[i].tumorCellContent,
-          brcaness: mtbFile.data.ngsReports[i].brcaness,
-          msi: mtbFile.data.ngsReports[i].msi,
-          tmb: mtbFile.data.ngsReports[i].tmb,
-          simpleVariants: mtbFile.data.ngsReports[i].simpleVariants,
+          id: mtbFileView.data.ngsReports[i].id,
+          specimen: mtbFileView.data.ngsReports[i].specimen,
+          issueDate: mtbFileView.data.ngsReports[i].issueDate,
+          sequencingType: mtbFileView.data.ngsReports[i].sequencingType,
+          metadata: mtbFileView.data.ngsReports[i].metadata,
+          tumorCellContent: mtbFileView.data.ngsReports[i].tumorCellContent,
+          brcaness: mtbFileView.data.ngsReports[i].brcaness,
+          microSatelliteInstabilities:
+            mtbFileView.data.ngsReports[i].microSatelliteInstabilities,
+          tumorMutationalBurden:
+            mtbFileView.data.ngsReports[i].tumorMutationalBurden,
+          simpleVariants: mtbFileView.data.ngsReports[i].simpleVariants,
+          copyNumberVariants: mtbFileView.data.ngsReports[i].copyNumberVariants,
+          dnaFusions: mtbFileView.data.ngsReports[i].dnaFusions,
+          rnaFusions: mtbFileView.data.ngsReports[i].rnaFusions,
+          rnaSeqs: mtbFileView.data.ngsReports[i].rnaSeqs,
         };
         rawNgsReports.push(item);
       }
     }
 
-    // RECOMMENDATIONS
-    let rawRecommendations = Array();
-    if (mtbFile.data.recommendations) {
-      for (var i = 0; i < mtbFile.data.recommendations.length; i++) {
-        let item = {
-          id: mtbFile.data.recommendations[i].id,
-          patient: mtbFile.data.recommendations[i].patient,
-          issuedOn: mtbFile.data.recommendations[i].issuedOn,
-          medication: mtbFile.data.recommendations[i].medication,
-          priority: mtbFile.data.recommendations[i].priority,
-          levelOfEvidence: mtbFile.data.recommendations[i].levelOfEvidence,
-        };
-        rawRecommendations.push(item);
-      }
-    }
-
-    // CARE PLANS
+    // CARE PLANS VIEW
     let rawCarePlans = Array();
-    if (mtbFile.data.carePlans) {
-      for (var i = 0; i < mtbFile.data.carePlans.length; i++) {
+    if (mtbFileView.data.carePlans) {
+      for (var i = 0; i < mtbFileView.data.carePlans.length; i++) {
         let item = {
-          id: mtbFile.data.carePlans[i].id,
-          patient: mtbFile.data.carePlans[i].patient,
-          issuedOn: mtbFile.data.carePlans[i].issuedOn,
-          description: mtbFile.data.carePlans[i].description,
-          recommendations: mtbFile.data.carePlans[i].recommendations,
-          geneticCounsellingRequest:
-            mtbFile.data.carePlans[i].geneticCounsellingRequest,
-          rebiopsyRequests: mtbFile.data.carePlans[i].rebiopsyRequests,
+          id: mtbFileView.data.carePlans[i].id,
+          icd10: mtbFileView.data.carePlans[i].icd10,
+          issuedOn: mtbFileView.data.carePlans[i].issuedOn,
+          protocol: mtbFileView.data.carePlans[i].protocol,
+          geneticCounsellingRecommendation:
+            mtbFileView.data.carePlans[i].geneticCounsellingRecommendation,
+          inclusionInStudyRecommendation:
+            mtbFileView.data.carePlans[i].inclusionInStudyRecommendation,
+          targetAvailable: mtbFileView.data.carePlans[i].targetAvailable,
+          therapyRecommendations:
+            mtbFileView.data.carePlans[i].therapyRecommendations,
         };
         rawCarePlans.push(item);
       }
     }
 
-    // GENETIC COUNSELLING REQUESTS
-    let rawGeneticCounsellingRequests = Array();
-    if (mtbFile.data.geneticCounsellingRequests) {
-      for (var i = 0; i < mtbFile.data.geneticCounsellingRequests.length; i++) {
+    // CLAIM STATUS VIEW
+    let rawClaimStatus = Array();
+    if (mtbFileView.data.claimStatus) {
+      for (var i = 0; i < mtbFileView.data.claimStatus.length; i++) {
         let item = {
-          id: mtbFile.data.geneticCounsellingRequests[i].id,
-          patient: mtbFile.data.geneticCounsellingRequests[i].patient,
-          issuedOn: mtbFile.data.geneticCounsellingRequests[i].issuedOn,
+          id: mtbFileView.data.claimStatus[i].id,
+          therapy: mtbFileView.data.claimStatus[i].therapy,
+          issueDate: mtbFileView.data.claimStatus[i].issueDate,
+          responseDate: mtbFileView.data.claimStatus[i].responseDate,
+          status: mtbFileView.data.claimStatus[i].status,
+          reason: mtbFileView.data.claimStatus[i].reason,
         };
-        rawGeneticCounsellingRequests.push(item);
+        rawClaimStatus.push(item);
       }
     }
 
-    // REBIOPSY REQUESTS
-    let rawRebiopsyRequests = Array();
-    if (mtbFile.data.rebiopsyRequests) {
-      for (var i = 0; i < mtbFile.data.rebiopsyRequests.length; i++) {
-        let item = {
-          id: mtbFile.data.rebiopsyRequests[i].id,
-          patient: mtbFile.data.rebiopsyRequests[i].patient,
-          specimen: mtbFile.data.rebiopsyRequests[i].specimen,
-          issuedOn: mtbFile.data.rebiopsyRequests[i].issuedOn,
-        };
-        rawRebiopsyRequests.push(item);
-      }
-    }
-
-    // MOLECULAR THERAPIES
+    // MOLECULAR THERAPIES VIEW
     let rawMolecularTherapies = Array();
-    if (mtbFile.data.molecularTherapies) {
-      for (var i = 0; i < mtbFile.data.molecularTherapies.length; i++) {
+    if (mtbFileView.data.molecularTherapies) {
+      for (var i = 0; i < mtbFileView.data.molecularTherapies.length; i++) {
         let item = {
-          id: mtbFile.data.molecularTherapies[i].history[i].id,
-          patient: mtbFile.data.molecularTherapies[i].history[i].patient,
-          recordedOn: mtbFile.data.molecularTherapies[i].history[i].recordedOn,
-          basedOn: mtbFile.data.molecularTherapies[i].history[i].basedOn,
-          period: mtbFile.data.molecularTherapies[i].history[i].period,
-          medication: mtbFile.data.molecularTherapies[i].history[i].medication,
-          dosage: mtbFile.data.molecularTherapies[i].history[i].dosage,
-          note: mtbFile.data.molecularTherapies[i].history[i].note,
-          status: mtbFile.data.molecularTherapies[i].history[i].status,
+          id: mtbFileView.data.molecularTherapies[i].id,
+          diagnosis: mtbFileView.data.molecularTherapies[i].diagnosis,
+          status: mtbFileView.data.molecularTherapies[i].status,
+          recordedOn: mtbFileView.data.molecularTherapies[i].recordedOn,
+          recommendation: mtbFileView.data.molecularTherapies[i].recommendation,
+          period: mtbFileView.data.molecularTherapies[i].period,
+          notDoneReason: mtbFileView.data.molecularTherapies[i].notDoneReason,
+          medication: mtbFileView.data.molecularTherapies[i].medication,
+          reasonStopped: mtbFileView.data.molecularTherapies[i].reasonStopped,
+          dosage: mtbFileView.data.molecularTherapies[i].dosage,
+          note: mtbFileView.data.molecularTherapies[i].note,
+          response: mtbFileView.data.molecularTherapies[i].response,
+          progressionDate:
+            mtbFileView.data.molecularTherapies[i].progressionDate,
         };
         rawMolecularTherapies.push(item);
-      }
-    }
-
-    // RESPONSES
-    let rawResponses = Array();
-    if (mtbFile.data.responses) {
-      for (var i = 0; i < mtbFile.data.responses.length; i++) {
-        let item = {
-          id: mtbFile.data.responses[i].id,
-          patient: mtbFile.data.responses[i].patient,
-          therapy: mtbFile.data.responses[i].therapy,
-          effectiveDate: mtbFile.data.responses[i].effectiveDate,
-          value: mtbFile.data.responses[i].value,
-        };
-        rawResponses.push(item);
       }
     }
 
     return {
       baseURL: `${serverBaseURL}/${params.id}/files`,
 
-      patientId: mtbFile.data.patient.id,
-      gender: mtbFile.data.patient.gender,
-      birthDate: mtbFile.data.patient.birthDate,
-      managingZPM: mtbFile.data.patient.managingZPM,
-      insurance: mtbFile.data.patient.insurance,
-
-      patient: mtbFile.data.patient,
-      consent: mtbFile.data.consent,
+      patient: mtbFileView.data.patient,
       diagnoses: rawDiagnoses,
       familyMemberDiagnoses: rawFamilyMemberDiagnoses,
-      previousGuidelineTherapies: rawPreviousGuidelineTherapies,
-      lastGuidelineTherapy: rawLastGuidelineTherapy,
+      guidelineTherapies: rawGuidelineTherapies,
       ecogStatus: rawEcogStatus,
       specimens: rawSpecimens,
+      molecularPathologyFindings: rawMolecularPathologyFindings,
       histologyReports: rawHistologyReports,
       ngsReports: rawNgsReports,
-      recommendations: rawRecommendations,
       carePlans: rawCarePlans,
-      geneticCounsellingRequests: rawGeneticCounsellingRequests,
-      rebiopsyRequests: rawRebiopsyRequests,
+      claimStatus: rawClaimStatus,
       molecularTherapies: rawMolecularTherapies,
-      responses: rawResponses,
     };
   },
 };

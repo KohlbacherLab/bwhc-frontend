@@ -11,8 +11,8 @@
           @click="$router.push('/main')"
         >
           <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-        >Do you need some
-        <strong @click="$router.push('help')">help?</strong>
+        >There is nothing to see here <i class="far fa-times-circle"></i> try to
+        <strong @click="$router.push('/main')">go back!</strong>
       </span>
     </v-flex>
     <v-divider class="my-3"></v-divider>

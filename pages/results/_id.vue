@@ -104,9 +104,9 @@
           v-ripple="{ center: true }"
         >
           <v-card-text class="headline font-weight-thin">
-            <p><v-icon color="indigo" dark>fas fa-file-medical</v-icon></p>
-            <strong>{{ itemsTherapies.length }}</strong>
-            <br />Molecular Therapies
+            <p><v-icon color="indigo">fas fa-stethoscope</v-icon></p>
+            <strong>{{ itemsGenomicReports.length }}</strong>
+            <br />NGS Summaries
           </v-card-text>
         </v-card>
       </v-flex>
@@ -138,9 +138,9 @@
           v-ripple="{ center: true }"
         >
           <v-card-text class="headline font-weight-thin">
-            <p><v-icon color="cyan">fas fa-stethoscope</v-icon></p>
-            <strong>{{ itemsGenomicReports.length }}</strong>
-            <br />NGS Summaries
+            <p><v-icon color="cyan" dark>fas fa-file-medical</v-icon></p>
+            <strong>{{ itemsTherapies.length }}</strong>
+            <br />Molecular Therapies
           </v-card-text>
         </v-card>
       </v-flex>
@@ -152,17 +152,17 @@
       <v-tab class="subheading font-weight-regular" :key="cases"
         >Patients</v-tab
       >
-      <v-tab class="subheading font-weight-regular" :key="therapies"
-        >Molecular Therapies</v-tab
+      <v-tab class="subheading font-weight-regular" :key="genomics"
+        >NGS Summaries</v-tab
       >
       <v-tab class="subheading font-weight-regular" :key="recommendations"
         >Recommendations</v-tab
       >
-      <v-tab class="subheading font-weight-regular" :key="genomics"
-        >NGS Summaries</v-tab
+      <v-tab class="subheading font-weight-regular" :key="therapies"
+        >Molecular Therapies</v-tab
       >
 
-      <!-- Cases -->
+      <!-- CASES -->
       <v-tab-item>
         <v-card flat light>
           <v-data-table :headers="headerFiles" :items="itemsFiles">
@@ -208,7 +208,67 @@
         </v-card>
       </v-tab-item>
 
-      <!-- Therapies -->
+      <!-- NGS SUMMARIES -->
+      <v-tab-item>
+        <v-card flat light>
+          <v-data-table
+            :headers="headerGenomicReports"
+            :items="itemsGenomicReports"
+          >
+            <template slot="items" slot-scope="props">
+              <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
+                <!--
+                  <td>
+                  {{ props.item.diagnosis.code }} -
+                  {{ props.item.diagnosis.display }}
+                </td>
+                -->
+                <td>{{ props.item.specimen }}</td>
+                <td>{{ props.item.tumorEntity }}</td>
+                <!--
+                <td>
+                  {{ props.item.sampleAgeAtSequencing.value }}
+                  {{ props.item.sampleAgeAtSequencing.unit }}
+                </td>
+                -->
+                <td>{{ props.item.specimenType }}</td>
+                <td>{{ props.item.sequencingType }}</td>
+                <td>{{ props.item.tumorCellContent }}</td>
+              </tr>
+            </template>
+            <v-alert :value="true" color="error" icon="warning"
+              >Your search for "{{ search }}" found no results.</v-alert
+            >
+          </v-data-table>
+        </v-card>
+      </v-tab-item>
+
+      <!-- RECOMMENDATIONS -->
+      <v-tab-item>
+        <v-card flat light>
+          <v-data-table
+            :headers="headerRecommendations"
+            :items="itemsRecommendations"
+          >
+            <template slot="items" slot-scope="props">
+              <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
+                <td>{{ props.item.icd10 }}</td>
+                <!--
+                <td>{{ props.item.drugs.join(", ") }}</td>
+                -->
+                <td>{{ props.item.medication }}</td>
+                <td>{{ props.item.priority }}</td>
+                <td>{{ props.item.levelOfEvidence }}</td>
+              </tr>
+            </template>
+            <v-alert :value="true" color="error" icon="warning"
+              >Your search for "{{ search }}" found no results.</v-alert
+            >
+          </v-data-table>
+        </v-card>
+      </v-tab-item>
+
+      <!-- THERAPIES -->
       <v-tab-item>
         <v-card flat light>
           <v-data-table
@@ -218,12 +278,18 @@
           >
             <template slot="items" slot-scope="props">
               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
-              <td>{{ props.item.status }}</td>
-              <td>{{ props.item.recordedOn }}</td>
-              <td>{{ props.item.basedOn }}</td>
-              <td>{{ props.item.notDoneReason.code }}</td>
-              <td>{{ props.item.note }}</td>
-              <!--
+                <td>{{ props.item.status }}</td>
+                <td>{{ props.item.recordedOn }}</td>
+                <td>{{ props.item.recommendation }}</td>
+                <td>{{ props.item.period }}</td>
+                <td>{{ props.item.notDoneReason }}</td>
+                <td>{{ props.item.medication }}</td>
+                <td>{{ props.item.reasonStopped }}</td>
+                <td>{{ props.item.dosage }}</td>
+                <td>{{ props.item.note }}</td>
+                <td>{{ props.item.response }}</td>
+                <td>{{ props.item.progressionDate }}</td>
+                <!--
                 <td>
                   <div v-if="props.item.progression === null">-</div>
                   <div v-else>
@@ -233,67 +299,6 @@
                 </td>
                 -->
               </tr>
-            </template>
-            <v-alert :value="true" color="error" icon="warning"
-              >Your search for "{{ search }}" found no results.</v-alert
-            >
-          </v-data-table>
-        </v-card>
-      </v-tab-item>
-
-      <!-- THERAPY RECOMMENDATIONS -->
-      <v-tab-item>
-        <v-card flat light>
-          <v-data-table
-            :headers="headerRecommendations"
-            :items="itemsRecommendations"
-          >
-            <template slot="items" slot-scope="props">
-              <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
-              <td>{{ props.item.diagnosis }}</td>
-              <td>{{ props.item.issuedOn }}</td>
-              <!--
-                <td>{{ props.item.drugs.join(", ") }}</td>
-                -->
-              <td>{{ props.item.medication }}</td>
-              <td>{{ props.item.priority }}</td>
-              <td>{{ props.item.levelOfEvidence }}</td>
-              </tr>
-            </template>
-            <v-alert :value="true" color="error" icon="warning"
-              >Your search for "{{ search }}" found no results.</v-alert
-            >
-          </v-data-table>
-        </v-card>
-      </v-tab-item>
-
-      <!-- NGS SUMMARIES -->
-      <v-tab-item>
-        <v-card flat light>
-          <v-data-table
-            :headers="headerGenomicReports"
-            :items="itemsGenomicReports"
-          >
-            <template slot="items" slot-scope="props">
-               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
-              <!--
-                  <td>
-                  {{ props.item.diagnosis.code }} -
-                  {{ props.item.diagnosis.display }}
-                </td>
-                -->
-              <td>{{ props.item.specimen }}</td>
-              <td>{{ props.item.tumorEntity }}</td>
-              <!--
-                <td>
-                  {{ props.item.sampleAgeAtSequencing.value }}
-                  {{ props.item.sampleAgeAtSequencing.unit }}
-                </td>
-                -->
-              <td>{{ props.item.specimenType }}</td>
-              <td>{{ props.item.sequencingType }}</td>
-              <td>{{ props.item.tumorCellContent }}</td>
-               </tr>
             </template>
             <v-alert :value="true" color="error" icon="warning"
               >Your search for "{{ search }}" found no results.</v-alert
@@ -321,13 +326,11 @@ import { Line } from "vue-chartjs";
 
 import userPanel from "~/components/userPanel";
 import filterPanel from "~/components/filterPanel";
-import sparklineChart from "~/components/sparklineChart";
 import queryPanel from "~/components/queryPanel";
 
 import util from "~/assets/js/util";
 
-let serverBaseURL =
-  process.env.baseUrl + process.env.port + `/bwhc/mtb/api/query`;
+let serverBaseURL = process.env.baseUrl + process.env.port + process.env.query;
 
 export default {
   name: "ProfilePage",
@@ -335,7 +338,6 @@ export default {
   components: {
     userPanel,
     filterPanel,
-    sparklineChart,
     queryPanel,
   },
 
@@ -344,35 +346,6 @@ export default {
       diagnosis: Array(),
 
       drugUsageCat: ["Recommended", "Used"],
-
-      baseChangeCat: [
-        "c.76A>C",
-        "c.-14G>C",
-        "c.88+1G>T",
-        "c.89-2A>C",
-        "c.*46T>A",
-      ],
-
-      aminoAcidChangesCat: [
-        "p.Trp26Cys",
-        "p.Phe2_Met46",
-        "p.Met1_Lys45",
-        "p.Trp26Ter",
-        "p.Trp26_Leu833del",
-      ],
-
-      variantEffectsCat: [
-        "Activating",
-        "Inactivating",
-        "FunctionChanged",
-        "ProbActivating",
-        "ProbInactivating",
-        "ProbFunctionChange",
-        "Ambiguous",
-        "Benign",
-        "NotAvailable",
-      ],
-
       localQuery: false,
       gender: [],
       ageRange: [],
@@ -388,13 +361,36 @@ export default {
       headerTherapies: [
         { text: "Status", align: "left", value: "status" },
         { text: "Recorded On", align: "left", value: "recordedOn" },
-        { text: "Based On", align: "left", sortable: true, value: "basedOn" },
+        {
+          text: "Recommendation",
+          align: "left",
+          sortable: true,
+          value: "recommendation",
+        },
+        { text: "Period", align: "left", sortable: true, value: "period" },
         {
           text: "Not Done Reason",
           align: "left",
           value: "notDoneReason",
         },
+        {
+          text: "Medication",
+          align: "left",
+          value: "medication",
+        },
+        {
+          text: "Reason Stopped",
+          align: "left",
+          value: "reasonStopped",
+        },
+        {
+          text: "Dosage",
+          align: "left",
+          value: "dosage",
+        },
         { text: "Note", align: "left", value: "note" },
+        { text: "Response", align: "left", value: "response" },
+        { text: "Progression Date", align: "left", value: "progressionDate" },
       ],
 
       headerRecommendations: [
@@ -402,9 +398,8 @@ export default {
           text: "Diagnosis",
           align: "left",
           sortable: true,
-          value: "diagnosis",
+          value: "icd10",
         },
-        { text: "Issued On", align: "left", value: "issuedOn" },
         { text: "Medication", align: "left", value: "medication" },
         {
           text: "Priority",
@@ -491,16 +486,16 @@ export default {
 
       let filter = queryparams.data.filter;
 
-      let therapies = await axios.get(
-        `${serverBaseURL}/${params.id}/MolecularTherapy`
+      let genomicReports = await axios.get(
+        `${serverBaseURL}/${params.id}/NGSSummary`
       );
 
       let recommendations = await axios.get(
         `${serverBaseURL}/${params.id}/TherapyRecommendation`
       );
 
-      let genomicReports = await axios.get(
-        `${serverBaseURL}/${params.id}/NGSSummary`
+      let therapies = await axios.get(
+        `${serverBaseURL}/${params.id}/MolecularTherapy`
       );
 
       /*
@@ -599,6 +594,8 @@ export default {
     } catch (err) {
       if (err.response.status === 401) {
         this.$router.push(`/`);
+      } else if (err.response.status === 403) {
+        return redirect("/403");
       }
     }
   },

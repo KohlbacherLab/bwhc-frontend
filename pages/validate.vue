@@ -59,7 +59,9 @@
           {{ props.item.numberOfIssues }}
         </td>
         <td class="text-xs-right">
-          <v-icon small @click="functionalityNotAvailable">fas fa-trash</v-icon>
+          <v-icon small @click="functionalityNotAvailable"
+            >fas fa-highlighter</v-icon
+          >
         </td>
       </template>
     </v-data-table>
@@ -233,7 +235,7 @@ export default {
         return redirect("/");
       } else if (err.response.status === 403) {
         return redirect("/403");
-      } 
+      }
     }
   },
 };

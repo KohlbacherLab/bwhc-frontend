@@ -158,7 +158,6 @@
 </template>
 
 <script>
-import navPanel from "~/components/navPanel";
 import { mapActions } from "vuex";
 
 export default {
@@ -167,10 +166,6 @@ export default {
     username: "",
     password: "",
   }),
-
-  components: {
-    navPanel,
-  },
 
   methods: {
     ...mapActions({

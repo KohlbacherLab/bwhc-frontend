@@ -207,9 +207,9 @@
                 ></v-select>
               </v-flex>
               <v-card-text class="grey--text">
-              Password must contain minimum 8 characters, including one capital letter, one number & one special character.
-            </v-card-text>
-              
+                Password must contain minimum 8 characters, including one
+                capital letter, one number & one special character.
+              </v-card-text>
             </v-layout>
           </form>
         </v-container>
@@ -283,9 +283,10 @@
                   required
                 ></v-text-field>
               </v-flex>
-               <v-card-text class="grey--text">
-              Password must contain minimum 8 characters, including one capital letter, one number & one special character.
-            </v-card-text>
+              <v-card-text class="grey--text">
+                Password must contain minimum 8 characters, including one
+                capital letter, one number & one special character.
+              </v-card-text>
             </v-layout>
           </form>
         </v-container>
@@ -357,8 +358,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
- 
   </v-container>
 </template>
 
@@ -667,14 +666,14 @@ export default {
       return {
         itemsUsers: users.data.entries,
         registeredUsers: users.data.total,
-        me: whoami.data
+        me: whoami.data,
       };
     } catch (err) {
       if (err.response.status === 401) {
         return redirect("/");
       } else if (err.response.status === 403) {
         return redirect("/403");
-      } 
+      }
     }
   },
 };

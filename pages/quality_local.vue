@@ -33,9 +33,7 @@
           >
             <v-card-text class="headline font-weight-thin">
               <p>
-                <v-icon color="red accent-1" dark
-                  >fas fa-street-view</v-icon
-                >
+                <v-icon color="red accent-1" dark>fas fa-street-view</v-icon>
               </p>
               <strong>{{ localReport.data.patientTotal }}</strong>
               <br />
@@ -161,7 +159,10 @@
               <p>
                 <v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon>
               </p>
-              <strong>{{ localAverageDurations[0].patient.value }} {{ localAverageDurations[0].patient.unit }}</strong>
+              <strong
+                >{{ localAverageDurations[0].patient.value }}
+                {{ localAverageDurations[0].patient.unit }}</strong
+              >
               <br />{{ localAverageDurations[0].id }}
             </v-card-text>
           </v-card>
@@ -177,15 +178,19 @@
           >
             <v-card-text class="title font-weight-thin">
               <p>
-                <v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon><v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon>
+                <v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon
+                ><v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon>
               </p>
-              <strong>{{ localAverageDurations[1].patient.value }} {{ localAverageDurations[1].patient.unit }}</strong>
+              <strong
+                >{{ localAverageDurations[1].patient.value }}
+                {{ localAverageDurations[1].patient.unit }}</strong
+              >
               <br />{{ localAverageDurations[1].id }}
             </v-card-text>
           </v-card>
         </v-flex>
 
-         <v-flex d-flex xs12 sm6 md3>
+        <v-flex d-flex xs12 sm6 md3>
           <v-card
             flat
             color="grey lighten-4"
@@ -195,9 +200,14 @@
           >
             <v-card-text class="title font-weight-thin">
               <p>
-                <v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon><v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon><v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon>
+                <v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon
+                ><v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon
+                ><v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon>
               </p>
-              <strong>{{ localAverageDurations[2].patient.value }} {{ localAverageDurations[2].patient.unit }}</strong>
+              <strong
+                >{{ localAverageDurations[2].patient.value }}
+                {{ localAverageDurations[2].patient.unit }}</strong
+              >
               <br />{{ localAverageDurations[2].id }}
             </v-card-text>
           </v-card>
@@ -205,7 +215,6 @@
       </v-layout>
 
       <v-divider class="my-3"></v-divider>
-
     </v-container>
     <template></template>
   </v-responsive>
@@ -223,7 +232,7 @@ export default {
   data: () => ({}),
 
   components: {
-    userPanel
+    userPanel,
   },
 
   computed: {
@@ -238,8 +247,6 @@ export default {
     axios.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${localStorage.token}`;
-
-    //alert(`Bearer ${localStorage.token}`);
 
     try {
       let localReport = await axios.get(
@@ -283,7 +290,7 @@ export default {
         return redirect("/");
       } else if (err.response.status === 403) {
         return redirect("/403");
-      } 
+      }
     }
   },
 };

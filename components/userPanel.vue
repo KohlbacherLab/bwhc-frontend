@@ -108,7 +108,6 @@
 
 <script>
 import axios from "axios";
-import { mapGetters } from "vuex";
 
 export default {
   data() {
@@ -121,17 +120,6 @@ export default {
       timeout: 2000,
       text: "Succesfully Logging Out",
     };
-  },
-
-  computed: {
-    ...mapGetters({
-      admin: "auth/admin",
-      documentarist: "auth/documentarist",
-      global: "auth/global",
-      local: "auth/local",
-      mtb: "auth/mtb",
-      researcher: "auth/researcher",
-    }),
   },
 
   methods: {
@@ -152,12 +140,6 @@ export default {
 
       this.$router.push(`/`);
     },
-  },
-
-  async fetch({ params, redirect, error }) {
-    axios.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${localStorage.token}`;
   },
 };
 </script>

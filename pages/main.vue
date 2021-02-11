@@ -8,7 +8,7 @@
       </v-btn>
       <span class="subheading font-weight-thin">
         bwHC query portal, stats, validation and management.
-        <strong @click="$router.push('help')">Help?</strong>
+        <strong @click="$router.push('/help')">Help?</strong>
       </span>
       <v-divider class="my-3"></v-divider>
     </v-flex>
@@ -23,7 +23,34 @@
             >,
           </v-card-text>
           <v-card-text class="subheading grey--text font-weight-light">
-            add details...
+            before clicking on the links above, please check your roles below
+            and take a look at the User Roles table on the right side.
+            <i class="fas fa-user-tag"></i> If you think that your roles are not
+            correct or missing then please get in contact with your local
+            bwHealthCloud administrator. <br /><br />
+            We are constantly working on improving the user experience, if you
+            have any comments/questions regarding the usability of the
+            bwHealthCloud portal, please do not hesitate to contact us. You can
+            send an e-mail to
+            <a href="mailto:aydin-can.polatkan@uni-tuebingen.de">Aydin</a>.
+            <br /><br />
+            <i class="fas fa-exclamation-triangle"></i> If you are experiencing
+            an error, please fill the
+            <a href="https://forms.gle/w8Z3CnB3zLN6iNMb7" target="_blank"
+              >Bug Report Form</a
+            >. <br /><br />
+            <i class="far fa-comments"></i> We can't improve bwHealthCloud
+            without your valuable feedback, please help us to evaluate the
+            portal by filling the following
+            <a href="https://forms.gle/zb7SPH5WEmSurh376" target="_blank"
+              >UI/UX Feedback Form</a
+            >. <br /><br />
+            Thanks in advance.<br />
+            - your bwHealthCloud development team.
+          </v-card-text>
+          <v-card-text class="subheading grey--text font-weight-thin">
+            You have the following role(s):
+            <strong>{{ me.roles.join(", ") }}</strong>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -32,22 +59,24 @@
           <v-flex d-flex>
             <v-card flat>
               <v-card-title class="headline font-weight-light">
-                Quality Check
+                Screencasts
                 <v-icon></v-icon>
               </v-card-title>
               <v-card-text class="subheading grey--text font-weight-light">
-                add details...
+                <i class="fas fa-desktop"></i> Next release will include
+                screencast links here.
               </v-card-text>
             </v-card>
           </v-flex>
           <v-flex d-flex>
             <v-card flat>
               <v-card-title class="headline font-weight-light">
-                Data Validation
+                Release Notes
                 <v-icon></v-icon>
               </v-card-title>
               <v-card-text class="subheading grey--text font-weight-light">
-                add details...
+                <i class="far fa-sticky-note"></i> Next release will include the
+                release notes here.
               </v-card-text>
             </v-card>
           </v-flex>
@@ -69,20 +98,6 @@
                             <v-btn
                               icon
                               slot="activator"
-                              @click="$router.push('/admin')"
-                            >
-                              <v-icon style="font-size: 1.4rem"
-                                >fas fa-user-shield</v-icon
-                              >
-                            </v-btn>
-                            <span>User Management</span>
-                          </v-tooltip>
-                        </td>
-                        <td>
-                          <v-tooltip top>
-                            <v-btn
-                              icon
-                              slot="activator"
                               @click="$router.push('/me')"
                             >
                               <v-icon style="font-size: 1.4rem"
@@ -90,6 +105,20 @@
                               >
                             </v-btn>
                             <span>User Details</span>
+                          </v-tooltip>
+                        </td>
+                        <td>
+                          <v-tooltip top>
+                            <v-btn
+                              icon
+                              slot="activator"
+                              @click="$router.push('/admin')"
+                            >
+                              <v-icon style="font-size: 1.4rem"
+                                >fas fa-user-shield</v-icon
+                              >
+                            </v-btn>
+                            <span>User Management</span>
                           </v-tooltip>
                         </td>
                         <td></td>
@@ -298,11 +327,6 @@
                       </tr>
                     </table>
                   </v-card-text>
-                  <v-card-text class="subheading grey--text font-weight-thin">
-                    You have the following role(s):
-
-                    <strong>{{ me.roles.join(", ") }}</strong>
-                  </v-card-text>
                 </v-card>
               </v-flex>
             </v-layout>
@@ -319,21 +343,12 @@ import userPanel from "~/components/userPanel";
 
 export default {
   data: () => ({
-    //loginDialog: false,
     me: "",
   }),
 
   components: {
     userPanel,
   },
-  /*
-  methods: {
-    ...mapActions({
-      login: "auth/login",
-      logout: "auth/logout",
-    }),
-  },
-  */
 
   async asyncData({ params, redirect, error }) {
     axios.defaults.headers.common[
@@ -352,8 +367,6 @@ export default {
         this.$router.push(`/`);
       } else if (err.response.status === 403) {
         this.$router.push(`/`);
-      } else if (me.length === 0) {
-        this.$router.push(`/admin`);
       }
     }
   },

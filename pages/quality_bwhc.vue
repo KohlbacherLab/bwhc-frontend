@@ -34,9 +34,7 @@
           >
             <v-card-text class="headline font-weight-thin">
               <p>
-                <v-icon color="yellow accent-1" dark
-                  >fas fa-street-view</v-icon
-                >
+                <v-icon color="yellow accent-1" dark>fas fa-street-view</v-icon>
               </p>
               <strong>{{ globalReport.data.patientTotal }}</strong>
               <br />
@@ -164,7 +162,8 @@
                 <v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon>
               </p>
               <strong
-                >{{ globalAverageDurations[0].patient.value }} {{ globalAverageDurations[0].patient.unit }}</strong
+                >{{ globalAverageDurations[0].patient.value }}
+                {{ globalAverageDurations[0].patient.unit }}</strong
               >
 
               <br />{{ globalAverageDurations[0].id }}
@@ -182,10 +181,12 @@
           >
             <v-card-text class="title font-weight-thin">
               <p>
-                <v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon><v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon>
+                <v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon
+                ><v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon>
               </p>
               <strong
-                >{{ globalAverageDurations[1].patient.value }} {{ globalAverageDurations[1].patient.unit }}</strong
+                >{{ globalAverageDurations[1].patient.value }}
+                {{ globalAverageDurations[1].patient.unit }}</strong
               >
               <br />{{ globalAverageDurations[1].id }}
             </v-card-text>
@@ -202,16 +203,18 @@
           >
             <v-card-text class="title font-weight-thin">
               <p>
-                <v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon><v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon><v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon>
+                <v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon
+                ><v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon
+                ><v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon>
               </p>
               <strong
-                >{{ globalAverageDurations[2].patient.value }} {{ globalAverageDurations[2].patient.unit }}</strong
+                >{{ globalAverageDurations[2].patient.value }}
+                {{ globalAverageDurations[2].patient.unit }}</strong
               >
               <br />{{ globalAverageDurations[2].id }}
             </v-card-text>
           </v-card>
         </v-flex>
-
       </v-layout>
       <v-divider class="my-3"></v-divider>
     </v-container>
@@ -224,7 +227,6 @@ import axios from "axios";
 import { dirname } from "path";
 
 import userPanel from "~/components/userPanel";
-import navPanel from "~/components/navPanel";
 
 let seen = true;
 
@@ -233,7 +235,6 @@ export default {
 
   components: {
     userPanel,
-    navPanel,
   },
 
   computed: {
@@ -250,7 +251,6 @@ export default {
     ] = `Bearer ${localStorage.token}`;
 
     try {
-
       let globalReport = await axios.get(
         process.env.baseUrl +
           process.env.port +
@@ -305,7 +305,7 @@ export default {
         return redirect("/");
       } else if (err.response.status === 403) {
         return redirect("/403");
-      } 
+      }
     }
   },
 };

@@ -35,15 +35,20 @@
             </div>
           </v-card-title>
           <v-card-actions>
-            <v-btn flat color="grey" icon @click="editOwnDetails()"><i class="fas fa-user-edit"></i></v-btn>
+            <v-btn flat color="grey" icon @click="editOwnDetails()"
+              ><i class="fas fa-user-edit"></i
+            ></v-btn>
             <v-spacer></v-spacer>
             <v-btn flat color="grey" icon @click="show = !show">
-            <v-icon>{{ show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
-          </v-btn>
+              <v-icon>{{
+                show ? "keyboard_arrow_down" : "keyboard_arrow_up"
+              }}</v-icon>
+            </v-btn>
           </v-card-actions>
           <v-slide-y-transition>
             <v-card-text class="grey--text" v-show="show">
-              To edit user details click on the icon left above then 'save'.<br>*** More descriptive text can be added here.
+              To edit user details click on the icon left above then 'save'.<br />***
+              More descriptive text can be added here.
             </v-card-text>
           </v-slide-y-transition>
         </v-card>
@@ -97,9 +102,10 @@
                   required
                 ></v-text-field>
               </v-flex>
-               <v-card-text class="grey--text">
-              Password must contain minimum 8 characters, including one capital letter, one number & one special character.
-            </v-card-text>
+              <v-card-text class="grey--text">
+                Password must contain minimum 8 characters, including one
+                capital letter, one number & one special character.
+              </v-card-text>
             </v-layout>
           </form>
         </v-container>
@@ -525,7 +531,7 @@ export default {
         return redirect("/");
       } else if (err.response.status === 403) {
         return redirect("/403");
-      } 
+      }
     }
   },
 };
