@@ -21,6 +21,14 @@
 
     <v-card-title class="headline font-weight-light">User List</v-card-title>
 
+    <v-card-text
+      v-if="registeredUsers == 0"
+      class="subheading grey--text font-weight-light"
+    >
+      <i class="fas fa-exclamation-triangle"></i> Please make sure to logout <i class="fas fa-sign-out-alt"></i> 
+      right after adding the first user! Current registered user count is {{ registeredUsers }}. <i class="fas fa-exclamation-triangle"></i> 
+    </v-card-text>
+
     <v-btn
       color="indigo darken-1"
       @click="addNewUserDialog = true"
@@ -229,6 +237,54 @@
             color="indigo darken-1"
             type="addNewUser"
             @click="addNewUser"
+            :disabled="invalid"
+            width="140"
+            >Save</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="editUserRolesDialog" width="500">
+      <v-card>
+        <v-card-title class="headline grey lighten-2" primary-title>
+          <strong>Edit User Roles</strong></v-card-title
+        >
+        <v-container grid-list-md>
+          <form>
+            <v-layout wrap>
+              <v-flex d-flex xs12 sm6 md12>
+                <v-select
+                  v-model="selectEdit"
+                  :items="roles"
+                  :error-messages="errors"
+                  chips
+                  deletable-chips
+                  multiple
+                  label="Role"
+                  data-vv-name="select"
+                  required
+                ></v-select>
+              </v-flex>
+            </v-layout>
+          </form>
+        </v-container>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="black"
+            type="editUserRoles"
+            :disabled="invalid"
+            flat
+            @click="editUserRolesDialog = false"
+            >Cancel</v-btn
+          >
+          <v-btn
+            dark
+            color="indigo darken-1"
+            type="editUserRoles"
+            @click="updateUserRoles"
             :disabled="invalid"
             width="140"
             >Save</v-btn
