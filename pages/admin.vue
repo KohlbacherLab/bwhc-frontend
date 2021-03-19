@@ -2,7 +2,7 @@
   <v-container fluid grid-list-md>
     <userPanel />
     <v-flex>
-      <h3 class="display-3"><strong>bwHealthCloud</strong> user management</h3>
+      <h3 class="display-3"><strong>bwHealthCloud</strong> control panel</h3>
       <span class="subheading subheading font-weight-thin">
         <v-btn
           dark
@@ -18,15 +18,47 @@
     </v-flex>
 
     <v-divider class="my-3"></v-divider>
+    <v-flex d-flex xs5 sm3 md1>
+      <v-col v-for="(peer, i) in peers" :key="i">
+        <v-card flat left max-width="200">
+          <v-card-title class="subtitle"
+            >{{ peer.site }}
+            <div class="caption">
+              {{ peer.status }}
+            </div></v-card-title
+          >
+          <v-card-actions>
+            <v-flex text-xs-center>
+              <div v-if="peer.status == 'Online'">
+                <v-icon style="font-size: 3rem" color="green accent-4"
+                  >fas fa-satellite-dish</v-icon
+                >
+              </div>
+              <div v-else>
+                <v-icon style="font-size: 2.5rem" color="red accent-4"
+                  >fas fa-satellite-dish</v-icon
+                >
+              </div>
+            </v-flex>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-flex>
 
-    <v-card-title class="headline font-weight-light">User List</v-card-title>
+    <v-divider class="my-3"></v-divider>
+
+    <v-card-title class="headline font-weight-light"
+      >User Management</v-card-title
+    >
 
     <v-card-text
       v-if="registeredUsers == 0"
       class="subheading grey--text font-weight-light"
     >
-      <i class="fas fa-exclamation-triangle"></i> Please make sure to logout <i class="fas fa-sign-out-alt"></i> 
-      right after adding the first user! Current registered user count is {{ registeredUsers }}. <i class="fas fa-exclamation-triangle"></i> 
+      <i class="fas fa-exclamation-triangle"></i> Please make sure to logout
+      <i class="fas fa-sign-out-alt"></i> right after adding the first user!
+      Current registered user count is {{ registeredUsers }}.
+      <i class="fas fa-exclamation-triangle"></i>
     </v-card-text>
 
     <v-btn
@@ -719,10 +751,15 @@ export default {
         process.env.baseUrl + process.env.port + process.env.users
       );
 
+      let peerStatusReport = await axios.get(
+        process.env.baseUrl + process.env.port + process.env.peerStatusReport
+      );
+
       return {
         itemsUsers: users.data.entries,
         registeredUsers: users.data.total,
         me: whoami.data,
+        peers: peerStatusReport.data.peerStatus,
       };
     } catch (err) {
       if (err.response.status === 401) {

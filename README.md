@@ -1,3 +1,5 @@
+bwHealthCloud Frontend is a web application developed using the Nuxt.js (based on Vue.js, Node.js) framework. It is designed to run complementary with the bwHealthCloud backend application.
+
 # bwHealthCloud Frontend Manual
 
 -----

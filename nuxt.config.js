@@ -41,6 +41,8 @@ module.exports = {
     mtbFileView: process.env.mtbFileView ||  '/bwhc/mtb/api/data/MTBFileView',
     reporting: process.env.reporting || '/bwhc/mtb/api/reporting',
 
+    peerStatusReport: process.env.peerStatusReport || '/bwhc/peerStatusReport',
+
     users: process.env.users || '/bwhc/user/api/users',
     me: process.env.me || '/bwhc/user/api/whoami',
     logout: process.env.logout || '/bwhc/user/api/logout'

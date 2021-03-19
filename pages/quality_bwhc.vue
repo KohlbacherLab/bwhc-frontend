@@ -66,7 +66,7 @@
               </p>
               <strong
                 >{{ globalCompletionStats[0].patient.count }} ({{
-                  globalCompletionStats[0].patient.percent
+                  globalCompletionStats[0].patient.percent.toFixed(1)
                 }}%)</strong
               >
               <br />{{ globalCompletionStats[0].id }}
@@ -90,7 +90,7 @@
               </p>
               <strong
                 >{{ globalCompletionStats[1].patient.count }} ({{
-                  globalCompletionStats[1].patient.percent
+                  globalCompletionStats[1].patient.percent.toFixed(1)
                 }}%)</strong
               >
               <br />{{ globalCompletionStats[1].id }}
@@ -112,7 +112,7 @@
               </p>
               <strong
                 >{{ globalCompletionStats[2].patient.count }} ({{
-                  globalCompletionStats[2].patient.percent
+                  globalCompletionStats[2].patient.percent.toFixed(1)
                 }}%)</strong
               >
               <br />{{ globalCompletionStats[2].id }}
@@ -136,7 +136,7 @@
               </p>
               <strong
                 >{{ globalCompletionStats[3].patient.count }} ({{
-                  globalCompletionStats[3].patient.percent
+                  globalCompletionStats[3].patient.percent.toFixed(1)
                 }}%)</strong
               >
               <br />{{ globalCompletionStats[3].id }}
@@ -217,6 +217,225 @@
         </v-flex>
       </v-layout>
       <v-divider class="my-3"></v-divider>
+
+      <v-col
+        v-for="(globalConstituentReport, i) in globalConstituentReports"
+        :key="i"
+      >
+        <v-flex d-flex xs12 sm6 md3>
+          <v-card-title class="title font-weight-light"
+            >ZPM {{ globalConstituentReport.zpm }} <div class="caption">
+              <p>Total Patient Count:
+            {{ globalConstituentReport.patientTotal }}</p>
+            </div></v-card-title
+          ></v-flex
+        >
+        <v-layout wrap fluid>
+          <v-flex d-flex xs12 sm6 md3>
+            <v-card
+              flat
+              color="grey lighten-4"
+              light
+              width="250"
+              v-ripple="{ center: true }"
+            >
+              <v-card-text class="title font-weight-thin">
+                <p>
+                  <v-icon style="font-size: 1.4rem">fas fa-file-alt</v-icon>
+                </p>
+                <strong
+                  >{{
+                    globalConstituentReport.completionStats[0].frequency.count
+                  }}
+                  ({{
+                    globalConstituentReport.completionStats[0].frequency.percent.toFixed(
+                      1
+                    )
+                  }}%)</strong
+                >
+                <br />{{ globalConstituentReport.completionStats[0].level }}
+              </v-card-text>
+            </v-card>
+          </v-flex>
+
+          <v-flex d-flex xs12 sm6 md3>
+            <v-card
+              flat
+              color="grey lighten-4"
+              light
+              width="250"
+              v-ripple="{ center: true }"
+            >
+              <v-card-text class="title font-weight-thin">
+                <p>
+                  <v-icon style="font-size: 1.4rem">fas fa-file-alt</v-icon>
+                </p>
+                <strong
+                  >{{
+                    globalConstituentReport.completionStats[1].frequency.count
+                  }}
+                  ({{
+                    globalConstituentReport.completionStats[1].frequency.percent.toFixed(
+                      1
+                    )
+                  }}%)</strong
+                >
+                <br />{{ globalConstituentReport.completionStats[1].level }}
+              </v-card-text>
+            </v-card>
+          </v-flex>
+          <v-flex d-flex xs12 sm6 md3>
+            <v-card
+              flat
+              color="grey lighten-4"
+              light
+              width="250"
+              v-ripple="{ center: true }"
+            >
+              <v-card-text class="title font-weight-thin">
+                <p>
+                  <v-icon style="font-size: 1.4rem">fas fa-file-alt</v-icon>
+                </p>
+                <strong
+                  >{{
+                    globalConstituentReport.completionStats[2].frequency.count
+                  }}
+                  ({{
+                    globalConstituentReport.completionStats[2].frequency.percent.toFixed(
+                      1
+                    )
+                  }}%)</strong
+                >
+                <br />{{ globalConstituentReport.completionStats[2].level }}
+              </v-card-text>
+            </v-card>
+          </v-flex>
+
+          <v-flex d-flex xs12 sm6 md3>
+            <v-card
+              flat
+              color="grey lighten-4"
+              light
+              width="250"
+              v-ripple="{ center: true }"
+            >
+              <v-card-text class="title font-weight-thin">
+                <p>
+                  <v-icon style="font-size: 1.4rem">fas fa-file-alt</v-icon>
+                </p>
+                <strong
+                  >{{
+                    globalConstituentReport.completionStats[3].frequency.count
+                  }}
+                  ({{
+                    globalConstituentReport.completionStats[3].frequency.percent.toFixed(
+                      1
+                    )
+                  }}%)</strong
+                >
+                <br />{{ globalConstituentReport.completionStats[3].level }}
+              </v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
+        <v-flex d-flex xs12 sm6 md3>
+          <v-card-title class="title font-weight-light"
+            >Average Durations</v-card-title
+          >
+        </v-flex>
+        <v-layout wrap fluid>
+          <v-flex d-flex xs12 sm6 md3>
+            <v-card
+              flat
+              color="grey lighten-4"
+              light
+              width="250"
+              v-ripple="{ center: true }"
+            >
+              <v-card-text class="title font-weight-thin">
+                <p>
+                  <v-icon style="font-size: 1.4rem"
+                    >fas fa-chevron-right</v-icon
+                  >
+                </p>
+                <strong
+                  >{{
+                    globalConstituentReport.averageDurations[0].duration.value
+                  }}
+                  {{
+                    globalConstituentReport.averageDurations[0].duration.unit
+                  }}</strong
+                >
+
+                <br />{{ globalConstituentReport.averageDurations[0].timeSpan }}
+              </v-card-text>
+            </v-card>
+          </v-flex>
+
+          <v-flex d-flex xs12 sm6 md3>
+            <v-card
+              flat
+              color="grey lighten-4"
+              light
+              width="250"
+              v-ripple="{ center: true }"
+            >
+              <v-card-text class="title font-weight-thin">
+                <p>
+                  <v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon
+                  ><v-icon style="font-size: 1.4rem"
+                    >fas fa-chevron-right</v-icon
+                  >
+                </p>
+                <strong
+                  >{{
+                    globalConstituentReport.averageDurations[1].duration.value
+                  }}
+                  {{
+                    globalConstituentReport.averageDurations[1].duration.unit
+                  }}</strong
+                >
+
+                <br />{{ globalConstituentReport.averageDurations[1].timeSpan }}
+              </v-card-text>
+            </v-card>
+          </v-flex>
+
+          <v-flex d-flex xs12 sm6 md3>
+            <v-card
+              flat
+              color="grey lighten-4"
+              light
+              width="250"
+              v-ripple="{ center: true }"
+            >
+              <v-card-text class="title font-weight-thin">
+                <p>
+                  <v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon
+                  ><v-icon style="font-size: 1.4rem"
+                    >fas fa-chevron-right</v-icon
+                  ><v-icon style="font-size: 1.4rem"
+                    >fas fa-chevron-right</v-icon
+                  >
+                </p>
+                <strong
+                  >{{
+                    globalConstituentReport.averageDurations[2].duration.value
+                  }}
+                  {{
+                    globalConstituentReport.averageDurations[2].duration.unit
+                  }}</strong
+                >
+
+                <br />{{ globalConstituentReport.averageDurations[2].timeSpan }}
+              </v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
+        <v-divider class="my-3"></v-divider>
+      </v-col>
+
+      
     </v-container>
     <template></template>
   </v-responsive>
@@ -258,6 +477,8 @@ export default {
           "/GlobalQCReport"
       );
 
+      //alert(JSON.stringify(globalReport));
+
       // GLOBAL COMPLETION STATS
       let rawGlobalCompletionStats = Array();
       if (globalReport.data.completionStats) {
@@ -283,6 +504,7 @@ export default {
       }
 
       // GLOBAL CONSTITUENT REPORTS
+      /*
       let rawGlobalConstituentReports = Array();
       if (globalReport.data.constituentReports) {
         for (var i = 0; i < globalReport.data.constituentReports.length; i++) {
@@ -293,12 +515,13 @@ export default {
           rawGlobalConstituentReports.push(item);
         }
       }
+      */
 
       return {
         globalReport,
         globalCompletionStats: rawGlobalCompletionStats,
         globalAverageDurations: rawGlobalAverageDurations,
-        globalConstituentReports: rawGlobalConstituentReports,
+        globalConstituentReports: globalReport.data.constituentReports,
       };
     } catch (err) {
       if (err.response.status === 401) {

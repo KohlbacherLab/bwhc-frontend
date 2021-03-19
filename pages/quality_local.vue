@@ -63,7 +63,7 @@
               <p><v-icon style="font-size: 1.4rem">fas fa-file-alt</v-icon></p>
               <strong
                 >{{ localCompletionStats[0].patient.count }} ({{
-                  localCompletionStats[0].patient.percent
+                  localCompletionStats[0].patient.percent.toFixed(1)
                 }}%)</strong
               >
               <br />{{ localCompletionStats[0].id }}
@@ -87,7 +87,7 @@
               </p>
               <strong
                 >{{ localCompletionStats[1].patient.count }} ({{
-                  localCompletionStats[1].patient.percent
+                  localCompletionStats[1].patient.percent.toFixed(1)
                 }}%)</strong
               >
               <br />{{ localCompletionStats[1].id }}
@@ -109,7 +109,7 @@
               </p>
               <strong
                 >{{ localCompletionStats[2].patient.count }} ({{
-                  localCompletionStats[2].patient.percent
+                  localCompletionStats[2].patient.percent.toFixed(1)
                 }}%)</strong
               >
               <br />{{ localCompletionStats[2].id }}
@@ -133,7 +133,7 @@
               </p>
               <strong
                 >{{ localCompletionStats[3].patient.count }} ({{
-                  localCompletionStats[3].patient.percent
+                  localCompletionStats[3].patient.percent.toFixed(1)
                 }}%)</strong
               >
               <br />{{ localCompletionStats[3].id }}

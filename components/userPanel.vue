@@ -40,7 +40,7 @@
         <v-btn icon slot="activator" @click="$router.push('/admin')">
           <v-icon style="font-size: 2rem">fas fa-user-shield</v-icon>
         </v-btn>
-        <span>User Management</span>
+        <span>Control Panel</span>
       </v-tooltip>
 
       <v-tooltip top>
