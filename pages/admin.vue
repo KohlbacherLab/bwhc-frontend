@@ -2,7 +2,7 @@
   <v-container fluid grid-list-md>
     <userPanel />
     <v-flex>
-      <h3 class="display-3"><strong>bwHealthCloud</strong> control panel</h3>
+      <h3 class="display-3"><strong>bwHealthCloud</strong> Bedienpanel</h3>
       <span class="subheading subheading font-weight-thin">
         <v-btn
           dark
@@ -12,12 +12,15 @@
           @click="$router.push('/main')"
         >
           <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-        >Admin panel to add, edit and remove users.
-        <strong @click="$router.push('help')">Help?</strong>
+        >Admin-Panel: Hinzufügen, Bearbeiten und Entfernen von Benutzern. 
+        <strong @click="$router.push('help')">Hilfe?</strong>
       </span>
     </v-flex>
 
     <v-divider class="my-3"></v-divider>
+    <v-card-title class="headline font-weight-light"
+      >bwHC-Knoten: Verbindungsstatus</v-card-title
+    >
     <v-flex d-flex xs5 sm3 md1>
       <v-col v-for="(peer, i) in peers" :key="i">
         <v-card flat left max-width="200">
@@ -30,7 +33,7 @@
           <v-card-actions>
             <v-flex text-xs-center>
               <div v-if="peer.status == 'Online'">
-                <v-icon style="font-size: 3rem" color="green accent-4"
+                <v-icon style="font-size: 2.5rem" color="green accent-4"
                   >fas fa-satellite-dish</v-icon
                 >
               </div>
@@ -48,16 +51,16 @@
     <v-divider class="my-3"></v-divider>
 
     <v-card-title class="headline font-weight-light"
-      >User Management</v-card-title
+      >Benutzerverwaltung</v-card-title
     >
 
     <v-card-text
       v-if="registeredUsers == 0"
       class="subheading grey--text font-weight-light"
-    >
-      <i class="fas fa-exclamation-triangle"></i> Please make sure to logout
-      <i class="fas fa-sign-out-alt"></i> right after adding the first user!
-      Current registered user count is {{ registeredUsers }}.
+    > 
+      <i class="fas fa-exclamation-triangle"></i> Bitte stellen Sie sicher, logout 
+      <i class="fas fa-sign-out-alt"></i> direkt nach den ersten Benutzer hinzufügen!
+      Aktuelle registrierte Benutzeranzahl ist {{ registeredUsers }}.
       <i class="fas fa-exclamation-triangle"></i>
     </v-card-text>
 
@@ -68,7 +71,7 @@
       dark
       class="mb-2 font-weight-bold"
       v-on="on"
-      >Add User</v-btn
+      >Nutzer hinzufügen</v-btn
     >
     <br /><br />
 
@@ -170,7 +173,7 @@
             :disabled="invalid"
             flat
             @click="editOwnDetailsDialog = false"
-            >Cancel</v-btn
+            >Abbrechen</v-btn
           >
           <v-btn
             dark
@@ -179,7 +182,7 @@
             @click="updateOwnDetails"
             :disabled="invalid"
             width="140"
-            >Save</v-btn
+            >Speichern</v-btn
           >
         </v-card-actions>
       </v-card>
@@ -188,7 +191,7 @@
     <v-dialog v-model="addNewUserDialog" width="500">
       <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>
-          <strong>Add New User</strong></v-card-title
+          <strong>Neue/n Nutzer/in anlegen</strong></v-card-title
         >
         <v-container grid-list-md>
           <form @submit.prevent="addNewUser">
@@ -198,7 +201,7 @@
                   v-model="username"
                   :counter="20"
                   :error-messages="errors"
-                  label="Username"
+                  label="Nutzername"
                   required
                 ></v-text-field>
               </v-flex>
@@ -206,7 +209,7 @@
                 <v-text-field
                   autocomplete="current-password"
                   :value="password"
-                  label="Password"
+                  label="Passwort"
                   :append-icon="value ? 'fas fa-eye-slash' : 'fas fa-eye'"
                   @click:append="() => (value = !value)"
                   :type="value ? 'password' : 'text'"
@@ -219,7 +222,7 @@
                   v-model="given"
                   :counter="10"
                   :error-messages="errors"
-                  label="Name"
+                  label="Vorname"
                   required
                 ></v-text-field>
               </v-flex>
@@ -227,7 +230,7 @@
                 <v-text-field
                   v-model="family"
                   :error-messages="errors"
-                  label="Surname"
+                  label="Nachname"
                   required
                 ></v-text-field>
               </v-flex>
@@ -241,14 +244,13 @@
                   chips
                   deletable-chips
                   multiple
-                  label="Role"
+                  label="Rolle"
                   data-vv-name="select"
                   required
                 ></v-select>
               </v-flex>
               <v-card-text class="grey--text">
-                Password must contain minimum 8 characters, including one
-                capital letter, one number & one special character.
+                Mindest. 8 Zeichen, inkl. ein Großbuchstabe, eine Zahl und ein Sonderzeichen.
               </v-card-text>
             </v-layout>
           </form>
@@ -262,7 +264,7 @@
             :disabled="invalid"
             flat
             @click="addNewUserDialog = false"
-            >Cancel</v-btn
+            >Abbrechen</v-btn
           >
           <v-btn
             dark
@@ -271,7 +273,7 @@
             @click="addNewUser"
             :disabled="invalid"
             width="140"
-            >Save</v-btn
+            >Speichern</v-btn
           >
         </v-card-actions>
       </v-card>
@@ -280,7 +282,7 @@
     <v-dialog v-model="editUserRolesDialog" width="500">
       <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>
-          <strong>Edit User Roles</strong></v-card-title
+          <strong>Nutzer/in Rolle Bearbeiten</strong></v-card-title
         >
         <v-container grid-list-md>
           <form>
@@ -293,7 +295,7 @@
                   chips
                   deletable-chips
                   multiple
-                  label="Role"
+                  label="Rolle"
                   data-vv-name="select"
                   required
                 ></v-select>
@@ -310,7 +312,7 @@
             :disabled="invalid"
             flat
             @click="editUserRolesDialog = false"
-            >Cancel</v-btn
+            >Abbrechen</v-btn
           >
           <v-btn
             dark
@@ -319,7 +321,7 @@
             @click="updateUserRoles"
             :disabled="invalid"
             width="140"
-            >Save</v-btn
+            >Speichern</v-btn
           >
         </v-card-actions>
       </v-card>
@@ -328,7 +330,7 @@
     <v-dialog v-model="editUserDetailsDialog" width="500">
       <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>
-          <strong>Edit User Details</strong></v-card-title
+          <strong>Nutzer/in Details Bearbeiten</strong></v-card-title
         >
         <v-container grid-list-md>
           <form>
@@ -338,7 +340,7 @@
                   v-model="usernameEdit"
                   :counter="20"
                   :error-messages="errors"
-                  label="Username"
+                  label="Nutzername"
                   required
                 ></v-text-field>
               </v-flex>
@@ -346,7 +348,7 @@
                 <v-text-field
                   autocomplete="current-password"
                   :value="passwordEdit"
-                  label="Password"
+                  label="Passwort"
                   :append-icon="value ? 'fas fa-eye-slash' : 'fas fa-eye'"
                   @click:append="() => (value = !value)"
                   :type="value ? 'password' : 'text'"
@@ -359,7 +361,7 @@
                   v-model="givenEdit"
                   :counter="10"
                   :error-messages="errors"
-                  label="Name"
+                  label="Vorname"
                   required
                 ></v-text-field>
               </v-flex>
@@ -367,13 +369,12 @@
                 <v-text-field
                   v-model="familyEdit"
                   :error-messages="errors"
-                  label="Surname"
+                  label="Nachname"
                   required
                 ></v-text-field>
               </v-flex>
               <v-card-text class="grey--text">
-                Password must contain minimum 8 characters, including one
-                capital letter, one number & one special character.
+                Mindest. 8 Zeichen, inkl. ein Großbuchstabe, eine Zahl und ein Sonderzeichen.
               </v-card-text>
             </v-layout>
           </form>
@@ -387,7 +388,7 @@
             :disabled="invalid"
             flat
             @click="editUserDetailsDialog = false"
-            >Cancel</v-btn
+            >Abbrechen</v-btn
           >
           <v-btn
             dark
@@ -396,7 +397,7 @@
             @click="updateUserDetails"
             :disabled="invalid"
             width="140"
-            >Save</v-btn
+            >Speichern</v-btn
           >
         </v-card-actions>
       </v-card>
@@ -405,7 +406,7 @@
     <v-dialog v-model="deleteUserDialog" width="500">
       <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>
-          <strong>Delete User</strong></v-card-title
+          <strong>Nutzer/in Löschen</strong></v-card-title
         >
         <v-container grid-list-md>
           <form>
@@ -413,11 +414,11 @@
               <v-flex d-flex xs12 sm6 md12>
                 <v-card-text class="font-weight-medium">
                   <v-icon>fas fa-exclamation-triangle</v-icon>
-                  Warning!<br /><br />
+                  Achtung!<br /><br />
                   <p class="font-weight-black">
-                    Clicking "Delete" will deactivate this account.
+                    Ein Klick auf „Löschen“ wird dieses Nutzer/in deaktivieren.
                   </p>
-                  <p>Are you really sure?</p>
+                  <p>Sind Sie wirklich sicher?</p>
                 </v-card-text>
               </v-flex>
             </v-layout>
@@ -432,7 +433,7 @@
             :disabled="invalid"
             flat
             @click="deleteUserDialog = false"
-            >Cancel</v-btn
+            >Abbrechen</v-btn
           >
           <v-btn
             dark
@@ -474,7 +475,7 @@ export default {
         const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
         return (
           pattern.test(value) ||
-          "Min. 8 characters, incl. one capital letter, one number & one special character."
+          "Mindest. 8 Zeichen, inkl. ein Großbuchstabe, eine Zahl und ein Sonderzeichen."
         );
       },
     },
@@ -489,11 +490,11 @@ export default {
     ],
 
     headerUsers: [
-      { text: "User ID", value: "id" },
-      { text: "Username", value: "username" },
-      { text: "Roles", value: "role" },
-      { text: "Surname", value: "family" },
-      { text: "Name", value: "given" },
+      { text: "Benutzeridentifikation", value: "id" },
+      { text: "Nutzername", value: "username" },
+      { text: "Rollen", value: "role" },
+      { text: "Nachname", value: "family" },
+      { text: "Vorname", value: "given" },
       { text: "Status", value: "status" },
       {
         text: "Details",
@@ -502,13 +503,13 @@ export default {
         value: "details",
       },
       {
-        text: "Roles",
+        text: "Rollen",
         align: "right",
         sortable: false,
         value: "roles",
       },
       {
-        text: "Delete",
+        text: "Löschen",
         align: "right",
         sortable: false,
         value: "delete",

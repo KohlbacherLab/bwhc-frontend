@@ -3,7 +3,7 @@
     <v-container fluid grid-list-md>
       <userPanel />
       <v-flex>
-        <h3 class="display-3"><strong>bwHealthCloud</strong> query portal</h3>
+        <h3 class="display-3"><strong>bwHealthCloud</strong> Abfrage-Portal</h3>
 
         <span class="subheading subheading font-weight-thin">
           <v-btn
@@ -14,8 +14,8 @@
             @click="$router.push('/main')"
           >
             <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-          >If nothing is selected, query will return everything.
-          <strong @click="$router.push('help')">Help?</strong>
+          >Ohne Such-Kriterien, wird die Anfrage alles zurückliefern. 
+          <strong @click="$router.push('help')">Hilfe?</strong>
         </span>
         <v-divider class="my-3"></v-divider>
       </v-flex>

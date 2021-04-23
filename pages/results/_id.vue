@@ -1,14 +1,13 @@
 <template>
   <v-container fluid grid-list-md>
     <userPanel />
-    <h3 class="display-3"><strong>bwHealthCloud</strong> results</h3>
+    <h3 class="display-3"><strong>bwHealthCloud</strong> Ergebnisse</h3>
 
     <span class="subheading font-weight-light">
       <v-btn dark icon color="blue accent-2" align-end @click="goBack">
         <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-      >Query results are displayed below some informative text can be displayed
-      here.
-      <strong @click="$router.push('../help')">Help?</strong>
+      >Abfrageergebnisse werden unten angezeigt.
+      <strong @click="$router.push('../help')">Hilfe?</strong>
     </span>
     <v-divider class="my-3"></v-divider>
 
@@ -25,27 +24,27 @@
                 <v-card flat>
                   <v-card-text class="subheading font-weight-thin">
                     <span v-if="getQueryParametersMutations.length > 0">
-                      <strong>Mutations:</strong>
+                      <strong>Mutationen:</strong>
                       {{ getQueryParametersMutations.join(", ") }}
                       <br />
                     </span>
                     <span v-if="getQueryParametersDiagnosis.length > 0">
-                      <strong>Diagnosis</strong>
+                      <strong>Diagnose:</strong>
                       {{ getQueryParametersDiagnosis.join(", ") }}
                       <br />
                     </span>
                     <span v-if="getQueryParametersDrugs.length > 0">
-                      <strong>Drugs</strong>
+                      <strong>Wirkstoffe:</strong>
                       {{ getQueryParametersDrugs.join(", ") }}
                       <br />
                     </span>
                     <span v-if="getQueryParametersResponses.length > 0">
-                      <strong>Responses</strong>
+                      <strong>Responses:</strong>
                       {{ getQueryParametersResponses.join(", ") }}
                       <br />
                     </span>
 
-                    <strong>Query Type:</strong>
+                    <strong>Abfragetyp:</strong>
                     {{ getQueryParametersFederated }}
                   </v-card-text>
                 </v-card>
@@ -89,7 +88,7 @@
           <v-card-text class="headline font-weight-thin">
             <p><v-icon color="purple" dark>fas fa-street-view</v-icon></p>
             <strong>{{ itemsFiles.length }}</strong>
-            <br />Patients
+            <br />Patienten
           </v-card-text>
         </v-card>
       </v-flex>
@@ -106,7 +105,7 @@
           <v-card-text class="headline font-weight-thin">
             <p><v-icon color="indigo">fas fa-stethoscope</v-icon></p>
             <strong>{{ itemsGenomicReports.length }}</strong>
-            <br />NGS Summaries
+            <br />NGS Übersichten
           </v-card-text>
         </v-card>
       </v-flex>
@@ -123,7 +122,7 @@
           <v-card-text class="headline font-weight-thin">
             <p><v-icon color="blue">fas fa-comment-medical</v-icon></p>
             <strong>{{ itemsRecommendations.length }}</strong>
-            <br />Recommendations
+            <br />Therapie-Empfehlungen
           </v-card-text>
         </v-card>
       </v-flex>
@@ -140,7 +139,7 @@
           <v-card-text class="headline font-weight-thin">
             <p><v-icon color="cyan" dark>fas fa-file-medical</v-icon></p>
             <strong>{{ itemsTherapies.length }}</strong>
-            <br />Molecular Therapies
+            <br />Molekulare Therapien
           </v-card-text>
         </v-card>
       </v-flex>
@@ -150,22 +149,23 @@
 
     <v-tabs color="blue-grey lighten-5" fixed-tabs icons-and-text>
       <v-tab class="subheading font-weight-regular" :key="cases"
-        >Patients</v-tab
+        >Patienten</v-tab
       >
       <v-tab class="subheading font-weight-regular" :key="genomics"
-        >NGS Summaries</v-tab
+        >NGS Übersichten</v-tab
       >
       <v-tab class="subheading font-weight-regular" :key="recommendations"
-        >Recommendations</v-tab
+        >Therapie-Empfehlungen</v-tab
       >
       <v-tab class="subheading font-weight-regular" :key="therapies"
-        >Molecular Therapies</v-tab
+        >Molekulare Therapien</v-tab
       >
 
       <!-- CASES -->
       <v-tab-item>
         <v-card flat light>
-          <v-data-table :headers="headerFiles" :items="itemsFiles">
+          <v-data-table :headers="headerFiles" :items="itemsFiles" no-data-text="Keine Daten verfügbar"
+      rows-per-page-text="Zeilen pro Seite">
             <template slot="items" slot-scope="props" no-data>
               <tr @click="routeToPatient(queryId + '&' + props.item.id)">
                 <!-- <td>{{ props.item.firstReferral }}</td> -->
@@ -214,6 +214,8 @@
           <v-data-table
             :headers="headerGenomicReports"
             :items="itemsGenomicReports"
+            no-data-text="Keine Daten verfügbar"
+      rows-per-page-text="Zeilen pro Seite"
           >
             <template slot="items" slot-scope="props">
               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
@@ -249,6 +251,8 @@
           <v-data-table
             :headers="headerRecommendations"
             :items="itemsRecommendations"
+            no-data-text="Keine Daten verfügbar"
+      rows-per-page-text="Zeilen pro Seite"
           >
             <template slot="items" slot-scope="props">
               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
@@ -275,6 +279,8 @@
             fluid
             :headers="headerTherapies"
             :items="itemsTherapies"
+            no-data-text="Keine Daten verfügbar"
+      rows-per-page-text="Zeilen pro Seite"
           >
             <template slot="items" slot-scope="props">
               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
@@ -352,57 +358,57 @@ export default {
       vitalStatus: [],
 
       headerFiles: [
-        { text: "Managing ZPM", align: "left", value: "managingZPM" },
-        { text: "Gender", align: "left", sortable: true, value: "gender" },
-        { text: "Age", align: "left", sortable: true, value: "age" },
-        { text: "Vital Status", align: "left", value: "vitalStatus" },
+        { text: "ZPM", align: "left", value: "managingZPM" },
+        { text: "Geschlecht", align: "left", sortable: true, value: "gender" },
+        { text: "Alter", align: "left", sortable: true, value: "age" },
+        { text: "Vital-Status", align: "left", value: "vitalStatus" },
       ],
 
       headerTherapies: [
         { text: "Status", align: "left", value: "status" },
-        { text: "Recorded On", align: "left", value: "recordedOn" },
+        { text: "Erfassungsdatum", align: "left", value: "recordedOn" },
         {
-          text: "Recommendation",
+          text: "Empfehlung",
           align: "left",
           sortable: true,
           value: "recommendation",
         },
-        { text: "Period", align: "left", sortable: true, value: "period" },
+        { text: "Zeitraum", align: "left", sortable: true, value: "period" },
         {
-          text: "Not Done Reason",
+          text: "Nicht-Umsetzungs-Grund",
           align: "left",
           value: "notDoneReason",
         },
         {
-          text: "Medication",
+          text: "Medikation",
           align: "left",
           value: "medication",
         },
         {
-          text: "Reason Stopped",
+          text: "Abbruchsgrund",
           align: "left",
           value: "reasonStopped",
         },
         {
-          text: "Dosage",
+          text: "Dosisdichte",
           align: "left",
           value: "dosage",
         },
-        { text: "Note", align: "left", value: "note" },
+        { text: "Bemerkungen", align: "left", value: "note" },
         { text: "Response", align: "left", value: "response" },
-        { text: "Progression Date", align: "left", value: "progressionDate" },
+        { text: "Progressionsdatum", align: "left", value: "progressionDate" },
       ],
 
       headerRecommendations: [
         {
-          text: "Diagnosis",
+          text: "Diagnose",
           align: "left",
           sortable: true,
           value: "icd10",
         },
-        { text: "Medication", align: "left", value: "medication" },
+        { text: "Medikation", align: "left", value: "medication" },
         {
-          text: "Priority",
+          text: "Priorität",
           align: "left",
           value: "priority",
         },
@@ -411,20 +417,20 @@ export default {
 
       headerGenomicReports: [
         {
-          text: "Specimen",
+          text: "Probe",
           align: "left",
           sortable: true,
           value: "specimen",
         },
-        { text: "Tumor Entity", align: "left", value: "tumorEntity" },
-        { text: "Specimen Type", align: "left", value: "specimenType" },
+        { text: "Tumorentität", align: "left", value: "tumorEntity" },
+        { text: "Probenart", align: "left", value: "specimenType" },
         {
-          text: "Sequencing Type",
+          text: "Sequenzierungs-Art",
           align: "left",
           value: "sequencingType",
         },
         {
-          text: "Tumor Cell Content",
+          text: "Tumor-Zellgehalt",
           align: "left",
           value: "tumorCellContent",
         },

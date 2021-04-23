@@ -1,13 +1,12 @@
 <template>
   <v-container fluid grid-list-md>
     <userPanel />
-    <h3 class="display-3"><strong>bwHealthCloud</strong> patient</h3>
+    <h3 class="display-3"><strong>bwHealthCloud</strong> Patient</h3>
     <span class="subheading font-weight-light">
       <v-btn dark icon color="blue accent-2" align-end @click="goBack">
         <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-      >Query results are displayed below some informative text can be displayed
-      here.
-      <strong @click="$router.push('../help')">Help?</strong>
+      >Patienten Akte.
+      <strong @click="$router.push('../help')">Hilfe?</strong>
     </span>
 
     <v-divider class="my-3"></v-divider>
@@ -31,7 +30,7 @@
                 <v-icon slot="activator" class="mr-1"
                   >fas fa-calendar-day</v-icon
                 >
-                <span>Date of Birth</span>
+                <span>Geburtsdatum</span>
               </v-tooltip>
               <span class="heading mr-2">{{ patient.birthDate }}</span>
               <span class="mr-2">·</span>
@@ -39,23 +38,22 @@
                 <v-icon slot="activator" class="mr-1"
                   >fas fa-location-arrow</v-icon
                 >
-                <span>Managing ZPM</span>
-                <span>Age</span>
+                <span>ZPM</span>
               </v-tooltip>
               <span class="subheading mr-2">{{ patient.managingZPM }}</span>
               <span class="mr-2">·</span>
               <v-tooltip top>
                 <v-icon slot="activator" class="mr-1">fas fa-shield-alt</v-icon>
-                <span>Insurance</span>
+                <span>Versicherung</span>
               </v-tooltip>
               <span class="subheading mr-2">{{ patient.insurance }}</span>
             </v-list-tile>
           </v-layout>
         </v-card-actions>
         <v-card-title
-          >Consent: {{ patient.consentStatus }} <br />
-          First Referral Date: {{ patient.firstReferralDate }} <br />
-          Patient ID: {{ patient.id }}
+          >Einwilligung: {{ patient.consentStatus }} <br />
+          Datum der Erstüberweisung {{ patient.firstReferralDate }} <br />
+          Patienten ID: {{ patient.id }}
         </v-card-title>
       </v-card>
     </v-layout>
@@ -76,7 +74,8 @@
         :top="y === 'top'"
         :vertical="mode === 'vertical'"
       >
-        ⚠️ Simple demonstration 🚧 The treating doctor or facility notified.
+        ⚠️ Demo 🚧 Der behandelnde Arzt oder die behandelnde Einrichtung
+        benachrichtigt.
         <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
       </v-snackbar>
     </v-flex>
@@ -85,12 +84,14 @@
     <div id="diagnoses"></div>
 
     <v-divider class="my-3"></v-divider>
-    <v-card-title class="headline font-weight-light">Diagnoses</v-card-title>
+    <v-card-title class="headline font-weight-light">Diagnosen</v-card-title>
     <v-data-table
       :headers="headerDiagnoses"
       :items="diagnoses"
       hide-default-header
       hide-default-footer
+      no-data-text="Keine Daten verfügbar"
+      rows-per-page-text="Zeilen pro Seite"
     >
       <template slot="items" slot-scope="props">
         <tr>
@@ -121,13 +122,15 @@
 
     <v-divider class="my-3"></v-divider>
     <v-card-title class="headline font-weight-light"
-      >Family Member Diagnoses</v-card-title
+      >Tumor-Erkrankungen bei Verwandten</v-card-title
     >
     <v-data-table
       :headers="headerFamilyMemberDiagnoses"
       :items="familyMemberDiagnoses"
       hide-default-header
       hide-default-footer
+      no-data-text="Keine Daten verfügbar"
+      rows-per-page-text="Zeilen pro Seite"
     >
       <template slot="items" slot-scope="props">
         <tr>
@@ -153,13 +156,15 @@
 
     <v-divider class="my-3"></v-divider>
     <v-card-title class="headline font-weight-light"
-      >Guideline Therapies</v-card-title
+      >Leitlinien-Therapien</v-card-title
     >
     <v-data-table
       :headers="headerGuidelineTherapies"
       :items="guidelineTherapies"
       hide-default-header
       hide-default-footer
+      no-data-text="Keine Daten verfügbar"
+      rows-per-page-text="Zeilen pro Seite"
     >
       <template slot="items" slot-scope="props">
         <tr>
@@ -194,6 +199,8 @@
       :items="ecogStatus"
       hide-default-header
       hide-default-footer
+      no-data-text="Keine Daten verfügbar"
+      rows-per-page-text="Zeilen pro Seite"
     >
       <template slot="items" slot-scope="props">
         <tr>
@@ -216,12 +223,14 @@
     <div id="specimens"></div>
 
     <v-divider class="my-3"></v-divider>
-    <v-card-title class="headline font-weight-light">Specimens</v-card-title>
+    <v-card-title class="headline font-weight-light">Proben</v-card-title>
     <v-data-table
       :headers="headerSpecimens"
       :items="specimens"
       hide-default-header
       hide-default-footer
+      no-data-text="Keine Daten verfügbar"
+      rows-per-page-text="Zeilen pro Seite"
     >
       <template slot="items" slot-scope="props">
         <tr>
@@ -249,13 +258,15 @@
 
     <v-divider class="my-3"></v-divider>
     <v-card-title class="headline font-weight-light"
-      >Molecular Pathology Findings</v-card-title
+      >Molekular-Pathologie Befunde</v-card-title
     >
     <v-data-table
       :headers="headerMolecularPathologyFindings"
       :items="molecularPathologyFindings"
       hide-default-header
       hide-default-footer
+      no-data-text="Keine Daten verfügbar"
+      rows-per-page-text="Zeilen pro Seite"
     >
       <template slot="items" slot-scope="props">
         <tr>
@@ -282,13 +293,15 @@
 
     <v-divider class="my-3"></v-divider>
     <v-card-title class="headline font-weight-light"
-      >Histology Reports</v-card-title
+      >Histologie Berichte</v-card-title
     >
     <v-data-table
       :headers="headerHistologyReports"
       :items="histologyReports"
       hide-default-header
       hide-default-footer
+      no-data-text="Keine Daten verfügbar"
+      rows-per-page-text="Zeilen pro Seite"
     >
       <template slot="items" slot-scope="props">
         <tr>
@@ -315,13 +328,17 @@
     <div id="ngsReports"></div>
 
     <v-divider class="my-3"></v-divider>
-    <v-card-title class="headline font-weight-light">NGS Reports</v-card-title>
+    <v-card-title class="headline font-weight-light"
+      >Somatische NGS-Berichte</v-card-title
+    >
     <v-data-table
       :headers="headerNgsReports"
       :items="ngsReports"
       :expand="expand"
       hide-default-header
       hide-default-footer
+      no-data-text="Keine Daten verfügbar"
+      rows-per-page-text="Zeilen pro Seite"
     >
       <template slot="items" slot-scope="props">
         <tr @click="props.expanded = !props.expanded">
@@ -340,7 +357,7 @@
       </template>
       <template v-slot:expand="props">
         <v-card color="grey lighten-3" flat light left>
-          <v-card-title>Metadata </v-card-title>
+          <v-card-title>Metadaten </v-card-title>
         </v-card>
 
         <v-card flat>
@@ -350,6 +367,8 @@
             hide-default-header
             hide-default-footer
             hide-actions
+            no-data-text="Keine Daten verfügbar"
+            rows-per-page-text="Zeilen pro Seite"
           >
             <template slot="items" slot-scope="props">
               <tr>
@@ -373,7 +392,7 @@
           </v-data-table>
         </v-card>
         <v-card color="grey lighten-3" flat light left>
-          <v-card-title>Simple Variants </v-card-title>
+          <v-card-title>Einfache Varianten </v-card-title>
         </v-card>
 
         <v-card flat>
@@ -383,6 +402,8 @@
             hide-default-header
             hide-default-footer
             hide-actions
+            no-data-text="Keine Daten verfügbar"
+            rows-per-page-text="Zeilen pro Seite"
           >
             <template slot="items" slot-scope="props">
               <tr>
@@ -431,7 +452,7 @@
         </v-card>
 
         <v-card color="grey lighten-3" flat light left>
-          <v-card-title>Copy Number Variants </v-card-title>
+          <v-card-title>Copy Number Varianten </v-card-title>
         </v-card>
         <v-card flat>
           <v-data-table
@@ -440,6 +461,8 @@
             hide-default-header
             hide-default-footer
             hide-actions
+            no-data-text="Keine Daten verfügbar"
+            rows-per-page-text="Zeilen pro Seite"
           >
             <template slot="items" slot-scope="props">
               <tr>
@@ -482,7 +505,7 @@
         </v-card>
 
         <v-card color="grey lighten-3" flat light left>
-          <v-card-title>DNA Fusions </v-card-title>
+          <v-card-title>DNA-Fusions </v-card-title>
         </v-card>
         <v-card flat>
           <v-data-table
@@ -491,6 +514,8 @@
             hide-default-header
             hide-default-footer
             hide-actions
+            no-data-text="Keine Daten verfügbar"
+            rows-per-page-text="Zeilen pro Seite"
           >
             <template slot="items" slot-scope="props">
               <tr>
@@ -506,7 +531,7 @@
         </v-card>
 
         <v-card color="grey lighten-3" flat light left>
-          <v-card-title>RNA Fusions </v-card-title>
+          <v-card-title>RNA-Fusions </v-card-title>
         </v-card>
         <v-card flat>
           <v-data-table
@@ -515,6 +540,8 @@
             hide-default-header
             hide-default-footer
             hide-actions
+            no-data-text="Keine Daten verfügbar"
+            rows-per-page-text="Zeilen pro Seite"
           >
             <template slot="items" slot-scope="props">
               <tr>
@@ -557,6 +584,8 @@
             hide-default-header
             hide-default-footer
             hide-actions
+            no-data-text="Keine Daten verfügbar"
+            rows-per-page-text="Zeilen pro Seite"
           >
             <template slot="items" slot-scope="props">
               <tr>
@@ -610,7 +639,9 @@
     <div id="carePlans"></div>
 
     <v-divider class="my-3"></v-divider>
-    <v-card-title class="headline font-weight-light">Care Plans</v-card-title>
+    <v-card-title class="headline font-weight-light"
+      >MTB-Beschluss</v-card-title
+    >
 
     <v-data-table
       :headers="headerCarePlans"
@@ -618,6 +649,8 @@
       :expand="expand"
       hide-default-header
       hide-default-footer
+      no-data-text="Keine Daten verfügbar"
+      rows-per-page-text="Zeilen pro Seite"
     >
       <template slot="items" slot-scope="props">
         <tr @click="props.expanded = !props.expanded">
@@ -637,10 +670,10 @@
           <v-card-title
             ><v-icon color="blue" class="mr-3">fas fa-info-circle</v-icon>
             <p>
-              <strong> Protocol</strong> {{ props.item.protocol }} <br />
-              <strong>Genetic Counselling Recommendation</strong>
+              <strong> Protokoll:</strong> {{ props.item.protocol }} <br />
+              <strong>Human-genetische Beratung:</strong>
               {{ props.item.geneticCounsellingRecommendation }} <br />
-              <strong>Inclusion In Study Recommendation</strong>
+              <strong>Einschluss in Studie:</strong>
               {{ props.item.inclusionInStudyRecommendation }}
             </p>
           </v-card-title>
@@ -653,6 +686,8 @@
             hide-default-header
             hide-default-footer
             hide-actions
+            no-data-text="Keine Daten verfügbar"
+            rows-per-page-text="Zeilen pro Seite"
           >
             <template slot="items" slot-scope="props">
               <tr>
@@ -695,7 +730,7 @@
 
     <v-divider class="my-3"></v-divider>
     <v-card-title class="headline font-weight-light"
-      >Claim Responses</v-card-title
+      >Kostenübernahme-Anträge</v-card-title
     >
 
     <v-data-table
@@ -703,6 +738,8 @@
       :items="claimStatus"
       hide-default-header
       hide-default-footer
+      no-data-text="Keine Daten verfügbar"
+      rows-per-page-text="Zeilen pro Seite"
     >
       <template slot="items" slot-scope="props">
         <tr>
@@ -730,7 +767,7 @@
 
     <v-divider class="my-3"></v-divider>
     <v-card-title class="headline font-weight-light"
-      >Molecular Therapies</v-card-title
+      >Molekulare Therapien</v-card-title
     >
 
     <v-data-table
@@ -738,6 +775,8 @@
       :items="molecularTherapies"
       hide-default-header
       hide-default-footer
+      no-data-text="Keine Daten verfügbar"
+      rows-per-page-text="Zeilen pro Seite"
     >
       <template slot="items" slot-scope="props">
         <tr>
@@ -797,6 +836,7 @@ export default {
       snackbar: false,
       extendCarePlans: false,
       y: "top",
+
       headerDiagnoses: [
         {
           text: "ID",
@@ -805,7 +845,7 @@ export default {
           value: "id",
         },
         {
-          text: "Recorded On",
+          text: "Erstdiagnosedatum",
           align: "left",
           sortable: true,
           value: "recordedOn",
@@ -823,19 +863,19 @@ export default {
           value: "icdO3T",
         },
         {
-          text: "Who Grade",
+          text: "WHO ZNS Grad",
           align: "left",
           sortable: true,
           value: "whoGrade",
         },
         {
-          text: "Status History",
+          text: "Tumorausbreitung",
           align: "left",
           sortable: true,
           value: "statusHistory",
         },
         {
-          text: "Guideline Treatment Status",
+          text: "Leitlinien-Behandlungsstatus",
           align: "left",
           sortable: true,
           value: "guidelineTreatmentStatus",
@@ -850,7 +890,7 @@ export default {
           value: "id",
         },
         {
-          text: "Relationship",
+          text: "Verwandtschaftsgrad",
           align: "left",
           sortable: true,
           value: "relationship",
@@ -865,31 +905,31 @@ export default {
           value: "id",
         },
         {
-          text: "Diagnosis",
+          text: "Diagnose",
           align: "left",
           sortable: true,
           value: "diagnosis",
         },
         {
-          text: "Therapy Line",
+          text: "Therapie-Linie",
           align: "left",
           sortable: true,
           value: "therapyLine",
         },
         {
-          text: "Period",
+          text: "Zeitraum",
           align: "left",
           sortable: true,
           value: "period",
         },
         {
-          text: "Medication",
+          text: "Medikation",
           align: "left",
           sortable: true,
           value: "medication",
         },
         {
-          text: "Reason Stopped",
+          text: "Abbruchsgrund",
           align: "left",
           sortable: true,
           value: "reasonStopped",
@@ -901,7 +941,7 @@ export default {
           value: "response",
         },
         {
-          text: "Progression Date",
+          text: "Progressionsdatum",
           align: "left",
           sortable: true,
           value: "progressionDate",
@@ -910,13 +950,13 @@ export default {
 
       headerEcogStatus: [
         {
-          text: "Effective Date",
+          text: "Datum",
           align: "left",
           sortable: true,
           value: "effectiveDate",
         },
         {
-          text: "Value",
+          text: "Wert",
           align: "left",
           sortable: true,
           value: "value",
@@ -937,25 +977,25 @@ export default {
           value: "icd10",
         },
         {
-          text: "Type",
+          text: "Art",
           align: "left",
           sortable: true,
           value: "type",
         },
         {
-          text: "Collection Date",
+          text: "Entnahmedatum",
           align: "left",
           sortable: true,
           value: "collectionDate",
         },
         {
-          text: "Localization",
+          text: "Lokalisierung",
           align: "left",
           sortable: true,
           value: "localization",
         },
         {
-          text: "Collection Method",
+          text: "Entnahmemethode",
           align: "left",
           sortable: true,
           value: "collectionMethod",
@@ -970,25 +1010,25 @@ export default {
           value: "id",
         },
         {
-          text: "Specimen",
+          text: "Probe",
           align: "left",
           sortable: true,
           value: "specimen",
         },
         {
-          text: "Performing Institute",
+          text: "Institut",
           align: "left",
           sortable: true,
           value: "performingInstitute",
         },
         {
-          text: "Issued On",
+          text: "Erstellungsdatum",
           align: "left",
           sortable: true,
           value: "issuedOn",
         },
         {
-          text: "Note",
+          text: "Bemerkungen",
           align: "left",
           sortable: true,
           value: "note",
@@ -1003,31 +1043,31 @@ export default {
           value: "id",
         },
         {
-          text: "Specimen",
+          text: "Probe",
           align: "left",
           sortable: true,
           value: "specimen",
         },
         {
-          text: "Issued On",
+          text: "Erstellungsdatum",
           align: "left",
           sortable: true,
           value: "issuedOn",
         },
         {
-          text: "Tumor Morphology",
+          text: "Tumor-Morphologie",
           align: "left",
           sortable: true,
           value: "tumorMorphology",
         },
         {
-          text: "Tumor Cell Content",
+          text: "Tumor-Zellgehalt",
           align: "left",
           sortable: true,
           value: "tumorCellContent",
         },
         {
-          text: "Note",
+          text: "Bemerkungen",
           align: "left",
           sortable: true,
           value: "note",
@@ -1042,25 +1082,25 @@ export default {
           value: "id",
         },
         {
-          text: "Specimen",
+          text: "Probe",
           align: "left",
           sortable: true,
           value: "specimen",
         },
         {
-          text: "Issue Date",
+          text: "Erstellungsdatum",
           align: "left",
           sortable: true,
           value: "issuedOn",
         },
         {
-          text: "Sequencing Type",
+          text: "Sequenzierungs-Art",
           align: "left",
           sortable: true,
           value: "sequencingType",
         },
         {
-          text: "Tumor Cell Content",
+          text: "Tumor-Zellgehalt",
           align: "left",
           sortable: true,
           value: "tumorCellContent",
@@ -1072,19 +1112,19 @@ export default {
           value: "brcaness",
         },
         {
-          text: "Micro Satellite Instabilities",
+          text: "Micro-Satellite Instabilitäten",
           align: "left",
           sortable: true,
           value: "microSatelliteInstabilities",
         },
         {
-          text: "Tumor Mutational Burden",
+          text: "Mutationslast",
           align: "left",
           sortable: true,
           value: "tumorMutationalBurden",
         },
         {
-          text: "Expand NGS Report Details",
+          text: "NGS-Bericht Details...",
           align: "right",
           sortable: false,
           value: "",
@@ -1093,25 +1133,25 @@ export default {
 
       headerMetadata: [
         {
-          text: "Kit Type",
+          text: "Kit-Typ",
           align: "left",
           sortable: true,
           value: "kitType",
         },
         {
-          text: "Kit Manufacturer",
+          text: "Kit Hersteller",
           align: "left",
           sortable: true,
           value: "kitManufacturer",
         },
         {
-          text: "Sequencer",
+          text: "Sequenziergerät",
           align: "left",
           sortable: true,
           value: "sequencer",
         },
         {
-          text: "Ref. Genome",
+          text: "Ref. Genom",
           align: "left",
           sortable: true,
           value: "referenceGenome",
@@ -1132,31 +1172,31 @@ export default {
           value: "chromosome",
         },
         {
-          text: "Gene",
+          text: "Gen",
           align: "left",
           sortable: true,
           value: "gene",
         },
         {
-          text: "Start/End",
+          text: "Start/Ende",
           align: "left",
           sortable: true,
           value: "startEnd",
         },
         {
-          text: "Ref. Allele",
+          text: "Ref Allel",
           align: "left",
           sortable: true,
           value: "refAllele",
         },
         {
-          text: "Alt Allele",
+          text: "Alt Allel",
           align: "left",
           sortable: true,
           value: "altAllele",
         },
         {
-          text: "Functional Annotation",
+          text: "Funktionale Annotation",
           align: "left",
           sortable: true,
           value: "functionalAnnotation",
@@ -1180,7 +1220,7 @@ export default {
           value: "readDepth",
         },
         {
-          text: "Allelic Freq.",
+          text: "Allel-Frequenz",
           align: "left",
           sortable: true,
           value: "readDepth",
@@ -1213,55 +1253,49 @@ export default {
           value: "chromosome",
         },
         {
-          text: "Start Range",
+          text: "Anfangsbereich",
           align: "left",
           sortable: true,
           value: "startRange",
         },
         {
-          text: "End",
+          text: "Endbereich",
           align: "left",
           sortable: true,
           value: "endRange",
         },
         {
-          text: "Total Copy Number",
-          align: "left",
-          sortable: true,
-          value: "totalCopyNumber",
-        },
+        text: "Rel. Kopienzahl",
+        align: "left",
+        sortable: true,
+        value: "relativeCopyNumber",
+      },
+      {
+        text: "CNA",
+        align: "left",
+        sortable: true,
+        value: "cnA",
+      },
+      {
+        text: "CNB",
+        align: "left",
+        sortable: true,
+        value: "cnB",
+      },
+      {
+        text: "Reported Affected Genes",
+        align: "left",
+        sortable: true,
+        value: "reportedAffectedGenes",
+      },
+      {
+        text: "Reported Focality",
+        align: "left",
+        sortable: true,
+        value: "reportedFocality",
+      },
         {
-          text: "Relative Copy Number",
-          align: "left",
-          sortable: true,
-          value: "relativeCopyNumber",
-        },
-        {
-          text: "CNA",
-          align: "left",
-          sortable: true,
-          value: "cnA",
-        },
-        {
-          text: "CNB",
-          align: "left",
-          sortable: true,
-          value: "cnB",
-        },
-        {
-          text: "Reported Affected Genes",
-          align: "left",
-          sortable: true,
-          value: "reportedAffectedGenes",
-        },
-        {
-          text: "Reported Focality",
-          align: "left",
-          sortable: true,
-          value: "reportedFocality",
-        },
-        {
-          text: "Type",
+          text: "Art",
           align: "left",
           sortable: true,
           value: "type",
@@ -1276,13 +1310,13 @@ export default {
 
       headerDNAFusions: [
         {
-          text: "Representation",
+          text: "Formatierte Darstellung",
           align: "left",
           sortable: true,
           value: "representation",
         },
         {
-          text: "Reported Number of Reads",
+          text: "Anzahl Reads",
           align: "left",
           sortable: true,
           value: "reportedNumReads",
@@ -1291,7 +1325,7 @@ export default {
 
       headerRNAFusions: [
         {
-          text: "Representation",
+          text: "Formatierte Darstellung",
           align: "left",
           sortable: true,
           value: "representation",
@@ -1321,7 +1355,7 @@ export default {
           value: "strand3pr",
         },
         {
-          text: "Effect",
+          text: "Effekt",
           align: "left",
           sortable: true,
           value: "effect",
@@ -1333,7 +1367,7 @@ export default {
           value: "cosmicId",
         },
         {
-          text: "Reported Number of Reads",
+          text: "Anzahl Reads",
           align: "left",
           sortable: true,
           value: "reportedNumReads",
@@ -1354,7 +1388,7 @@ export default {
           value: "ensemblId",
         },
         {
-          text: "Gene",
+          text: "Gen",
           align: "left",
           sortable: true,
           value: "gene",
@@ -1366,13 +1400,13 @@ export default {
           value: "transcriptId",
         },
         {
-          text: "Fragments / kBaseMillion",
+          text: "Fragmente / kBaseMillion",
           align: "left",
           sortable: true,
           value: "fragmentsPerKilobaseMillion",
         },
         {
-          text: "From NGS",
+          text: "von NGS",
           align: "left",
           sortable: true,
           value: "fromNGS",
@@ -1417,19 +1451,19 @@ export default {
           value: "icd10",
         },
         {
-          text: "Issued On",
+          text: "Erstellungsdatum",
           align: "left",
           sortable: true,
           value: "issuedOn",
         },
         {
-          text: "Target Available",
+          text: "Target verfügbar",
           align: "left",
           sortable: true,
           value: "targetAvailable",
         },
         {
-          text: "Expand Care Plan Details",
+          text: "Beschluss-Details...",
           align: "right",
           sortable: false,
           value: "",
@@ -1450,13 +1484,13 @@ export default {
           value: "icd10",
         },
         {
-          text: "Medication",
+          text: "Medikation",
           align: "left",
           sortable: true,
           value: "medication",
         },
         {
-          text: "Priority",
+          text: "Priorität",
           align: "left",
           sortable: true,
           value: "priority",
@@ -1468,7 +1502,7 @@ export default {
           value: "levelOfEvidence",
         },
         {
-          text: "Supporting Variants",
+          text: "Stützende Varianten",
           align: "left",
           sortable: true,
           value: "supportingVariants",
@@ -1483,19 +1517,19 @@ export default {
           value: "id",
         },
         {
-          text: "Therapy",
+          text: "Therapie-Empfehlung",
           align: "left",
           sortable: true,
           value: "therapy",
         },
         {
-          text: "Issue Date",
+          text: "Antragsdatum",
           align: "left",
           sortable: true,
           value: "issueDate",
         },
         {
-          text: "Response Date",
+          text: "Antwortdatum",
           align: "left",
           sortable: true,
           value: "responseDate",
@@ -1507,7 +1541,7 @@ export default {
           value: "status",
         },
         {
-          text: "Reason",
+          text: "Ablehnungsgrund",
           align: "left",
           sortable: true,
           value: "reason",
@@ -1522,7 +1556,7 @@ export default {
           value: "id",
         },
         {
-          text: "Diagnosis",
+          text: "Diagnose",
           align: "left",
           sortable: true,
           value: "diagnosis",
@@ -1534,49 +1568,49 @@ export default {
           value: "status",
         },
         {
-          text: "Recorded On",
+          text: "Erfassungsdatum",
           align: "left",
           sortable: true,
           value: "recordedOn",
         },
         {
-          text: "Recommendation",
+          text: "Therapie-Empfehlung",
           align: "left",
           sortable: true,
           value: "recommendation",
         },
         {
-          text: "Period",
+          text: "Zeitraum",
           align: "left",
           sortable: true,
           value: "period",
         },
         {
-          text: "Not Done Reason",
+          text: "Nicht-Umsetzungs-Grund",
           align: "left",
           sortable: true,
           value: "notDoneReason",
         },
         {
-          text: "Medication",
+          text: "Medikation",
           align: "left",
           sortable: true,
           value: "medication",
         },
         {
-          text: "Reason Stopped",
+          text: "Abbruchsgrund",
           align: "left",
           sortable: true,
           value: "reasonStopped",
         },
         {
-          text: "Dosage",
+          text: "Dosisdichte",
           align: "left",
           sortable: true,
           value: "dosage",
         },
         {
-          text: "Note",
+          text: "Bemerkungen",
           align: "left",
           sortable: true,
           value: "note",
@@ -1588,7 +1622,7 @@ export default {
           value: "response",
         },
         {
-          text: "Progression Date",
+          text: "Progressionsdatum",
           align: "left",
           sortable: true,
           value: "progressionDate",
@@ -1870,5 +1904,3 @@ export default {
   },
 };
 </script>
-
-

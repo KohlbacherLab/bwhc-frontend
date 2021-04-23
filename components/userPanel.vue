@@ -5,101 +5,101 @@
         <v-btn icon slot="activator" @click="$router.push('/quality_local')">
           <v-icon style="font-size: 2rem">fas fa-check-double</v-icon>
         </v-btn>
-        <span>Local Quality Control Stats</span>
+        <span>Lokale Qualitätskontrolle Statistik</span>
       </v-tooltip>
 
       <v-tooltip top>
         <v-btn icon slot="activator" @click="$router.push('/quality_bwhc')">
           <v-icon style="font-size: 2rem">fas fa-globe-europe</v-icon>
         </v-btn>
-        <span>bwHC Wide Quality Control Stats</span>
+        <span>Globale Qualitätskontrolle Statistik</span>
       </v-tooltip>
 
       <v-tooltip top>
         <v-btn icon slot="activator" @click="$router.push('/validate')">
           <v-icon style="font-size: 2rem">fas fa-server</v-icon>
         </v-btn>
-        <span>Data Validation</span>
+        <span>Datenvalidierung</span>
       </v-tooltip>
 
       <v-tooltip top>
         <v-btn icon slot="activator" @click="$router.push('/query')">
           <v-icon style="font-size: 2rem">fas fa-search</v-icon>
         </v-btn>
-        <span>Query Portal</span>
+        <span>Abfrage Portal</span>
       </v-tooltip>
 
       <v-tooltip top>
         <v-btn icon slot="activator" @click="$router.push('/me')">
           <v-icon style="font-size: 2rem">fas fa-user</v-icon>
         </v-btn>
-        <span>User Details</span>
+        <span>Nutzerdetails</span>
       </v-tooltip>
 
       <v-tooltip top>
         <v-btn icon slot="activator" @click="$router.push('/admin')">
           <v-icon style="font-size: 2rem">fas fa-user-shield</v-icon>
         </v-btn>
-        <span>Control Panel</span>
+        <span>Bedienpanel</span>
       </v-tooltip>
 
       <v-tooltip top>
         <v-btn icon @click="logout" slot="activator">
           <v-icon style="font-size: 2rem">fas fa-sign-out-alt</v-icon>
         </v-btn>
-        <span>Logout</span>
+        <span>Ausloggen</span>
       </v-tooltip>
     </span>
 
     <span v-else>
       <v-btn small depressed light @click="$router.push('/quality_local')">
-        Local QC<v-icon color="grey" style="font-size: 1rem" right
+        Lokale QKS<v-icon color="grey" style="font-size: 1rem" right
           >fas fa-check-double</v-icon
         >
       </v-btn>
 
       <v-btn small depressed light @click="$router.push('/quality_bwhc')">
-        bwHC QC<v-icon color="grey" style="font-size: 1rem" right
+        Globale QKS<v-icon color="grey" style="font-size: 1rem" right
           >fas fa-globe-europe</v-icon
         >
       </v-btn>
 
       <v-btn small depressed light @click="$router.push('/validate')">
-        Data Validation<v-icon color="grey" style="font-size: 1rem" right
+        Datenvalidierung<v-icon color="grey" style="font-size: 1rem" right
           >fas fa-server</v-icon
         >
       </v-btn>
 
       <v-btn small depressed light @click="$router.push('/query')">
-        Query Portal<v-icon color="grey" style="font-size: 1rem" right
+        Abfrage Portal<v-icon color="grey" style="font-size: 1rem" right
           >fas fa-search</v-icon
         >
       </v-btn>
 
       <v-btn small depressed light @click="$router.push('/me')">
-        User Details<v-icon color="grey" style="font-size: 1rem" right
+        Nutzerdetails<v-icon color="grey" style="font-size: 1rem" right
           >fas fa-user</v-icon
         >
       </v-btn>
 
       <v-btn small depressed light @click="$router.push('/admin')">
-        User Management<v-icon color="grey" style="font-size: 1rem" right
+        Bedienpanel<v-icon color="grey" style="font-size: 1rem" right
           >fas fa-user-shield</v-icon
         >
       </v-btn>
 
       <v-btn small depressed light @click="logout">
-        Logout<v-icon color="grey" style="font-size: 1rem" right
+        Ausloggen<v-icon color="grey" style="font-size: 1rem" right
           >fas fa-sign-out-alt</v-icon
         >
       </v-btn>
     </span>
 
     <span v-if="iconMenu">
-      <v-switch v-model="iconMenu" label="show text"> </v-switch
+      <v-switch v-model="iconMenu" label="Text anzeigen"> </v-switch
     ></span>
     <span v-else>
-      <v-switch v-model="iconMenu" :label="`show icons`"> </v-switch
+      <v-switch v-model="iconMenu" label="Symbole anzeigen"> </v-switch
     ></span>
 
     <v-divider class="my-3"></v-divider>
@@ -131,7 +131,7 @@ export default {
       await axios.post(
         process.env.baseUrl + process.env.port + process.env.logout
       );
-      let toast = this.$toasted.success("Logout Successful!", {
+      let toast = this.$toasted.success("Abmeldung erfolgreich!", {
         theme: "bubble",
         icon: "check_circle",
         position: "top-center",

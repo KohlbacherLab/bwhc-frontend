@@ -10,7 +10,7 @@
           max-width="1200"
         >
           <v-card-text class="headline font-weight-thin">
-            <br />Mutations
+            <br />Mutationen
             <v-icon color="purple" dark>fas fa-dna</v-icon>
 
             <!--
@@ -231,7 +231,7 @@
               :loading="isLoading"
               item-text="name"
               item-value="id"
-              label="enter Gene names here"
+              label="Gen-Name oder HGNC Symbol..."
               chips
               deletable-chips
               dense
@@ -252,12 +252,12 @@
           max-width="1200"
         >
           <v-card-text class="headline font-weight-thin">
-            <br />Diagnosis
+            <br />Diagnose
             <v-icon color="indigo" dark>fas fa-diagnoses</v-icon>
             <v-autocomplete
               v-model="diagnosis"
               :items="diagnosisCat"
-              label="enter ICD-10 code here"
+              label="ICD-10 Diagnose-Text oder Code..."
               ref="diagnosis"
               chips
               clearable
@@ -280,19 +280,19 @@
         >
           <v-card-text class="headline font-weight-thin">
             <strong></strong>
-            <br />Drugs
+            <br />Wirkstoffe
             <v-icon color="blue">fas fa-pills</v-icon>
             <v-radio-group v-model="drugUsage" row>
               <!--<v-radio label="All" value="all"></v-radio>-->
-              <v-radio label="Used" value="used"></v-radio>
-              <v-radio label="Recommended" value="recommended"></v-radio>
+              <v-radio label="Verabreicht" value="used"></v-radio>
+              <v-radio label="Empfohlen" value="recommended"></v-radio>
             </v-radio-group>
             <v-autocomplete
               v-model="drugs"
               :items="drugsCat"
               :itemscope="used"
               :loading="isLoading"
-              label="enter Drug names here"
+              label="Wirkstoff-Name oder ATC Code..."
               ref="drugUsage"
               chips
               deletable-chips
@@ -343,7 +343,7 @@
               v-model="responses"
               :items="responsesCat"
               :loading="isLoading"
-              label="enter Response here"
+              label="RECIST"
               ref="responses"
               chips
               deletable-chips
@@ -402,7 +402,7 @@
           slot="activator"
           color="blue accent-3"
           @click="submitQuery"
-          >Submit Query</v-btn
+          >Anfrage senden</v-btn
         >
         <!--
         <v-tooltip top>
@@ -437,16 +437,16 @@
         <v-card>
           <v-card-title class="headline yellow lighten-1" darkprimary-title>
             <v-icon color="black" large left>fas fa-compress-arrows-alt</v-icon
-            >bwHC Federated Query
+            >bwHC Abfrage
           </v-card-title>
           <v-card-text
-            >By running a 'bwHC Federated Query', you accept the terms and
-            conditions of 'bwHC Consent Agreement' and confirm that you have
-            read and accepted our terms and conditions of use (in particular the
-            section dealing with restrictions on saving, distributing query
-            results) and our Privacy Policy (in particular the section dealing
-            the terms and conditions contained in the 'bwHC Consent
-            Agreement').</v-card-text
+            >Wenn Sie eine "bwHC Federated Query" ausführen, akzeptieren Sie die Bedingungen und
+             Bedingungen der "bwHC-Einverständniserklärung" und bestätigen Sie, dass Sie haben
+             Lesen und akzeptieren Sie unsere Nutzungsbedingungen (insbesondere die
+             Abschnitt über Einschränkungen beim Speichern und Verteilen von Abfragen
+             Ergebnisse) und unsere Datenschutzrichtlinie (insbesondere den Abschnitt über
+             die in der bwHC-Einwilligung enthaltenen Geschäftsbedingungen
+             Zustimmung').</v-card-text
           >
           <v-divider></v-divider>
           <v-card-actions>
@@ -502,10 +502,10 @@ export default {
     drugUsage: "used",
     diagnosis: Array(),
 
-    select: { mode: "local", desc: "query mode is set to on site" },
+    select: { mode: "local", desc: "Der Abfragemodus ist auf lokal eingestellt" },
     items: [
-      { mode: "local", desc: "query mode is set to on site" },
-      { mode: "federated", desc: "query mode is set to bwHealthCloud wide" },
+      { mode: "local", desc: "Der Abfragemodus ist auf lokal eingestellt" },
+      { mode: "federated", desc: "Der Abfragemodus ist auf bwHealthCloud-weit eingestellt" },
     ],
 
     federatedQueryDialog: false,

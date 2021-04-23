@@ -3,7 +3,7 @@
     <v-container fluid grid-list-md>
       <userPanel />
       <v-flex>
-        <h3 class="display-3"><strong>bwHealthCloud</strong> help</h3>
+        <h3 class="display-3"><strong>bwHealthCloud</strong> hilfe</h3>
 
         <span class="subheading font-weight-light">
           <v-btn
@@ -15,7 +15,7 @@
           >
             <v-icon dark>fas fa-arrow-left</v-icon></v-btn
           >
-          Help will be here soon. <i class="fas fa-cat"></i>
+          Hier finden Sie bald hilfe. Bis dahin gibts eine Katze. <i class="fas fa-cat"></i>
         </span>
 
         <v-divider class="my-3"></v-divider>

@@ -2,7 +2,7 @@
   <v-container fluid grid-list-md>
     <userPanel />
     <v-flex>
-      <h3 class="display-3"><strong>bwHealthCloud</strong> user management</h3>
+      <h3 class="display-3"><strong>bwHealthCloud</strong> Nutzerdetails</h3>
       <span class="subheading subheading font-weight-thin">
         <v-btn
           dark
@@ -12,9 +12,8 @@
           @click="$router.push('/main')"
         >
           <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-        >User details view. Click on the box below to edit your user details &
-        password.
-        <strong @click="$router.push('help')">Help?</strong>
+        >Benutzerdetails. Klicken Sie auf das unten stehende Feld Ihre Benutzerdaten und Passwort zu bearbeiten. 
+        <strong @click="$router.push('help')">Hilfe?</strong>
       </span>
     </v-flex>
     <v-divider class="my-3"></v-divider>
@@ -24,13 +23,13 @@
         <v-card light flat left max-width="450">
           <v-card-title primary-title>
             <div>
-              <span class="grey--text">Welcome,</span>
+              <span class="grey--text">Herzlich willkommen,</span>
               <div class="headline font-weight-thin">
                 {{ me.givenName }} {{ me.familyName }}
               </div>
-              Username: <span class="grey--text">{{ me.username }}</span
+              Nutzername: <span class="grey--text">{{ me.username }}</span
               ><br />
-              Role(s):
+              Rolle(n):
               <span class="grey--text">{{ me.roles.join(", ") }}</span>
             </div>
           </v-card-title>
@@ -47,8 +46,8 @@
           </v-card-actions>
           <v-slide-y-transition>
             <v-card-text class="grey--text" v-show="show">
-              To edit user details click on the icon left above then 'save'.<br />***
-              More descriptive text can be added here.
+              Zum Bearbeiten bitte auf das Symbol oben links klicken, dann 'Speichern'.<br />***
+              *** Weitere Beschreibungstext kann hier hinzugefügt werden.
             </v-card-text>
           </v-slide-y-transition>
         </v-card>
@@ -59,7 +58,7 @@
     <v-dialog v-model="editOwnDetailsDialog" width="500">
       <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>
-          <strong>Edit Details</strong></v-card-title
+          <strong>Details bearbeiten</strong></v-card-title
         >
         <v-container grid-list-md>
           <form>
@@ -69,7 +68,7 @@
                   v-model="usernameOwn"
                   :counter="20"
                   :error-messages="errors"
-                  label="Username"
+                  label="Nutzername"
                   required
                 ></v-text-field>
               </v-flex>
@@ -77,7 +76,7 @@
                 <v-text-field
                   autocomplete="current-password"
                   :value="passwordOwn"
-                  label="Password"
+                  label="Passwort"
                   :append-icon="value ? 'fas fa-eye-slash' : 'fas fa-eye'"
                   @click:append="() => (value = !value)"
                   :type="value ? 'password' : 'text'"
@@ -98,13 +97,12 @@
                 <v-text-field
                   v-model="familyOwn"
                   :error-messages="errors"
-                  label="Surname"
+                  label="Nachname"
                   required
                 ></v-text-field>
               </v-flex>
               <v-card-text class="grey--text">
-                Password must contain minimum 8 characters, including one
-                capital letter, one number & one special character.
+                Das Passwort muss mind. 8 Zeichen haben, davon mind. ein Großbuchstabe, eine Ziffer und ein Sonderzeichen
               </v-card-text>
             </v-layout>
           </form>
@@ -118,7 +116,7 @@
             :disabled="invalid"
             flat
             @click="editOwnDetailsDialog = false"
-            >Cancel</v-btn
+            >Abbrechen</v-btn
           >
           <v-btn
             dark
@@ -127,7 +125,7 @@
             @click="updateOwnDetails"
             :disabled="invalid"
             width="140"
-            >Save</v-btn
+            >Speicher</v-btn
           >
         </v-card-actions>
       </v-card>
@@ -415,7 +413,7 @@ export default {
         const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
         return (
           pattern.test(value) ||
-          "Min. 8 characters, incl. one capital letter, one number & one special character."
+          "Das Passwort muss mind. 8 Zeichen haben, davon mind. ein Großbuchstabe, eine Ziffer und ein Sonderzeichen"
         );
       },
     },

@@ -7,8 +7,8 @@
         ><v-icon dark>fas fa-certificate</v-icon>
       </v-btn>
       <span class="subheading font-weight-thin">
-        bwHC query portal, stats, validation and management.
-        <strong @click="$router.push('/help')">Help?</strong>
+        bwHC Abfrage-Portal, Statistiken, Validierung und Management.
+        <strong @click="$router.push('/help')">Hilfe?</strong>
       </span>
       <v-divider class="my-3"></v-divider>
     </v-flex>
@@ -16,40 +16,31 @@
       <v-flex d-flex xs12 sm6 md6>
         <v-card flat>
           <v-card-title primary class="headline font-weight-thin"
-            >bwHC Overview</v-card-title
+            >bwHC Übersicht</v-card-title
           >
           <v-card-text class="subheading font-weight-thin">
-            Welcome <strong>{{ me.givenName }}</strong
+            Herzlich Willkommen,  <strong>{{ me.givenName }}</strong
             >,
           </v-card-text>
           <v-card-text class="subheading grey--text font-weight-light">
-            before clicking on the links above, please check your roles below
-            and take a look at the User Roles table on the right side.
-            <i class="fas fa-user-tag"></i> If you think that your roles are not
-            correct or missing then please get in contact with your local
-            bwHealthCloud administrator. <br /><br />
-            We are constantly working on improving the user experience, if you
-            have any comments/questions regarding the usability of the
-            bwHealthCloud portal, please do not hesitate to contact us. You can
-            send an e-mail to
-            <a href="mailto:aydin-can.polatkan@uni-tuebingen.de">Aydin</a>.
+            Bitte überprüfen Sie Ihre Rollen unten und werfen Sie einen Blick auf die entsprechenden Zugriffsrechte in der Tabelle rechts unten.
+            <i class="fas fa-user-tag"></i> Falls Sie denken, dass Ihre Rollen nicht vollständig sind, nehmen Sie bitte Kontakt mit Ihrem lokalen bwHealthCloud Administrator auf.  <br /><br />
+            Falls Sie Fragen oder Anregungen in Bezug auf die Bedienung des bwHealthCloud Portals haben, zögern Sie bitte nicht, uns zu kontaktieren. 
+            Sie können eine E-Mail an <a href="mailto:aydin-can.polatkan@uni-tuebingen.de">Aydin</a> senden.
             <br /><br />
-            <i class="fas fa-exclamation-triangle"></i> If you are experiencing
-            an error, please fill the
+            <i class="fas fa-exclamation-triangle"></i> Falls Sie einen Fehler entdecken, füllen Sie bitte das 
             <a href="https://forms.gle/w8Z3CnB3zLN6iNMb7" target="_blank"
-              >Bug Report Form</a
-            >. <br /><br />
-            <i class="far fa-comments"></i> We can't improve bwHealthCloud
-            without your valuable feedback, please help us to evaluate the
-            portal by filling the following
+              >Bug-Report-Formular</a
+            > aus. <br /><br />
+            <i class="far fa-comments"></i> Wir können bwHealthCloud nicht ohne Ihr wertvolles Feedback verbessern. Bitte helfen Sie uns, indem Sie das folgende 
             <a href="https://forms.gle/zb7SPH5WEmSurh376" target="_blank"
-              >UI/UX Feedback Form</a
-            >. <br /><br />
-            Thanks in advance.<br />
-            - your bwHealthCloud development team.
+              >UI / UX Feedback-Formular</a
+            > ausfüllen. <br /><br />
+            Danke im Voraus.<br />
+            - Ihr bwHealthCloud Entwicklungsteam.
           </v-card-text>
           <v-card-text class="subheading grey--text font-weight-thin">
-            You have the following role(s):
+            Sie haben die folgende(n) Rolle(n):
             <strong>{{ me.roles.join(", ") }}</strong>
           </v-card-text>
         </v-card>
@@ -63,20 +54,18 @@
                 <v-icon></v-icon>
               </v-card-title>
               <v-card-text class="subheading grey--text font-weight-light">
-                <i class="fas fa-desktop"></i> Next release will include
-                screencast links here.
+                <i class="fas fa-desktop"></i> Nächste Version wird Screencasts Links enthalten.
               </v-card-text>
             </v-card>
           </v-flex>
           <v-flex d-flex>
             <v-card flat>
               <v-card-title class="headline font-weight-light">
-                Release Notes
+                Versionshinweise
                 <v-icon></v-icon>
               </v-card-title>
               <v-card-text class="subheading grey--text font-weight-light">
-                <i class="far fa-sticky-note"></i> Next release will include the
-                release notes here.
+                <i class="far fa-sticky-note"></i>  Nächste Version wird die Release Notes hier enthalten.
               </v-card-text>
             </v-card>
           </v-flex>
@@ -85,13 +74,13 @@
               <v-flex v-for="n in 1" :key="n" d-flex xs12>
                 <v-card flat>
                   <v-card-title class="headline font-weight-light">
-                    User Roles
+                    Rollen
                     <v-icon></v-icon>
                   </v-card-title>
                   <v-card-text class="subheading font-weight-light">
                     <table>
                       <tr>
-                        <td>Admin</td>
+                        <td>Adminstrator/in</td>
                         <td></td>
                         <td>
                           <v-tooltip top>
@@ -104,7 +93,7 @@
                                 >fas fa-user</v-icon
                               >
                             </v-btn>
-                            <span>User Details</span>
+                            <span>Nutzerdetails</span>
                           </v-tooltip>
                         </td>
                         <td>
@@ -118,13 +107,13 @@
                                 >fas fa-user-shield</v-icon
                               >
                             </v-btn>
-                            <span>User Management</span>
+                            <span>Bedienpanel</span>
                           </v-tooltip>
                         </td>
                         <td></td>
                       </tr>
                       <tr>
-                        <td>Documentarist</td>
+                        <td>Dokumentar/in</td>
                         <td></td>
                         <td>
                           <v-tooltip top>
@@ -137,7 +126,7 @@
                                 >fas fa-server</v-icon
                               >
                             </v-btn>
-                            <span>Data Validation</span>
+                            <span>Datenvalidierung</span>
                           </v-tooltip>
                         </td>
                         <td>
@@ -151,13 +140,13 @@
                                 >fas fa-user</v-icon
                               >
                             </v-btn>
-                            <span>User Details</span>
+                            <span>Nutzerdetails</span>
                           </v-tooltip>
                         </td>
                         <td></td>
                       </tr>
                       <tr>
-                        <td>Local ZPM Coordinator</td>
+                        <td>ZPM-Koordinator/in (Lokal)</td>
                         <td></td>
                         <td>
                           <v-tooltip top>
@@ -170,7 +159,7 @@
                                 >fas fa-check-double</v-icon
                               >
                             </v-btn>
-                            <span>Local Quality Control Stats</span>
+                            <span>Lokale Qualitätskontrolle Statistik</span>
                           </v-tooltip>
                         </td>
                         <td>
@@ -184,7 +173,7 @@
                                 >fas fa-search</v-icon
                               >
                             </v-btn>
-                            <span>Query Portal</span>
+                            <span>Abfrage-Portal</span>
                           </v-tooltip>
                         </td>
                         <td>
@@ -198,12 +187,12 @@
                                 >fas fa-user</v-icon
                               >
                             </v-btn>
-                            <span>User Details</span>
+                            <span>Nutzerdetails</span>
                           </v-tooltip>
                         </td>
                       </tr>
                       <tr>
-                        <td>bwHC-wide ZPM Coordinator</td>
+                        <td>ZPM-Koordinator/in (Global)</td>
                         <td></td>
                         <td>
                           <v-tooltip top>
@@ -216,10 +205,11 @@
                                 >fas fa-check-double</v-icon
                               >
                             </v-btn>
-                            <span>Local Quality Control Stats</span>
+                            <span>Lokale Qualitätskontrolle Statistik</span>
                           </v-tooltip>
                         </td>
                         <td>
+                          <v-tooltip top>
                           <v-btn
                             icon
                             slot="activator"
@@ -229,6 +219,8 @@
                               >fas fa-globe-europe</v-icon
                             >
                           </v-btn>
+                          <span>Globale Qualitätskontrolle Statistik</span>
+                          </v-tooltip>
                         </td>
                         <td>
                           <v-tooltip top>
@@ -241,7 +233,7 @@
                                 >fas fa-search</v-icon
                               >
                             </v-btn>
-                            <span>Query Portal</span>
+                            <span>Abfrage-Portal</span>
                           </v-tooltip>
                         </td>
                         <td>
@@ -255,12 +247,12 @@
                                 >fas fa-user</v-icon
                               >
                             </v-btn>
-                            <span>User Details</span>
+                            <span>Nutzerdetails</span>
                           </v-tooltip>
                         </td>
                       </tr>
                       <tr>
-                        <td>MTB Coordinator</td>
+                        <td>MTB-Koordinator/in</td>
                         <td></td>
                         <td>
                           <v-tooltip top>
@@ -273,7 +265,7 @@
                                 >fas fa-check-double</v-icon
                               >
                             </v-btn>
-                            <span>Local Quality Control Stats</span>
+                            <span>Lokale Qualitätskontrolle Statistik</span>
                           </v-tooltip>
                         </td>
                         <td>
@@ -287,13 +279,13 @@
                                 >fas fa-user</v-icon
                               >
                             </v-btn>
-                            <span>User Details</span>
+                            <span>Nutzerdetails</span>
                           </v-tooltip>
                         </td>
                         <td></td>
                       </tr>
                       <tr>
-                        <td>Researcher</td>
+                        <td>Forscher/in</td>
                         <td></td>
                         <td>
                           <v-tooltip top>
@@ -306,7 +298,7 @@
                                 >fas fa-search</v-icon
                               >
                             </v-btn>
-                            <span>Query Portal</span>
+                            <span>Abfrage-Portal</span>
                           </v-tooltip>
                         </td>
                         <td>
@@ -320,7 +312,7 @@
                                 >fas fa-user</v-icon
                               >
                             </v-btn>
-                            <span>User Details</span>
+                            <span>Nutzerdetails</span>
                           </v-tooltip>
                         </td>
                         <td></td>

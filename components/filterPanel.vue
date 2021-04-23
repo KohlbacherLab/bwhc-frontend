@@ -2,40 +2,40 @@
   <v-navigation-drawer v-model="rightDrawer" :right="right" fixed app>
     <v-list>
       <v-list-tile>
-        <h4 class="headline font-weight-regular">Filter Criteria</h4>
+        <h4 class="headline font-weight-regular">Filterkriterien</h4>
       </v-list-tile>
 
       <v-divider></v-divider>
 
       <!-- Gender -->
-      <v-subheader class="subheading font-weight-regular">Gender</v-subheader>
+      <v-subheader class="subheading font-weight-regular">Geschlecht</v-subheader>
       <v-container fluid>
         <v-layout row wrap>
           <v-flex xs12 sm4 md4>
             <v-checkbox
               v-model="gender"
-              label="Male"
+              label="Männlich"
               color="indigo"
               value="male"
               hide-details
             ></v-checkbox>
             <v-checkbox
               v-model="gender"
-              label="Female"
+              label="Weiblich"
               color="pink"
               value="female"
               hide-details
             ></v-checkbox>
             <v-checkbox
               v-model="gender"
-              label="Other"
+              label="Andere"
               color="gray"
               value="other"
               hide-details
             ></v-checkbox>
             <v-checkbox
               v-model="gender"
-              label="Unknown"
+              label="Unbekannt"
               color="gray"
               value="unknown"
               hide-details
@@ -46,7 +46,7 @@
       <v-divider></v-divider>
 
       <!-- Age -->
-      <v-subheader class="subheading font-weight-regular">Age</v-subheader>
+      <v-subheader class="subheading font-weight-regular">Alter</v-subheader>
 
       <v-card-text>
         <v-range-slider
@@ -61,21 +61,21 @@
 
       <!-- Gender -->
       <v-subheader class="subheading font-weight-regular"
-        >Vital Status</v-subheader
+        >Vital-Status</v-subheader
       >
       <v-container fluid>
         <v-layout row wrap>
           <v-flex xs12 sm4 md4>
             <v-checkbox
               v-model="vitalStatus"
-              label="Alive"
+              label="Lebend"
               color="green"
               value="Alive"
               hide-details
             ></v-checkbox>
             <v-checkbox
               v-model="vitalStatus"
-              label="Deceased"
+              label="Verstorben"
               color="red"
               value="Deceased"
               hide-details
@@ -95,9 +95,9 @@
             slot="activator"
             color="red darken-1"
             @click="filterQuery"
-            >Filter</v-btn
+            >Filtern</v-btn
           >
-          <span>click here to filter bwHC query results</span>
+          <span>Klicken Sie hier, um die Ergebnisse der bwHC-Abfrage zu filtern</span>
         </v-tooltip>
       </v-flex>
     </v-list>

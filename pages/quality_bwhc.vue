@@ -4,7 +4,7 @@
       <userPanel />
       <v-flex>
         <h3 class="display-3">
-          <strong>bwHealthCloud</strong> quality control stats
+          <strong>bwHealthCloud</strong> Qualitätskontrolle Statistik
         </h3>
 
         <span class="subheading subheading font-weight-thin">
@@ -16,8 +16,8 @@
             @click="$router.push('/main')"
           >
             <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-          >bwHC wide ZPM statistics are shown below.
-          <strong @click="$router.push('help')">Help?</strong>
+          >bwHC breit ZPM Statistiken finden Sie weiter unten.
+          <strong @click="$router.push('help')">Hilfe?</strong>
         </span>
         <v-divider class="my-3"></v-divider>
       </v-flex>
@@ -38,7 +38,7 @@
               </p>
               <strong>{{ globalReport.data.patientTotal }}</strong>
               <br />
-              Patients in bwHC
+              Gesamtzahl Patienten in bwHC
             </v-card-text>
           </v-card>
         </v-flex>
@@ -48,14 +48,14 @@
       <v-icon color="yellow darken-1">fas fa-globe-europe</v-icon>
 
       <v-card-title class="title font-weight-light"
-        >Global Completion Stats</v-card-title
+        >Globale Übersicht</v-card-title
       >
 
       <v-layout wrap fluid>
         <v-flex d-flex xs12 sm6 md3>
           <v-card
             flat
-            color="grey lighten-4"
+            color="grey lighten-2"
             light
             width="250"
             v-ripple="{ center: true }"
@@ -77,7 +77,7 @@
         <v-flex d-flex xs12 sm6 md3>
           <v-card
             flat
-            color="grey lighten-4"
+            color="grey lighten-2"
             light
             width="250"
             v-ripple="{ center: true }"
@@ -101,7 +101,7 @@
         <v-flex d-flex xs12 sm6 md3>
           <v-card
             flat
-            color="grey lighten-4"
+            color="grey lighten-2"
             light
             width="250"
             v-ripple="{ center: true }"
@@ -123,7 +123,7 @@
         <v-flex d-flex xs12 sm6 md3>
           <v-card
             flat
-            color="grey lighten-4"
+            color="grey lighten-2"
             light
             width="250"
             v-ripple="{ center: true }"
@@ -146,13 +146,13 @@
       </v-layout>
 
       <v-card-title class="title font-weight-light"
-        >Global Average Durations</v-card-title
+        >Globale Mittlere Dauern</v-card-title
       >
       <v-layout wrap fluid>
         <v-flex d-flex xs12 sm6 md3>
           <v-card
             flat
-            color="grey lighten-4"
+            color="grey lighten-2"
             light
             width="250"
             v-ripple="{ center: true }"
@@ -174,7 +174,7 @@
         <v-flex d-flex xs12 sm6 md3>
           <v-card
             flat
-            color="grey lighten-4"
+            color="grey lighten-2"
             light
             width="250"
             v-ripple="{ center: true }"
@@ -196,7 +196,7 @@
         <v-flex d-flex xs12 sm6 md3>
           <v-card
             flat
-            color="grey lighten-4"
+            color="grey lighten-2"
             light
             width="250"
             v-ripple="{ center: true }"
@@ -224,9 +224,11 @@
       >
         <v-flex d-flex xs12 sm6 md3>
           <v-card-title class="title font-weight-light"
-            >ZPM {{ globalConstituentReport.zpm }} <div class="caption">
-              <p>Total Patient Count:
-            {{ globalConstituentReport.patientTotal }}</p>
+            >ZPM {{ globalConstituentReport.zpm }}
+            <div class="caption">
+              <p>
+               Gesamtzahl Patienten: {{ globalConstituentReport.patientTotal }}
+              </p>
             </div></v-card-title
           ></v-flex
         >
@@ -340,7 +342,7 @@
         </v-layout>
         <v-flex d-flex xs12 sm6 md3>
           <v-card-title class="title font-weight-light"
-            >Average Durations</v-card-title
+            >Mittlere Dauern</v-card-title
           >
         </v-flex>
         <v-layout wrap fluid>
@@ -435,7 +437,10 @@
         <v-divider class="my-3"></v-divider>
       </v-col>
 
-      
+      <v-card-title class="title font-weight-light">Fehler</v-card-title>
+      <v-col v-for="(issue, i) in issues" :key="i">
+        <div class="caption">{{ issue.details }}</div>
+      </v-col>
     </v-container>
     <template></template>
   </v-responsive>
@@ -522,6 +527,7 @@ export default {
         globalCompletionStats: rawGlobalCompletionStats,
         globalAverageDurations: rawGlobalAverageDurations,
         globalConstituentReports: globalReport.data.constituentReports,
+        issues: globalReport.data._issues,
       };
     } catch (err) {
       if (err.response.status === 401) {

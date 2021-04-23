@@ -4,7 +4,7 @@
       <userPanel />
       <v-flex>
         <h3 class="display-3">
-          <strong>bwHealthCloud</strong> quality control stats
+          <strong>bwHealthCloud</strong> Qualitätskontrolle Statistik
         </h3>
 
         <span class="subheading subheading font-weight-thin">
@@ -16,8 +16,8 @@
             @click="$router.push('/main')"
           >
             <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-          >Local ZPM statistics are shown below.
-          <strong @click="$router.push('help')">Help?</strong>
+          >Lokale ZPM Statistiken finden Sie weiter unten. 
+          <strong @click="$router.push('help')">Hilfe?</strong>
         </span>
         <v-divider class="my-3"></v-divider>
       </v-flex>
@@ -37,7 +37,7 @@
               </p>
               <strong>{{ localReport.data.patientTotal }}</strong>
               <br />
-              Patients in {{ localReport.data.zpm }}
+              Gesamtzahl Patienten in {{ localReport.data.zpm }}
             </v-card-text>
           </v-card>
         </v-flex>
@@ -47,7 +47,7 @@
       <v-icon color="red accent-4">fas fa-location-arrow</v-icon>
 
       <v-card-title class="title font-weight-light"
-        >Local Average Stats</v-card-title
+        ></v-card-title
       >
 
       <v-layout wrap fluid>
@@ -143,7 +143,7 @@
       </v-layout>
 
       <v-card-title class="title font-weight-light"
-        >Local Average Durations</v-card-title
+        >Mittlere Dauern</v-card-title
       >
 
       <v-layout wrap fluid>

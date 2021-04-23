@@ -1,8 +1,8 @@
 <template>
   <v-container fluid grid-list-md>
     <v-flex>
-      <h3 class="display-3"><strong>bwHealthCloud</strong> access denied</h3>
-      <span class="subheading font-weight-thin">
+      <h3 class="display-3"><strong>bwHealthCloud</strong> Zugriff verweigert</h3>
+      <span class="subheading font-weight-thin"> 
         <v-btn
           dark
           icon
@@ -11,8 +11,8 @@
           @click="$router.push('/main')"
         >
           <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-        >There is nothing to see here <i class="far fa-times-circle"></i> try to
-        <strong @click="$router.push('/main')">go back!</strong>
+        >Es gibt nichts zu sehen hier <i class="far fa-times-circle"></i> versuchen,  
+        <strong @click="$router.push('/main')">zurück</strong> zu gehen!
       </span>
     </v-flex>
     <v-divider class="my-3"></v-divider>
@@ -29,15 +29,14 @@
         <v-card-text class="headline font-weight-thin">
           <p>🙅🏻‍♂️</p>
           <strong>403</strong>
-          <br />Forbidden.
+          <br />verboten.
         </v-card-text>
       </v-card>
     </v-flex>
     <br />
     <v-flex d-flex xs12 sm6 md12>
       <span class="headline font-weight-thin"
-        ><strong>That's an error!</strong><br />We're sorry but you don't have
-        access this page or resource.
+        ><strong>Das ist ein Fehler!</strong><br />Es tut uns leid, aber Sie haben keinen Zugriff auf diese Seite oder Ressource.
       </span>
     </v-flex>
   </v-container>

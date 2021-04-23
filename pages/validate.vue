@@ -2,7 +2,7 @@
   <v-container fluid grid-list-md>
     <userPanel />
     <v-flex>
-      <h3 class="display-3"><strong>bwHealthCloud</strong> data validation</h3>
+      <h3 class="display-3"><strong>bwHealthCloud</strong> Datenvalidierung</h3>
 
       <span class="subheading font-weight-light">
         <v-btn
@@ -13,8 +13,8 @@
           @click="$router.push('/main')"
         >
           <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-        >Patients with incoherent data are listed below.
-        <strong @click="$router.push('help')">Help?</strong>
+        >Patienten mit inkohärenten Daten sind unten aufgeführt.
+        <strong @click="$router.push('help')">Hilfe?</strong>
       </span>
       <v-divider class="my-3"></v-divider>
     </v-flex>
@@ -34,17 +34,19 @@
               <v-icon color="orange accent-1" dark>fas fa-street-view</v-icon>
             </p>
             <strong>{{ countPatients }}</strong>
-            <br />Patients
+            <br />Patienten
           </v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
     <v-divider class="my-3"></v-divider>
-    <v-card-title class="headline font-weight-light">Patient List</v-card-title>
+    <v-card-title class="headline font-weight-light">Patientenliste</v-card-title>
     <v-data-table
       :headers="headerConditions"
       :items="itemsPatients"
       :search="search"
+      no-data-text="Keine Daten verfügbar"
+      rows-per-page-text="Zeilen pro Seite"
     >
       <template slot="items" slot-scope="props">
         <td @click="routeToPatient(props.item.id)">{{ props.item.id }}</td>
@@ -110,31 +112,31 @@ export default {
     ],
     headerConditions: [
       {
-        text: "Patient ID",
+        text: "Patienten ID",
         align: "left",
         sortable: true,
         value: "id",
       },
       {
-        text: "Gender",
+        text: "Geschlecht",
         align: "left",
         sortable: true,
         value: "gender",
       },
       {
-        text: "Birth Date",
+        text: "Geburtstag",
         align: "left",
         sortable: true,
         value: "birthDate",
       },
       {
-        text: "Number of Issues",
+        text: "Anzahl Fehler",
         align: "left",
         sortable: true,
         value: "numberOfIssues",
       },
       {
-        text: "Actions",
+        text: "Aktionen",
         align: "right",
         sortable: false,
         value: "actions",
@@ -205,7 +207,7 @@ export default {
     },
 
     functionalityNotAvailable() {
-      alert("⚠️ Functionality not available! 🚧");
+      alert("⚠️ Funktionalität nicht verfügbar! 🚧");
     },
 
     goBack() {
