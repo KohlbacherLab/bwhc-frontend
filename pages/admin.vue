@@ -2,7 +2,7 @@
   <v-container fluid grid-list-md>
     <userPanel />
     <v-flex>
-      <h3 class="display-3"><strong>bwHealthCloud</strong> Bedienpanel</h3>
+      <h3 class="display-3"><strong>bwHealthCloud</strong> Admin-Panel</h3>
       <span class="subheading subheading font-weight-thin">
         <v-btn
           dark

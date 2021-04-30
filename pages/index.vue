@@ -45,7 +45,7 @@
                 >Abbrechen</v-btn
               >
               <v-btn color="cyan accent-3" @click="submit" width="140"
-                >Einreichen</v-btn
+                >Senden</v-btn
               >
             </v-card-actions>
           </v-card>

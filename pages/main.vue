@@ -107,7 +107,7 @@
                                 >fas fa-user-shield</v-icon
                               >
                             </v-btn>
-                            <span>Bedienpanel</span>
+                            <span>Admin-Panel</span>
                           </v-tooltip>
                         </td>
                         <td></td>

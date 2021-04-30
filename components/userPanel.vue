@@ -40,7 +40,7 @@
         <v-btn icon slot="activator" @click="$router.push('/admin')">
           <v-icon style="font-size: 2rem">fas fa-user-shield</v-icon>
         </v-btn>
-        <span>Bedienpanel</span>
+        <span>Admin-Panel</span>
       </v-tooltip>
 
       <v-tooltip top>
@@ -83,7 +83,7 @@
       </v-btn>
 
       <v-btn small depressed light @click="$router.push('/admin')">
-        Bedienpanel<v-icon color="grey" style="font-size: 1rem" right
+        Admin-Panel<v-icon color="grey" style="font-size: 1rem" right
           >fas fa-user-shield</v-icon
         >
       </v-btn>

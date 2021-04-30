@@ -125,7 +125,7 @@
             @click="updateOwnDetails"
             :disabled="invalid"
             width="140"
-            >Speicher</v-btn
+            >Speichern</v-btn
           >
         </v-card-actions>
       </v-card>
