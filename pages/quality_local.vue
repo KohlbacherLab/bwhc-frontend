@@ -16,7 +16,7 @@
             @click="$router.push('/main')"
           >
             <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-          >Lokale ZPM Statistiken finden Sie weiter unten. 
+          >Lokale ZPM Statistiken finden Sie weiter unten.
           <strong @click="$router.push('help')">Hilfe?</strong>
         </span>
         <v-divider class="my-3"></v-divider>
@@ -46,9 +46,7 @@
 
       <v-icon color="red accent-4">fas fa-location-arrow</v-icon>
 
-      <v-card-title class="title font-weight-light"
-        ></v-card-title
-      >
+      <v-card-title class="title font-weight-light"></v-card-title>
 
       <v-layout wrap fluid>
         <v-flex d-flex xs12 sm6 md3>
@@ -290,6 +288,8 @@ export default {
         return redirect("/");
       } else if (err.response.status === 403) {
         return redirect("/403");
+      } else {
+        return redirect("/" + err.response.status);
       }
     }
   },

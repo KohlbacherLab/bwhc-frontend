@@ -87,13 +87,13 @@
         >
           <v-card-text class="headline font-weight-thin">
             <p><v-icon color="purple" dark>fas fa-street-view</v-icon></p>
-            <strong>{{ itemsFiles.length }}</strong>
+            <strong>{{ displayResults.patientTotal }}</strong>
             <br />Patienten
           </v-card-text>
         </v-card>
       </v-flex>
 
-      <v-flex d-flex xs12 sm6 md3>
+      <v-flex v-if="hide" d-flex xs12 sm6 md3>
         <v-card
           class="mx-auto"
           flat
@@ -104,13 +104,13 @@
         >
           <v-card-text class="headline font-weight-thin">
             <p><v-icon color="indigo">fas fa-stethoscope</v-icon></p>
-            <strong>{{ itemsGenomicReports.length }}</strong>
+            <strong>{{ itemsGenomicReportsCount }}</strong>
             <br />NGS Übersichten
           </v-card-text>
         </v-card>
       </v-flex>
 
-      <v-flex d-flex xs12 sm6 md3>
+      <v-flex v-if="hide" d-flex xs12 sm6 md3>
         <v-card
           class="mx-auto"
           flat
@@ -121,13 +121,13 @@
         >
           <v-card-text class="headline font-weight-thin">
             <p><v-icon color="blue">fas fa-comment-medical</v-icon></p>
-            <strong>{{ itemsRecommendations.length }}</strong>
+            <strong>{{ itemsRecommendationsCount }}</strong>
             <br />Therapie-Empfehlungen
           </v-card-text>
         </v-card>
       </v-flex>
 
-      <v-flex d-flex xs12 sm6 md3>
+      <v-flex v-if="hide" d-flex xs12 sm6 md3>
         <v-card
           class="mx-auto"
           flat
@@ -138,16 +138,94 @@
         >
           <v-card-text class="headline font-weight-thin">
             <p><v-icon color="cyan" dark>fas fa-file-medical</v-icon></p>
-            <strong>{{ itemsTherapies.length }}</strong>
+            <strong>{{ itemsTherapiesCount }}</strong>
             <br />Molekulare Therapien
           </v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
 
-    <v-divider class="my-3"></v-divider>
+    <v-layout wrap fluid>
+      <v-flex d-flex xs12 sm6 md3>
+        <v-card
+          flat
+          color="grey lighten-2"
+          light
+          width="250"
+          v-ripple="{ center: true }"
+        >
+          <v-card-text class="title font-weight-thin">
+            <strong
+              >{{ displayResults.completionStats[0].frequency.count }} ({{
+                displayResults.completionStats[0].frequency.percent.toFixed(1)
+              }}%)</strong
+            >
+            <br />{{ displayResults.completionStats[0].level }}
+          </v-card-text>
+        </v-card>
+      </v-flex>
 
-    <v-tabs color="blue-grey lighten-5" fixed-tabs icons-and-text>
+      <v-flex d-flex xs12 sm6 md3>
+        <v-card
+          flat
+          color="grey lighten-2"
+          light
+          width="250"
+          v-ripple="{ center: true }"
+        >
+          <v-card-text class="title font-weight-thin">
+            <strong
+              >{{ displayResults.completionStats[1].frequency.count }} ({{
+                displayResults.completionStats[1].frequency.percent.toFixed(1)
+              }}%)</strong
+            >
+            <br />{{ displayResults.completionStats[1].level }}
+          </v-card-text>
+        </v-card>
+      </v-flex>
+
+      <v-flex d-flex xs12 sm6 md3>
+        <v-card
+          flat
+          color="grey lighten-2"
+          light
+          width="250"
+          v-ripple="{ center: true }"
+        >
+          <v-card-text class="title font-weight-thin">
+            <strong
+              >{{ displayResults.completionStats[2].frequency.count }} ({{
+                displayResults.completionStats[2].frequency.percent.toFixed(1)
+              }}%)</strong
+            >
+            <br />{{ displayResults.completionStats[2].level }}
+          </v-card-text>
+        </v-card>
+      </v-flex>
+
+      <v-flex d-flex xs12 sm6 md3>
+        <v-card
+          flat
+          color="grey lighten-2"
+          light
+          width="250"
+          v-ripple="{ center: true }"
+        >
+          <v-card-text class="title font-weight-thin">
+            <strong
+              >{{ displayResults.completionStats[3].frequency.count }} ({{
+                displayResults.completionStats[3].frequency.percent.toFixed(1)
+              }}%)</strong
+            >
+            <br />{{ displayResults.completionStats[3].level }}
+          </v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
+
+    <v-divider v-if="hide" class="my-3"></v-divider>
+
+    <v-tabs v-if="hide" color="blue-grey lighten-5" fixed-tabs icons-and-text>
       <v-tab class="subheading font-weight-regular" :key="cases"
         >Patienten</v-tab
       >
@@ -164,8 +242,12 @@
       <!-- CASES -->
       <v-tab-item>
         <v-card flat light>
-          <v-data-table :headers="headerFiles" :items="itemsFiles" no-data-text="Keine Daten verfügbar"
-      rows-per-page-text="Zeilen pro Seite">
+          <v-data-table
+            :headers="headerFiles"
+            :items="itemsFiles"
+            no-data-text="Keine Daten verfügbar"
+            rows-per-page-text="Zeilen pro Seite"
+          >
             <template slot="items" slot-scope="props" no-data>
               <tr @click="routeToPatient(queryId + '&' + props.item.id)">
                 <!-- <td>{{ props.item.firstReferral }}</td> -->
@@ -215,7 +297,7 @@
             :headers="headerGenomicReports"
             :items="itemsGenomicReports"
             no-data-text="Keine Daten verfügbar"
-      rows-per-page-text="Zeilen pro Seite"
+            rows-per-page-text="Zeilen pro Seite"
           >
             <template slot="items" slot-scope="props">
               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
@@ -252,7 +334,7 @@
             :headers="headerRecommendations"
             :items="itemsRecommendations"
             no-data-text="Keine Daten verfügbar"
-      rows-per-page-text="Zeilen pro Seite"
+            rows-per-page-text="Zeilen pro Seite"
           >
             <template slot="items" slot-scope="props">
               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
@@ -280,7 +362,7 @@
             :headers="headerTherapies"
             :items="itemsTherapies"
             no-data-text="Keine Daten verfügbar"
-      rows-per-page-text="Zeilen pro Seite"
+            rows-per-page-text="Zeilen pro Seite"
           >
             <template slot="items" slot-scope="props">
               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
@@ -324,7 +406,7 @@
     />
   </v-container>
 </template>
-  
+
 <script>
 import axios from "axios";
 import { stringify } from "querystring";
@@ -336,6 +418,7 @@ import queryPanel from "~/components/queryPanel";
 
 import util from "~/assets/js/util";
 
+let baseURL = process.env.baseUrl + process.env.port;
 let serverBaseURL = process.env.baseUrl + process.env.port + process.env.query;
 
 export default {
@@ -485,26 +568,68 @@ export default {
       );
 
       let queryparams = await axios.get(`${serverBaseURL}/${params.id}`);
-
-      let files = await axios.get(`${serverBaseURL}/${params.id}/Patient`);
-
       //let filter = await axios.get(`${serverBaseURL}/${params.id}/filter`);
-
       let filter = queryparams.data.filter;
 
-      let genomicReports = await axios.get(
-        `${serverBaseURL}/${params.id}/NGSSummary`
-      );
+      let resultSummary;
+      let results;
+      //let links = queryparams.data._links;
+      if (queryparams.data._links["result-summary"]) {
+        resultSummary = queryparams.data._links["result-summary"].href;
+        results = await axios.get(`${baseURL}` + resultSummary);
+      }
 
-      let recommendations = await axios.get(
-        `${serverBaseURL}/${params.id}/TherapyRecommendation`
-      );
+      let patients;
+      let files;
+      let filesEntries;
+      if (queryparams.data._links["patients"]) {
+        patients = queryparams.data._links["patients"].href;
+        files = await axios.get(`${baseURL}` + patients);
+        filesEntries = files.data.entries;
+      }
 
-      let therapies = await axios.get(
-        `${serverBaseURL}/${params.id}/MolecularTherapy`
-      );
+      let hide = false;
 
-      /*
+      let ngsSummaries;
+      let genomicReports;
+      let genomicReportsEntries;
+      let genomicReportsCount;
+      if (queryparams.data._links["ngs-summaries"]) {
+        ngsSummaries = queryparams.data._links["ngs-summaries"].href;
+        //alert("ngs summaries exist " + `${baseURL}` + ngsSummaries);
+        genomicReports = await axios.get(`${baseURL}` + ngsSummaries);
+        genomicReportsEntries = genomicReports.data.entries;
+        genomicReportsCount = genomicReportsEntries.length;
+        hide = true;
+      }
+
+      let therapyRecommendations;
+      let recommendations;
+      let recommendationsEntries;
+      let recommendationsCount;
+      if (queryparams.data._links["therapy-recommendations"]) {
+        therapyRecommendations =
+          queryparams.data._links["therapy-recommendations"].href;
+        recommendations = await axios.get(
+          `${baseURL}` + therapyRecommendations
+        );
+        recommendationsEntries = recommendations.data.entries;
+        recommendationsCount = recommendationsEntries.length;
+      }
+
+      let molecularTherapies;
+      let therapies;
+      let therapiesEntries;
+      let therapiesCount;
+      if (queryparams.data._links["molecular-therapies"]) {
+        molecularTherapies =
+          queryparams.data._links["molecular-therapies"].href;
+        therapies = await axios.get(`${baseURL}` + molecularTherapies);
+        therapiesEntries = therapies.data.entries;
+        therapiesCount = therapiesEntries.length;
+      }
+
+      /*      
       alert("DIAGNOSES CAT " + JSON.stringify(diagnosisCatRaw));
       alert("GENES CAT " + JSON.stringify(genesCatRaw));
       alert("DRUGS CAT " + JSON.stringify(drugsCatRaw));
@@ -580,13 +705,24 @@ export default {
       return {
         baseURL: `${serverBaseURL}/${params.id}/files`,
         queryId: `${params.id}`,
-        itemsFiles: files.data.entries,
-        itemsTherapies: therapies.data.entries,
-        itemsRecommendations: recommendations.data.entries,
-        itemsGenomicReports: genomicReports.data.entries,
+
+        hide: hide,
+
+        displayResults: results.data,
+
+        itemsFiles: filesEntries,
+        itemsTherapies: therapiesEntries,
+        itemsRecommendations: recommendationsEntries,
+        itemsGenomicReports: genomicReportsEntries,
+
+        itemsTherapiesCount: therapiesCount,
+        itemsRecommendationsCount: recommendationsCount,
+        itemsGenomicReportsCount: genomicReportsCount,
+
         gender: filter.genders,
         vitalStatus: filter.vitalStatus,
         ageRange: ageRangeRaw,
+
         diagnosisCat,
         genesCat,
         drugsCat,
@@ -597,12 +733,16 @@ export default {
         getQueryParametersResponses,
         getQueryParametersFederated,
       };
+      
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err.status === 401) {
         this.$router.push(`/`);
-      } else if (err.response.status === 403) {
+      } else if (err.status === 403) {
         return redirect("/403");
+      } else {
+        return redirect("/" + err.status);
       }
+      
     }
   },
 };

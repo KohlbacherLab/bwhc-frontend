@@ -29,7 +29,7 @@
         <v-card-text class="headline font-weight-thin">
           <p>🙅🏻‍♂️</p>
           <strong>403</strong>
-          <br />verboten.
+          <br />Verboten.
         </v-card-text>
       </v-card>
     </v-flex>

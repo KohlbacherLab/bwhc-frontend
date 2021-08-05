@@ -676,7 +676,6 @@ export default {
           diagnosis.push(this.diagnosis[i].slice(0, 5));
         }
       }
-      //alert(diagnosis);
 
       let request = {
         user: "Myself",
@@ -689,16 +688,11 @@ export default {
         }
       };
 
-      alert(JSON.stringify(request));
-
-      console.log(JSON.stringify(request));
-
       let Response = await axios.post(
         process.env.baseUrl+`:80/bwhc/mtb/query`,
         request
       );
 
-      alert(JSON.stringify(Response.data));
     },
     */
 

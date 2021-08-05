@@ -8,7 +8,9 @@
       <v-divider></v-divider>
 
       <!-- Gender -->
-      <v-subheader class="subheading font-weight-regular">Geschlecht</v-subheader>
+      <v-subheader class="subheading font-weight-regular"
+        >Geschlecht</v-subheader
+      >
       <v-container fluid>
         <v-layout row wrap>
           <v-flex xs12 sm4 md4>
@@ -97,7 +99,10 @@
             @click="filterQuery"
             >Filtern</v-btn
           >
-          <span>Klicken Sie hier, um die Ergebnisse der bwHC-Abfrage zu filtern</span>
+          <span
+            >Klicken Sie hier, um die Ergebnisse der bwHC-Abfrage zu
+            filtern</span
+          >
         </v-tooltip>
       </v-flex>
     </v-list>
@@ -151,6 +156,10 @@ export default {
       } catch (err) {
         if (err.response.status === 401) {
           this.$router.push(`/`);
+        } else if (err.response.status === 403) {
+          return redirect("/403");
+        } else {
+          return redirect("/" + err.response.status);
         }
       }
     },

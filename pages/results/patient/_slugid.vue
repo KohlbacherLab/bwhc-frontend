@@ -95,7 +95,9 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
+          <!--
           <td>{{ props.item.id }}</td>
+          -->
           <td>{{ props.item.recordedOn }}</td>
           <td>{{ props.item.icd10 }}</td>
           <td>{{ props.item.icdO3T }}</td>
@@ -134,7 +136,9 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
+          <!--
           <td>{{ props.item.id }}</td>
+          -->
           <td>
             {{ props.item.relationship }}
           </td>
@@ -168,7 +172,9 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
+          <!--
           <td>{{ props.item.id }}</td>
+          -->
           <td>{{ props.item.diagnosis }}</td>
           <td>{{ props.item.therapyLine }}</td>
           <td>{{ props.item.period }}</td>
@@ -234,7 +240,9 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
+          <!--
           <td>{{ props.item.id }}</td>
+          -->
           <td>{{ props.item.icd10 }}</td>
           <td>{{ props.item.type }}</td>
           <td>{{ props.item.collectionDate }}</td>
@@ -270,7 +278,9 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
+          <!--
           <td>{{ props.item.id }}</td>
+          -->
           <td>{{ props.item.specimen }}</td>
           <td>{{ props.item.performingInstitute }}</td>
           <td>{{ props.item.issuedOn }}</td>
@@ -305,7 +315,9 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
+          <!--
           <td>{{ props.item.id }}</td>
+          -->
           <td>{{ props.item.specimen }}</td>
           <td>{{ props.item.issuedOn }}</td>
           <td>{{ props.item.tumorMorphology }}</td>
@@ -342,7 +354,9 @@
     >
       <template slot="items" slot-scope="props">
         <tr @click="props.expanded = !props.expanded">
+          <!--
           <td>{{ props.item.id }}</td>
+          -->
           <td>{{ props.item.specimen }}</td>
           <td>{{ props.item.issueDate }}</td>
           <td>{{ props.item.sequencingType }}</td>
@@ -654,7 +668,9 @@
     >
       <template slot="items" slot-scope="props">
         <tr @click="props.expanded = !props.expanded">
+          <!--
           <td>{{ props.item.id }}</td>
+          -->
           <td>{{ props.item.icd10 }}</td>
           <td>{{ props.item.issuedOn }}</td>
           <td>{{ props.item.targetAvailable }}</td>
@@ -691,9 +707,11 @@
           >
             <template slot="items" slot-scope="props">
               <tr>
+                <!--
                 <td>
                   {{ props.item.id }}
                 </td>
+                -->
                 <td>
                   {{ props.item.icd10 }}
                 </td>
@@ -743,7 +761,9 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
-          <td>{{ props.item.id }}</td>
+          <!--
+            <td>{{ props.item.id }}</td>
+          -->
           <td>{{ props.item.therapy }}</td>
           <td>{{ props.item.issueDate }}</td>
           <td>{{ props.item.responseDate }}</td>
@@ -780,7 +800,9 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
+          <!--
           <td>{{ props.item.id }}</td>
+          -->
           <td>{{ props.item.diagnosis }}</td>
           <td>{{ props.item.status }}</td>
           <td>{{ props.item.recordedOn }}</td>
@@ -838,12 +860,14 @@ export default {
       y: "top",
 
       headerDiagnoses: [
+        /*
         {
           text: "ID",
           align: "left",
           sortable: true,
           value: "id",
         },
+        */
         {
           text: "Erstdiagnosedatum",
           align: "left",
@@ -883,12 +907,14 @@ export default {
       ],
 
       headerFamilyMemberDiagnoses: [
+        /*
         {
           text: "ID",
           align: "left",
           sortable: true,
           value: "id",
         },
+        */
         {
           text: "Verwandtschaftsgrad",
           align: "left",
@@ -898,12 +924,14 @@ export default {
       ],
 
       headerGuidelineTherapies: [
+        /*
         {
           text: "ID",
           align: "left",
           sortable: true,
           value: "id",
         },
+        */
         {
           text: "Diagnose",
           align: "left",
@@ -964,12 +992,14 @@ export default {
       ],
 
       headerSpecimens: [
+        /*
         {
           text: "ID",
           align: "left",
           sortable: true,
           value: "id",
         },
+        */
         {
           text: "ICD-10",
           align: "left",
@@ -1003,12 +1033,14 @@ export default {
       ],
 
       headerMolecularPathologyFindings: [
+        /*
         {
           text: "ID",
           align: "left",
           sortable: true,
           value: "id",
         },
+        */
         {
           text: "Probe",
           align: "left",
@@ -1036,12 +1068,14 @@ export default {
       ],
 
       headerHistologyReports: [
+        /*
         {
           text: "ID",
           align: "left",
           sortable: true,
           value: "id",
         },
+        */
         {
           text: "Probe",
           align: "left",
@@ -1075,12 +1109,14 @@ export default {
       ],
 
       headerNgsReports: [
+        /*
         {
           text: "ID",
           align: "left",
           sortable: true,
           value: "id",
         },
+        */
         {
           text: "Probe",
           align: "left",
@@ -1438,12 +1474,14 @@ export default {
       ],
 
       headerCarePlans: [
+        /*
         {
           text: "ID",
           align: "left",
           sortable: true,
           value: "id",
         },
+        */
         {
           text: "ICD-10",
           align: "left",
@@ -1471,12 +1509,14 @@ export default {
       ],
 
       headerTherapyRecommendations: [
+        /*
         {
           text: "ID",
           align: "left",
           sortable: true,
           value: "id",
         },
+        */
         {
           text: "ICD-10",
           align: "left",
@@ -1510,12 +1550,14 @@ export default {
       ],
 
       headerClaimStatus: [
+        /*
         {
           text: "ID",
           align: "left",
           sortable: true,
           value: "id",
         },
+        */
         {
           text: "Therapie-Empfehlung",
           align: "left",
@@ -1549,12 +1591,14 @@ export default {
       ],
 
       headerMolecularTherapies: [
+        /*
         {
           text: "ID",
           align: "left",
           sortable: true,
           value: "id",
         },
+        */
         {
           text: "Diagnose",
           align: "left",

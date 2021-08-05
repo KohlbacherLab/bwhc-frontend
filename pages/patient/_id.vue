@@ -68,6 +68,40 @@
       </v-card>
     </v-layout>
 
+    <template v-slot:header>
+      <span>
+        <v-hover>
+          <v-card flat>
+            <v-card-text class="subheading font-weight-thin">
+              <span v-if="getQueryParametersMutations.length > 0">
+                <strong>Mutationen:</strong>
+                {{ getQueryParametersMutations.join(", ") }}
+                <br />
+              </span>
+              <span v-if="getQueryParametersDiagnosis.length > 0">
+                <strong>Diagnose:</strong>
+                {{ getQueryParametersDiagnosis.join(", ") }}
+                <br />
+              </span>
+              <span v-if="getQueryParametersDrugs.length > 0">
+                <strong>Wirkstoffe:</strong>
+                {{ getQueryParametersDrugs.join(", ") }}
+                <br />
+              </span>
+              <span v-if="getQueryParametersResponses.length > 0">
+                <strong>Responses:</strong>
+                {{ getQueryParametersResponses.join(", ") }}
+                <br />
+              </span>
+
+              <strong>Abfragetyp:</strong>
+              {{ getQueryParametersFederated }}
+            </v-card-text>
+          </v-card>
+        </v-hover>
+      </span>
+    </template>
+
     <!-- ISSUES -->
     <div id="issues"></div>
     <v-divider class="my-3"></v-divider>
@@ -80,6 +114,7 @@
       hide-default-footer
       no-data-text="Keine Daten verfügbar"
       rows-per-page-text="Zeilen pro Seite"
+      :rows-per-page-items="[25, 50, 75, 100, 125, 150, 175, 200]"
     >
       <template slot="items" slot-scope="props">
         <tr>
@@ -325,7 +360,9 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
+          <!--
           <td>{{ props.item.id }}</td>
+          -->
           <td>{{ props.item.specimen }}</td>
           <td>{{ props.item.issuedOn }}</td>
           <td>{{ props.item.tumorMorphology }}</td>
@@ -362,7 +399,9 @@
     >
       <template slot="items" slot-scope="props">
         <tr @click="props.expanded = !props.expanded">
+          <!--
           <td>{{ props.item.id }}</td>
+          -->
           <td>{{ props.item.specimen }}</td>
           <td>{{ props.item.issueDate }}</td>
           <td>{{ props.item.sequencingType }}</td>
@@ -709,9 +748,7 @@
           >
             <template slot="items" slot-scope="props">
               <tr>
-                <td>
-                  {{ props.item.id }}
-                </td>
+                <td>{{ props.item.id }}</td>
                 <td>
                   {{ props.item.icd10 }}
                 </td>
@@ -1714,7 +1751,7 @@ export default {
           `/${params.id}`
       );
 
-      //console.log(JSON.stringify(dataQualityReport));
+      console.log(JSON.stringify(dataQualityReport));
 
       let mtbFileView = await axios.get(
         process.env.baseUrl +
@@ -1723,7 +1760,7 @@ export default {
           `/${params.id}`
       );
 
-      //alert(JSON.stringify(mtbFileView));
+      // alert(JSON.stringify(mtbFileView._links));
 
       // ISSUES
 
@@ -1978,6 +2015,8 @@ export default {
         return redirect("/");
       } else if (err.response.status === 403) {
         return redirect("/403");
+      } else {
+        return redirect("/" + err.response.status);
       }
     }
   },

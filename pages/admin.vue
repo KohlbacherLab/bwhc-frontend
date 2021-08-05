@@ -487,6 +487,7 @@ export default {
       "GlobalZPMCoordinator",
       "MTBCoordinator",
       "Researcher",
+      "ApprovedResearcher"
     ],
 
     headerUsers: [
@@ -767,7 +768,10 @@ export default {
         return redirect("/");
       } else if (err.response.status === 403) {
         return redirect("/403");
+      } else {
+        return redirect("/" + err.response.status);
       }
+      
     }
   },
 };

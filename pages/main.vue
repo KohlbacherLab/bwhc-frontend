@@ -74,7 +74,7 @@
               <v-flex v-for="n in 1" :key="n" d-flex xs12>
                 <v-card flat>
                   <v-card-title class="headline font-weight-light">
-                    Rollen
+                    <strong> Rollen </strong>
                     <v-icon></v-icon>
                   </v-card-title>
                   <v-card-text class="subheading font-weight-light">
@@ -285,6 +285,39 @@
                         <td></td>
                       </tr>
                       <tr>
+                        <td>Fortgeschrittene/r Forscher/in</td>
+                        <td></td>
+                        <td>
+                          <v-tooltip top>
+                            <v-btn
+                              icon
+                              slot="activator"
+                              @click="$router.push('/query')"
+                            >
+                              <v-icon style="font-size: 1.4rem"
+                                >fas fa-search</v-icon
+                              >
+                            </v-btn>
+                            <span>Abfrage-Portal</span>
+                          </v-tooltip>
+                        </td>
+                        <td>
+                          <v-tooltip top>
+                            <v-btn
+                              icon
+                              slot="activator"
+                              @click="$router.push('/me')"
+                            >
+                              <v-icon style="font-size: 1.4rem"
+                                >fas fa-user</v-icon
+                              >
+                            </v-btn>
+                            <span>Nutzerdetails</span>
+                          </v-tooltip>
+                        </td>
+                        <td></td>
+                      </tr>
+                      <tr>
                         <td>Forscher/in</td>
                         <td></td>
                         <td>
@@ -355,10 +388,12 @@ export default {
         me: whoami.data,
       };
     } catch (err) {
-      if (err.status === 401) {
+      if (err.response.status === 401) {
         this.$router.push(`/`);
       } else if (err.response.status === 403) {
-        this.$router.push(`/`);
+        this.$router.push(`/403`);
+      } else {
+        return redirect("/" + err.response.status);
       }
     }
   },

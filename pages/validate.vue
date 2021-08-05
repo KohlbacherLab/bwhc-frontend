@@ -40,33 +40,57 @@
       </v-flex>
     </v-layout>
     <v-divider class="my-3"></v-divider>
-    <v-card-title class="headline font-weight-light">Patientenliste</v-card-title>
-    <v-data-table
-      :headers="headerConditions"
-      :items="itemsPatients"
-      :search="search"
-      no-data-text="Keine Daten verfügbar"
-      rows-per-page-text="Zeilen pro Seite"
-    >
-      <template slot="items" slot-scope="props">
-        <td @click="routeToPatient(props.item.id)">{{ props.item.id }}</td>
 
-        <td @click="routeToPatient(props.item.id)">
-          {{ props.item.gender }}
-        </td>
-        <td @click="routeToPatient(props.item.id)">
-          {{ props.item.birthDate }}
-        </td>
-        <td @click="routeToPatient(props.item.id)">
-          {{ props.item.numberOfIssues }}
-        </td>
-        <td class="text-xs-right">
-          <v-icon small @click="functionalityNotAvailable"
-            >fas fa-highlighter</v-icon
-          >
-        </td>
-      </template>
-    </v-data-table>
+    <v-card flat>
+      <v-card-title class="headline font-weight-light">
+        Patientenliste
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="search"
+          label="Suchen"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
+      <v-data-table
+        :headers="headerConditions"
+        :items="itemsPatients"
+        :search="search"
+        :rows-per-page-items="[25, 50, 75, 100, 125, 150, 175, 200]"
+        no-data-text="Keine Daten verfügbar"
+        rows-per-page-text="Zeilen pro Seite"
+        no-results-text="keine passenden Ergebnisse gefunden"
+      >
+        <template slot="items" slot-scope="props">
+          <td @click="routeToPatient(props.item.id)">{{ props.item.id }}</td>
+
+          <td @click="routeToPatient(props.item.id)">
+            {{ props.item.gender }}
+          </td>
+          <td @click="routeToPatient(props.item.id)">
+            {{ props.item.birthDate }}
+          </td>
+          <td @click="routeToPatient(props.item.id)">
+            {{ props.item.numberOfErrors }}
+          </td>
+           <td @click="routeToPatient(props.item.id)">
+            {{ props.item.numberOfWarnings }}
+          </td>
+          <td @click="routeToPatient(props.item.id)">
+            {{ props.item.numberOfInfos }}
+          </td>
+          <!--
+          <td class="text-xs-right">
+            <v-icon small @click="functionalityNotAvailable"
+              >fas fa-highlighter</v-icon
+            >
+          </td>
+          -->
+        </template>
+      </v-data-table>
+    </v-card>
+
     <v-divider class="my-3"></v-divider>
   </v-container>
 </template>
@@ -133,14 +157,27 @@ export default {
         text: "Anzahl Fehler",
         align: "left",
         sortable: true,
-        value: "numberOfIssues",
+        value: "numberOfErrors",
       },
+      {
+        text: "Anzahl Warnungen",
+        align: "left",
+        sortable: true,
+        value: "numberOfWarnings",
+      },
+      {
+        text: "Anzahl Infos",
+        align: "left",
+        sortable: true,
+        value: "numberOfInfos",
+      }
+      /*,
       {
         text: "Aktionen",
         align: "right",
         sortable: false,
         value: "actions",
-      },
+      },*/
     ],
 
     patientValidated: false,
@@ -228,6 +265,9 @@ export default {
       let patients = await axios.get(
         process.env.baseUrl + process.env.port + process.env.patient
       );
+
+      //alert(JSON.stringify(patients));
+      
       return {
         itemsPatients: patients.data.entries,
         countPatients: patients.data.total,
