@@ -360,9 +360,7 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
-          <!--
           <td>{{ props.item.id }}</td>
-          -->
           <td>{{ props.item.specimen }}</td>
           <td>{{ props.item.issuedOn }}</td>
           <td>{{ props.item.tumorMorphology }}</td>
@@ -399,9 +397,7 @@
     >
       <template slot="items" slot-scope="props">
         <tr @click="props.expanded = !props.expanded">
-          <!--
           <td>{{ props.item.id }}</td>
-          -->
           <td>{{ props.item.specimen }}</td>
           <td>{{ props.item.issueDate }}</td>
           <td>{{ props.item.sequencingType }}</td>

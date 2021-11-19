@@ -587,15 +587,22 @@ export default {
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${localStorage.token}`;
+      
+      let pass = null;
+      if (this.password) {
+        pass = this.password
+      }
 
       try {
         let request = {
           id: this.id,
           username: this.usernameEdit,
-          password: this.password,
+          password: pass,
           givenName: this.givenEdit,
           familyName: this.familyEdit,
         };
+
+        alert(JSON.stringify(request));
 
         let Response = await axios.put(
           process.env.baseUrl +
@@ -605,6 +612,8 @@ export default {
             this.id,
           request
         );
+
+        alert(JSON.stringify(Response));
 
         this.editUserDetailsDialog = false;
         window.location.reload(true);

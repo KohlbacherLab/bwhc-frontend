@@ -464,12 +464,17 @@ export default {
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${localStorage.token}`;
+            
+      let pass = null;
+      if (this.password) {
+        pass = this.password
+      }
 
       try {
         let request = {
           id: this.id,
           username: this.usernameOwn,
-          password: this.password,
+          password: pass,
           givenName: this.givenOwn,
           familyName: this.familyOwn,
         };
