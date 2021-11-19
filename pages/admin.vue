@@ -602,8 +602,6 @@ export default {
           familyName: this.familyEdit,
         };
 
-        alert(JSON.stringify(request));
-
         let Response = await axios.put(
           process.env.baseUrl +
             process.env.port +
@@ -612,8 +610,6 @@ export default {
             this.id,
           request
         );
-
-        alert(JSON.stringify(Response));
 
         this.editUserDetailsDialog = false;
         window.location.reload(true);
