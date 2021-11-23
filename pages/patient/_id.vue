@@ -478,9 +478,6 @@
                   {{ props.item.altAllele }}
                 </td>
                 <td>
-                  {{ props.item.functionalAnnotation }}
-                </td>
-                <td>
                   {{ props.item.dnaChange }}
                 </td>
                 <td>
@@ -1259,12 +1256,6 @@ export default {
         align: "left",
         sortable: true,
         value: "altAllele",
-      },
-      {
-        text: "Funktionale Annotation",
-        align: "left",
-        sortable: true,
-        value: "functionalAnnotation",
       },
       {
         text: "DNA Change",
