@@ -656,6 +656,7 @@ export default {
         );
       }
 
+      /*
       for (var i = 0; i < genesCatRaw.data.entries.length; i++) {
         genesCat.push(
           genesCatRaw.data.entries[i].symbol +
@@ -663,12 +664,21 @@ export default {
             genesCatRaw.data.entries[i].name
         );
       }
+      */
+
+      for (var i = 0; i < genesCatRaw.data.entries.length; i++) {
+        genesCat.push(
+         genesCatRaw.data.entries[i].symbol +
+            " - " +
+            genesCatRaw.data.entries[i].name + " · " +  genesCatRaw.data.entries[i].hgncId
+        );
+      }
 
       for (var i = 0; i < drugsCatRaw.data.entries.length; i++) {
         drugsCat.push(
-          drugsCatRaw.data.entries[i].code +
-            " - " +
-            drugsCatRaw.data.entries[i].name
+          drugsCatRaw.data.entries[i].name +
+            " · " +
+            drugsCatRaw.data.entries[i].code
         );
       }
       for (var i = 0; i < responsesCatRaw.data.concepts.length; i++) {

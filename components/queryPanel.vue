@@ -223,8 +223,8 @@
                 ></v-autocomplete>
               </v-flex>
             </v-layout>
-            -->
-
+ -->
+ 
             <v-autocomplete
               v-model="genes"
               :items="genesCat"
@@ -238,7 +238,20 @@
               hide-no-data
               multiple
               return-object
-            ></v-autocomplete>
+            >
+              <!--           
+              <template v-slot:selection="{ item }">
+                <v-chip>
+                  <span v-text="item[1]"></span>
+                </v-chip>
+              </template>
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item[1]"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+  -->
+            </v-autocomplete>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -440,13 +453,14 @@
             >bwHC Abfrage
           </v-card-title>
           <v-card-text
-            >Wenn Sie eine "bwHC Federated Query" ausführen, akzeptieren Sie die Bedingungen und
-             Bedingungen der "bwHC-Einverständniserklärung" und bestätigen Sie, dass Sie haben
-             Lesen und akzeptieren Sie unsere Nutzungsbedingungen (insbesondere die
-             Abschnitt über Einschränkungen beim Speichern und Verteilen von Abfragen
-             Ergebnisse) und unsere Datenschutzrichtlinie (insbesondere den Abschnitt über
-             die in der bwHC-Einwilligung enthaltenen Geschäftsbedingungen
-             Zustimmung').</v-card-text
+            >Wenn Sie eine "bwHC Federated Query" ausführen, akzeptieren Sie die
+            Bedingungen und Bedingungen der "bwHC-Einverständniserklärung" und
+            bestätigen Sie, dass Sie haben Lesen und akzeptieren Sie unsere
+            Nutzungsbedingungen (insbesondere die Abschnitt über Einschränkungen
+            beim Speichern und Verteilen von Abfragen Ergebnisse) und unsere
+            Datenschutzrichtlinie (insbesondere den Abschnitt über die in der
+            bwHC-Einwilligung enthaltenen Geschäftsbedingungen
+            Zustimmung').</v-card-text
           >
           <v-divider></v-divider>
           <v-card-actions>
@@ -502,10 +516,16 @@ export default {
     drugUsage: "used",
     diagnosis: Array(),
 
-    select: { mode: "local", desc: "Der Abfragemodus ist auf lokal eingestellt" },
+    select: {
+      mode: "local",
+      desc: "Der Abfragemodus ist auf lokal eingestellt",
+    },
     items: [
       { mode: "local", desc: "Der Abfragemodus ist auf lokal eingestellt" },
-      { mode: "federated", desc: "Der Abfragemodus ist auf bwHealthCloud-weit eingestellt" },
+      {
+        mode: "federated",
+        desc: "Der Abfragemodus ist auf bwHealthCloud-weit eingestellt",
+      },
     ],
 
     federatedQueryDialog: false,
@@ -522,7 +542,9 @@ export default {
         if (this.genes) {
           for (var i = 0; i < this.genes.length; i++) {
             mutatedGenes.push(
-              this.genes[i].substr(0, this.genes[i].indexOf(" "))
+              //this.genes[i].substr(0, this.genes[i].indexOf(" "))
+              //this.genes[i][0]
+              this.genes[i].split(" · ")[1]
             );
           }
         }
@@ -644,7 +666,8 @@ export default {
 
     addDrugs(drug, usage) {
       //const index = this.drugs.indexOf(drug);
-      let code = drug.substr(0, drug.indexOf(" "));
+      //let code = drug.substr(0, drug.indexOf(" "));
+      let code = drug.split(" · ")[1];
       this.selectedDrugs.push({ code, usage });
       //alert(JSON.stringify(this.selectedDrugs));
     },

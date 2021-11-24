@@ -14,7 +14,7 @@
             @click="$router.push('/main')"
           >
             <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-          >Ohne Such-Kriterien, wird die Anfrage alles zurückliefern. 
+          >Ohne Such-Kriterien, wird die Anfrage alles zurückliefern.
           <strong @click="$router.push('help')">Hilfe?</strong>
         </span>
         <v-divider class="my-3"></v-divider>
@@ -35,7 +35,6 @@
     </v-container>
   </v-responsive>
 </template>
-
 
 <script>
 import axios from "axios";
@@ -124,21 +123,34 @@ export default {
         );
       }
 
+      /*
+      for (var i = 0; i < genesCatRaw.data.entries.length; i++) {
+        genesCat.push(
+          [genesCatRaw.data.entries[i].hgncId, genesCatRaw.data.entries[i].symbol +
+            " - " +
+            genesCatRaw.data.entries[i].name]
+        );
+      }
+      */
+
       for (var i = 0; i < genesCatRaw.data.entries.length; i++) {
         genesCat.push(
           genesCatRaw.data.entries[i].symbol +
             " - " +
-            genesCatRaw.data.entries[i].name
+            genesCatRaw.data.entries[i].name +
+            " · " +
+            genesCatRaw.data.entries[i].hgncId
         );
       }
 
       for (var i = 0; i < drugsCatRaw.data.entries.length; i++) {
         drugsCat.push(
-          drugsCatRaw.data.entries[i].code +
-            " - " +
-            drugsCatRaw.data.entries[i].name
+          drugsCatRaw.data.entries[i].name +
+            " · " +
+            drugsCatRaw.data.entries[i].code
         );
       }
+
       for (var i = 0; i < responsesCatRaw.data.concepts.length; i++) {
         responsesCat.push(
           responsesCatRaw.data.concepts[i].code +
