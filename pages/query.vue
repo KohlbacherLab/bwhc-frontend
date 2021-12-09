@@ -32,6 +32,13 @@
         clipped-right
       />
       <v-divider class="my-3"></v-divider>
+      <!--
+      <v-card-title class="title font-weight-light">Fehler</v-card-title>
+      -->
+      <v-col v-for="(issue, i) in issues" :key="i">
+        <div class="caption">{{ issue.details }}</div>
+      </v-col>
+
     </v-container>
   </v-responsive>
 </template>
@@ -110,6 +117,13 @@ export default {
           "/RECIST"
       );
 
+      let globalReport = await axios.get(
+        process.env.baseUrl +
+          process.env.port +
+          process.env.reporting +
+          "/GlobalQCReport"
+      );
+
       let diagnosisCat = Array();
       let genesCat = Array();
       let drugsCat = Array();
@@ -164,6 +178,7 @@ export default {
         genesCat,
         drugsCat,
         responsesCat,
+        issues: globalReport.data._issues
       };
     } catch (err) {
       if (err.status === 401) {

@@ -404,6 +404,10 @@
       :ageRange="ageRange"
       clipped-right
     />
+
+    <v-col v-for="(issue, i) in issues" :key="i">
+        <div class="caption">{{ issue.details }}</div>
+      </v-col>
   </v-container>
 </template>
 
@@ -668,9 +672,11 @@ export default {
 
       for (var i = 0; i < genesCatRaw.data.entries.length; i++) {
         genesCat.push(
-         genesCatRaw.data.entries[i].symbol +
+          genesCatRaw.data.entries[i].symbol +
             " - " +
-            genesCatRaw.data.entries[i].name + " · " +  genesCatRaw.data.entries[i].hgncId
+            genesCatRaw.data.entries[i].name +
+            " · " +
+            genesCatRaw.data.entries[i].hgncId
         );
       }
 
@@ -712,6 +718,13 @@ export default {
       let getQueryParametersResponses = queryparams.data.parameters.responses;
       let getQueryParametersFederated = queryparams.data.mode;
 
+      let globalReport = await axios.get(
+        process.env.baseUrl +
+          process.env.port +
+          process.env.reporting +
+          "/GlobalQCReport"
+      );
+
       return {
         baseURL: `${serverBaseURL}/${params.id}/files`,
         queryId: `${params.id}`,
@@ -742,8 +755,8 @@ export default {
         getQueryParametersDrugs,
         getQueryParametersResponses,
         getQueryParametersFederated,
+        issues: globalReport.data._issues
       };
-      
     } catch (err) {
       if (err.status === 401) {
         this.$router.push(`/`);
@@ -752,7 +765,6 @@ export default {
       } else {
         return redirect("/" + err.status);
       }
-      
     }
   },
 };
