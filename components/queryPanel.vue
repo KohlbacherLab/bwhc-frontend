@@ -224,7 +224,7 @@
               </v-flex>
             </v-layout>
  -->
- 
+
             <v-autocomplete
               v-model="genes"
               :items="genesCat"
@@ -238,7 +238,18 @@
               hide-no-data
               multiple
               return-object
+              @input="addMutatedGenes(genes[genes.length - 1])"
             >
+
+            <template slot="selection" slot-scope="data">
+                <v-chip
+                  :selected="data.selected"
+                  close
+                  @input="removeMutatedGenes(data.item)"
+                >
+                  {{ data.item }}
+                </v-chip>
+              </template>
               <!--           
               <template v-slot:selection="{ item }">
                 <v-chip>
@@ -273,12 +284,22 @@
               label="ICD-10 Diagnose-Text oder Code..."
               ref="diagnosis"
               chips
-              clearable
               deletable-chips
               dense
               multiple
               placeholder
-            ></v-autocomplete>
+              @input="addDiagnosis(diagnosis[diagnosis.length - 1])"
+            >
+              <template slot="selection" slot-scope="data">
+                <v-chip
+                  :selected="data.selected"
+                  close
+                  @input="removeDiagnosis(data.item)"
+                >
+                  {{ data.item }}
+                </v-chip>
+              </template>
+            </v-autocomplete>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -314,6 +335,7 @@
               multiple
               placeholder
               @input="addDrugs(drugs[drugs.length - 1], drugUsage)"
+              
             >
               <!--
               <template slot="selection" slot-scope="data">
@@ -332,7 +354,7 @@
                 >
                   <strong>{{ data.item }}</strong>
                   &nbsp;
-                  {{ selectedDrugs[data.index].usage }}
+                  {{ selectedDrugs[data.index].usage.code }}
                 </v-chip>
               </template>
             </v-autocomplete>
@@ -363,7 +385,19 @@
               dense
               multiple
               placeholder
-            ></v-autocomplete>
+              @input="addResponses(responses[responses.length - 1])"
+            >
+            <template slot="selection" slot-scope="data">
+                <v-chip
+                  :selected="data.selected"
+                  close
+                  @input="removeResponses(data.item)"
+                >
+                  {{ data.item }}
+                </v-chip>
+              </template>
+            
+            </v-autocomplete>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -505,6 +539,9 @@ export default {
 
   data: () => ({
     selectedDrugs: Array(),
+    selectedDiagnosis: Array(),
+    selectedMutatedGenes: Array(),
+    selectedResponses: Array(),
     mutationOptions: "radioAll",
     localQuery: false,
 
@@ -576,16 +613,19 @@ export default {
 
         if (this.queryId == undefined) {
           let request = {
-            mode: this.select.mode,
+            mode: {
+              code: this.select.mode,
+            },
+            // this.select.mode,
             parameters: {
-              diagnoses: diagnosis,
-              mutatedGenes: mutatedGenes,
+              diagnoses: this.selectedDiagnosis,
+              mutatedGenes: this.selectedMutatedGenes,
               medicationsWithUsage: this.selectedDrugs,
               //responses: [],
               //mutation:[{genes:this.genes,variant:{type:"SNV"}}],
               //medicationsWithUsage: [{usage:"recommended",drug:"something"}],
               //drugs:[{usage:"recommended",drug:"something"}],
-              responses: responses,
+              responses: this.selectedResponses,
             },
 
             /*
@@ -614,17 +654,19 @@ export default {
           this.$router.push(`/results/${Response.data.id}`);
         } else {
           let request = {
-            mode: this.select.mode,
+            mode: {
+              code: this.select.mode,
+            },
             id: this.queryId,
             parameters: {
-              diagnoses: diagnosis,
-              mutatedGenes: mutatedGenes,
+              diagnoses: this.selectedDiagnosis,
+              mutatedGenes: this.selectedMutatedGenes,
               medicationsWithUsage: this.selectedDrugs,
               //responses: [],
               //mutation:[{genes:this.genes,variant:{type:"SNV"}}],
               //medicationsWithUsage: [{usage:"recommended",drug:"something"}],
               //drugs:[{usage:"recommended",drug:"something"}],
-              responses: responses,
+              responses: this.selectedResponses,
             },
           };
 
@@ -664,11 +706,42 @@ export default {
       (this.queryMutationChips = this.gene), this.mutationType;
     },
 
+    addDiagnosis(diagnosis) {
+      let code = diagnosis.split(" - ")[0];
+      this.selectedDiagnosis.push({ code });
+      //alert(JSON.stringify(this.selectedDiagnosis));
+    },
+
+    removeDiagnosis(item) {
+      const index = this.diagnosis.indexOf(item);
+      if (index >= 0) this.selectedDiagnosis.splice(index, 1);
+      this.diagnosis.splice(index, 1);
+    },
+
+    resetDiagnosis() {
+      this.selectedDiagnosis = [];
+    },
+
+    addMutatedGenes(mutatedGenes) {
+      let code = mutatedGenes.split(" · ")[1];
+      this.selectedMutatedGenes.push({ code });
+      //alert(JSON.stringify(this.selectedDiagnosis));
+    },
+
+    removeMutatedGenes(item) {
+      const index = this.mutatedGenes.indexOf(item);
+      if (index >= 0) this.selectedMutatedGenes.splice(index, 1);
+      this.mutatedGenes.splice(index, 1);
+    },
+
+    resetDiagnosis() {
+      this.selectedMutatedGenes = [];
+    },
+
     addDrugs(drug, usage) {
       //const index = this.drugs.indexOf(drug);
       //let code = drug.substr(0, drug.indexOf(" "));
-      let code = drug.split(" · ")[1];
-      this.selectedDrugs.push({ code, usage });
+      this.selectedDrugs.push({ medication: { "code": drug.split(" · ")[1] }, usage: { "code": usage } });
       //alert(JSON.stringify(this.selectedDrugs));
     },
 
@@ -680,6 +753,21 @@ export default {
 
     resetDrugs() {
       this.selectedDrugs = [];
+    },
+
+    addResponses(responses) {
+      let code = responses.split(" - ")[0];
+      this.selectedResponses.push({ code });
+    },
+
+    removeResponses(item) {
+      const index = this.responses.indexOf(item);
+      if (index >= 0) this.selectedResponses.splice(index, 1);
+      this.responses.splice(index, 1);
+    },
+
+    resetResponses() {
+      this.selectedResponses = [];
     },
 
     setQueryParams(item) {

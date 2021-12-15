@@ -12,12 +12,41 @@
     <v-divider class="my-3"></v-divider>
 
     <v-flex d-flex>
+
+      <v-card flat>
+                  <v-card-text class="subheading font-weight-thin">
+                    <span v-if="getQueryParametersMutations.length > 0">
+                      <strong>Mutationen:</strong>
+                      {{ getQueryParametersMutations.join(", ") }}
+                      <br />
+                    </span>
+                    <span v-if="getQueryParametersDiagnosis.length > 0">
+                      <strong>Diagnose:</strong>
+                      {{ getQueryParametersDiagnosis.join(", ") }}
+                      <br />
+                    </span>
+                    <span v-if="getQueryParametersDrugs.length > 0">
+                      <strong>Wirkstoffe:</strong>
+                      {{ getQueryParametersDrugs.join(", ") }}
+                      <br />
+                    </span>
+                    <span v-if="getQueryParametersResponses.length > 0">
+                      <strong>Responses:</strong>
+                      {{ getQueryParametersResponses.join(", ") }}
+                      <br />
+                    </span>
+
+                    <strong>Abfragetyp:</strong>
+                    {{ getQueryParametersFederated.display }}
+                  </v-card-text>
+                </v-card>
+      
+      <!--
       <v-expansion-panel>
         <v-expansion-panel-content>
           <template v-slot:actions>
             <v-icon color="blue accent-3">fas fa-search</v-icon>
           </template>
-
           <template v-slot:header>
             <span>
               <v-hover>
@@ -45,13 +74,13 @@
                     </span>
 
                     <strong>Abfragetyp:</strong>
-                    {{ getQueryParametersFederated }}
+                    {{ getQueryParametersFederated.display }}
                   </v-card-text>
                 </v-card>
               </v-hover>
             </span>
           </template>
-
+          
           <queryPanel
             v-bind:genesCat="genesCat"
             :diagnosisCat="diagnosisCat"
@@ -71,6 +100,8 @@
           />
         </v-expansion-panel-content>
       </v-expansion-panel>
+      -->
+
     </v-flex>
 
     <v-divider class="my-3"></v-divider>
@@ -379,7 +410,7 @@
                 <td>{{ props.item.progressionDate }}</td>
                 <!--
                 <td>
-                  <div v-if="props.item.progression === null">-</div>
+                  <div v-if="props.item.progression === null">-</div>np
                   <div v-else>
                     {{ props.item.progression.value }}
                     {{ props.item.progression.unit }}
@@ -407,6 +438,7 @@
 
     <v-col v-for="(issue, i) in issues" :key="i">
         <div class="caption">{{ issue.details }}</div>
+
       </v-col>
   </v-container>
 </template>
@@ -699,6 +731,21 @@ export default {
       ageRangeRaw[0] = filter.ageRange.l;
       ageRangeRaw[1] = filter.ageRange.r;
 
+
+      let getQueryParametersMutations = Array();
+      for (
+        var i = 0;
+        i < queryparams.data.parameters.mutatedGenes.length;
+        i++
+      ) {
+        getQueryParametersMutations.push(
+          queryparams.data.parameters.mutatedGenes[i].code +
+            " (" +
+            queryparams.data.parameters.mutatedGenes[i].display + ")"
+        );
+      }
+      
+
       let getQueryParametersDrugs = Array();
       for (
         var i = 0;
@@ -706,17 +753,45 @@ export default {
         i++
       ) {
         getQueryParametersDrugs.push(
-          queryparams.data.parameters.medicationsWithUsage[i].code +
-            " " +
-            queryparams.data.parameters.medicationsWithUsage[i].usage
+          queryparams.data.parameters.medicationsWithUsage[i].medication.code + " (" + queryparams.data.parameters.medicationsWithUsage[i].medication.display +
+            ") [" +
+            queryparams.data.parameters.medicationsWithUsage[i].usage.code + "]"
         );
       }
 
-      let getQueryParametersMutations =
-        queryparams.data.parameters.mutatedGenes;
-      let getQueryParametersDiagnosis = queryparams.data.parameters.diagnoses;
-      let getQueryParametersResponses = queryparams.data.parameters.responses;
+      let getQueryParametersDiagnosis = Array();
+      for (
+        var i = 0;
+        i < queryparams.data.parameters.diagnoses.length;
+        i++
+      ) {
+        getQueryParametersDiagnosis.push(
+          queryparams.data.parameters.diagnoses[i].code +
+            " (" +
+            queryparams.data.parameters.diagnoses[i].display + ")"
+        );
+      }
+
+      let getQueryParametersResponses = Array();
+      for (
+        var i = 0;
+        i < queryparams.data.parameters.responses.length;
+        i++
+      ) {
+        getQueryParametersResponses.push(
+          queryparams.data.parameters.responses[i].code +
+            " (" +
+            queryparams.data.parameters.responses[i].display + ")"
+        );
+      }
+
+      //let getQueryParametersMutations = queryparams.data.parameters.mutatedGenes;
+      //let getQueryParametersDiagnosis = queryparams.data.parameters.diagnoses;
+      //let getQueryParametersResponses = queryparams.data.parameters.responses;
       let getQueryParametersFederated = queryparams.data.mode;
+
+      //alert(getQueryParametersMutations.length);
+      //alert(JSON.stringify(getQueryParametersMutations));
 
       let globalReport = await axios.get(
         process.env.baseUrl +
