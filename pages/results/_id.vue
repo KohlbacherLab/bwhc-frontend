@@ -739,9 +739,8 @@ export default {
         i++
       ) {
         getQueryParametersMutations.push(
-          queryparams.data.parameters.mutatedGenes[i].code +
-            " (" +
-            queryparams.data.parameters.mutatedGenes[i].display + ")"
+          //queryparams.data.parameters.mutatedGenes[i].code + " " +
+          queryparams.data.parameters.mutatedGenes[i].display
         );
       }
       
@@ -753,9 +752,9 @@ export default {
         i++
       ) {
         getQueryParametersDrugs.push(
-          queryparams.data.parameters.medicationsWithUsage[i].medication.code + " (" + queryparams.data.parameters.medicationsWithUsage[i].medication.display +
-            ") [" +
-            queryparams.data.parameters.medicationsWithUsage[i].usage.code + "]"
+          //queryparams.data.parameters.medicationsWithUsage[i].medication.code + " " + 
+          queryparams.data.parameters.medicationsWithUsage[i].medication.display +
+            " [" + queryparams.data.parameters.medicationsWithUsage[i].usage.code + "]"
         );
       }
 
@@ -766,9 +765,8 @@ export default {
         i++
       ) {
         getQueryParametersDiagnosis.push(
-          queryparams.data.parameters.diagnoses[i].code +
-            " (" +
-            queryparams.data.parameters.diagnoses[i].display + ")"
+          //queryparams.data.parameters.diagnoses[i].code + " " +
+          queryparams.data.parameters.diagnoses[i].display
         );
       }
 
@@ -779,9 +777,8 @@ export default {
         i++
       ) {
         getQueryParametersResponses.push(
-          queryparams.data.parameters.responses[i].code +
-            " (" +
-            queryparams.data.parameters.responses[i].display + ")"
+          //queryparams.data.parameters.responses[i].code + " " +
+          queryparams.data.parameters.responses[i].display
         );
       }
 
