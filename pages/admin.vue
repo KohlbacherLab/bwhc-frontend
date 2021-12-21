@@ -12,7 +12,7 @@
           @click="$router.push('/main')"
         >
           <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-        >Admin-Panel: Hinzufügen, Bearbeiten und Entfernen von Benutzern. 
+        >Admin-Panel: Hinzufügen, Bearbeiten und Entfernen von Benutzern.
         <strong @click="$router.push('help')">Hilfe?</strong>
       </span>
     </v-flex>
@@ -57,10 +57,11 @@
     <v-card-text
       v-if="registeredUsers == 0"
       class="subheading grey--text font-weight-light"
-    > 
-      <i class="fas fa-exclamation-triangle"></i> Bitte stellen Sie sicher, logout 
-      <i class="fas fa-sign-out-alt"></i> direkt nach den ersten Benutzer hinzufügen!
-      Aktuelle registrierte Benutzeranzahl ist {{ registeredUsers }}.
+    >
+      <i class="fas fa-exclamation-triangle"></i> Bitte stellen Sie sicher,
+      logout <i class="fas fa-sign-out-alt"></i> direkt nach den ersten Benutzer
+      hinzufügen! Aktuelle registrierte Benutzeranzahl ist
+      {{ registeredUsers }}.
       <i class="fas fa-exclamation-triangle"></i>
     </v-card-text>
 
@@ -250,7 +251,8 @@
                 ></v-select>
               </v-flex>
               <v-card-text class="grey--text">
-                Mindest. 8 Zeichen, inkl. ein Großbuchstabe, eine Zahl und ein Sonderzeichen.
+                Mindest. 8 Zeichen, inkl. ein Großbuchstabe, eine Zahl und ein
+                Sonderzeichen.
               </v-card-text>
             </v-layout>
           </form>
@@ -374,7 +376,8 @@
                 ></v-text-field>
               </v-flex>
               <v-card-text class="grey--text">
-                Mindest. 8 Zeichen, inkl. ein Großbuchstabe, eine Zahl und ein Sonderzeichen.
+                Mindest. 8 Zeichen, inkl. ein Großbuchstabe, eine Zahl und ein
+                Sonderzeichen.
               </v-card-text>
             </v-layout>
           </form>
@@ -487,7 +490,7 @@ export default {
       "GlobalZPMCoordinator",
       "MTBCoordinator",
       "Researcher",
-      "ApprovedResearcher"
+      "ApprovedResearcher",
     ],
 
     headerUsers: [
@@ -549,7 +552,7 @@ export default {
         this.editOwnDetailsDialog = false;
         window.location.reload(true);
       } catch (err) {
-        if (err.response.status === 401) {
+        if (response.status === 401) {
           return redirect("/");
         }
       }
@@ -569,15 +572,17 @@ export default {
           roles: this.select,
         };
 
-        let Response = await axios.post(
+        let response = await axios.post(
           process.env.baseUrl + process.env.port + process.env.users,
           request
         );
 
         this.addNewUser = false;
         window.location.reload();
+      
       } catch (err) {
-        if (err.response.status === 401) {
+        alert("catch");
+        if (response.status === 404) {
           return redirect("/");
         }
       }
@@ -587,10 +592,10 @@ export default {
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${localStorage.token}`;
-      
+
       let pass = null;
       if (this.password) {
-        pass = this.password
+        pass = this.password;
       }
 
       try {
@@ -776,7 +781,6 @@ export default {
       } else {
         return redirect("/" + err.response.status);
       }
-      
     }
   },
 };
