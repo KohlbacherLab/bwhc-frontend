@@ -11,20 +11,19 @@
           @click="$router.push('/main')"
         >
           <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-        >Es gibt nichts zu sehen hier <i class="far fa-times-circle"></i> versuchen,  
-        <strong @click="$router.push('/main')">zurück</strong> zu gehen!
+        >Es gibt nichts zu sehen hier. <i class="far fa-times-circle"></i>
+        <strong @click="$router.push('/')">Zurück!</strong>
       </span>
     </v-flex>
     <v-divider class="my-3"></v-divider>
 
     <v-flex d-flex xs12 sm6 md3>
       <v-card
-        class="mx-auto"
+        class="mx-0"
         flat
         color="grey lighten-3"
         light
-        max-width="400"
-        v-ripple="{ center: true }"
+        max-width="500"
       >
         <v-card-text class="headline font-weight-thin">
           <p>🙅🏻‍♂️</p>
