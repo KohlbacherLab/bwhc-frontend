@@ -183,7 +183,7 @@ export default {
     } catch (err) {
       if (err.status === 401) {
         return redirect("/");
-      } else if (err.response.status === 403) {
+      } else if (err.status === 403) {
         return redirect("/403");
       }
     }
@@ -218,7 +218,7 @@ export default {
       } catch (err) {
         if (err.status === 401) {
           return redirect("/");
-        } else if (err.response.status === 403) {
+        } else if (err.status === 403) {
           return redirect("/403");
         }
       }
@@ -263,7 +263,7 @@ export default {
         request
       );
 
-      console.log(JSON.stringify(Response.data));
+      //console.log(JSON.stringify(Response.data));
     },
 
     addDrug() {
