@@ -95,9 +95,6 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
-          <!--
-          <td>{{ props.item.id }}</td>
-          -->
           <td>{{ props.item.recordedOn }}</td>
           <td>{{ props.item.icd10 }}</td>
           <td>{{ props.item.icdO3T }}</td>
@@ -136,9 +133,6 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
-          <!--
-          <td>{{ props.item.id }}</td>
-          -->
           <td>
             {{ props.item.relationship }}
           </td>
@@ -172,9 +166,6 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
-          <!--
-          <td>{{ props.item.id }}</td>
-          -->
           <td>{{ props.item.diagnosis }}</td>
           <td>{{ props.item.therapyLine }}</td>
           <td>{{ props.item.period }}</td>
@@ -240,9 +231,6 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
-          <!--
-          <td>{{ props.item.id }}</td>
-          -->
           <td>{{ props.item.icd10 }}</td>
           <td>{{ props.item.type }}</td>
           <td>{{ props.item.collectionDate }}</td>
@@ -278,9 +266,6 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
-          <!--
-          <td>{{ props.item.id }}</td>
-          -->
           <td>{{ props.item.specimen }}</td>
           <td>{{ props.item.performingInstitute }}</td>
           <td>{{ props.item.issuedOn }}</td>
@@ -480,6 +465,9 @@
                 <td>
                   {{ props.item.chromosome }}
                 </td>
+                 <td>
+                  {{ props.item.reportedAffectedGenes }}
+                </td>
                 <td>
                   {{ props.item.startRange }}
                 </td>
@@ -497,9 +485,6 @@
                 </td>
                 <td>
                   {{ props.item.cnB }}
-                </td>
-                <td>
-                  {{ props.item.reportedAffectedGenes }}
                 </td>
                 <td>
                   {{ props.item.reportedFocality }}
@@ -665,17 +650,12 @@
     >
       <template slot="items" slot-scope="props">
         <tr @click="props.expanded = !props.expanded">
-          <!--
-          <td>{{ props.item.id }}</td>
-          -->
           <td>{{ props.item.icd10 }}</td>
           <td>{{ props.item.issuedOn }}</td>
           <td>{{ props.item.targetAvailable }}</td>
           <td class="text-xs-right">
             <v-icon color="blue" small>fas fa-info-circle</v-icon>
           </td>
-          <!--
-          <td>{{ props.item.therapyRecommendations }}</td> -->
         </tr>
       </template>
       <template v-slot:expand="props">
@@ -704,11 +684,6 @@
           >
             <template slot="items" slot-scope="props">
               <tr>
-                <!--
-                <td>
-                  {{ props.item.id }}
-                </td>
-                -->
                 <td>
                   {{ props.item.icd10 }}
                 </td>
@@ -758,9 +733,6 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
-          <!--
-            <td>{{ props.item.id }}</td>
-          -->
           <td>{{ props.item.therapy }}</td>
           <td>{{ props.item.issueDate }}</td>
           <td>{{ props.item.responseDate }}</td>
@@ -797,9 +769,6 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
-          <!--
-          <td>{{ props.item.id }}</td>
-          -->
           <td>{{ props.item.diagnosis }}</td>
           <td>{{ props.item.status }}</td>
           <td>{{ props.item.recordedOn }}</td>
@@ -826,17 +795,6 @@
     </v-btn>
 
     <v-divider class="my-3"></v-divider>
-    <!--
-    <v-btn
-      class="ma-2 font-weight-bold"
-      tile
-      small
-      color="red accent-3"
-      dark
-      @click="logout()"
-      >Logout</v-btn
-    >
-    -->
   </v-container>
 </template>
 
@@ -857,14 +815,6 @@ export default {
       y: "top",
 
       headerDiagnoses: [
-        /*
-        {
-          text: "ID",
-          align: "left",
-          sortable: true,
-          value: "id",
-        },
-        */
         {
           text: "Erstdiagnosedatum",
           align: "left",
@@ -904,14 +854,6 @@ export default {
       ],
 
       headerFamilyMemberDiagnoses: [
-        /*
-        {
-          text: "ID",
-          align: "left",
-          sortable: true,
-          value: "id",
-        },
-        */
         {
           text: "Verwandtschaftsgrad",
           align: "left",
@@ -921,14 +863,6 @@ export default {
       ],
 
       headerGuidelineTherapies: [
-        /*
-        {
-          text: "ID",
-          align: "left",
-          sortable: true,
-          value: "id",
-        },
-        */
         {
           text: "Diagnose",
           align: "left",
@@ -989,14 +923,6 @@ export default {
       ],
 
       headerSpecimens: [
-        /*
-        {
-          text: "ID",
-          align: "left",
-          sortable: true,
-          value: "id",
-        },
-        */
         {
           text: "ICD-10",
           align: "left",
@@ -1030,14 +956,6 @@ export default {
       ],
 
       headerMolecularPathologyFindings: [
-        /*
-        {
-          text: "ID",
-          align: "left",
-          sortable: true,
-          value: "id",
-        },
-        */
         {
           text: "Probe",
           align: "left",
@@ -1065,14 +983,6 @@ export default {
       ],
 
       headerHistologyReports: [
-        /*
-        {
-          text: "ID",
-          align: "left",
-          sortable: true,
-          value: "id",
-        },
-        */
         {
           text: "Probe",
           align: "left",
@@ -1106,14 +1016,6 @@ export default {
       ],
 
       headerNgsReports: [
-        /*
-        {
-          text: "ID",
-          align: "left",
-          sortable: true,
-          value: "id",
-        },
-        */
         {
           text: "Probe",
           align: "left",
@@ -1280,6 +1182,12 @@ export default {
           value: "chromosome",
         },
         {
+          text: "Reported Affected Genes",
+          align: "left",
+          sortable: true,
+          value: "reportedAffectedGenes",
+        },
+        {
           text: "Anfangsbereich",
           align: "left",
           sortable: true,
@@ -1314,12 +1222,6 @@ export default {
           align: "left",
           sortable: true,
           value: "cnB",
-        },
-        {
-          text: "Reported Affected Genes",
-          align: "left",
-          sortable: true,
-          value: "reportedAffectedGenes",
         },
         {
           text: "Reported Focality",
@@ -1471,14 +1373,6 @@ export default {
       ],
 
       headerCarePlans: [
-        /*
-        {
-          text: "ID",
-          align: "left",
-          sortable: true,
-          value: "id",
-        },
-        */
         {
           text: "ICD-10",
           align: "left",
@@ -1506,14 +1400,6 @@ export default {
       ],
 
       headerTherapyRecommendations: [
-        /*
-        {
-          text: "ID",
-          align: "left",
-          sortable: true,
-          value: "id",
-        },
-        */
         {
           text: "ICD-10",
           align: "left",
@@ -1547,14 +1433,6 @@ export default {
       ],
 
       headerClaimStatus: [
-        /*
-        {
-          text: "ID",
-          align: "left",
-          sortable: true,
-          value: "id",
-        },
-        */
         {
           text: "Therapie-Empfehlung",
           align: "left",
@@ -1588,14 +1466,6 @@ export default {
       ],
 
       headerMolecularTherapies: [
-        /*
-        {
-          text: "ID",
-          align: "left",
-          sortable: true,
-          value: "id",
-        },
-        */
         {
           text: "Diagnose",
           align: "left",
@@ -1681,7 +1551,6 @@ export default {
       return window.history.back();
     },
     showMutations(genomicReportId) {
-      //alert(genomicReportId);
     },
 
     avatarCheck(gender) {
@@ -1710,14 +1579,13 @@ export default {
 
     const [slug, id] = params.slugid.split("&");
 
-    let mtbFile = await axios.get(`${serverBaseURL}/${slug}/MTBFile/${id}`);
+    let mtbFile = await axios.get(`${serverBaseURL}/${slug}/mtbfiles/${id}`);
 
     let mtbFileView = await axios.get(
-      `${serverBaseURL}/${slug}/MTBFileView/${id}`
+      `${serverBaseURL}/${slug}/mtbfileViews/${id}`
     );
 
     // DIAGNOSES VIEW
-
     let rawDiagnoses = Array();
     if (mtbFileView.data.diagnoses) {
       for (var i = 0; i < mtbFileView.data.diagnoses.length; i++) {
@@ -1737,7 +1605,6 @@ export default {
     }
 
     // FAMILY MEMBER DIAGNOSES VIEW
-
     let rawFamilyMemberDiagnoses = Array();
     if (mtbFileView.data.familyMemberDiagnoses) {
       for (var i = 0; i < mtbFileView.data.familyMemberDiagnoses.length; i++) {
@@ -1751,7 +1618,6 @@ export default {
     }
 
     // GUIDELINE THERAPIES VIEW
-
     let rawGuidelineTherapies = Array();
     if (mtbFileView.data.guidelineTherapies) {
       for (var i = 0; i < mtbFileView.data.guidelineTherapies.length; i++) {
@@ -1771,7 +1637,6 @@ export default {
     }
 
     // ECOG STATUS VIEW
-
     let rawEcogStatus = Array();
     if (mtbFileView.data.ecogStatus) {
       for (var i = 0; i < mtbFileView.data.ecogStatus.values.length; i++) {
@@ -1784,7 +1649,6 @@ export default {
     }
 
     // SPECIMENS VIEW
-
     let rawSpecimens = Array();
     if (mtbFileView.data.specimens) {
       for (var i = 0; i < mtbFileView.data.specimens.length; i++) {
@@ -1801,7 +1665,6 @@ export default {
     }
 
     // MOLECULAR PATHOLOGY FINDINGS VIEW
-
     let rawMolecularPathologyFindings = Array();
     if (mtbFileView.data.molecularPathologyFindings) {
       for (
@@ -1822,7 +1685,6 @@ export default {
     }
 
     // HISTOLOGY REPORTS VIEW
-
     let rawHistologyReports = Array();
     if (mtbFileView.data.histologyReports) {
       for (var i = 0; i < mtbFileView.data.histologyReports.length; i++) {

@@ -1,5 +1,6 @@
 <template>
   <v-container fluid grid-list-md>
+    <disclaimer-info />
     <userPanel />
     <h3 class="display-3"><strong>bwHealthCloud</strong> Ergebnisse</h3>
 
@@ -12,35 +13,34 @@
     <v-divider class="my-3"></v-divider>
 
     <v-flex d-flex>
-
       <v-card flat>
-                  <v-card-text class="subheading font-weight-thin">
-                    <span v-if="getQueryParametersMutations.length > 0">
-                      <strong>Mutationen:</strong>
-                      {{ getQueryParametersMutations.join(", ") }}
-                      <br />
-                    </span>
-                    <span v-if="getQueryParametersDiagnosis.length > 0">
-                      <strong>Diagnose:</strong>
-                      {{ getQueryParametersDiagnosis.join(", ") }}
-                      <br />
-                    </span>
-                    <span v-if="getQueryParametersDrugs.length > 0">
-                      <strong>Wirkstoffe:</strong>
-                      {{ getQueryParametersDrugs.join(", ") }}
-                      <br />
-                    </span>
-                    <span v-if="getQueryParametersResponses.length > 0">
-                      <strong>Responses:</strong>
-                      {{ getQueryParametersResponses.join(", ") }}
-                      <br />
-                    </span>
+        <v-card-text class="subheading font-weight-thin">
+          <span v-if="getQueryParametersMutations.length > 0">
+            <strong>Mutationen:</strong>
+            {{ getQueryParametersMutations.join(", ") }}
+            <br />
+          </span>
+          <span v-if="getQueryParametersDiagnosis.length > 0">
+            <strong>Diagnose:</strong>
+            {{ getQueryParametersDiagnosis.join(", ") }}
+            <br />
+          </span>
+          <span v-if="getQueryParametersDrugs.length > 0">
+            <strong>Wirkstoffe:</strong>
+            {{ getQueryParametersDrugs.join(", ") }}
+            <br />
+          </span>
+          <span v-if="getQueryParametersResponses.length > 0">
+            <strong>Responses:</strong>
+            {{ getQueryParametersResponses.join(", ") }}
+            <br />
+          </span>
 
-                    <strong>Abfragetyp:</strong>
-                    {{ getQueryParametersFederated.display }}
-                  </v-card-text>
-                </v-card>
-      
+          <strong>Abfragetyp:</strong>
+          {{ getQueryParametersFederated.display }}
+        </v-card-text>
+      </v-card>
+
       <!--
       <v-expansion-panel>
         <v-expansion-panel-content>
@@ -101,7 +101,6 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
       -->
-
     </v-flex>
 
     <v-divider class="my-3"></v-divider>
@@ -281,37 +280,10 @@
           >
             <template slot="items" slot-scope="props" no-data>
               <tr @click="routeToPatient(queryId + '&' + props.item.id)">
-                <!-- <td>{{ props.item.firstReferral }}</td> -->
                 <td>{{ props.item.managingZPM }}</td>
                 <td>{{ props.item.gender }}</td>
                 <td>{{ props.item.age }}</td>
                 <td>{{ props.item.vitalStatus }}</td>
-                <!--
-                  <td>
-                    <div
-                      v-if="
-                        props.item.survival.PFS === null &&
-                        props.item.survival.OS === null
-                      "
-                    >
-                      -
-                    </div>
-                    <div v-else-if="props.item.survival.PFS === null">
-                      PFS: {{ props.item.survival.OS.value }}
-                      {{ props.item.survival.OS.unit }}
-                    </div>
-                    <div v-else-if="props.item.survival.OS === null">
-                      OS: {{ props.item.survival.PFS.value }}
-                      {{ props.item.survival.PFS.unit }}
-                    </div>
-                    <div v-else>
-                      PFS: {{ props.item.survival.OS.value }}
-                      {{ props.item.survival.OS.unit }} / OS:
-                      {{ props.item.survival.PFS.value }}
-                      {{ props.item.survival.PFS.unit }}
-                    </div>
-                  </td>
-                  -->
               </tr>
             </template>
             <v-alert :value="true" color="error" icon="warning"
@@ -332,20 +304,7 @@
           >
             <template slot="items" slot-scope="props">
               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
-                <!--
-                  <td>
-                  {{ props.item.diagnosis.code }} -
-                  {{ props.item.diagnosis.display }}
-                </td>
-                -->
                 <td>{{ props.item.specimen }}</td>
-                <td>{{ props.item.tumorEntity }}</td>
-                <!--
-                <td>
-                  {{ props.item.sampleAgeAtSequencing.value }}
-                  {{ props.item.sampleAgeAtSequencing.unit }}
-                </td>
-                -->
                 <td>{{ props.item.specimenType }}</td>
                 <td>{{ props.item.sequencingType }}</td>
                 <td>{{ props.item.tumorCellContent }}</td>
@@ -370,9 +329,6 @@
             <template slot="items" slot-scope="props">
               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
                 <td>{{ props.item.icd10 }}</td>
-                <!--
-                <td>{{ props.item.drugs.join(", ") }}</td>
-                -->
                 <td>{{ props.item.medication }}</td>
                 <td>{{ props.item.priority }}</td>
                 <td>{{ props.item.levelOfEvidence }}</td>
@@ -408,15 +364,6 @@
                 <td>{{ props.item.note }}</td>
                 <td>{{ props.item.response }}</td>
                 <td>{{ props.item.progressionDate }}</td>
-                <!--
-                <td>
-                  <div v-if="props.item.progression === null">-</div>np
-                  <div v-else>
-                    {{ props.item.progression.value }}
-                    {{ props.item.progression.unit }}
-                  </div>
-                </td>
-                -->
               </tr>
             </template>
             <v-alert :value="true" color="error" icon="warning"
@@ -436,10 +383,10 @@
       clipped-right
     />
 
-    <v-col v-for="(issue, i) in issues" :key="i">
-        <div class="caption">{{ issue.details }}</div>
-
-      </v-col>
+    <v-col>
+      <div class="caption">{{ issues }}</div>
+    </v-col>
+    
   </v-container>
 </template>
 
@@ -604,12 +551,14 @@ export default {
       );
 
       let queryparams = await axios.get(`${serverBaseURL}/${params.id}`);
-      //let filter = await axios.get(`${serverBaseURL}/${params.id}/filter`);
       let filter = queryparams.data.filter;
+
+      console.log(`${serverBaseURL}/${params.id}`);
+      console.log(JSON.stringify(queryparams));
 
       let resultSummary;
       let results;
-      //let links = queryparams.data._links;
+
       if (queryparams.data._links["result-summary"]) {
         resultSummary = queryparams.data._links["result-summary"].href;
         results = await axios.get(`${baseURL}` + resultSummary);
@@ -632,7 +581,6 @@ export default {
       let genomicReportsCount;
       if (queryparams.data._links["ngs-summaries"]) {
         ngsSummaries = queryparams.data._links["ngs-summaries"].href;
-        //alert("ngs summaries exist " + `${baseURL}` + ngsSummaries);
         genomicReports = await axios.get(`${baseURL}` + ngsSummaries);
         genomicReportsEntries = genomicReports.data.entries;
         genomicReportsCount = genomicReportsEntries.length;
@@ -665,20 +613,6 @@ export default {
         therapiesCount = therapiesEntries.length;
       }
 
-      /*      
-      alert("DIAGNOSES CAT " + JSON.stringify(diagnosisCatRaw));
-      alert("GENES CAT " + JSON.stringify(genesCatRaw));
-      alert("DRUGS CAT " + JSON.stringify(drugsCatRaw));
-      alert("RESPONSES CAT " + JSON.stringify(responsesCatRaw));
-      alert("QUERY PARAMS " + JSON.stringify(queryparams.data));
-      alert("PARAMETERS " + JSON.stringify(queryparams.data.parameters));
-      alert("FILTER " + JSON.stringify(filter));
-      alert("CASES " + JSON.stringify(files));
-      alert("THERAPIES " + JSON.stringify(therapies));
-      alert("RECOMMENDATIONS " + JSON.stringify(recommendations));
-      alert("GENOMIC REPORTS " + JSON.stringify(genomicReports));
-      */
-
       let diagnosisCat = Array();
       let genesCat = Array();
       let drugsCat = Array();
@@ -691,16 +625,6 @@ export default {
             diagnosisCatRaw.data.entries[i].display
         );
       }
-
-      /*
-      for (var i = 0; i < genesCatRaw.data.entries.length; i++) {
-        genesCat.push(
-          genesCatRaw.data.entries[i].symbol +
-            " - " +
-            genesCatRaw.data.entries[i].name
-        );
-      }
-      */
 
       for (var i = 0; i < genesCatRaw.data.entries.length; i++) {
         genesCat.push(
@@ -731,7 +655,6 @@ export default {
       ageRangeRaw[0] = filter.ageRange.l;
       ageRangeRaw[1] = filter.ageRange.r;
 
-
       let getQueryParametersMutations = Array();
       for (
         var i = 0;
@@ -739,11 +662,9 @@ export default {
         i++
       ) {
         getQueryParametersMutations.push(
-          //queryparams.data.parameters.mutatedGenes[i].code + " " +
           queryparams.data.parameters.mutatedGenes[i].display
         );
       }
-      
 
       let getQueryParametersDrugs = Array();
       for (
@@ -752,50 +673,34 @@ export default {
         i++
       ) {
         getQueryParametersDrugs.push(
-          //queryparams.data.parameters.medicationsWithUsage[i].medication.code + " " + 
-          queryparams.data.parameters.medicationsWithUsage[i].medication.display +
-            " [" + queryparams.data.parameters.medicationsWithUsage[i].usage.code + "]"
+          queryparams.data.parameters.medicationsWithUsage[i].medication
+            .display +
+            " [" +
+            queryparams.data.parameters.medicationsWithUsage[i].usage.code +
+            "]"
         );
       }
 
       let getQueryParametersDiagnosis = Array();
-      for (
-        var i = 0;
-        i < queryparams.data.parameters.diagnoses.length;
-        i++
-      ) {
+      for (var i = 0; i < queryparams.data.parameters.diagnoses.length; i++) {
         getQueryParametersDiagnosis.push(
-          //queryparams.data.parameters.diagnoses[i].code + " " +
           queryparams.data.parameters.diagnoses[i].display
         );
       }
 
       let getQueryParametersResponses = Array();
-      for (
-        var i = 0;
-        i < queryparams.data.parameters.responses.length;
-        i++
-      ) {
+      for (var i = 0; i < queryparams.data.parameters.responses.length; i++) {
         getQueryParametersResponses.push(
-          //queryparams.data.parameters.responses[i].code + " " +
           queryparams.data.parameters.responses[i].display
         );
       }
 
-      //let getQueryParametersMutations = queryparams.data.parameters.mutatedGenes;
-      //let getQueryParametersDiagnosis = queryparams.data.parameters.diagnoses;
-      //let getQueryParametersResponses = queryparams.data.parameters.responses;
       let getQueryParametersFederated = queryparams.data.mode;
 
-      //alert(getQueryParametersMutations.length);
-      //alert(JSON.stringify(getQueryParametersMutations));
-
-      let globalReport = await axios.get(
-        process.env.baseUrl +
-          process.env.port +
-          process.env.reporting +
-          "/GlobalQCReport"
-      );
+      let connectionIssues = "";
+      if (localStorage.getItem("issues")) {
+       connectionIssues = localStorage.getItem("issues");
+      }
 
       return {
         baseURL: `${serverBaseURL}/${params.id}/files`,
@@ -827,7 +732,7 @@ export default {
         getQueryParametersDrugs,
         getQueryParametersResponses,
         getQueryParametersFederated,
-        issues: globalReport.data._issues
+        issues: connectionIssues,
       };
     } catch (err) {
       if (err.status === 401) {

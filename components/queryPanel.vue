@@ -240,8 +240,7 @@
               return-object
               @input="addMutatedGenes(genes[genes.length - 1])"
             >
-
-            <template slot="selection" slot-scope="data">
+              <template slot="selection" slot-scope="data">
                 <v-chip
                   :selected="data.selected"
                   close
@@ -335,7 +334,6 @@
               multiple
               placeholder
               @input="addDrugs(drugs[drugs.length - 1], drugUsage)"
-              
             >
               <!--
               <template slot="selection" slot-scope="data">
@@ -387,7 +385,7 @@
               placeholder
               @input="addResponses(responses[responses.length - 1])"
             >
-            <template slot="selection" slot-scope="data">
+              <template slot="selection" slot-scope="data">
                 <v-chip
                   :selected="data.selected"
                   close
@@ -396,7 +394,6 @@
                   {{ data.item }}
                 </v-chip>
               </template>
-            
             </v-autocomplete>
           </v-card-text>
         </v-card>
@@ -649,7 +646,13 @@ export default {
           );
 
           //alert("QUERY PANEL " + JSON.stringify(request));
-          //alert("QUERY RESPONSE " + JSON.stringify(Response));
+          if (JSON.stringify(Response.data._issues) != undefined) {
+            let connectionErrors = "";
+            for (var i = 0; i < Response.data._issues.length; i++) {
+              connectionErrors += Response.data._issues[i].details + " · ";
+            }
+            localStorage.setItem("issues", connectionErrors);
+          } else localStorage.removeItem("issues");
 
           this.$router.push(`/results/${Response.data.id}`);
         } else {
@@ -741,7 +744,10 @@ export default {
     addDrugs(drug, usage) {
       //const index = this.drugs.indexOf(drug);
       //let code = drug.substr(0, drug.indexOf(" "));
-      this.selectedDrugs.push({ medication: { "code": drug.split(" · ")[1] }, usage: { "code": usage } });
+      this.selectedDrugs.push({
+        medication: { code: drug.split(" · ")[1] },
+        usage: { code: usage },
+      });
       //alert(JSON.stringify(this.selectedDrugs));
     },
 

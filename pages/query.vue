@@ -32,9 +32,6 @@
         clipped-right
       />
       <v-divider class="my-3"></v-divider>
-      <!--
-      <v-card-title class="title font-weight-light">Fehler</v-card-title>
-      -->
       <v-col v-for="(issue, i) in issues" :key="i">
         <div class="caption">{{ issue.details }}</div>
       </v-col>
@@ -80,8 +77,6 @@ export default {
     form() {
       return {
         diagnosis: this.diagnosis,
-        //genes: this.genes,
-        //drugs: this.drugs,
         responses: this.responses,
         queryType: false,
       };
@@ -100,7 +95,6 @@ export default {
           process.env.coding +
           "/ICD-10-GM"
       );
-      console.log(JSON.stringify(diagnosisCatRaw));
 
       let genesCatRaw = await axios.get(
         process.env.baseUrl + process.env.port + process.env.coding + "/HGNC"
@@ -117,13 +111,6 @@ export default {
           "/RECIST"
       );
 
-      let globalReport = await axios.get(
-        process.env.baseUrl +
-          process.env.port +
-          process.env.reporting +
-          "/GlobalQCReport"
-      );
-
       let diagnosisCat = Array();
       let genesCat = Array();
       let drugsCat = Array();
@@ -136,16 +123,6 @@ export default {
             diagnosisCatRaw.data.entries[i].display
         );
       }
-
-      /*
-      for (var i = 0; i < genesCatRaw.data.entries.length; i++) {
-        genesCat.push(
-          [genesCatRaw.data.entries[i].hgncId, genesCatRaw.data.entries[i].symbol +
-            " - " +
-            genesCatRaw.data.entries[i].name]
-        );
-      }
-      */
 
       for (var i = 0; i < genesCatRaw.data.entries.length; i++) {
         genesCat.push(
@@ -178,7 +155,6 @@ export default {
         genesCat,
         drugsCat,
         responsesCat,
-        issues: globalReport.data._issues
       };
     } catch (err) {
       if (err.status === 401) {
@@ -262,8 +238,6 @@ export default {
         process.env.baseUrl + process.env.port + process.env.query,
         request
       );
-
-      //console.log(JSON.stringify(Response.data));
     },
 
     addDrug() {

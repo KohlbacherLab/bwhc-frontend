@@ -522,6 +522,9 @@
                   {{ props.item.chromosome }}
                 </td>
                 <td>
+                  {{ props.item.reportedAffectedGenes }}
+                </td>
+                <td>
                   {{ props.item.startRange }}
                 </td>
                 <td>
@@ -538,9 +541,6 @@
                 </td>
                 <td>
                   {{ props.item.cnB }}
-                </td>
-                <td>
-                  {{ props.item.reportedAffectedGenes }}
                 </td>
                 <td>
                   {{ props.item.reportedFocality }}
@@ -1309,6 +1309,12 @@ export default {
         value: "chromosome",
       },
       {
+        text: "Reported Affected Genes",
+        align: "left",
+        sortable: true,
+        value: "reportedAffectedGenes",
+      },
+      {
         text: "Anfangsbereich",
         align: "left",
         sortable: true,
@@ -1343,12 +1349,6 @@ export default {
         align: "left",
         sortable: true,
         value: "cnB",
-      },
-      {
-        text: "Reported Affected Genes",
-        align: "left",
-        sortable: true,
-        value: "reportedAffectedGenes",
       },
       {
         text: "Reported Focality",
@@ -1697,7 +1697,6 @@ export default {
 
   methods: {
     goBack() {
-      alert("here");
       return window.history.back();
     },
 
@@ -1738,8 +1737,6 @@ export default {
           `/${params.id}`
       );
 
-      console.log(JSON.stringify(dataQualityReport));
-
       let mtbFileView = await axios.get(
         process.env.baseUrl +
           process.env.port +
@@ -1747,10 +1744,7 @@ export default {
           `/${params.id}`
       );
 
-      // alert(JSON.stringify(mtbFileView._links));
-
       // ISSUES
-
       let rawDataQualityReport = Array();
       if (dataQualityReport.data.issues) {
         for (var i = 0; i < dataQualityReport.data.issues.length; i++) {
@@ -1764,7 +1758,6 @@ export default {
       }
 
       // DIAGNOSES VIEW
-
       let rawDiagnoses = Array();
       if (mtbFileView.data.diagnoses) {
         for (var i = 0; i < mtbFileView.data.diagnoses.length; i++) {
@@ -1784,7 +1777,6 @@ export default {
       }
 
       // FAMILY MEMBER DIAGNOSES VIEW
-
       let rawFamilyMemberDiagnoses = Array();
       if (mtbFileView.data.familyMemberDiagnoses) {
         for (
@@ -1803,7 +1795,6 @@ export default {
       }
 
       // GUIDELINE THERAPIES VIEW
-
       let rawGuidelineTherapies = Array();
       if (mtbFileView.data.guidelineTherapies) {
         for (var i = 0; i < mtbFileView.data.guidelineTherapies.length; i++) {
@@ -1823,7 +1814,6 @@ export default {
       }
 
       // ECOG STATUS VIEW
-
       let rawEcogStatus = Array();
       if (mtbFileView.data.ecogStatus) {
         for (var i = 0; i < mtbFileView.data.ecogStatus.values.length; i++) {
@@ -1836,7 +1826,6 @@ export default {
       }
 
       // SPECIMENS VIEW
-
       let rawSpecimens = Array();
       if (mtbFileView.data.specimens) {
         for (var i = 0; i < mtbFileView.data.specimens.length; i++) {
@@ -1853,7 +1842,6 @@ export default {
       }
 
       // MOLECULAR PATHOLOGY FINDINGS VIEW
-
       let rawMolecularPathologyFindings = Array();
       if (mtbFileView.data.molecularPathologyFindings) {
         for (
@@ -1875,7 +1863,6 @@ export default {
       }
 
       // HISTOLOGY REPORTS VIEW
-
       let rawHistologyReports = Array();
       if (mtbFileView.data.histologyReports) {
         for (var i = 0; i < mtbFileView.data.histologyReports.length; i++) {
