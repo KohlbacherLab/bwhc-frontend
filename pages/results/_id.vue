@@ -25,6 +25,11 @@
             {{ getQueryParametersDiagnosis.join(", ") }}
             <br />
           </span>
+          <span v-if="getQueryParametersTumorMorphology.length > 0">
+            <strong>Tumor Morphologie:</strong>
+            {{ getQueryParametersTumorMorphology.join(", ") }}
+            <br />
+          </span>
           <span v-if="getQueryParametersDrugs.length > 0">
             <strong>Wirkstoffe:</strong>
             {{ getQueryParametersDrugs.join(", ") }}
@@ -305,6 +310,7 @@
             <template slot="items" slot-scope="props">
               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
                 <td>{{ props.item.specimen }}</td>
+                <td>{{ props.item.tumorEntity }}</td>
                 <td>{{ props.item.specimenType }}</td>
                 <td>{{ props.item.sequencingType }}</td>
                 <td>{{ props.item.tumorCellContent }}</td>
@@ -332,6 +338,8 @@
                 <td>{{ props.item.medication }}</td>
                 <td>{{ props.item.priority }}</td>
                 <td>{{ props.item.levelOfEvidence }}</td>
+                <td>{{ props.item.ecogStatus }}</td>
+                <td>{{ props.item.supportingVariants }}</td>
               </tr>
             </template>
             <v-alert :value="true" color="error" icon="warning"
@@ -355,7 +363,7 @@
               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
                 <td>{{ props.item.status }}</td>
                 <td>{{ props.item.recordedOn }}</td>
-                <td>{{ props.item.recommendation }}</td>
+                <td>{{ props.item.recommendationPriority }}</td>
                 <td>{{ props.item.period }}</td>
                 <td>{{ props.item.notDoneReason }}</td>
                 <td>{{ props.item.medication }}</td>
@@ -405,6 +413,9 @@ let baseURL = process.env.baseUrl + process.env.port;
 let serverBaseURL = process.env.baseUrl + process.env.port + process.env.query;
 
 export default {
+  
+  loading: '~/components/loading.vue',
+
   name: "ProfilePage",
 
   components: {
@@ -433,11 +444,11 @@ export default {
       headerTherapies: [
         { text: "Status", align: "left", value: "status" },
         { text: "Erfassungsdatum", align: "left", value: "recordedOn" },
-        {
-          text: "Empfehlung",
+         {
+          text: "Empfehlungs Priorität",
           align: "left",
           sortable: true,
-          value: "recommendation",
+          value: "recommendationPriority",
         },
         { text: "Zeitraum", align: "left", sortable: true, value: "period" },
         {
@@ -479,6 +490,8 @@ export default {
           value: "priority",
         },
         { text: "Level of Evidence", align: "left", value: "levelOfEvidence" },
+        { text: "ECOG Status", align: "left", value: "ecogStatus" },
+        { text: "Stützende Varianten", align: "left", value: "supportingVariants"}
       ],
 
       headerGenomicReports: [
@@ -543,6 +556,10 @@ export default {
         process.env.baseUrl + process.env.port + process.env.coding + `/ATC`
       );
 
+      let tumorMorphologyCatRaw = await axios.get (
+        process.env.baseUrl + process.env.port + `/bwhc/catalogs/api/Coding?system=icd-o-3-m`
+      );
+
       let responsesCatRaw = await axios.get(
         process.env.baseUrl +
           process.env.port +
@@ -553,8 +570,8 @@ export default {
       let queryparams = await axios.get(`${serverBaseURL}/${params.id}`);
       let filter = queryparams.data.filter;
 
-      console.log(`${serverBaseURL}/${params.id}`);
-      console.log(JSON.stringify(queryparams));
+      //console.log(`${serverBaseURL}/${params.id}`);
+      //console.log(JSON.stringify(queryparams));
 
       let resultSummary;
       let results;
@@ -617,12 +634,21 @@ export default {
       let genesCat = Array();
       let drugsCat = Array();
       let responsesCat = Array();
+      let tumorMorphologyCat = Array();
 
       for (var i = 0; i < diagnosisCatRaw.data.entries.length; i++) {
         diagnosisCat.push(
           diagnosisCatRaw.data.entries[i].code +
             " - " +
             diagnosisCatRaw.data.entries[i].display
+        );
+      }
+
+      for (var i = 0; i < tumorMorphologyCatRaw.data.entries.length; i++) {
+        tumorMorphologyCat.push(
+          tumorMorphologyCatRaw.data.entries[i].code +
+            " - " +
+            tumorMorphologyCatRaw.data.entries[i].display
         );
       }
 
@@ -643,6 +669,7 @@ export default {
             drugsCatRaw.data.entries[i].code
         );
       }
+
       for (var i = 0; i < responsesCatRaw.data.concepts.length; i++) {
         responsesCat.push(
           responsesCatRaw.data.concepts[i].code +
@@ -688,6 +715,13 @@ export default {
         );
       }
 
+      let getQueryParametersTumorMorphology = Array();
+      for (var i = 0; i < queryparams.data.parameters.tumorMorphology.length; i++) {
+        getQueryParametersTumorMorphology.push(
+          queryparams.data.parameters.tumorMorphology[i].display
+        );
+      }
+
       let getQueryParametersResponses = Array();
       for (var i = 0; i < queryparams.data.parameters.responses.length; i++) {
         getQueryParametersResponses.push(
@@ -727,8 +761,10 @@ export default {
         genesCat,
         drugsCat,
         responsesCat,
+        tumorMorphologyCat,
         getQueryParametersMutations,
         getQueryParametersDiagnosis,
+        getQueryParametersTumorMorphology,
         getQueryParametersDrugs,
         getQueryParametersResponses,
         getQueryParametersFederated,

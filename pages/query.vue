@@ -23,6 +23,7 @@
       <queryPanel
         v-bind:genesCat="genesCat"
         :diagnosisCat="diagnosisCat"
+        :tumorMorphologyCat="tumorMorphologyCat"
         :drugsCat="drugsCat"
         :responsesCat="responsesCat"
         :baseChangeCat="baseChangeCat"
@@ -35,7 +36,6 @@
       <v-col v-for="(issue, i) in issues" :key="i">
         <div class="caption">{{ issue.details }}</div>
       </v-col>
-
     </v-container>
   </v-responsive>
 </template>
@@ -50,6 +50,8 @@ import queryPanel from "~/components/queryPanel";
 let seen = true;
 
 export default {
+  loading: "~/components/loading.vue",
+
   data: () => ({
     password: "",
     mutationOptions: "radioAll",
@@ -96,6 +98,12 @@ export default {
           "/ICD-10-GM"
       );
 
+      let tumorMorphologyCatRaw = await axios.get(
+        process.env.baseUrl +
+          process.env.port +
+          `/bwhc/catalogs/api/Coding?system=icd-o-3-m`
+      );
+
       let genesCatRaw = await axios.get(
         process.env.baseUrl + process.env.port + process.env.coding + "/HGNC"
       );
@@ -112,6 +120,7 @@ export default {
       );
 
       let diagnosisCat = Array();
+      let tumorMorphologyCat = Array();
       let genesCat = Array();
       let drugsCat = Array();
       let responsesCat = Array();
@@ -121,6 +130,14 @@ export default {
           diagnosisCatRaw.data.entries[i].code +
             " - " +
             diagnosisCatRaw.data.entries[i].display
+        );
+      }
+
+      for (var i = 0; i < tumorMorphologyCatRaw.data.entries.length; i++) {
+        tumorMorphologyCat.push(
+          tumorMorphologyCatRaw.data.entries[i].code +
+            " - " +
+            tumorMorphologyCatRaw.data.entries[i].display
         );
       }
 
@@ -152,6 +169,7 @@ export default {
 
       return {
         diagnosisCat,
+        tumorMorphologyCat,
         genesCat,
         drugsCat,
         responsesCat,

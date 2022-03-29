@@ -299,6 +299,31 @@
                 </v-chip>
               </template>
             </v-autocomplete>
+
+            <v-autocomplete
+              v-model="tumorMorphology"
+              :items="tumorMorphologyCat"
+              label="ICD-O3-M Diagnose-Text oder Code..."
+              ref="tumorMorphology"
+              chips
+              deletable-chips
+              dense
+              multiple
+              placeholder
+              @input="
+                addTumorMorphology(tumorMorphology[tumorMorphology.length - 1])
+              "
+            >
+              <template slot="selection" slot-scope="data">
+                <v-chip
+                  :selected="data.selected"
+                  close
+                  @input="removeTumorMorphology(data.item)"
+                >
+                  {{ data.item }}
+                </v-chip>
+              </template>
+            </v-autocomplete>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -315,11 +340,7 @@
             <strong></strong>
             <br />Wirkstoffe
             <v-icon color="blue">fas fa-pills</v-icon>
-            <v-radio-group v-model="drugUsage" row>
-              <!--<v-radio label="All" value="all"></v-radio>-->
-              <v-radio label="Verabreicht" value="used"></v-radio>
-              <v-radio label="Empfohlen" value="recommended"></v-radio>
-            </v-radio-group>
+
             <v-autocomplete
               v-model="drugs"
               :items="drugsCat"
@@ -356,6 +377,12 @@
                 </v-chip>
               </template>
             </v-autocomplete>
+            <v-radio-group v-model="drugUsage" row>
+              <!--<v-radio label="Egal" value=""></v-radio>-->
+              <v-radio label="Verabreicht" value="used"></v-radio>
+              <v-radio label="Empfohlen" value="recommended"></v-radio>
+             <!--<v-radio label="Beide" value="recommended, used"></v-radio>-->
+            </v-radio-group>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -520,6 +547,7 @@ export default {
   props: [
     "genesCat",
     "diagnosisCat",
+    "tumorMorphologyCat",
     "drugsCat",
     "responsesCat",
     "baseChangeCat",
@@ -537,6 +565,7 @@ export default {
   data: () => ({
     selectedDrugs: Array(),
     selectedDiagnosis: Array(),
+    selectedTumorMorphology: Array(),
     selectedMutatedGenes: Array(),
     selectedResponses: Array(),
     mutationOptions: "radioAll",
@@ -547,7 +576,7 @@ export default {
     showSCNV: false,
     showSV: false,
 
-    drugUsage: "used",
+    drugUsage: "",
     diagnosis: Array(),
 
     select: {
@@ -592,6 +621,18 @@ export default {
           }
         }
 
+        let tumorMorphology = Array();
+        if (this.tumorMorphology) {
+          for (var i = 0; i < this.tumorMorphology.length; i++) {
+            tumorMorphology.push(
+              this.tumorMorphology[i].substr(
+                0,
+                this.tumorMorphology[i].indexOf(" ")
+              )
+            );
+          }
+        }
+
         let responses = Array();
         if (this.responses) {
           for (var i = 0; i < this.responses.length; i++) {
@@ -616,6 +657,7 @@ export default {
             // this.select.mode,
             parameters: {
               diagnoses: this.selectedDiagnosis,
+              tumorMorphology: this.selectedTumorMorphology,
               mutatedGenes: this.selectedMutatedGenes,
               medicationsWithUsage: this.selectedDrugs,
               //responses: [],
@@ -663,6 +705,7 @@ export default {
             id: this.queryId,
             parameters: {
               diagnoses: this.selectedDiagnosis,
+              tumorMorphology: this.selectedTumorMorphology,
               mutatedGenes: this.selectedMutatedGenes,
               medicationsWithUsage: this.selectedDrugs,
               //responses: [],
@@ -725,6 +768,22 @@ export default {
       this.selectedDiagnosis = [];
     },
 
+    addTumorMorphology(tumorMorphology) {
+      let code = tumorMorphology.split(" - ")[0];
+      this.selectedTumorMorphology.push({ code });
+      //alert(JSON.stringify(this.selectedDiagnosis));
+    },
+
+    removeTumorMorphology(item) {
+      const index = this.tumorMorphology.indexOf(item);
+      if (index >= 0) this.selectedTumorMorphology.splice(index, 1);
+      this.tumorMorphology.splice(index, 1);
+    },
+
+    resetDiagnosis() {
+      this.selectedTumorMorphology = [];
+    },
+
     addMutatedGenes(mutatedGenes) {
       let code = mutatedGenes.split(" · ")[1];
       this.selectedMutatedGenes.push({ code });
@@ -779,6 +838,7 @@ export default {
     setQueryParams(item) {
       this.mutations = this.getQueryParametersMutations;
       this.diagnosis = this.getQueryParametersDiagnosis;
+      this.tumorMorphology = this.getQueryParameterTumorMorphology;
       this.drugs = this.getQueryParametersDrugs;
       this.responses = this.getQueryParametersResponses;
       this.localQuery = this.getQueryParametersFederated;

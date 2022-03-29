@@ -227,6 +227,8 @@ import userPanel from "~/components/userPanel";
 let seen = true;
 
 export default {
+  loading: "~/components/loading.vue",
+
   data: () => ({}),
 
   components: {

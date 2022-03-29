@@ -227,7 +227,7 @@
             >ZPM {{ globalConstituentReport.zpm }}
             <div class="caption">
               <p>
-               Gesamtzahl Patienten: {{ globalConstituentReport.patientTotal }}
+                Gesamtzahl Patienten: {{ globalConstituentReport.patientTotal }}
               </p>
             </div></v-card-title
           ></v-flex
@@ -457,6 +457,8 @@ import userPanel from "~/components/userPanel";
 let seen = true;
 
 export default {
+  loading: "~/components/loading.vue",
+
   data: () => ({}),
 
   components: {

@@ -12,20 +12,17 @@
     <v-divider class="my-3"></v-divider>
     <div id="patientCard"></div>
     <v-layout>
-      <v-card
-        flat
-        :color="genderCheck(patient.gender)"
-        dark
-        left
-        max-width="450"
-      >
+      <v-card flat dark left max-width="450">
         <br />
         <v-card-actions>
           <v-layout align-center>
             <v-list-tile class="grow">
               <v-tooltip top>
-                <span>Male</span>
+                <v-icon slot="activator" class="mr-1">fas fa-venus-mars</v-icon>
+                <span>Geschlecht</span>
               </v-tooltip>
+              <span class="heading mr-2">{{ patient.gender }}</span>
+              <span class="mr-2">·</span>
               <v-tooltip top>
                 <v-icon slot="activator" class="mr-1"
                   >fas fa-calendar-day</v-icon
@@ -465,7 +462,7 @@
                 <td>
                   {{ props.item.chromosome }}
                 </td>
-                 <td>
+                <td>
                   {{ props.item.reportedAffectedGenes }}
                 </td>
                 <td>
@@ -807,6 +804,8 @@ let serverBaseURL =
   process.env.baseUrl + process.env.port + `/bwhc/mtb/api/query`;
 
 export default {
+  loading: "~/components/loading.vue",
+
   data() {
     return {
       search: "",
@@ -1550,22 +1549,7 @@ export default {
     goBack() {
       return window.history.back();
     },
-    showMutations(genomicReportId) {
-    },
-
-    avatarCheck(gender) {
-      if (gender == "male") return "blue";
-      else if (gender == "female") return "pink";
-      else return "gray";
-    },
-
-    genderCheck(gender) {
-      if (gender == "male") return "blue";
-      else if (gender == "Männlich") return "blue";
-      else if (gender == "female") return "pink";
-      else if (gender == "Weiblich") return "pink";
-      else return "gray";
-    },
+    showMutations(genomicReportId) {},
 
     displayTherapyRecommendations() {
       this.extendCarePlans = false;

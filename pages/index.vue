@@ -74,9 +74,20 @@
           >
           <v-card-text class="subheading font-weight-light">
             <p>
-              Primäres Ziel ist der Entwurf einer sicheren Datenintegrations- und -verwaltungsplattform, die in einer späteren Phase produktiv aufgebaut werden soll. Klinische Daten der Patienten werden landesweit verschlüsselt gespeichert. So soll ein großer Datenpool geschaffen werden, der aussagekräftigere Auswertungen erlaubt.
-<br><br>
-Im fertigen Zustand soll die Plattform Patienten, Ärzten und Wissenschaftlern Zugang zu den integrierten Daten geben. Ärzte und Wissenschaftler werden die Daten auswerten, um z.B. die Therapie zu verbessern oder um verschiedene Therapien zu vergleichen. Im Rahmen der Personalisierten Medizin sollen durch die Auswertung der Daten Verbesserungen der Behandlungen für den einzelnen Patienten gefunden werden und weitere Hinweise auf die Ursachen und den Verlauf der Erkrankung.
+              Primäres Ziel ist der Entwurf einer sicheren Datenintegrations-
+              und -verwaltungsplattform, die in einer späteren Phase produktiv
+              aufgebaut werden soll. Klinische Daten der Patienten werden
+              landesweit verschlüsselt gespeichert. So soll ein großer Datenpool
+              geschaffen werden, der aussagekräftigere Auswertungen erlaubt.
+              <br /><br />
+              Im fertigen Zustand soll die Plattform Patienten, Ärzten und
+              Wissenschaftlern Zugang zu den integrierten Daten geben. Ärzte und
+              Wissenschaftler werden die Daten auswerten, um z.B. die Therapie
+              zu verbessern oder um verschiedene Therapien zu vergleichen. Im
+              Rahmen der Personalisierten Medizin sollen durch die Auswertung
+              der Daten Verbesserungen der Behandlungen für den einzelnen
+              Patienten gefunden werden und weitere Hinweise auf die Ursachen
+              und den Verlauf der Erkrankung.
             </p>
           </v-card-text>
           <v-card-title class="headline font-weight-light">
@@ -108,17 +119,22 @@ Im fertigen Zustand soll die Plattform Patienten, Ärzten und Wissenschaftlern Z
                 <v-icon></v-icon>
               </v-card-title>
               <v-card-text class="subheading font-weight-light">
-                Vorhandene medizinische Daten onkologischer Patienten der Universitätskliniken in Baden-Württemberg sollen in einer sicheren Cloud gespeichert werden. Die Daten können von den Patienten und den behandelnden Ärzten abgerufen werden. Im Rahmen der Personalisierten Medizin (PM) sollen die Daten insgesamt und für jeden Patienten einzeln ausgewertet werden.
+                Vorhandene medizinische Daten onkologischer Patienten der
+                Universitätskliniken in Baden-Württemberg sollen in einer
+                sicheren Cloud gespeichert werden. Die Daten können von den
+                Patienten und den behandelnden Ärzten abgerufen werden. Im
+                Rahmen der Personalisierten Medizin (PM) sollen die Daten
+                insgesamt und für jeden Patienten einzeln ausgewertet werden.
               </v-card-text>
               <v-card-title class="headline font-weight-light">
                 Medizinische Fachrichtung:
                 <br />
                 <v-icon></v-icon>
               </v-card-title>
-<v-card-text class="subheading font-weight-light">
-               Medizininformatik, Onkologische Bereiche der Universitätskliniken, Krebsregister
-               </v-card-text>
-
+              <v-card-text class="subheading font-weight-light">
+                Medizininformatik, Onkologische Bereiche der
+                Universitätskliniken, Krebsregister
+              </v-card-text>
             </v-card>
           </v-flex>
           <v-flex d-flex>
@@ -134,7 +150,8 @@ Im fertigen Zustand soll die Plattform Patienten, Ärzten und Wissenschaftlern Z
                     <p>
                       Universitätskliniken Tübingen, Heidelberg, Ulm, Freiburg
                     </p>
-                    Finanzierung <br>Ministerium für Soziales und Integration Baden-Württemberg
+                    Finanzierung <br />Ministerium für Soziales und Integration
+                    Baden-Württemberg
                   </v-card-text>
                 </v-card>
               </v-flex>
@@ -150,6 +167,7 @@ Im fertigen Zustand soll die Plattform Patienten, Ärzten und Wissenschaftlern Z
 import { mapActions } from "vuex";
 
 export default {
+
   data: () => ({
     loginDialog: false,
     username: "",

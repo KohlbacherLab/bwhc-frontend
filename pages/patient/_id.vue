@@ -864,6 +864,7 @@ import axios from "axios";
 import userPanel from "~/components/userPanel";
 
 export default {
+  loading: "~/components/loading.vue",
   data: () => ({
     expand: true,
     headerIssues: [
