@@ -15,7 +15,7 @@
         >
           <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
         >Überprüfen Sie die Daten-Qualitätsprobleme!
-        <strong @click="$router.push('help')">Hilfe?</strong>
+        <strong @click="$router.push('../help')">Hilfe?</strong>
       </span>
     </v-flex>
 

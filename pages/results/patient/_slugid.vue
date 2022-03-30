@@ -6,7 +6,7 @@
       <v-btn dark icon color="blue accent-2" align-end @click="goBack">
         <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
       >Patienten Akte.
-      <strong @click="$router.push('../help')">Hilfe?</strong>
+      <strong @click="$router.push('../../help')">Hilfe?</strong>
     </span>
 
     <v-divider class="my-3"></v-divider>
@@ -54,10 +54,12 @@
         </v-card-title>
       </v-card>
     </v-layout>
+
+    <!--
     <br />
     <v-flex>
       <v-btn flat fab dark medium color="red accent-3" @click="snackbar = true">
-        <!-- @click="notifyCase" -->
+        @click="notifyCase"
         <v-icon>fas fa-bell</v-icon>
       </v-btn>
 
@@ -76,6 +78,7 @@
         <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
       </v-snackbar>
     </v-flex>
+    -->
 
     <!-- DIAGNOSES VIEW -->
     <div id="diagnoses"></div>

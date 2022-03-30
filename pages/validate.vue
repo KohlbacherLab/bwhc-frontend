@@ -30,11 +30,9 @@
           v-ripple="{ center: true }"
         >
           <v-card-text class="headline font-weight-thin">
-            <p>
-              <v-icon color="orange accent-1" dark>fas fa-street-view</v-icon>
-            </p>
-            <strong>{{ countPatients }}</strong>
-            <br />Patienten
+            <v-icon color="orange accent-1" dark>fas fa-street-view</v-icon>
+            <br />
+            <strong>{{ countPatients }}</strong> Patienten
           </v-card-text>
         </v-card>
       </v-flex>
@@ -74,7 +72,7 @@
           <td @click="routeToPatient(props.item.id)">
             {{ props.item.numberOfErrors }}
           </td>
-           <td @click="routeToPatient(props.item.id)">
+          <td @click="routeToPatient(props.item.id)">
             {{ props.item.numberOfWarnings }}
           </td>
           <td @click="routeToPatient(props.item.id)">
@@ -170,7 +168,7 @@ export default {
         align: "left",
         sortable: true,
         value: "numberOfInfos",
-      }
+      },
       /*,
       {
         text: "Aktionen",
@@ -267,7 +265,7 @@ export default {
       );
 
       //alert(JSON.stringify(patients));
-      
+
       return {
         itemsPatients: patients.data.entries,
         countPatients: patients.data.total,

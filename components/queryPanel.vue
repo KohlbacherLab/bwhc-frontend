@@ -231,7 +231,7 @@
               :loading="isLoading"
               item-text="name"
               item-value="id"
-              label="Gen-Name oder HGNC Symbol..."
+              label="Gen-Name oder HGNC Symbol"
               chips
               deletable-chips
               dense
@@ -280,7 +280,7 @@
             <v-autocomplete
               v-model="diagnosis"
               :items="diagnosisCat"
-              label="ICD-10 Diagnose-Text oder Code..."
+              label="ICD-10 Diagnose-Text oder Code"
               ref="diagnosis"
               chips
               deletable-chips
@@ -303,7 +303,7 @@
             <v-autocomplete
               v-model="tumorMorphology"
               :items="tumorMorphologyCat"
-              label="ICD-O3-M Diagnose-Text oder Code..."
+              label="ICD-O3-M Diagnose-Text oder Code"
               ref="tumorMorphology"
               chips
               deletable-chips
@@ -341,19 +341,12 @@
             <br />Wirkstoffe
             <v-icon color="blue">fas fa-pills</v-icon>
 
-            <v-radio-group v-model="drugUsage" row>
-              <v-radio label="Egal" value="egal"></v-radio>
-              <v-radio label="Verabreicht" value="used"></v-radio>
-              <v-radio label="Empfohlen" value="recommended"></v-radio>
-              <v-radio label="Beide" value="beide"></v-radio>
-            </v-radio-group>
-
             <v-autocomplete
               v-model="drugs"
               :items="drugsCat"
               :itemscope="used"
               :loading="isLoading"
-              label="Wirkstoff-Name oder ATC Code..."
+              label="Wirkstoff-Name oder ATC Code"
               ref="drugUsage"
               chips
               deletable-chips
@@ -385,6 +378,13 @@
                 </v-chip>
               </template>
             </v-autocomplete>
+
+            <v-radio-group v-model="drugUsage" row>
+              <v-radio label="Egal" value="egal"></v-radio>
+              <v-radio label="Verabreicht" value="used"></v-radio>
+              <v-radio label="Empfohlen" value="recommended"></v-radio>
+              <v-radio label="Beide" value="beide"></v-radio>
+            </v-radio-group>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -746,7 +746,7 @@ export default {
     },
 
     // DIAGNOSIS (ICD-10)
-    
+
     addDiagnosis(diagnosis) {
       let code = diagnosis.split(" - ")[0];
       this.selectedDiagnosis.push({ code });
@@ -804,7 +804,7 @@ export default {
     addDrugs(drug, usage) {
       //const index = this.drugs.indexOf(drug);
       //let code = drug.substr(0, drug.indexOf(" "));
-    
+
       if (usage == "beide") {
         this.selectedDrugs.push({
           medication: { code: drug.split(" · ")[1] },

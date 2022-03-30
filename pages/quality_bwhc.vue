@@ -33,12 +33,10 @@
             v-ripple="{ center: true }"
           >
             <v-card-text class="headline font-weight-thin">
-              <p>
-                <v-icon color="yellow accent-1" dark>fas fa-street-view</v-icon>
-              </p>
-              <strong>{{ globalReport.data.patientTotal }}</strong>
+              <v-icon color="yellow accent-1" dark>fas fa-street-view</v-icon>
               <br />
-              Gesamtzahl Patienten in bwHC
+              <strong>{{ globalReport.data.patientTotal }}</strong> Gesamtzahl
+              Patienten in bwHC
             </v-card-text>
           </v-card>
         </v-flex>

@@ -32,12 +32,10 @@
             v-ripple="{ center: true }"
           >
             <v-card-text class="headline font-weight-thin">
-              <p>
-                <v-icon color="red accent-1" dark>fas fa-street-view</v-icon>
-              </p>
-              <strong>{{ localReport.data.patientTotal }}</strong>
-              <br />
-              Gesamtzahl Patienten in {{ localReport.data.zpm }}
+              <v-icon color="red accent-1" dark>fas fa-street-view</v-icon
+              ><br />
+              <strong>{{ localReport.data.patientTotal }}</strong> Gesamtzahl
+              Patienten in {{ localReport.data.zpm }}
             </v-card-text>
           </v-card>
         </v-flex>

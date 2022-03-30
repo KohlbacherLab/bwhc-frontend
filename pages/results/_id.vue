@@ -12,39 +12,7 @@
     </span>
     <v-divider class="my-3"></v-divider>
 
-    <v-flex d-flex>
-      <v-card flat>
-        <v-card-text class="subheading font-weight-thin">
-          <span v-if="getQueryParametersMutations.length > 0">
-            <strong>Mutationen:</strong>
-            {{ getQueryParametersMutations.join(", ") }}
-            <br />
-          </span>
-          <span v-if="getQueryParametersDiagnosis.length > 0">
-            <strong>Diagnose:</strong>
-            {{ getQueryParametersDiagnosis.join(", ") }}
-            <br />
-          </span>
-          <span v-if="getQueryParametersTumorMorphology.length > 0">
-            <strong>Tumor Morphologie:</strong>
-            {{ getQueryParametersTumorMorphology.join(", ") }}
-            <br />
-          </span>
-          <span v-if="getQueryParametersDrugs.length > 0">
-            <strong>Wirkstoffe:</strong>
-            {{ getQueryParametersDrugs.join(", ") }}
-            <br />
-          </span>
-          <span v-if="getQueryParametersResponses.length > 0">
-            <strong>Responses:</strong>
-            {{ getQueryParametersResponses.join(", ") }}
-            <br />
-          </span>
-
-          <strong>Abfragetyp:</strong>
-          {{ getQueryParametersFederated.display }}
-        </v-card-text>
-      </v-card>
+    
 
       <!--
       <v-expansion-panel>
@@ -106,9 +74,6 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
       -->
-    </v-flex>
-
-    <v-divider class="my-3"></v-divider>
 
     <v-layout wrap>
       <v-flex d-flex xs12 sm6 md3>
@@ -118,12 +83,10 @@
           color="purple lighten-2"
           dark
           max-width="400"
-          v-ripple="{ center: true }"
         >
           <v-card-text class="headline font-weight-thin">
-            <p><v-icon color="purple" dark>fas fa-street-view</v-icon></p>
-            <strong>{{ displayResults.patientTotal }}</strong>
-            <br />Patienten
+            <v-icon color="purple" dark>fas fa-street-view</v-icon>
+            <strong>{{ displayResults.patientTotal }}</strong> Patienten
           </v-card-text>
         </v-card>
       </v-flex>
@@ -135,12 +98,10 @@
           color="indigo lighten-2"
           dark
           max-width="400"
-          v-ripple="{ center: true }"
         >
           <v-card-text class="headline font-weight-thin">
-            <p><v-icon color="indigo">fas fa-stethoscope</v-icon></p>
-            <strong>{{ itemsGenomicReportsCount }}</strong>
-            <br />NGS Übersichten
+            <v-icon color="indigo">fas fa-stethoscope</v-icon>
+            <strong>{{ itemsGenomicReportsCount }}</strong> NGS Übersichten
           </v-card-text>
         </v-card>
       </v-flex>
@@ -152,12 +113,10 @@
           color="blue lighten-2"
           dark
           max-width="400"
-          v-ripple="{ center: true }"
         >
           <v-card-text class="headline font-weight-thin">
-            <p><v-icon color="blue">fas fa-comment-medical</v-icon></p>
-            <strong>{{ itemsRecommendationsCount }}</strong>
-            <br />Therapie-Empfehlungen
+            <v-icon color="blue">fas fa-comment-medical</v-icon>
+            <strong>{{ itemsRecommendationsCount }}</strong> Therapie-Empfehlungen
           </v-card-text>
         </v-card>
       </v-flex>
@@ -169,12 +128,10 @@
           color="cyan lighten-2"
           dark
           max-width="400"
-          v-ripple="{ center: true }"
         >
           <v-card-text class="headline font-weight-thin">
-            <p><v-icon color="cyan" dark>fas fa-file-medical</v-icon></p>
-            <strong>{{ itemsTherapiesCount }}</strong>
-            <br />Molekulare Therapien
+            <v-icon color="cyan" dark>fas fa-file-medical</v-icon>
+            <strong>{{ itemsTherapiesCount }}</strong> Molekulare Therapien
           </v-card-text>
         </v-card>
       </v-flex>
@@ -184,18 +141,16 @@
       <v-flex d-flex xs12 sm6 md3>
         <v-card
           flat
-          color="grey lighten-2"
+          color="grey lighten-4"
           light
           width="250"
-          v-ripple="{ center: true }"
         >
-          <v-card-text class="title font-weight-thin">
+          <v-card-text class="subtitle font-weight-thin">
             <strong
               >{{ displayResults.completionStats[0].frequency.count }} ({{
                 displayResults.completionStats[0].frequency.percent.toFixed(1)
               }}%)</strong
-            >
-            <br />{{ displayResults.completionStats[0].level }}
+            > {{ displayResults.completionStats[0].level }}
           </v-card-text>
         </v-card>
       </v-flex>
@@ -203,18 +158,16 @@
       <v-flex d-flex xs12 sm6 md3>
         <v-card
           flat
-          color="grey lighten-2"
+          color="grey lighten-4"
           light
           width="250"
-          v-ripple="{ center: true }"
         >
-          <v-card-text class="title font-weight-thin">
+          <v-card-text class="subtitle font-weight-thin">
             <strong
               >{{ displayResults.completionStats[1].frequency.count }} ({{
                 displayResults.completionStats[1].frequency.percent.toFixed(1)
               }}%)</strong
-            >
-            <br />{{ displayResults.completionStats[1].level }}
+            > {{ displayResults.completionStats[1].level }}
           </v-card-text>
         </v-card>
       </v-flex>
@@ -222,18 +175,16 @@
       <v-flex d-flex xs12 sm6 md3>
         <v-card
           flat
-          color="grey lighten-2"
+          color="grey lighten-4"
           light
           width="250"
-          v-ripple="{ center: true }"
         >
-          <v-card-text class="title font-weight-thin">
+          <v-card-text class="subtitle font-weight-thin">
             <strong
               >{{ displayResults.completionStats[2].frequency.count }} ({{
                 displayResults.completionStats[2].frequency.percent.toFixed(1)
               }}%)</strong
-            >
-            <br />{{ displayResults.completionStats[2].level }}
+            > {{ displayResults.completionStats[2].level }}
           </v-card-text>
         </v-card>
       </v-flex>
@@ -241,18 +192,16 @@
       <v-flex d-flex xs12 sm6 md3>
         <v-card
           flat
-          color="grey lighten-2"
+          color="grey lighten-4"
           light
           width="250"
-          v-ripple="{ center: true }"
         >
-          <v-card-text class="title font-weight-thin">
+          <v-card-text class="subtitle font-weight-thin">
             <strong
               >{{ displayResults.completionStats[3].frequency.count }} ({{
                 displayResults.completionStats[3].frequency.percent.toFixed(1)
               }}%)</strong
-            >
-            <br />{{ displayResults.completionStats[3].level }}
+            > {{ displayResults.completionStats[3].level }}
           </v-card-text>
         </v-card>
       </v-flex>
@@ -260,18 +209,53 @@
 
     <v-divider v-if="hide" class="my-3"></v-divider>
 
+    <v-flex d-flex>
+      <v-card flat>
+        <v-card-text class="subheading font-weight-thin">
+          <span v-if="getQueryParametersMutations.length > 0">
+            <strong>Mutationen:</strong>
+            {{ getQueryParametersMutations.join(", ") }}
+            <br />
+          </span>
+          <span v-if="getQueryParametersDiagnosis.length > 0">
+            <strong>Diagnose:</strong>
+            {{ getQueryParametersDiagnosis.join(", ") }}
+            <br />
+          </span>
+          <span v-if="getQueryParametersTumorMorphology.length > 0">
+            <strong>Tumor Morphologie:</strong>
+            {{ getQueryParametersTumorMorphology.join(", ") }}
+            <br />
+          </span>
+          <span v-if="getQueryParametersDrugs.length > 0">
+            <strong>Wirkstoffe:</strong>
+            {{ getQueryParametersDrugs.join(", ") }}
+            <br />
+          </span>
+          <span v-if="getQueryParametersResponses.length > 0">
+            <strong>Responses:</strong>
+            {{ getQueryParametersResponses.join(", ") }}
+            <br />
+          </span>
+
+          <strong>Abfragetyp:</strong>
+          {{ getQueryParametersFederated.display }}
+        </v-card-text>
+      </v-card>
+    </v-flex>
+
     <v-tabs v-if="hide" color="blue-grey lighten-5" fixed-tabs icons-and-text>
       <v-tab class="subheading font-weight-regular" :key="cases"
-        >Patienten</v-tab
+        >Patienten <v-icon color="purple" dark>fas fa-street-view</v-icon> </v-tab
       >
       <v-tab class="subheading font-weight-regular" :key="genomics"
-        >NGS Übersichten</v-tab
+        >NGS Übersichten <v-icon color="indigo">fas fa-stethoscope</v-icon></v-tab
       >
       <v-tab class="subheading font-weight-regular" :key="recommendations"
-        >Therapie-Empfehlungen</v-tab
+        >Therapie-Empfehlungen <v-icon color="blue">fas fa-comment-medical</v-icon></v-tab
       >
       <v-tab class="subheading font-weight-regular" :key="therapies"
-        >Molekulare Therapien</v-tab
+        >Molekulare Therapien <v-icon color="cyan" dark>fas fa-file-medical</v-icon></v-tab
       >
 
       <!-- CASES -->
@@ -394,7 +378,6 @@
     <v-col>
       <div class="caption">{{ issues }}</div>
     </v-col>
-    
   </v-container>
 </template>
 
@@ -413,8 +396,7 @@ let baseURL = process.env.baseUrl + process.env.port;
 let serverBaseURL = process.env.baseUrl + process.env.port + process.env.query;
 
 export default {
-  
-  loading: '~/components/loading.vue',
+  loading: "~/components/loading.vue",
 
   name: "ProfilePage",
 
@@ -444,7 +426,7 @@ export default {
       headerTherapies: [
         { text: "Status", align: "left", value: "status" },
         { text: "Erfassungsdatum", align: "left", value: "recordedOn" },
-         {
+        {
           text: "Empfehlungs Priorität",
           align: "left",
           sortable: true,
@@ -491,7 +473,11 @@ export default {
         },
         { text: "Level of Evidence", align: "left", value: "levelOfEvidence" },
         { text: "ECOG Status", align: "left", value: "ecogStatus" },
-        { text: "Stützende Varianten", align: "left", value: "supportingVariants"}
+        {
+          text: "Stützende Varianten",
+          align: "left",
+          value: "supportingVariants",
+        },
       ],
 
       headerGenomicReports: [
@@ -556,8 +542,10 @@ export default {
         process.env.baseUrl + process.env.port + process.env.coding + `/ATC`
       );
 
-      let tumorMorphologyCatRaw = await axios.get (
-        process.env.baseUrl + process.env.port + `/bwhc/catalogs/api/Coding?system=icd-o-3-m`
+      let tumorMorphologyCatRaw = await axios.get(
+        process.env.baseUrl +
+          process.env.port +
+          `/bwhc/catalogs/api/Coding?system=icd-o-3-m`
       );
 
       let responsesCatRaw = await axios.get(
@@ -694,18 +682,51 @@ export default {
       }
 
       let getQueryParametersDrugs = Array();
+      //alert(JSON.stringify(queryparams.data.parameters.medicationsWithUsage));
       for (
         var i = 0;
         i < queryparams.data.parameters.medicationsWithUsage.length;
         i++
       ) {
-        getQueryParametersDrugs.push(
-          queryparams.data.parameters.medicationsWithUsage[i].medication
-            .display +
-            " [" +
-            queryparams.data.parameters.medicationsWithUsage[i].usage.code +
-            "]"
-        );
+        if (
+          queryparams.data.parameters.medicationsWithUsage[i].usage.length === 2
+        ) {
+          getQueryParametersDrugs.push(
+            queryparams.data.parameters.medicationsWithUsage[i].medication
+              .display +
+              " [" +
+              JSON.stringify(
+                queryparams.data.parameters.medicationsWithUsage[i].usage[0]
+                  .display
+              ) +
+              ", " +
+              JSON.stringify(
+                queryparams.data.parameters.medicationsWithUsage[i].usage[1]
+                  .display
+              ) +
+              "]"
+          );
+        } else if (
+          queryparams.data.parameters.medicationsWithUsage[i].usage.length === 1
+        ) {
+          getQueryParametersDrugs.push(
+            queryparams.data.parameters.medicationsWithUsage[i].medication
+              .display +
+              " [" +
+              JSON.stringify(
+                queryparams.data.parameters.medicationsWithUsage[i].usage[0]
+                  .display
+              ) +
+              "]"
+          );
+        } else if (
+          queryparams.data.parameters.medicationsWithUsage[i].usage.length === 0
+        ) {
+          getQueryParametersDrugs.push(
+            queryparams.data.parameters.medicationsWithUsage[i].medication
+              .display + " [ ]"
+          );
+        }
       }
 
       let getQueryParametersDiagnosis = Array();
@@ -716,7 +737,11 @@ export default {
       }
 
       let getQueryParametersTumorMorphology = Array();
-      for (var i = 0; i < queryparams.data.parameters.tumorMorphology.length; i++) {
+      for (
+        var i = 0;
+        i < queryparams.data.parameters.tumorMorphology.length;
+        i++
+      ) {
         getQueryParametersTumorMorphology.push(
           queryparams.data.parameters.tumorMorphology[i].display
         );
@@ -733,7 +758,7 @@ export default {
 
       let connectionIssues = "";
       if (localStorage.getItem("issues")) {
-       connectionIssues = localStorage.getItem("issues");
+        connectionIssues = localStorage.getItem("issues");
       }
 
       return {
