@@ -341,6 +341,13 @@
             <br />Wirkstoffe
             <v-icon color="blue">fas fa-pills</v-icon>
 
+            <v-radio-group v-model="drugUsage" row>
+              <v-radio label="Egal" value="egal"></v-radio>
+              <v-radio label="Verabreicht" value="used"></v-radio>
+              <v-radio label="Empfohlen" value="recommended"></v-radio>
+              <v-radio label="Beide" value="beide"></v-radio>
+            </v-radio-group>
+
             <v-autocomplete
               v-model="drugs"
               :items="drugsCat"
@@ -373,16 +380,11 @@
                 >
                   <strong>{{ data.item }}</strong>
                   &nbsp;
-                  {{ selectedDrugs[data.index].usage.code }}
+
+                  {{ selectedDrugsDisplay[data.index].usage }}
                 </v-chip>
               </template>
             </v-autocomplete>
-            <v-radio-group v-model="drugUsage" row>
-              <!--<v-radio label="Egal" value=""></v-radio>-->
-              <v-radio label="Verabreicht" value="used"></v-radio>
-              <v-radio label="Empfohlen" value="recommended"></v-radio>
-             <!--<v-radio label="Beide" value="recommended, used"></v-radio>-->
-            </v-radio-group>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -564,6 +566,7 @@ export default {
 
   data: () => ({
     selectedDrugs: Array(),
+    selectedDrugsDisplay: Array(),
     selectedDiagnosis: Array(),
     selectedTumorMorphology: Array(),
     selectedMutatedGenes: Array(),
@@ -576,7 +579,7 @@ export default {
     showSCNV: false,
     showSV: false,
 
-    drugUsage: "",
+    drugUsage: "egal",
     diagnosis: Array(),
 
     select: {
@@ -742,16 +745,8 @@ export default {
       return window.history.back();
     },
 
-    removeMutation(item) {
-      const index = this.mutations.indexOf(item);
-      if (index >= 0) this.mutations.splice(index, 1);
-    },
-
-    addMutation(item) {
-      //const index = this.mutations.indexOf(item);
-      (this.queryMutationChips = this.gene), this.mutationType;
-    },
-
+    // DIAGNOSIS (ICD-10)
+    
     addDiagnosis(diagnosis) {
       let code = diagnosis.split(" - ")[0];
       this.selectedDiagnosis.push({ code });
@@ -768,6 +763,8 @@ export default {
       this.selectedDiagnosis = [];
     },
 
+    // TUMOR MORPHOLOGY (ICD-O-3)
+
     addTumorMorphology(tumorMorphology) {
       let code = tumorMorphology.split(" - ")[0];
       this.selectedTumorMorphology.push({ code });
@@ -780,9 +777,11 @@ export default {
       this.tumorMorphology.splice(index, 1);
     },
 
-    resetDiagnosis() {
+    resetTumorMorphology() {
       this.selectedTumorMorphology = [];
     },
+
+    // MUTATED GENES
 
     addMutatedGenes(mutatedGenes) {
       let code = mutatedGenes.split(" · ")[1];
@@ -796,17 +795,51 @@ export default {
       this.mutatedGenes.splice(index, 1);
     },
 
-    resetDiagnosis() {
+    resetMutatedGenes() {
       this.selectedMutatedGenes = [];
     },
+
+    // DRUGS
 
     addDrugs(drug, usage) {
       //const index = this.drugs.indexOf(drug);
       //let code = drug.substr(0, drug.indexOf(" "));
-      this.selectedDrugs.push({
-        medication: { code: drug.split(" · ")[1] },
-        usage: { code: usage },
-      });
+    
+      if (usage == "beide") {
+        this.selectedDrugs.push({
+          medication: { code: drug.split(" · ")[1] },
+          usage: [{ code: "used" }, { code: "recommended" }],
+        });
+        this.selectedDrugsDisplay.push({
+          medication: { code: drug.split(" · ")[1] },
+          usage: "(v+e)",
+        });
+      } else if (usage == "egal") {
+        this.selectedDrugs.push({
+          medication: { code: drug.split(" · ")[1] },
+          usage: [],
+        });
+        this.selectedDrugsDisplay.push({
+          medication: { code: drug.split(" · ")[1] },
+          usage: "",
+        });
+      } else {
+        this.selectedDrugs.push({
+          medication: { code: drug.split(" · ")[1] },
+          usage: [{ code: usage }],
+        });
+        if (usage === "used") {
+          this.selectedDrugsDisplay.push({
+            medication: { code: drug.split(" · ")[1] },
+            usage: "(v)",
+          });
+        } else {
+          this.selectedDrugsDisplay.push({
+            medication: { code: drug.split(" · ")[1] },
+            usage: "(e)",
+          });
+        }
+      }
       //alert(JSON.stringify(this.selectedDrugs));
     },
 
@@ -818,7 +851,10 @@ export default {
 
     resetDrugs() {
       this.selectedDrugs = [];
+      this.selectedDrugsDisplay = [];
     },
+
+    // RESPONSES
 
     addResponses(responses) {
       let code = responses.split(" - ")[0];
@@ -834,6 +870,8 @@ export default {
     resetResponses() {
       this.selectedResponses = [];
     },
+
+    // QUERY PARAMETERS
 
     setQueryParams(item) {
       this.mutations = this.getQueryParametersMutations;

@@ -214,6 +214,8 @@ export default {
           return redirect("/");
         } else if (err.status === 403) {
           return redirect("/403");
+        } else {
+          return redirect("/" + err.response.status);
         }
       }
     },
