@@ -833,14 +833,14 @@
           <td>{{ props.item.status }}</td>
           <td>{{ props.item.recordedOn }}</td>
           <td>{{ props.item.recommendation }}</td>
-          <td>{{ props.item.period }}</td>
-          <td>{{ props.item.notDoneReason }}</td>
           <td>{{ props.item.medication }}</td>
-          <td>{{ props.item.reasonStopped }}</td>
           <td>{{ props.item.dosage }}</td>
+          <td>{{ props.item.period }}</td>   
+          <td>{{ props.item.reasonStopped }}</td>  
           <td>{{ props.item.note }}</td>
           <td>{{ props.item.response }}</td>
           <td>{{ props.item.progressionDate }}</td>
+          <td>{{ props.item.notDoneReason }}</td>
         </tr>
       </template>
     </v-data-table>
@@ -1643,34 +1643,28 @@ export default {
         value: "recommendation",
       },
       {
-        text: "Zeitraum",
-        align: "left",
-        sortable: true,
-        value: "period",
-      },
-      {
-        text: "Nicht-Umsetzungs-Grund",
-        align: "left",
-        sortable: true,
-        value: "notDoneReason",
-      },
-      {
         text: "Medikation",
         align: "left",
         sortable: true,
         value: "medication",
       },
       {
-        text: "Abbruchsgrund",
-        align: "left",
-        sortable: true,
-        value: "reasonStopped",
-      },
-      {
         text: "Dosisdichte",
         align: "left",
         sortable: true,
         value: "dosage",
+      },
+      {
+        text: "Zeitraum",
+        align: "left",
+        sortable: true,
+        value: "period",
+      },
+      {
+        text: "Abbruchsgrund",
+        align: "left",
+        sortable: true,
+        value: "reasonStopped",
       },
       {
         text: "Bemerkungen",
@@ -1689,6 +1683,12 @@ export default {
         align: "left",
         sortable: true,
         value: "progressionDate",
+      },
+      {
+        text: "Nicht-Umsetzungs-Grund",
+        align: "left",
+        sortable: true,
+        value: "notDoneReason",
       },
     ],
   }),

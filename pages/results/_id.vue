@@ -293,7 +293,6 @@
           >
             <template slot="items" slot-scope="props">
               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
-                <td>{{ props.item.specimen }}</td>
                 <td>{{ props.item.tumorEntity }}</td>
                 <td>{{ props.item.specimenType }}</td>
                 <td>{{ props.item.sequencingType }}</td>
@@ -348,14 +347,14 @@
                 <td>{{ props.item.status }}</td>
                 <td>{{ props.item.recordedOn }}</td>
                 <td>{{ props.item.recommendationPriority }}</td>
-                <td>{{ props.item.period }}</td>
-                <td>{{ props.item.notDoneReason }}</td>
                 <td>{{ props.item.medication }}</td>
-                <td>{{ props.item.reasonStopped }}</td>
                 <td>{{ props.item.dosage }}</td>
-                <td>{{ props.item.note }}</td>
+                <td>{{ props.item.period }}</td>
                 <td>{{ props.item.response }}</td>
+                <td>{{ props.item.reasonStopped }}</td>
+                <td>{{ props.item.note }}</td>
                 <td>{{ props.item.progressionDate }}</td>
+                <td>{{ props.item.notDoneReason }}</td>
               </tr>
             </template>
             <v-alert :value="true" color="error" icon="warning"
@@ -432,30 +431,30 @@ export default {
           sortable: true,
           value: "recommendationPriority",
         },
-        { text: "Zeitraum", align: "left", sortable: true, value: "period" },
-        {
-          text: "Nicht-Umsetzungs-Grund",
-          align: "left",
-          value: "notDoneReason",
-        },
         {
           text: "Medikation",
           align: "left",
           value: "medication",
         },
         {
-          text: "Abbruchsgrund",
-          align: "left",
-          value: "reasonStopped",
-        },
-        {
           text: "Dosisdichte",
           align: "left",
           value: "dosage",
         },
-        { text: "Bemerkungen", align: "left", value: "note" },
+        { text: "Zeitraum", align: "left", sortable: true, value: "period" },
         { text: "Response", align: "left", value: "response" },
+        {
+          text: "Abbruchsgrund",
+          align: "left",
+          value: "reasonStopped",
+        },
+        { text: "Bemerkungen", align: "left", value: "note" },
         { text: "Progressionsdatum", align: "left", value: "progressionDate" },
+        {
+          text: "Nicht-Umsetzungs-Grund",
+          align: "left",
+          value: "notDoneReason",
+        }
       ],
 
       headerRecommendations: [
@@ -481,12 +480,6 @@ export default {
       ],
 
       headerGenomicReports: [
-        {
-          text: "Probe",
-          align: "left",
-          sortable: true,
-          value: "specimen",
-        },
         { text: "Tumorentität", align: "left", value: "tumorEntity" },
         { text: "Probenart", align: "left", value: "specimenType" },
         {
@@ -677,7 +670,8 @@ export default {
         i++
       ) {
         getQueryParametersMutations.push(
-          queryparams.data.parameters.mutatedGenes[i].display
+          queryparams.data.parameters.mutatedGenes[i].display + " · " + queryparams.data.parameters.mutatedGenes[i].code
+          
         );
       }
 
@@ -693,7 +687,8 @@ export default {
         ) {
           getQueryParametersDrugs.push(
             queryparams.data.parameters.medicationsWithUsage[i].medication
-              .display +
+              .display + " - " + queryparams.data.parameters.medicationsWithUsage[i].medication
+              .code + 
               " [" +
               JSON.stringify(
                 queryparams.data.parameters.medicationsWithUsage[i].usage[0]
@@ -711,7 +706,8 @@ export default {
         ) {
           getQueryParametersDrugs.push(
             queryparams.data.parameters.medicationsWithUsage[i].medication
-              .display +
+              .display  + " - " + queryparams.data.parameters.medicationsWithUsage[i].medication
+              .code +
               " [" +
               JSON.stringify(
                 queryparams.data.parameters.medicationsWithUsage[i].usage[0]
@@ -724,7 +720,8 @@ export default {
         ) {
           getQueryParametersDrugs.push(
             queryparams.data.parameters.medicationsWithUsage[i].medication
-              .display + " [ ]"
+              .display + " - " + queryparams.data.parameters.medicationsWithUsage[i].medication
+              .code
           );
         }
       }
@@ -732,7 +729,7 @@ export default {
       let getQueryParametersDiagnosis = Array();
       for (var i = 0; i < queryparams.data.parameters.diagnoses.length; i++) {
         getQueryParametersDiagnosis.push(
-          queryparams.data.parameters.diagnoses[i].display
+          queryparams.data.parameters.diagnoses[i].code + " - " + queryparams.data.parameters.diagnoses[i].display
         );
       }
 
@@ -743,7 +740,7 @@ export default {
         i++
       ) {
         getQueryParametersTumorMorphology.push(
-          queryparams.data.parameters.tumorMorphology[i].display
+          queryparams.data.parameters.tumorMorphology[i].code + " - " + queryparams.data.parameters.tumorMorphology[i].display
         );
       }
 

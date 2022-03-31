@@ -226,19 +226,20 @@
  -->
 
             <v-autocomplete
-              v-model="genes"
+              v-model="mutatedGenes"
               :items="genesCat"
               :loading="isLoading"
               item-text="name"
               item-value="id"
               label="Gen-Name oder HGNC Symbol"
+              ref="mutatedGenes"
               chips
               deletable-chips
               dense
               hide-no-data
               multiple
               return-object
-              @input="addMutatedGenes(genes[genes.length - 1])"
+              @input="addMutatedGenes(mutatedGenes[mutatedGenes.length - 1])"
             >
               <template slot="selection" slot-scope="data">
                 <v-chip
@@ -280,7 +281,7 @@
             <v-autocomplete
               v-model="diagnosis"
               :items="diagnosisCat"
-              label="ICD-10 Diagnose-Text oder Code"
+              label="Diagnose-Text oder ICD-10 Code"
               ref="diagnosis"
               chips
               deletable-chips
@@ -303,7 +304,7 @@
             <v-autocomplete
               v-model="tumorMorphology"
               :items="tumorMorphologyCat"
-              label="ICD-O3-M Diagnose-Text oder Code"
+              label="Tumor Morphology oder ICD-O-3-M Code"
               ref="tumorMorphology"
               chips
               deletable-chips
@@ -405,7 +406,7 @@
               v-model="responses"
               :items="responsesCat"
               :loading="isLoading"
-              label="RECIST"
+              label="Response oder RECIST Code"
               ref="responses"
               chips
               deletable-chips
@@ -604,6 +605,18 @@ export default {
       ] = `Bearer ${localStorage.token}`;
 
       try {
+        /*
+        let mutatedGenes = Array();
+        if (this.genes) {
+          for (var i = 0; i < this.genes.length; i++) {
+            mutatedGenes.push(
+              //this.genes[i].substr(0, this.genes[i].indexOf(" "))
+              //this.genes[i][0]
+              this.genes[i].split(" · ")[1]
+            );
+          }
+        }*/
+
         let mutatedGenes = Array();
         if (this.genes) {
           for (var i = 0; i < this.genes.length; i++) {
@@ -691,6 +704,7 @@ export default {
           );
 
           //alert("QUERY PANEL " + JSON.stringify(request));
+          
           if (JSON.stringify(Response.data._issues) != undefined) {
             let connectionErrors = "";
             for (var i = 0; i < Response.data._issues.length; i++) {
@@ -728,7 +742,9 @@ export default {
               this.queryId,
             request
           );
+
           //alert(JSON.stringify(Response));
+
           this.$router.push(`/results/${Response.data.id}`);
           window.location.reload(true);
         }
@@ -750,7 +766,6 @@ export default {
     addDiagnosis(diagnosis) {
       let code = diagnosis.split(" - ")[0];
       this.selectedDiagnosis.push({ code });
-      //alert(JSON.stringify(this.selectedDiagnosis));
     },
 
     removeDiagnosis(item) {
@@ -768,7 +783,6 @@ export default {
     addTumorMorphology(tumorMorphology) {
       let code = tumorMorphology.split(" - ")[0];
       this.selectedTumorMorphology.push({ code });
-      //alert(JSON.stringify(this.selectedDiagnosis));
     },
 
     removeTumorMorphology(item) {
@@ -786,7 +800,6 @@ export default {
     addMutatedGenes(mutatedGenes) {
       let code = mutatedGenes.split(" · ")[1];
       this.selectedMutatedGenes.push({ code });
-      //alert(JSON.stringify(this.selectedDiagnosis));
     },
 
     removeMutatedGenes(item) {
@@ -874,7 +887,8 @@ export default {
     // QUERY PARAMETERS
 
     setQueryParams(item) {
-      this.mutations = this.getQueryParametersMutations;
+      //this.mutations = this.getQueryParametersMutations;
+      this.mutatedGenes = this.getQueryParametersMutations;
       this.diagnosis = this.getQueryParametersDiagnosis;
       this.tumorMorphology = this.getQueryParameterTumorMorphology;
       this.drugs = this.getQueryParametersDrugs;
