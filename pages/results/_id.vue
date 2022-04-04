@@ -758,69 +758,62 @@ export default {
         );
       }
 
-      var index = 0;
-      for (var i = 0; i < therapiesEntries.length; i++) {
-        let x;
-        let y;
-        if (therapiesEntries[i].patient.length > 10) {
+      if (
+        filesEntries != undefined ||
+        recommendationsEntries != undefined ||
+        genomicReportsEntries != undefined ||
+        indexTherapiesEntries != undefined
+      ) {
+        var indexFiles = 0;
+        for (var i = 0; i < filesEntries.length; i++) {
+          let x;
+          let y;
+          x = filesEntries[i].id;
+          for (var j = 0; j < filesEntries.length; j++) {
+            y = filesEntries[j].id;
+            if (x === y) filesEntries[j].groupIndex = indexFiles + 1;
+          }
+          indexFiles++;
+        }
+
+        var indexRecommendations = 0;
+        for (var i = 0; i < recommendationsEntries.length; i++) {
+          let x;
+          let y;
+          x = recommendationsEntries[i].patient;
+          for (var j = 0; j < recommendationsEntries.length; j++) {
+            y = recommendationsEntries[j].patient;
+            if (x === y)
+              recommendationsEntries[j].groupIndex = indexRecommendations + 1;
+          }
+          indexRecommendations++;
+        }
+
+        var indexGenomicReports = 0;
+        for (var i = 0; i < genomicReportsEntries.length; i++) {
+          let x;
+          let y;
+          x = genomicReportsEntries[i].patient;
+          for (var j = 0; j < genomicReportsEntries.length; j++) {
+            y = genomicReportsEntries[j].patient;
+            if (x === y)
+              genomicReportsEntries[j].groupIndex = indexGenomicReports + 1;
+          }
+          indexGenomicReports++;
+        }
+
+        var indexTherapiesEntries = 0;
+        for (var i = 0; i < therapiesEntries.length; i++) {
+          let x;
+          let y;
           x = therapiesEntries[i].patient;
           for (var j = 0; j < therapiesEntries.length; j++) {
             y = therapiesEntries[j].patient;
-            if (x === y) therapiesEntries[j].patient = index + 1;
+            if (x === y)
+              therapiesEntries[j].groupIndex = indexTherapiesEntries + 1;
           }
-          index++;
+          indexTherapiesEntries++;
         }
-      }
-
-      var indexFiles = 0;
-      for (var i = 0; i < filesEntries.length; i++) {
-        let x;
-        let y;
-        x = filesEntries[i].id;
-        for (var j = 0; j < filesEntries.length; j++) {
-          y = filesEntries[j].id;
-          if (x === y) filesEntries[j].groupIndex = indexFiles + 1;
-        }
-        indexFiles++;
-      }
-
-      var indexRecommendations = 0;
-      for (var i = 0; i < recommendationsEntries.length; i++) {
-        let x;
-        let y;
-        x = recommendationsEntries[i].patient;
-        for (var j = 0; j < recommendationsEntries.length; j++) {
-          y = recommendationsEntries[j].patient;
-          if (x === y)
-            recommendationsEntries[j].groupIndex = indexRecommendations + 1;
-        }
-        indexRecommendations++;
-      }
-
-      var indexGenomicReports = 0;
-      for (var i = 0; i < genomicReportsEntries.length; i++) {
-        let x;
-        let y;
-        x = genomicReportsEntries[i].patient;
-        for (var j = 0; j < genomicReportsEntries.length; j++) {
-          y = genomicReportsEntries[j].patient;
-          if (x === y)
-            genomicReportsEntries[j].groupIndex = indexGenomicReports + 1;
-        }
-        indexGenomicReports++;
-      }
-
-      var indexTherapiesEntries = 0;
-      for (var i = 0; i < therapiesEntries.length; i++) {
-        let x;
-        let y;
-        x = therapiesEntries[i].patient;
-        for (var j = 0; j < therapiesEntries.length; j++) {
-          y = therapiesEntries[j].patient;
-          if (x === y)
-            therapiesEntries[j].groupIndex = indexTherapiesEntries + 1;
-        }
-        indexTherapiesEntries++;
       }
 
       let getQueryParametersFederated = queryparams.data.mode;

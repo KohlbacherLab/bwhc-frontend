@@ -2,28 +2,48 @@
   <div>
     <span v-if="iconMenu">
       <v-tooltip top>
-        <v-btn icon slot="activator" @click="$router.push('/quality_local')">
+        <v-btn
+          v-if="localIcon"
+          icon
+          slot="activator"
+          @click="$router.push('/quality_local')"
+        >
           <v-icon style="font-size: 2rem">fas fa-check-double</v-icon>
         </v-btn>
         <span>Lokale Qualitätskontrolle Statistik</span>
       </v-tooltip>
 
       <v-tooltip top>
-        <v-btn icon slot="activator" @click="$router.push('/quality_bwhc')">
+        <v-btn
+          v-if="globalIcon"
+          icon
+          slot="activator"
+          @click="$router.push('/quality_bwhc')"
+        >
           <v-icon style="font-size: 2rem">fas fa-globe-europe</v-icon>
         </v-btn>
         <span>Globale Qualitätskontrolle Statistik</span>
       </v-tooltip>
 
       <v-tooltip top>
-        <v-btn icon slot="activator" @click="$router.push('/validate')">
+        <v-btn
+          v-if="validateIcon"
+          icon
+          slot="activator"
+          @click="$router.push('/validate')"
+        >
           <v-icon style="font-size: 2rem">fas fa-server</v-icon>
         </v-btn>
         <span>Datenvalidierung</span>
       </v-tooltip>
 
       <v-tooltip top>
-        <v-btn icon slot="activator" @click="$router.push('/query')">
+        <v-btn
+          v-if="queryIcon"
+          icon
+          slot="activator"
+          @click="$router.push('/query')"
+        >
           <v-icon style="font-size: 2rem">fas fa-search</v-icon>
         </v-btn>
         <span>Abfrage Portal</span>
@@ -37,7 +57,12 @@
       </v-tooltip>
 
       <v-tooltip top>
-        <v-btn icon slot="activator" @click="$router.push('/admin')">
+        <v-btn
+          v-if="adminIcon"
+          icon
+          slot="activator"
+          @click="$router.push('/admin')"
+        >
           <v-icon style="font-size: 2rem">fas fa-user-shield</v-icon>
         </v-btn>
         <span>Admin-Panel</span>
@@ -52,25 +77,49 @@
     </span>
 
     <span v-else>
-      <v-btn small depressed light @click="$router.push('/quality_local')">
+      <v-btn
+        v-if="localIcon"
+        small
+        depressed
+        light
+        @click="$router.push('/quality_local')"
+      >
         Lokale QKS<v-icon color="grey" style="font-size: 1rem" right
           >fas fa-check-double</v-icon
         >
       </v-btn>
 
-      <v-btn small depressed light @click="$router.push('/quality_bwhc')">
+      <v-btn
+        v-if="globalIcon"
+        small
+        depressed
+        light
+        @click="$router.push('/quality_bwhc')"
+      >
         Globale QKS<v-icon color="grey" style="font-size: 1rem" right
           >fas fa-globe-europe</v-icon
         >
       </v-btn>
 
-      <v-btn small depressed light @click="$router.push('/validate')">
+      <v-btn
+        v-if="validateIcon"
+        small
+        depressed
+        light
+        @click="$router.push('/validate')"
+      >
         Datenvalidierung<v-icon color="grey" style="font-size: 1rem" right
           >fas fa-server</v-icon
         >
       </v-btn>
 
-      <v-btn small depressed light @click="$router.push('/query')">
+      <v-btn
+        v-if="queryIcon"
+        small
+        depressed
+        light
+        @click="$router.push('/query')"
+      >
         Abfrage Portal<v-icon color="grey" style="font-size: 1rem" right
           >fas fa-search</v-icon
         >
@@ -82,7 +131,13 @@
         >
       </v-btn>
 
-      <v-btn small depressed light @click="$router.push('/admin')">
+      <v-btn
+        v-if="adminIcon"
+        small
+        depressed
+        light
+        @click="$router.push('/admin')"
+      >
         Admin-Panel<v-icon color="grey" style="font-size: 1rem" right
           >fas fa-user-shield</v-icon
         >
@@ -114,6 +169,11 @@ export default {
     return {
       iconMenu: true,
       snackbar: false,
+      localIcon: false,
+      globalIcon: false,
+      validateIcon: false,
+      queryIcon: false,
+      adminIcon: false,
       y: "top",
       x: null,
       mode: "multi-line",
@@ -122,7 +182,38 @@ export default {
     };
   },
 
+  mounted() {
+    this.setMenu();
+  },
+
   methods: {
+    async setMenu() {
+      const whoami = await axios.get(
+        process.env.baseUrl + process.env.port + `/bwhc/user/api/whoami`
+      );
+
+      var roles = whoami.data.roles;
+
+      for (var i = 0; i < roles.length; i++) {
+        if (whoami.data.roles[i].match("Admin")) this.adminIcon = true;
+        if (whoami.data.roles[i].match("Researcher")) this.queryIcon = true;
+        if (whoami.data.roles[i].match("Documentarist"))
+          this.validateIcon = true;
+        if (whoami.data.roles[i].match("ApprovedResearcher"))
+          this.queryIcon = true;
+        if (whoami.data.roles[i].match("LocalZPMCoordinator")) {
+          this.localIcon = true;
+          this.queryIcon = true;
+        }
+        if (whoami.data.roles[i].match("GlobalZPMCoordinator")) {
+          this.localIcon = true;
+          this.globalIcon = true;
+          this.queryIcon = true;
+        }
+        if (whoami.data.roles[i].match("MTBCoordinator")) this.localIcon = true;
+      }
+    },
+
     async logout({ params, redirect, error }) {
       axios.defaults.headers.common[
         "Authorization"
@@ -143,4 +234,3 @@ export default {
   },
 };
 </script>
-
