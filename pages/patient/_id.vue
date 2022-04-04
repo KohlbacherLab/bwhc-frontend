@@ -22,20 +22,17 @@
     <v-divider class="my-3"></v-divider>
     <div id="patientCard"></div>
     <v-layout>
-      <v-card
-        flat
-        :color="genderCheck(patient.gender)"
-        dark
-        left
-        max-width="450"
-      >
+      <v-card flat dark left max-width="450">
         <br />
         <v-card-actions>
           <v-layout align-center>
             <v-list-tile class="grow">
               <v-tooltip top>
-                <span>Male</span>
+                <v-icon slot="activator" class="mr-1">fas fa-venus-mars</v-icon>
+                <span>Geschlecht</span>
               </v-tooltip>
+              <span class="heading mr-2">{{ patient.gender }}</span>
+              <span class="mr-2">·</span>
               <v-tooltip top>
                 <v-icon slot="activator" class="mr-1"
                   >fas fa-calendar-day</v-icon
@@ -62,7 +59,7 @@
         </v-card-actions>
         <v-card-title
           >Einwilligung: {{ patient.consentStatus }} <br />
-          Datum der Erstüberweisung: {{ patient.firstReferralDate }} <br />
+          Datum der Erstüberweisung {{ patient.firstReferralDate }} <br />
           Patienten ID: {{ patient.id }}
         </v-card-title>
       </v-card>
