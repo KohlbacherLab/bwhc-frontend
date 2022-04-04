@@ -12,9 +12,7 @@
     </span>
     <v-divider class="my-3"></v-divider>
 
-    
-
-      <!--
+    <!--
       <v-expansion-panel>
         <v-expansion-panel-content>
           <template v-slot:actions>
@@ -116,7 +114,8 @@
         >
           <v-card-text class="headline font-weight-thin">
             <v-icon color="blue">fas fa-comment-medical</v-icon>
-            <strong>{{ itemsRecommendationsCount }}</strong> Therapie-Empfehlungen
+            <strong>{{ itemsRecommendationsCount }}</strong>
+            Therapie-Empfehlungen
           </v-card-text>
         </v-card>
       </v-flex>
@@ -139,69 +138,53 @@
 
     <v-layout wrap fluid>
       <v-flex d-flex xs12 sm6 md3>
-        <v-card
-          flat
-          color="grey lighten-4"
-          light
-          width="250"
-        >
+        <v-card flat color="grey lighten-4" light width="250">
           <v-card-text class="subtitle font-weight-thin">
             <strong
               >{{ displayResults.completionStats[0].frequency.count }} ({{
                 displayResults.completionStats[0].frequency.percent.toFixed(1)
               }}%)</strong
-            > {{ displayResults.completionStats[0].level }}
+            >
+            {{ displayResults.completionStats[0].level }}
           </v-card-text>
         </v-card>
       </v-flex>
 
       <v-flex d-flex xs12 sm6 md3>
-        <v-card
-          flat
-          color="grey lighten-4"
-          light
-          width="250"
-        >
+        <v-card flat color="grey lighten-4" light width="250">
           <v-card-text class="subtitle font-weight-thin">
             <strong
               >{{ displayResults.completionStats[1].frequency.count }} ({{
                 displayResults.completionStats[1].frequency.percent.toFixed(1)
               }}%)</strong
-            > {{ displayResults.completionStats[1].level }}
+            >
+            {{ displayResults.completionStats[1].level }}
           </v-card-text>
         </v-card>
       </v-flex>
 
       <v-flex d-flex xs12 sm6 md3>
-        <v-card
-          flat
-          color="grey lighten-4"
-          light
-          width="250"
-        >
+        <v-card flat color="grey lighten-4" light width="250">
           <v-card-text class="subtitle font-weight-thin">
             <strong
               >{{ displayResults.completionStats[2].frequency.count }} ({{
                 displayResults.completionStats[2].frequency.percent.toFixed(1)
               }}%)</strong
-            > {{ displayResults.completionStats[2].level }}
+            >
+            {{ displayResults.completionStats[2].level }}
           </v-card-text>
         </v-card>
       </v-flex>
 
       <v-flex d-flex xs12 sm6 md3>
-        <v-card
-          flat
-          color="grey lighten-4"
-          light
-          width="250"
-        >
+        <v-card flat color="grey lighten-4" light width="250">
           <v-card-text class="subtitle font-weight-thin">
             <strong
               >{{ displayResults.completionStats[3].frequency.count }} ({{
                 displayResults.completionStats[3].frequency.percent.toFixed(1)
               }}%)</strong
-            > {{ displayResults.completionStats[3].level }}
+            >
+            {{ displayResults.completionStats[3].level }}
           </v-card-text>
         </v-card>
       </v-flex>
@@ -246,16 +229,19 @@
 
     <v-tabs v-if="hide" color="blue-grey lighten-5" fixed-tabs icons-and-text>
       <v-tab class="subheading font-weight-regular" :key="cases"
-        >Patienten <v-icon color="purple" dark>fas fa-street-view</v-icon> </v-tab
-      >
+        >Patienten <v-icon color="purple" dark>fas fa-street-view</v-icon>
+      </v-tab>
       <v-tab class="subheading font-weight-regular" :key="genomics"
-        >NGS Übersichten <v-icon color="indigo">fas fa-stethoscope</v-icon></v-tab
+        >NGS Übersichten
+        <v-icon color="indigo">fas fa-stethoscope</v-icon></v-tab
       >
       <v-tab class="subheading font-weight-regular" :key="recommendations"
-        >Therapie-Empfehlungen <v-icon color="blue">fas fa-comment-medical</v-icon></v-tab
+        >Therapie-Empfehlungen
+        <v-icon color="blue">fas fa-comment-medical</v-icon></v-tab
       >
       <v-tab class="subheading font-weight-regular" :key="therapies"
-        >Molekulare Therapien <v-icon color="cyan" dark>fas fa-file-medical</v-icon></v-tab
+        >Molekulare Therapien
+        <v-icon color="cyan" dark>fas fa-file-medical</v-icon></v-tab
       >
 
       <!-- CASES -->
@@ -269,6 +255,7 @@
           >
             <template slot="items" slot-scope="props" no-data>
               <tr @click="routeToPatient(queryId + '&' + props.item.id)">
+                <td>{{ props.item.groupIndex }}</td>
                 <td>{{ props.item.managingZPM }}</td>
                 <td>{{ props.item.gender }}</td>
                 <td>{{ props.item.age }}</td>
@@ -293,6 +280,7 @@
           >
             <template slot="items" slot-scope="props">
               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
+                <td>{{ props.item.groupIndex }}</td>
                 <td>{{ props.item.tumorEntity }}</td>
                 <td>{{ props.item.specimenType }}</td>
                 <td>{{ props.item.sequencingType }}</td>
@@ -317,6 +305,7 @@
           >
             <template slot="items" slot-scope="props">
               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
+                <td>{{ props.item.groupIndex }}</td>
                 <td>{{ props.item.icd10 }}</td>
                 <td>{{ props.item.medication }}</td>
                 <td>{{ props.item.priority }}</td>
@@ -341,9 +330,12 @@
             :items="itemsTherapies"
             no-data-text="Keine Daten verfügbar"
             rows-per-page-text="Zeilen pro Seite"
+            :group-by="patient"
+            show-group-by
           >
             <template slot="items" slot-scope="props">
               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
+                <td>{{ props.item.groupIndex }}</td>
                 <td>{{ props.item.status }}</td>
                 <td>{{ props.item.recordedOn }}</td>
                 <td>{{ props.item.recommendationPriority }}</td>
@@ -416,6 +408,7 @@ export default {
       vitalStatus: [],
 
       headerFiles: [
+        { text: "Index", align: "left", value: "groupIndex" },
         { text: "ZPM", align: "left", value: "managingZPM" },
         { text: "Geschlecht", align: "left", sortable: true, value: "gender" },
         { text: "Alter", align: "left", sortable: true, value: "age" },
@@ -423,6 +416,7 @@ export default {
       ],
 
       headerTherapies: [
+        { text: "Index", align: "left", value: "patient" },
         { text: "Status", align: "left", value: "status" },
         { text: "Erfassungsdatum", align: "left", value: "recordedOn" },
         {
@@ -454,10 +448,11 @@ export default {
           text: "Nicht-Umsetzungs-Grund",
           align: "left",
           value: "notDoneReason",
-        }
+        },
       ],
 
       headerRecommendations: [
+        { text: "Index", align: "left", value: "groupIndex" },
         {
           text: "Diagnose",
           align: "left",
@@ -480,6 +475,7 @@ export default {
       ],
 
       headerGenomicReports: [
+        { text: "Index", align: "left", value: "patient Index" },
         { text: "Tumorentität", align: "left", value: "tumorEntity" },
         { text: "Probenart", align: "left", value: "specimenType" },
         {
@@ -670,8 +666,9 @@ export default {
         i++
       ) {
         getQueryParametersMutations.push(
-          queryparams.data.parameters.mutatedGenes[i].display + " · " + queryparams.data.parameters.mutatedGenes[i].code
-          
+          queryparams.data.parameters.mutatedGenes[i].display +
+            " · " +
+            queryparams.data.parameters.mutatedGenes[i].code
         );
       }
 
@@ -687,8 +684,10 @@ export default {
         ) {
           getQueryParametersDrugs.push(
             queryparams.data.parameters.medicationsWithUsage[i].medication
-              .display + " - " + queryparams.data.parameters.medicationsWithUsage[i].medication
-              .code + 
+              .display +
+              " - " +
+              queryparams.data.parameters.medicationsWithUsage[i].medication
+                .code +
               " [" +
               JSON.stringify(
                 queryparams.data.parameters.medicationsWithUsage[i].usage[0]
@@ -706,8 +705,10 @@ export default {
         ) {
           getQueryParametersDrugs.push(
             queryparams.data.parameters.medicationsWithUsage[i].medication
-              .display  + " - " + queryparams.data.parameters.medicationsWithUsage[i].medication
-              .code +
+              .display +
+              " - " +
+              queryparams.data.parameters.medicationsWithUsage[i].medication
+                .code +
               " [" +
               JSON.stringify(
                 queryparams.data.parameters.medicationsWithUsage[i].usage[0]
@@ -720,8 +721,10 @@ export default {
         ) {
           getQueryParametersDrugs.push(
             queryparams.data.parameters.medicationsWithUsage[i].medication
-              .display + " - " + queryparams.data.parameters.medicationsWithUsage[i].medication
-              .code
+              .display +
+              " - " +
+              queryparams.data.parameters.medicationsWithUsage[i].medication
+                .code
           );
         }
       }
@@ -729,7 +732,9 @@ export default {
       let getQueryParametersDiagnosis = Array();
       for (var i = 0; i < queryparams.data.parameters.diagnoses.length; i++) {
         getQueryParametersDiagnosis.push(
-          queryparams.data.parameters.diagnoses[i].code + " - " + queryparams.data.parameters.diagnoses[i].display
+          queryparams.data.parameters.diagnoses[i].code +
+            " - " +
+            queryparams.data.parameters.diagnoses[i].display
         );
       }
 
@@ -740,7 +745,9 @@ export default {
         i++
       ) {
         getQueryParametersTumorMorphology.push(
-          queryparams.data.parameters.tumorMorphology[i].code + " - " + queryparams.data.parameters.tumorMorphology[i].display
+          queryparams.data.parameters.tumorMorphology[i].code +
+            " - " +
+            queryparams.data.parameters.tumorMorphology[i].display
         );
       }
 
@@ -749,6 +756,71 @@ export default {
         getQueryParametersResponses.push(
           queryparams.data.parameters.responses[i].display
         );
+      }
+
+      var index = 0;
+      for (var i = 0; i < therapiesEntries.length; i++) {
+        let x;
+        let y;
+        if (therapiesEntries[i].patient.length > 10) {
+          x = therapiesEntries[i].patient;
+          for (var j = 0; j < therapiesEntries.length; j++) {
+            y = therapiesEntries[j].patient;
+            if (x === y) therapiesEntries[j].patient = index + 1;
+          }
+          index++;
+        }
+      }
+
+      var indexFiles = 0;
+      for (var i = 0; i < filesEntries.length; i++) {
+        let x;
+        let y;
+        x = filesEntries[i].id;
+        for (var j = 0; j < filesEntries.length; j++) {
+          y = filesEntries[j].id;
+          if (x === y) filesEntries[j].groupIndex = indexFiles + 1;
+        }
+        indexFiles++;
+      }
+
+      var indexRecommendations = 0;
+      for (var i = 0; i < recommendationsEntries.length; i++) {
+        let x;
+        let y;
+        x = recommendationsEntries[i].patient;
+        for (var j = 0; j < recommendationsEntries.length; j++) {
+          y = recommendationsEntries[j].patient;
+          if (x === y)
+            recommendationsEntries[j].groupIndex = indexRecommendations + 1;
+        }
+        indexRecommendations++;
+      }
+
+      var indexGenomicReports = 0;
+      for (var i = 0; i < genomicReportsEntries.length; i++) {
+        let x;
+        let y;
+        x = genomicReportsEntries[i].patient;
+        for (var j = 0; j < genomicReportsEntries.length; j++) {
+          y = genomicReportsEntries[j].patient;
+          if (x === y)
+            genomicReportsEntries[j].groupIndex = indexGenomicReports + 1;
+        }
+        indexGenomicReports++;
+      }
+
+      var indexTherapiesEntries = 0;
+      for (var i = 0; i < therapiesEntries.length; i++) {
+        let x;
+        let y;
+        x = therapiesEntries[i].patient;
+        for (var j = 0; j < therapiesEntries.length; j++) {
+          y = therapiesEntries[j].patient;
+          if (x === y)
+            therapiesEntries[j].groupIndex = indexTherapiesEntries + 1;
+        }
+        indexTherapiesEntries++;
       }
 
       let getQueryParametersFederated = queryparams.data.mode;
