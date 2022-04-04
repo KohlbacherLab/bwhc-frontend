@@ -429,6 +429,7 @@
         </v-card>
       </v-flex>
 
+<!--
       <v-flex d-flex xs12 sm6 md6>
         <v-select
           prepend-icon="fas fa-map-marker-alt"
@@ -442,7 +443,7 @@
           return-object
           single-line
         ></v-select>
-        <!--
+
         <div v-if="localQuery === false">
           <v-switch
             class="subheading font-weight-light"
@@ -464,19 +465,61 @@
             ></v-switch>
           </strong>
         </div>
+        
+      </v-flex>
+      -->
+
+      <v-flex d-flex xs12 sm6 md6>
+        <v-btn
+          v-if="this.localButton"
+          class="subheading font-weight-regular"
+          dark
+          block
+          :loading="isLoading"
+          slot="activator"
+          color="blue accent-2"
+          @click="submitQuery('local')"
+          >Lokal Anfrage senden</v-btn
+        >
+        <!--
+        <v-tooltip top>
+          <v-btn
+            v-if="this.getQueryParametersDiagnosis"
+            class="subheading font-weight-regular"
+            block
+            dark
+            large
+            slot="activator"
+            color="red accent-3"
+            @click="setQueryParams"
+            >Reload Query Parameters</v-btn
+          >
+          <span>click 'red' to reload your previous bwHC query parameters</span>
+          <v-btn
+            class="subheading font-weight-regular"
+            block
+            dark
+            large
+            slot="activator"
+            color="blue accent-3"
+            @click="submitQuery"
+            >Submit New Query</v-btn
+          >
+          <span>then 'blue' to submit your bwHC query</span>
+        </v-tooltip>
         -->
       </v-flex>
 
       <v-flex d-flex xs12 sm6 md6>
         <v-btn
+          v-if="this.federatedButton"
           class="subheading font-weight-regular"
-          block
           dark
-          large
+          block
           slot="activator"
-          color="blue accent-3"
-          @click="submitQuery"
-          >Anfrage senden</v-btn
+          color="blue accent-4"
+          @click="submitQuery('federated')"
+          >Föderiert Anfrage senden</v-btn
         >
         <!--
         <v-tooltip top>
@@ -580,6 +623,9 @@ export default {
     showSCNV: false,
     showSV: false,
 
+    localButton: false,
+    federatedButton: false,
+
     drugUsage: "egal",
     diagnosis: Array(),
 
@@ -598,8 +644,25 @@ export default {
     federatedQueryDialog: false,
   }),
 
+  mounted() {
+    this.checkQueryRights();
+  },
+
   methods: {
-    async submitQuery() {
+    async checkQueryRights() {
+      const queryRights = await axios.get(
+        process.env.baseUrl + process.env.port + `/bwhc/mtb/api/query/`
+      );
+
+      let whichQuery = queryRights.data._actions;
+
+      if (whichQuery["submit-local-query"].method.length > 0)
+        this.localButton = true;
+      if (whichQuery["submit-federated-query"].method.length > 0)
+        this.federatedButton = true;
+    },
+
+    async submitQuery(queryMode) {
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${localStorage.token}`;
@@ -668,7 +731,8 @@ export default {
         if (this.queryId == undefined) {
           let request = {
             mode: {
-              code: this.select.mode,
+              //code: this.select.mode,
+              code: queryMode,
             },
             // this.select.mode,
             parameters: {
@@ -704,7 +768,7 @@ export default {
           );
 
           //alert("QUERY PANEL " + JSON.stringify(request));
-          
+
           if (JSON.stringify(Response.data._issues) != undefined) {
             let connectionErrors = "";
             for (var i = 0; i < Response.data._issues.length; i++) {
@@ -717,7 +781,8 @@ export default {
         } else {
           let request = {
             mode: {
-              code: this.select.mode,
+              //code: this.select.mode,
+              code: queryMode,
             },
             id: this.queryId,
             parameters: {

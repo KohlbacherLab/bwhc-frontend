@@ -143,15 +143,12 @@ export default {
           },
         };
 
-        //alert(JSON.stringify(filter));
-
         let Response = await axios.put(
           `${serverBaseURL}/${queryId}/filter`,
           filter
         );
 
         this.$router.push(`${Response.data.id}`);
-        //alert(JSON.stringify(Response));
         window.location.reload(true);
       } catch (err) {
         if (err.response.status === 401) {
