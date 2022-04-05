@@ -188,30 +188,20 @@ export default {
 
   methods: {
     async setMenu() {
-      const whoami = await axios.get(
-        process.env.baseUrl + process.env.port + `/bwhc/user/api/whoami`
+      const giveAccess = await axios.get(
+        process.env.baseUrl + process.env.port + `/bwhc`
       );
 
-      var roles = whoami.data.roles;
+      const reportingAccess = await axios.get(
+        process.env.baseUrl + process.env.port + `/bwhc/mtb/api/reporting/`
+      );
 
-      for (var i = 0; i < roles.length; i++) {
-        if (whoami.data.roles[i].match("Admin")) this.adminIcon = true;
-        if (whoami.data.roles[i].match("Researcher")) this.queryIcon = true;
-        if (whoami.data.roles[i].match("Documentarist"))
-          this.validateIcon = true;
-        if (whoami.data.roles[i].match("ApprovedResearcher"))
-          this.queryIcon = true;
-        if (whoami.data.roles[i].match("LocalZPMCoordinator")) {
-          this.localIcon = true;
-          this.queryIcon = true;
-        }
-        if (whoami.data.roles[i].match("GlobalZPMCoordinator")) {
-          this.localIcon = true;
-          this.globalIcon = true;
-          this.queryIcon = true;
-        }
-        if (whoami.data.roles[i].match("MTBCoordinator")) this.localIcon = true;
-      }
+      if (reportingAccess.data._links["local-qc-report"]) this.localIcon = true;
+      if (reportingAccess.data._links["global-qc-report"]) this.globalIcon = true;
+      if (giveAccess.data._links["data-quality-api"]) this.validateIcon = true;
+      if (giveAccess.data._links.peerStatusReport) this.adminIcon = true;
+      if (giveAccess.data._links["query-api"]) this.queryIcon = true;
+
     },
 
     async logout({ params, redirect, error }) {
