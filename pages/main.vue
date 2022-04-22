@@ -87,7 +87,6 @@
                             <v-btn
                               icon
                               slot="activator"
-                              @click="$router.push('/me')"
                             >
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-user</v-icon
@@ -101,7 +100,6 @@
                             <v-btn
                               icon
                               slot="activator"
-                              @click="$router.push('/admin')"
                             >
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-user-shield</v-icon
@@ -120,7 +118,6 @@
                             <v-btn
                               icon
                               slot="activator"
-                              @click="$router.push('/validate')"
                             >
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-server</v-icon
@@ -134,7 +131,6 @@
                             <v-btn
                               icon
                               slot="activator"
-                              @click="$router.push('/me')"
                             >
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-user</v-icon
@@ -153,7 +149,6 @@
                             <v-btn
                               icon
                               slot="activator"
-                              @click="$router.push('/quality_local')"
                             >
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-check-double</v-icon
@@ -167,7 +162,6 @@
                             <v-btn
                               icon
                               slot="activator"
-                              @click="$router.push('/query')"
                             >
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-search</v-icon
@@ -181,7 +175,6 @@
                             <v-btn
                               icon
                               slot="activator"
-                              @click="$router.push('/me')"
                             >
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-user</v-icon
@@ -199,7 +192,6 @@
                             <v-btn
                               icon
                               slot="activator"
-                              @click="$router.push('/quality_local')"
                             >
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-check-double</v-icon
@@ -213,7 +205,6 @@
                           <v-btn
                             icon
                             slot="activator"
-                            @click="$router.push('/quality_bwhc')"
                           >
                             <v-icon style="font-size: 1.4rem"
                               >fas fa-globe-europe</v-icon
@@ -227,7 +218,6 @@
                             <v-btn
                               icon
                               slot="activator"
-                              @click="$router.push('/query')"
                             >
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-search</v-icon
@@ -241,7 +231,6 @@
                             <v-btn
                               icon
                               slot="activator"
-                              @click="$router.push('/me')"
                             >
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-user</v-icon
@@ -259,7 +248,6 @@
                             <v-btn
                               icon
                               slot="activator"
-                              @click="$router.push('/quality_local')"
                             >
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-check-double</v-icon
@@ -273,7 +261,6 @@
                             <v-btn
                               icon
                               slot="activator"
-                              @click="$router.push('/me')"
                             >
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-user</v-icon
@@ -292,7 +279,6 @@
                             <v-btn
                               icon
                               slot="activator"
-                              @click="$router.push('/query')"
                             >
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-search</v-icon
@@ -306,7 +292,6 @@
                             <v-btn
                               icon
                               slot="activator"
-                              @click="$router.push('/me')"
                             >
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-user</v-icon
@@ -325,7 +310,6 @@
                             <v-btn
                               icon
                               slot="activator"
-                              @click="$router.push('/query')"
                             >
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-search</v-icon
@@ -339,7 +323,6 @@
                             <v-btn
                               icon
                               slot="activator"
-                              @click="$router.push('/me')"
                             >
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-user</v-icon
@@ -384,6 +367,14 @@ export default {
       let whoami = await axios.get(
         process.env.baseUrl + process.env.port + process.env.me
       );
+
+      localStorage.removeItem("diagnosis");
+      localStorage.removeItem("tumorMorphology");
+      localStorage.removeItem("mutatedGenes");
+      localStorage.removeItem("selectedDrugs");
+      localStorage.removeItem("responses");
+      localStorage.removeItem("queryId");
+
       return {
         me: whoami.data,
       };

@@ -5,6 +5,8 @@
         <v-btn
           v-if="localIcon"
           icon
+          color="grey darken-2"
+          flat
           slot="activator"
           @click="$router.push('/quality_local')"
         >
@@ -17,6 +19,8 @@
         <v-btn
           v-if="globalIcon"
           icon
+          color="grey darken-2"
+          flat
           slot="activator"
           @click="$router.push('/quality_bwhc')"
         >
@@ -29,6 +33,8 @@
         <v-btn
           v-if="validateIcon"
           icon
+          color="grey darken-2"
+          flat
           slot="activator"
           @click="$router.push('/validate')"
         >
@@ -41,6 +47,8 @@
         <v-btn
           v-if="queryIcon"
           icon
+          color="grey darken-2"
+          flat
           slot="activator"
           @click="$router.push('/query')"
         >
@@ -50,7 +58,27 @@
       </v-tooltip>
 
       <v-tooltip top>
-        <v-btn icon slot="activator" @click="$router.push('/me')">
+        <v-btn
+          v-if="fileIcon"
+          icon
+          color="grey darken-2"
+          flat
+          slot="activator"
+          @click="$router.push('/file')"
+        >
+          <v-icon style="font-size: 2rem">fas fa-folder</v-icon>
+        </v-btn>
+        <span>Patientendirektzugriff</span>
+      </v-tooltip>
+
+      <v-tooltip top>
+        <v-btn
+          icon
+          color="grey darken-2"
+          flat
+          slot="activator"
+          @click="$router.push('/me')"
+        >
           <v-icon style="font-size: 2rem">fas fa-user</v-icon>
         </v-btn>
         <span>Nutzerdetails</span>
@@ -60,6 +88,8 @@
         <v-btn
           v-if="adminIcon"
           icon
+          color="grey darken-2"
+          flat
           slot="activator"
           @click="$router.push('/admin')"
         >
@@ -69,7 +99,13 @@
       </v-tooltip>
 
       <v-tooltip top>
-        <v-btn icon @click="logout" slot="activator">
+        <v-btn
+          icon
+          color="blue-grey lighten-4"
+          flat
+          @click="logout"
+          slot="activator"
+        >
           <v-icon style="font-size: 2rem">fas fa-sign-out-alt</v-icon>
         </v-btn>
         <span>Ausloggen</span>
@@ -125,6 +161,18 @@
         >
       </v-btn>
 
+      <v-btn
+        v-if="fileIcon"
+        small
+        depressed
+        light
+        @click="$router.push('/file')"
+      >
+        Patientendirektzugriff<v-icon color="grey" style="font-size: 1rem" right
+          >fas fa-folder</v-icon
+        >
+      </v-btn>
+
       <v-btn small depressed light @click="$router.push('/me')">
         Nutzerdetails<v-icon color="grey" style="font-size: 1rem" right
           >fas fa-user</v-icon
@@ -149,14 +197,14 @@
         >
       </v-btn>
     </span>
-
+<!--
     <span v-if="iconMenu">
       <v-switch v-model="iconMenu" label="Text anzeigen"> </v-switch
     ></span>
     <span v-else>
       <v-switch v-model="iconMenu" label="Symbole anzeigen"> </v-switch
     ></span>
-
+-->
     <v-divider class="my-3"></v-divider>
   </div>
 </template>
@@ -173,6 +221,7 @@ export default {
       globalIcon: false,
       validateIcon: false,
       queryIcon: false,
+      fileIcon: true,
       adminIcon: false,
       y: "top",
       x: null,
@@ -197,11 +246,11 @@ export default {
       );
 
       if (reportingAccess.data._links["local-qc-report"]) this.localIcon = true;
-      if (reportingAccess.data._links["global-qc-report"]) this.globalIcon = true;
+      if (reportingAccess.data._links["global-qc-report"])
+        this.globalIcon = true;
       if (giveAccess.data._links["data-quality-api"]) this.validateIcon = true;
       if (giveAccess.data._links.peerStatusReport) this.adminIcon = true;
       if (giveAccess.data._links["query-api"]) this.queryIcon = true;
-
     },
 
     async logout({ params, redirect, error }) {

@@ -238,7 +238,6 @@
               dense
               hide-no-data
               multiple
-              return-object
               @input="addMutatedGenes(mutatedGenes[mutatedGenes.length - 1])"
             >
               <template slot="selection" slot-scope="data">
@@ -429,7 +428,7 @@
         </v-card>
       </v-flex>
 
-<!--
+      <!--
       <v-flex d-flex xs12 sm6 md6>
         <v-select
           prepend-icon="fas fa-map-marker-alt"
@@ -468,7 +467,6 @@
         
       </v-flex>
       -->
-
       <v-flex d-flex xs12 sm6 md6>
         <v-btn
           v-if="this.localButton"
@@ -521,34 +519,26 @@
           @click="submitQuery('federated')"
           >Föderiert Anfrage senden</v-btn
         >
-        <!--
-        <v-tooltip top>
-          <v-btn
-            v-if="this.getQueryParametersDiagnosis"
-            class="subheading font-weight-regular"
-            block
-            dark
-            large
-            slot="activator"
-            color="red accent-3"
-            @click="setQueryParams"
-            >Reload Query Parameters</v-btn
-          >
-          <span>click 'red' to reload your previous bwHC query parameters</span>
-          <v-btn
-            class="subheading font-weight-regular"
-            block
-            dark
-            large
-            slot="activator"
-            color="blue accent-3"
-            @click="submitQuery"
-            >Submit New Query</v-btn
-          >
-          <span>then 'blue' to submit your bwHC query</span>
-        </v-tooltip>
-        -->
       </v-flex>
+
+     <v-btn flat small dark medium color="red accent-3" @click="resetParameters()">
+        Reset
+      </v-btn>
+
+      <v-snackbar
+        v-model="snackbarParameters"
+        :bottom="y === 'bottom'"
+        :left="x === 'left'"
+        :multi-line="mode === 'multi-line'"
+        :right="x === 'right'"
+        :timeout="timeout"
+        :top="y === 'top'"
+        :vertical="mode === 'vertical'"
+      >
+        Abfrageparameter zurückgesetzt
+        <v-btn color="blue" flat @click="snackbarParameters = false">Schließen</v-btn>
+      </v-snackbar>
+
 
       <v-dialog v-model="federatedQueryDialog" width="500">
         <v-card>
@@ -626,26 +616,17 @@ export default {
     localButton: false,
     federatedButton: false,
 
-    drugUsage: "egal",
-    diagnosis: Array(),
+    snackbarParameters: false,
+    y: "top",
 
-    select: {
-      mode: "local",
-      desc: "Der Abfragemodus ist auf lokal eingestellt",
-    },
-    items: [
-      { mode: "local", desc: "Der Abfragemodus ist auf lokal eingestellt" },
-      {
-        mode: "federated",
-        desc: "Der Abfragemodus ist auf bwHealthCloud-weit eingestellt",
-      },
-    ],
+    drugUsage: "egal",
 
     federatedQueryDialog: false,
   }),
 
   mounted() {
     this.checkQueryRights();
+    this.setQueryParams();
   },
 
   methods: {
@@ -653,6 +634,8 @@ export default {
       const queryRights = await axios.get(
         process.env.baseUrl + process.env.port + `/bwhc/mtb/api/query/`
       );
+
+      //alert(JSON.stringify(queryRights));
 
       let whichQuery = queryRights.data._actions;
 
@@ -728,6 +711,12 @@ export default {
           }
         }
 
+        //alert(this.queryId);
+
+        this.queryId = localStorage.getItem("queryId");
+
+        //alert(this.queryId);
+
         if (this.queryId == undefined) {
           let request = {
             mode: {
@@ -746,18 +735,6 @@ export default {
               //drugs:[{usage:"recommended",drug:"something"}],
               responses: this.selectedResponses,
             },
-
-            /*
-          user: "Myself",
-          parameters: {
-            diagnosis: diagnosis,
-            //mutation: [{ genes: this.genes, variant: { type: "" } }],
-            //drugs:[{drug: "afatinib"}],
-            drugs: this.selectedDrugs,
-            response: this.responses,
-            federated: this.localQuery
-          }
-          */
           };
 
           //alert(JSON.stringify(request));
@@ -767,13 +744,29 @@ export default {
             request
           );
 
-          //alert("QUERY PANEL " + JSON.stringify(request));
+          //alert(JSON.stringify(request));
+
+          localStorage.setItem("diagnosis", JSON.stringify(this.diagnosis));
+          localStorage.setItem(
+            "tumorMorphology",
+            JSON.stringify(this.tumorMorphology)
+          );
+          localStorage.setItem(
+            "mutatedGenes",
+            JSON.stringify(this.mutatedGenes)
+          );
+          localStorage.setItem(
+            "selectedDrugs",
+            JSON.stringify(this.medicationsWithUsage)
+          );
+          localStorage.setItem("responses", JSON.stringify(this.responses));
 
           if (JSON.stringify(Response.data._issues) != undefined) {
             let connectionErrors = "";
             for (var i = 0; i < Response.data._issues.length; i++) {
               connectionErrors += Response.data._issues[i].details + " · ";
             }
+
             localStorage.setItem("issues", connectionErrors);
           } else localStorage.removeItem("issues");
 
@@ -798,8 +791,6 @@ export default {
             },
           };
 
-          //alert(JSON.stringify(request));
-
           let Response = await axios.post(
             process.env.baseUrl +
               process.env.port +
@@ -808,10 +799,33 @@ export default {
             request
           );
 
-          //alert(JSON.stringify(Response));
+           localStorage.setItem("diagnosis", JSON.stringify(this.diagnosis));
+          localStorage.setItem(
+            "tumorMorphology",
+            JSON.stringify(this.tumorMorphology)
+          );
+          localStorage.setItem(
+            "mutatedGenes",
+            JSON.stringify(this.mutatedGenes)
+          );
+          localStorage.setItem(
+            "selectedDrugs",
+            JSON.stringify(this.medicationsWithUsage)
+          );
+          localStorage.setItem("responses", JSON.stringify(this.responses));
+
+
+          if (JSON.stringify(Response.data._issues) != undefined) {
+            let connectionErrors = "";
+            for (var i = 0; i < Response.data._issues.length; i++) {
+              connectionErrors += Response.data._issues[i].details + " · ";
+            }
+
+            localStorage.setItem("issues", connectionErrors);
+          } else localStorage.removeItem("issues");
 
           this.$router.push(`/results/${Response.data.id}`);
-          window.location.reload(true);
+          //window.location.reload(true);
         }
       } catch (err) {
         if (err.status === 401) {
@@ -880,9 +894,6 @@ export default {
     // DRUGS
 
     addDrugs(drug, usage) {
-      //const index = this.drugs.indexOf(drug);
-      //let code = drug.substr(0, drug.indexOf(" "));
-
       if (usage == "beide") {
         this.selectedDrugs.push({
           medication: { code: drug.split(" · ")[1] },
@@ -949,46 +960,32 @@ export default {
       this.selectedResponses = [];
     },
 
+    resetParameters() {
+      this.snackbarParameters = true;
+      localStorage.removeItem("diagnosis");
+      localStorage.removeItem("tumorMorphology");
+      localStorage.removeItem("mutatedGenes");
+      localStorage.removeItem("selectedDrugs");
+      localStorage.removeItem("responses");
+      localStorage.removeItem("queryId");
+    },
+
     // QUERY PARAMETERS
 
-    setQueryParams(item) {
+    setQueryParams() {
+      //alert("setting parameters");
+      //let setMutatedGenes = localStorage.getItem("mutatedGenes");
+      //alert("setting: "+ setMutatedGenes);
+      //item.push(setMutatedGenes);
       //this.mutations = this.getQueryParametersMutations;
-      this.mutatedGenes = this.getQueryParametersMutations;
-      this.diagnosis = this.getQueryParametersDiagnosis;
-      this.tumorMorphology = this.getQueryParameterTumorMorphology;
-      this.drugs = this.getQueryParametersDrugs;
-      this.responses = this.getQueryParametersResponses;
-      this.localQuery = this.getQueryParametersFederated;
-    },
-
-    /*
-    async printQuery() {
+      //this.mutatedGenes = this.getQueryParametersMutations;
       //alert(this.diagnosis);
-      let diagnosis = Array();
-      if (this.diagnosis) {
-        for (var i = 0; i < this.diagnosis.length; i++) {
-          diagnosis.push(this.diagnosis[i].slice(0, 5));
-        }
-      }
-
-      let request = {
-        user: "Myself",
-        parameters: {
-          diagnosis: diagnosis,
-          mutation: [{ genes: this.genes, variant: { type: "" } }],
-          drugs: [{ usage: "", drug: "" }],
-          response: this.responses,
-          federated: this.localQuery
-        }
-      };
-
-      let Response = await axios.post(
-        process.env.baseUrl+`:80/bwhc/mtb/query`,
-        request
-      );
-
+      //this.selectedDiagnosis = this.getQueryParametersDiagnosis;
+      //this.tumorMorphology = this.getQueryParameterTumorMorphology;
+      //this.drugs = this.getQueryParametersDrugs;
+      //this.responses = this.getQueryParametersResponses;
+      //this.localQuery = this.getQueryParametersFederated;
     },
-    */
 
     addDrug() {
       //var drugToAdd = { drug: this.drugs, usage: this.selectedDrugUsage };
