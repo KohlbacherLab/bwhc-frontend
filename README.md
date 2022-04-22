@@ -88,4 +88,4 @@ The first created user MUST thus be given "Admin" rights to be able to create mo
 
 ## License Information
 
-[Nuxt.js](https://nuxtjs.org), [Vuetify](https://vuetifyjs.com) and [Font Awesome](https://fontawesome.com) are released under the MIT-License(https://opensource.org/licenses/MIT).
+[Nuxt.js](https://nuxtjs.org), [Vuetify](https://vuetifyjs.com) and [Font Awesome](https://fontawesome.com) are released under the [MIT-License](https://opensource.org/licenses/MIT).
