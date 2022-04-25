@@ -835,7 +835,7 @@ export default {
         connectionIssues = localStorage.getItem("issues");
       }
 
-      alert(JSON.stringify(therapiesEntries));
+      //alert(JSON.stringify(therapiesEntries));
 
       return {
         baseURL: `${serverBaseURL}/${params.id}/files`,
