@@ -281,6 +281,7 @@
             <template slot="items" slot-scope="props">
               <tr @click="routeToPatient(queryId + '&' + props.item.patient)">
                 <td>{{ props.item.groupIndex }}</td>
+                <td>{{ props.item.specimenLocalization }}</td>
                 <td>{{ props.item.tumorEntity }}</td>
                 <td>{{ props.item.specimenType }}</td>
                 <td>{{ props.item.sequencingType }}</td>
@@ -311,7 +312,7 @@
                 <td>{{ props.item.priority }}</td>
                 <td>{{ props.item.levelOfEvidence }}</td>
                 <td>{{ props.item.ecogStatus }}</td>
-                <td>{{ props.item.supportingVariants }}</td>
+                <td>{{ props.item.supportingVariants.join(", ") }}</td>
               </tr>
             </template>
             <v-alert :value="true" color="error" icon="warning"
@@ -340,6 +341,7 @@
                 <td>{{ props.item.recordedOn }}</td>
                 <td>{{ props.item.recommendationPriority }}</td>
                 <td>{{ props.item.medication }}</td>
+                <td>{{ props.item.supportingVariants.join(", ") }}</td>
                 <td>{{ props.item.dosage }}</td>
                 <td>{{ props.item.period }}</td>
                 <td>{{ props.item.response }}</td>
@@ -431,6 +433,11 @@ export default {
           value: "medication",
         },
         {
+          text: "Stützende Varianten",
+          align: "left",
+          value: "supportingVariants",
+        },
+        {
           text: "Dosisdichte",
           align: "left",
           value: "dosage",
@@ -476,6 +483,7 @@ export default {
 
       headerGenomicReports: [
         { text: "Index", align: "left", value: "patient Index" },
+        { text: "Proben-Lokalisation", align: "left", value: "specimenLocalization" },
         { text: "Tumorentität", align: "left", value: "tumorEntity" },
         { text: "Probenart", align: "left", value: "specimenType" },
         {
@@ -546,6 +554,8 @@ export default {
 
       let queryparams = await axios.get(`${serverBaseURL}/${params.id}`);
       let filter = queryparams.data.filter;
+
+      localStorage.setItem("queryId", queryparams.data.id);
 
       //console.log(`${serverBaseURL}/${params.id}`);
       //console.log(JSON.stringify(queryparams));
@@ -818,10 +828,14 @@ export default {
 
       let getQueryParametersFederated = queryparams.data.mode;
 
+      //alert(JSON.stringify(queryparams));
+
       let connectionIssues = "";
       if (localStorage.getItem("issues")) {
         connectionIssues = localStorage.getItem("issues");
       }
+
+      alert(JSON.stringify(therapiesEntries));
 
       return {
         baseURL: `${serverBaseURL}/${params.id}/files`,
