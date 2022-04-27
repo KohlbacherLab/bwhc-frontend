@@ -1,6 +1,5 @@
 <template>
   <v-container fluid grid-list-md>
-    <disclaimer-info />
     <userPanel />
     <h3 class="display-3"><strong>bwHealthCloud</strong> Ergebnisse</h3>
 
@@ -10,68 +9,8 @@
       >Abfrageergebnisse werden unten angezeigt.
       <strong @click="$router.push('../help')">Hilfe?</strong>
     </span>
+
     <v-divider class="my-3"></v-divider>
-
-    <!--
-      <v-expansion-panel>
-        <v-expansion-panel-content>
-          <template v-slot:actions>
-            <v-icon color="blue accent-3">fas fa-search</v-icon>
-          </template>
-          <template v-slot:header>
-            <span>
-              <v-hover>
-                <v-card flat>
-                  <v-card-text class="subheading font-weight-thin">
-                    <span v-if="getQueryParametersMutations.length > 0">
-                      <strong>Mutationen:</strong>
-                      {{ getQueryParametersMutations.join(", ") }}
-                      <br />
-                    </span>
-                    <span v-if="getQueryParametersDiagnosis.length > 0">
-                      <strong>Diagnose:</strong>
-                      {{ getQueryParametersDiagnosis.join(", ") }}
-                      <br />
-                    </span>
-                    <span v-if="getQueryParametersDrugs.length > 0">
-                      <strong>Wirkstoffe:</strong>
-                      {{ getQueryParametersDrugs.join(", ") }}
-                      <br />
-                    </span>
-                    <span v-if="getQueryParametersResponses.length > 0">
-                      <strong>Responses:</strong>
-                      {{ getQueryParametersResponses.join(", ") }}
-                      <br />
-                    </span>
-
-                    <strong>Abfragetyp:</strong>
-                    {{ getQueryParametersFederated.display }}
-                  </v-card-text>
-                </v-card>
-              </v-hover>
-            </span>
-          </template>
-          
-          <queryPanel
-            v-bind:genesCat="genesCat"
-            :diagnosisCat="diagnosisCat"
-            :drugsCat="drugsCat"
-            :responsesCat="responsesCat"
-            :baseChangeCat="baseChangeCat"
-            :aminoAcidChangesCat="aminoAcidChangesCat"
-            :variantEffectsCat="variantEffectsCat"
-            :diagnosis="diagnosis"
-            :getQueryParametersMutations="getQueryParametersMutations"
-            :getQueryParametersDiagnosis="getQueryParametersDiagnosis"
-            :getQueryParametersDrugs="getQueryParametersDrugs"
-            :getQueryParametersResponses="getQueryParametersResponses"
-            :getQueryParametersFederated="getQueryParametersFederated"
-            :queryId="queryId"
-            clipped-right
-          />
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-      -->
 
     <v-layout wrap>
       <v-flex d-flex xs12 sm6 md3>
@@ -139,7 +78,7 @@
     <v-layout wrap fluid>
       <v-flex d-flex xs12 sm6 md3>
         <v-card flat color="grey lighten-4" light width="250">
-          <v-card-text class="subtitle font-weight-thin">
+          <v-card-text class="font-weight-thin">
             <strong
               >{{ displayResults.completionStats[0].frequency.count }} ({{
                 displayResults.completionStats[0].frequency.percent.toFixed(1)
@@ -152,7 +91,7 @@
 
       <v-flex d-flex xs12 sm6 md3>
         <v-card flat color="grey lighten-4" light width="250">
-          <v-card-text class="subtitle font-weight-thin">
+          <v-card-text class="font-weight-thin">
             <strong
               >{{ displayResults.completionStats[1].frequency.count }} ({{
                 displayResults.completionStats[1].frequency.percent.toFixed(1)
@@ -165,7 +104,7 @@
 
       <v-flex d-flex xs12 sm6 md3>
         <v-card flat color="grey lighten-4" light width="250">
-          <v-card-text class="subtitle font-weight-thin">
+          <v-card-text class="font-weight-thin">
             <strong
               >{{ displayResults.completionStats[2].frequency.count }} ({{
                 displayResults.completionStats[2].frequency.percent.toFixed(1)
@@ -178,7 +117,7 @@
 
       <v-flex d-flex xs12 sm6 md3>
         <v-card flat color="grey lighten-4" light width="250">
-          <v-card-text class="subtitle font-weight-thin">
+          <v-card-text class="font-weight-thin">
             <strong
               >{{ displayResults.completionStats[3].frequency.count }} ({{
                 displayResults.completionStats[3].frequency.percent.toFixed(1)
@@ -191,7 +130,7 @@
     </v-layout>
 
     <v-divider v-if="hide" class="my-3"></v-divider>
-
+    <!--
     <v-flex d-flex>
       <v-card flat>
         <v-card-text class="subheading font-weight-thin">
@@ -226,6 +165,71 @@
         </v-card-text>
       </v-card>
     </v-flex>
+    -->
+
+    <v-expansion-panel popout>
+      <v-expansion-panel-content>
+        <template v-slot:actions>
+          <v-icon color="blue accent-3">fas fa-search</v-icon>
+        </template>
+        <template v-slot:header>
+          <span>
+            <v-hover>
+              <v-card flat>
+                <v-card-text small class="font-weight-thin">
+                  <span v-if="getQueryParametersMutations.length > 0">
+                    <strong>Mutationen:</strong>
+                    {{ getQueryParametersMutations.join(", ") }}
+                    <br />
+                  </span>
+                  <span v-if="getQueryParametersDiagnosis.length > 0">
+                    <strong>Diagnose:</strong>
+                    {{ getQueryParametersDiagnosis.join(", ") }}
+                    <br />
+                  </span>
+                  <span v-if="getQueryParametersTumorMorphology.length > 0">
+                    <strong>Tumor Morphologie:</strong>
+                    {{ getQueryParametersTumorMorphology.join(", ") }}
+                    <br />
+                  </span>
+                  <span v-if="getQueryParametersDrugsDisplay.length > 0">
+                    <strong>Wirkstoffe:</strong>
+                    {{ getQueryParametersDrugsDisplay.join(", ") }}
+                    <br />
+                  </span>
+                  <span v-if="getQueryParametersResponses.length > 0">
+                    <strong>Responses:</strong>
+                    {{ getQueryParametersResponses.join(", ") }}
+                    <br />
+                  </span>
+                  <strong>Abfragetyp:</strong>
+                  {{ getQueryParametersFederated.display }}
+                </v-card-text>
+              </v-card>
+            </v-hover>
+          </span>
+        </template>
+        <queryPanel
+          v-bind:genesCat="genesCat"
+          :diagnosisCat="diagnosisCat"
+          :tumorMorphologyCat="tumorMorphologyCat"
+          :drugsCat="drugsCat"
+          :responsesCat="responsesCat"
+          :baseChangeCat="baseChangeCat"
+          :aminoAcidChangesCat="aminoAcidChangesCat"
+          :variantEffectsCat="variantEffectsCat"
+          :getQueryParametersMutations="getQueryParametersMutations"
+          :getQueryParametersDiagnosis="getQueryParametersDiagnosis"
+          :getQueryParametersTumorMorphology="getQueryParametersTumorMorphology"
+          :getQueryParametersDrugs="getQueryParametersDrugs"
+          :getQueryParametersDrugsUsage="getQueryParametersDrugsUsage"
+          :getQueryParametersResponses="getQueryParametersResponses"
+          :getQueryParametersFederated="getQueryParametersFederated"
+          :queryId="queryId"
+          clipped-right
+        />
+      </v-expansion-panel-content>
+    </v-expansion-panel>
 
     <v-tabs v-if="hide" color="blue-grey lighten-5" fixed-tabs icons-and-text>
       <v-tab class="subheading font-weight-regular" :key="cases"
@@ -259,6 +263,7 @@
                 <td>{{ props.item.managingZPM }}</td>
                 <td>{{ props.item.gender }}</td>
                 <td>{{ props.item.age }}</td>
+                <td>{{ props.item.diagnosis }}</td>
                 <td>{{ props.item.vitalStatus }}</td>
               </tr>
             </template>
@@ -414,6 +419,12 @@ export default {
         { text: "ZPM", align: "left", value: "managingZPM" },
         { text: "Geschlecht", align: "left", sortable: true, value: "gender" },
         { text: "Alter", align: "left", sortable: true, value: "age" },
+        {
+          text: "Diagnosis",
+          align: "left",
+          sortable: true,
+          value: "diagnosis",
+        },
         { text: "Vital-Status", align: "left", value: "vitalStatus" },
       ],
 
@@ -433,7 +444,7 @@ export default {
           value: "medication",
         },
         {
-          text: "Stützende Varianten",
+          text: "Stützende Molekulare Alterationen",
           align: "left",
           value: "supportingVariants",
         },
@@ -475,7 +486,7 @@ export default {
         { text: "Level of Evidence", align: "left", value: "levelOfEvidence" },
         { text: "ECOG Status", align: "left", value: "ecogStatus" },
         {
-          text: "Stützende Varianten",
+          text: "Stützende Molekulare Alterationen",
           align: "left",
           value: "supportingVariants",
         },
@@ -483,7 +494,11 @@ export default {
 
       headerGenomicReports: [
         { text: "Index", align: "left", value: "patient Index" },
-        { text: "Proben-Lokalisation", align: "left", value: "specimenLocalization" },
+        {
+          text: "Proben-Lokalisation",
+          align: "left",
+          value: "specimenLocalization",
+        },
         { text: "Tumorentität", align: "left", value: "tumorEntity" },
         { text: "Probenart", align: "left", value: "specimenType" },
         {
@@ -555,6 +570,7 @@ export default {
       let queryparams = await axios.get(`${serverBaseURL}/${params.id}`);
       let filter = queryparams.data.filter;
 
+
       localStorage.setItem("queryId", queryparams.data.id);
 
       //console.log(`${serverBaseURL}/${params.id}`);
@@ -571,6 +587,7 @@ export default {
       let patients;
       let files;
       let filesEntries;
+
       if (queryparams.data._links["patients"]) {
         patients = queryparams.data._links["patients"].href;
         files = await axios.get(`${baseURL}` + patients);
@@ -583,6 +600,7 @@ export default {
       let genomicReports;
       let genomicReportsEntries;
       let genomicReportsCount;
+
       if (queryparams.data._links["ngs-summaries"]) {
         ngsSummaries = queryparams.data._links["ngs-summaries"].href;
         genomicReports = await axios.get(`${baseURL}` + ngsSummaries);
@@ -595,6 +613,7 @@ export default {
       let recommendations;
       let recommendationsEntries;
       let recommendationsCount;
+
       if (queryparams.data._links["therapy-recommendations"]) {
         therapyRecommendations =
           queryparams.data._links["therapy-recommendations"].href;
@@ -609,6 +628,7 @@ export default {
       let therapies;
       let therapiesEntries;
       let therapiesCount;
+
       if (queryparams.data._links["molecular-therapies"]) {
         molecularTherapies =
           queryparams.data._links["molecular-therapies"].href;
@@ -675,67 +695,15 @@ export default {
         i < queryparams.data.parameters.mutatedGenes.length;
         i++
       ) {
-        getQueryParametersMutations.push(
-          queryparams.data.parameters.mutatedGenes[i].display +
-            " · " +
-            queryparams.data.parameters.mutatedGenes[i].code
-        );
-      }
-
-      let getQueryParametersDrugs = Array();
-      //alert(JSON.stringify(queryparams.data.parameters.medicationsWithUsage));
-      for (
-        var i = 0;
-        i < queryparams.data.parameters.medicationsWithUsage.length;
-        i++
-      ) {
-        if (
-          queryparams.data.parameters.medicationsWithUsage[i].usage.length === 2
-        ) {
-          getQueryParametersDrugs.push(
-            queryparams.data.parameters.medicationsWithUsage[i].medication
-              .display +
-              " - " +
-              queryparams.data.parameters.medicationsWithUsage[i].medication
-                .code +
-              " [" +
-              JSON.stringify(
-                queryparams.data.parameters.medicationsWithUsage[i].usage[0]
-                  .display
-              ) +
-              ", " +
-              JSON.stringify(
-                queryparams.data.parameters.medicationsWithUsage[i].usage[1]
-                  .display
-              ) +
-              "]"
-          );
-        } else if (
-          queryparams.data.parameters.medicationsWithUsage[i].usage.length === 1
-        ) {
-          getQueryParametersDrugs.push(
-            queryparams.data.parameters.medicationsWithUsage[i].medication
-              .display +
-              " - " +
-              queryparams.data.parameters.medicationsWithUsage[i].medication
-                .code +
-              " [" +
-              JSON.stringify(
-                queryparams.data.parameters.medicationsWithUsage[i].usage[0]
-                  .display
-              ) +
-              "]"
-          );
-        } else if (
-          queryparams.data.parameters.medicationsWithUsage[i].usage.length === 0
-        ) {
-          getQueryParametersDrugs.push(
-            queryparams.data.parameters.medicationsWithUsage[i].medication
-              .display +
-              " - " +
-              queryparams.data.parameters.medicationsWithUsage[i].medication
-                .code
-          );
+        for (var j = 0; j < genesCat.length; j++) {
+          if (
+            genesCat[j].includes(
+              queryparams.data.parameters.mutatedGenes[i].display +
+                " · " +
+                queryparams.data.parameters.mutatedGenes[i].code
+            )
+          )
+            getQueryParametersMutations.push(genesCat[j]);
         }
       }
 
@@ -761,10 +729,105 @@ export default {
         );
       }
 
+      let getQueryParametersDrugs = Array();
+      let getQueryParametersDrugsUsage = Array();
+      let getQueryParametersDrugsDisplay = Array();
+
+      for (
+        var i = 0;
+        i < queryparams.data.parameters.medicationsWithUsage.length;
+        i++
+      ) {
+        if (
+          queryparams.data.parameters.medicationsWithUsage[i].usage.length === 2
+        ) {
+          getQueryParametersDrugs.push(
+            queryparams.data.parameters.medicationsWithUsage[i].medication
+              .display +
+              " · " +
+              queryparams.data.parameters.medicationsWithUsage[i].medication
+                .code
+          );
+
+          getQueryParametersDrugsUsage.push("beide");
+
+          getQueryParametersDrugsDisplay.push(
+            queryparams.data.parameters.medicationsWithUsage[i].medication
+              .display +
+              " · " +
+              queryparams.data.parameters.medicationsWithUsage[i].medication
+                .code +
+              " (" +
+              JSON.stringify(
+                queryparams.data.parameters.medicationsWithUsage[i].usage[0]
+                  .display
+              ) +
+              "+" +
+              JSON.stringify(
+                queryparams.data.parameters.medicationsWithUsage[i].usage[1]
+                  .display
+              ) +
+              ")"
+          );
+        } else if (
+          queryparams.data.parameters.medicationsWithUsage[i].usage.length === 1
+        ) {
+
+          getQueryParametersDrugs.push(
+            queryparams.data.parameters.medicationsWithUsage[i].medication
+              .display +
+              " · " +
+              queryparams.data.parameters.medicationsWithUsage[i].medication
+                .code
+          );
+
+          getQueryParametersDrugsUsage.push("used");
+
+          getQueryParametersDrugsDisplay.push(
+            queryparams.data.parameters.medicationsWithUsage[i].medication
+              .display +
+              " · " +
+              queryparams.data.parameters.medicationsWithUsage[i].medication
+                .code +
+              " (" +
+              JSON.stringify(
+                queryparams.data.parameters.medicationsWithUsage[i].usage[0]
+                  .display
+              ) +
+              ")"
+          );
+        } else if (
+          queryparams.data.parameters.medicationsWithUsage[i].usage.length === 0
+        ) {
+
+
+          getQueryParametersDrugs.push(
+            queryparams.data.parameters.medicationsWithUsage[i].medication
+              .display +
+              " · " +
+              queryparams.data.parameters.medicationsWithUsage[i].medication
+                .code
+          );
+
+          getQueryParametersDrugsUsage.push("egal");
+
+          getQueryParametersDrugsDisplay.push(
+            queryparams.data.parameters.medicationsWithUsage[i].medication
+              .display +
+              " · " +
+              queryparams.data.parameters.medicationsWithUsage[i].medication
+                .code
+          );
+        }
+      }
+
+
       let getQueryParametersResponses = Array();
       for (var i = 0; i < queryparams.data.parameters.responses.length; i++) {
         getQueryParametersResponses.push(
-          queryparams.data.parameters.responses[i].display
+          queryparams.data.parameters.responses[i].code +
+            " - " +
+            queryparams.data.parameters.responses[i].display
         );
       }
 
@@ -828,14 +891,10 @@ export default {
 
       let getQueryParametersFederated = queryparams.data.mode;
 
-      //alert(JSON.stringify(queryparams));
-
       let connectionIssues = "";
       if (localStorage.getItem("issues")) {
         connectionIssues = localStorage.getItem("issues");
       }
-
-      //alert(JSON.stringify(therapiesEntries));
 
       return {
         baseURL: `${serverBaseURL}/${params.id}/files`,
@@ -863,12 +922,16 @@ export default {
         drugsCat,
         responsesCat,
         tumorMorphologyCat,
+
         getQueryParametersMutations,
         getQueryParametersDiagnosis,
         getQueryParametersTumorMorphology,
         getQueryParametersDrugs,
+        getQueryParametersDrugsUsage,
+        getQueryParametersDrugsDisplay,
         getQueryParametersResponses,
         getQueryParametersFederated,
+
         issues: connectionIssues,
       };
     } catch (err) {

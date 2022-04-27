@@ -125,6 +125,8 @@ export default {
     };
   },
 
+  
+
   methods: {
     async filterQuery() {
       axios.defaults.headers.common[

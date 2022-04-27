@@ -197,7 +197,7 @@
         >
       </v-btn>
     </span>
-<!--
+    <!--
     <span v-if="iconMenu">
       <v-switch v-model="iconMenu" label="Text anzeigen"> </v-switch
     ></span>
@@ -258,17 +258,26 @@ export default {
         "Authorization"
       ] = `Bearer ${localStorage.token}`;
 
-      await axios.post(
-        process.env.baseUrl + process.env.port + process.env.logout
-      );
-      let toast = this.$toasted.success("Abmeldung erfolgreich!", {
-        theme: "bubble",
-        icon: "check_circle",
-        position: "top-center",
-        duration: 3000,
-      });
-
-      this.$router.push(`/`);
+      try {
+        await axios.post(
+          process.env.baseUrl + process.env.port + process.env.logout
+        );
+        let toast = this.$toasted.success("Abmeldung erfolgreich!", {
+          theme: "bubble",
+          icon: "check_circle",
+          position: "top-center",
+          duration: 3000,
+        });
+        this.$router.push(`/`);
+      } catch (err) {
+        if (err.status === 401) {
+          return this.$router.push("/");
+        } else if (err.status === 403) {
+          return this.$router.push("/403");
+        } else {
+          return this.$router.push("/");
+        }
+      }
     },
   },
 };

@@ -1402,7 +1402,7 @@ export default {
           value: "levelOfEvidence",
         },
         {
-          text: "Stützende Varianten",
+          text: "Stützende Molekulare Alterationen",
           align: "left",
           sortable: true,
           value: "supportingVariants",

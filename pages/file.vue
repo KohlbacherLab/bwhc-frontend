@@ -37,7 +37,7 @@
         </v-flex>
         <v-flex d-flex xs2>
           <v-btn dark color="blue accent-2" @click="routeToPatient()"
-            >Vorlegen</v-btn
+            >Senden</v-btn
           >
         </v-flex>
       </v-layout>

@@ -234,6 +234,7 @@
               label="Gen-Name oder HGNC Symbol"
               ref="mutatedGenes"
               chips
+              cache-items
               deletable-chips
               dense
               hide-no-data
@@ -280,6 +281,7 @@
             <v-autocomplete
               v-model="diagnosis"
               :items="diagnosisCat"
+              :loading="isLoading"
               label="Diagnose-Text oder ICD-10 Code"
               ref="diagnosis"
               chips
@@ -303,6 +305,7 @@
             <v-autocomplete
               v-model="tumorMorphology"
               :items="tumorMorphologyCat"
+              :loading="isLoading"
               label="Tumor Morphology oder ICD-O-3-M Code"
               ref="tumorMorphology"
               chips
@@ -373,7 +376,6 @@
                 >
                   <strong>{{ data.item }}</strong>
                   &nbsp;
-
                   {{ selectedDrugsDisplay[data.index].usage }}
                 </v-chip>
               </template>
@@ -521,9 +523,18 @@
         >
       </v-flex>
 
-     <v-btn flat small dark medium color="red accent-3" @click="resetParameters()">
+      <!--
+      <v-btn
+        flat
+        small
+        dark
+        medium
+        color="red accent-3"
+        @click="resetParameters()"
+      >
         Reset
       </v-btn>
+-->
 
       <v-snackbar
         v-model="snackbarParameters"
@@ -536,9 +547,10 @@
         :vertical="mode === 'vertical'"
       >
         Abfrageparameter zurückgesetzt
-        <v-btn color="blue" flat @click="snackbarParameters = false">Schließen</v-btn>
+        <v-btn color="blue" flat @click="snackbarParameters = false"
+          >Schließen</v-btn
+        >
       </v-snackbar>
-
 
       <v-dialog v-model="federatedQueryDialog" width="500">
         <v-card>
@@ -589,39 +601,41 @@ export default {
     "baseChangeCat",
     "aminoAcidChangesCat",
     "variantEffectsCat",
-    "diagnosis",
     "getQueryParametersMutations",
     "getQueryParametersDiagnosis",
+    "getQueryParametersTumorMorphology",
     "getQueryParametersDrugs",
+    "getQueryParametersDrugsUsage",
     "getQueryParametersResponses",
     "getQueryParametersFederated",
     "queryId",
   ],
 
   data: () => ({
-    selectedDrugs: Array(),
-    selectedDrugsDisplay: Array(),
+    //mutationOptions: "radioAll",
+    //showSNV: false,
+    //showCNV: false,
+    //showSCNV: false,
+    //showSV: false,
+
+    selectedMutatedGenes: Array(),
     selectedDiagnosis: Array(),
     selectedTumorMorphology: Array(),
-    selectedMutatedGenes: Array(),
+    selectedDrugs: Array(),
+    selectedDrugsDisplay: Array(),
     selectedResponses: Array(),
-    mutationOptions: "radioAll",
-    localQuery: false,
 
-    showSNV: false,
-    showCNV: false,
-    showSCNV: false,
-    showSV: false,
+    //localQuery: false,
 
     localButton: false,
     federatedButton: false,
 
-    snackbarParameters: false,
-    y: "top",
-
     drugUsage: "egal",
 
     federatedQueryDialog: false,
+
+    snackbarParameters: false,
+    y: "top",
   }),
 
   mounted() {
@@ -634,8 +648,6 @@ export default {
       const queryRights = await axios.get(
         process.env.baseUrl + process.env.port + `/bwhc/mtb/api/query/`
       );
-
-      //alert(JSON.stringify(queryRights));
 
       let whichQuery = queryRights.data._actions;
 
@@ -711,49 +723,38 @@ export default {
           }
         }
 
-        //alert(this.queryId);
-
         this.queryId = localStorage.getItem("queryId");
-
-        //alert(this.queryId);
 
         if (this.queryId == undefined) {
           let request = {
             mode: {
-              //code: this.select.mode,
               code: queryMode,
             },
-            // this.select.mode,
             parameters: {
+              mutatedGenes: this.selectedMutatedGenes,
               diagnoses: this.selectedDiagnosis,
               tumorMorphology: this.selectedTumorMorphology,
-              mutatedGenes: this.selectedMutatedGenes,
               medicationsWithUsage: this.selectedDrugs,
-              //responses: [],
+              responses: this.selectedResponses,
               //mutation:[{genes:this.genes,variant:{type:"SNV"}}],
               //medicationsWithUsage: [{usage:"recommended",drug:"something"}],
               //drugs:[{usage:"recommended",drug:"something"}],
-              responses: this.selectedResponses,
             },
           };
-
-          //alert(JSON.stringify(request));
 
           let Response = await axios.post(
             process.env.baseUrl + process.env.port + `/bwhc/mtb/api/query/`,
             request
           );
 
-          //alert(JSON.stringify(request));
-
+          localStorage.setItem(
+            "mutatedGenes",
+            JSON.stringify(this.mutatedGenes)
+          );
           localStorage.setItem("diagnosis", JSON.stringify(this.diagnosis));
           localStorage.setItem(
             "tumorMorphology",
             JSON.stringify(this.tumorMorphology)
-          );
-          localStorage.setItem(
-            "mutatedGenes",
-            JSON.stringify(this.mutatedGenes)
           );
           localStorage.setItem(
             "selectedDrugs",
@@ -774,20 +775,18 @@ export default {
         } else {
           let request = {
             mode: {
-              //code: this.select.mode,
               code: queryMode,
             },
             id: this.queryId,
             parameters: {
+              mutatedGenes: this.selectedMutatedGenes,
               diagnoses: this.selectedDiagnosis,
               tumorMorphology: this.selectedTumorMorphology,
-              mutatedGenes: this.selectedMutatedGenes,
               medicationsWithUsage: this.selectedDrugs,
-              //responses: [],
+              responses: this.selectedResponses,
               //mutation:[{genes:this.genes,variant:{type:"SNV"}}],
               //medicationsWithUsage: [{usage:"recommended",drug:"something"}],
               //drugs:[{usage:"recommended",drug:"something"}],
-              responses: this.selectedResponses,
             },
           };
 
@@ -799,21 +798,20 @@ export default {
             request
           );
 
-           localStorage.setItem("diagnosis", JSON.stringify(this.diagnosis));
-          localStorage.setItem(
-            "tumorMorphology",
-            JSON.stringify(this.tumorMorphology)
-          );
           localStorage.setItem(
             "mutatedGenes",
             JSON.stringify(this.mutatedGenes)
+          );
+          localStorage.setItem("diagnosis", JSON.stringify(this.diagnosis));
+          localStorage.setItem(
+            "tumorMorphology",
+            JSON.stringify(this.tumorMorphology)
           );
           localStorage.setItem(
             "selectedDrugs",
             JSON.stringify(this.medicationsWithUsage)
           );
           localStorage.setItem("responses", JSON.stringify(this.responses));
-
 
           if (JSON.stringify(Response.data._issues) != undefined) {
             let connectionErrors = "";
@@ -825,7 +823,7 @@ export default {
           } else localStorage.removeItem("issues");
 
           this.$router.push(`/results/${Response.data.id}`);
-          //window.location.reload(true);
+          window.location.reload(true);
         }
       } catch (err) {
         if (err.status === 401) {
@@ -838,6 +836,23 @@ export default {
 
     goBack() {
       return window.history.back();
+    },
+
+    // MUTATED GENES
+
+    addMutatedGenes(mutatedGenes) {
+      let code = mutatedGenes.split(" · ")[1];
+      this.selectedMutatedGenes.push({ code });
+    },
+
+    removeMutatedGenes(item) {
+      const index = this.mutatedGenes.indexOf(item);
+      if (index >= 0) this.selectedMutatedGenes.splice(index, 1);
+      this.mutatedGenes.splice(index, 1);
+    },
+
+    resetMutatedGenes() {
+      this.selectedMutatedGenes = [];
     },
 
     // DIAGNOSIS (ICD-10)
@@ -872,23 +887,6 @@ export default {
 
     resetTumorMorphology() {
       this.selectedTumorMorphology = [];
-    },
-
-    // MUTATED GENES
-
-    addMutatedGenes(mutatedGenes) {
-      let code = mutatedGenes.split(" · ")[1];
-      this.selectedMutatedGenes.push({ code });
-    },
-
-    removeMutatedGenes(item) {
-      const index = this.mutatedGenes.indexOf(item);
-      if (index >= 0) this.selectedMutatedGenes.splice(index, 1);
-      this.mutatedGenes.splice(index, 1);
-    },
-
-    resetMutatedGenes() {
-      this.selectedMutatedGenes = [];
     },
 
     // DRUGS
@@ -929,7 +927,15 @@ export default {
           });
         }
       }
-      //alert(JSON.stringify(this.selectedDrugs));
+    },
+
+    addDrug() {
+      //var drugToAdd = { drug: this.drugs, usage: this.selectedDrugUsage };
+      var obj = {
+        drug: this.drugs[this.drugs.length - 1],
+        usage: this.selectedDrugUsage,
+      };
+      this.drugQuery.push(obj);
     },
 
     removeDrugs(item) {
@@ -960,6 +966,44 @@ export default {
       this.selectedResponses = [];
     },
 
+    // QUERY PARAMETERS
+
+    setQueryParams() {
+      this.mutatedGenes = this.getQueryParametersMutations;
+      if (this.getQueryParametersMutations)
+        for (var i = 0; i < this.getQueryParametersMutations.length; i++) {
+          this.addMutatedGenes(this.getQueryParametersMutations[i]);
+        }
+
+      this.diagnosis = this.getQueryParametersDiagnosis;
+      if (this.getQueryParametersDiagnosis)
+        for (var i = 0; i < this.getQueryParametersDiagnosis.length; i++) {
+          this.addDiagnosis(this.getQueryParametersDiagnosis[i]);
+        }
+
+      this.tumorMorphology = this.getQueryParametersTumorMorphology;
+      if (this.getQueryParametersTumorMorphology)
+        for (
+          var i = 0;
+          i < this.getQueryParametersTumorMorphology.length;
+          i++
+        ) {
+          this.addTumorMorphology(this.getQueryParametersTumorMorphology[i]);
+        }
+      
+      this.drugs = this.getQueryParametersDrugs;
+      if (this.getQueryParametersDrugs)
+        for (var i = 0; i < this.getQueryParametersDrugs.length; i++) {
+          this.addDrugs(this.getQueryParametersDrugs[i],this.getQueryParametersDrugsUsage[i]);
+        }
+
+      this.responses = this.getQueryParametersResponses;
+      if (this.getQueryParametersResponses)
+        for (var i = 0; i < this.getQueryParametersResponses.length; i++) {
+          this.addResponses(this.getQueryParametersResponses[i]);
+        }
+    },
+
     resetParameters() {
       this.snackbarParameters = true;
       localStorage.removeItem("diagnosis");
@@ -968,32 +1012,6 @@ export default {
       localStorage.removeItem("selectedDrugs");
       localStorage.removeItem("responses");
       localStorage.removeItem("queryId");
-    },
-
-    // QUERY PARAMETERS
-
-    setQueryParams() {
-      //alert("setting parameters");
-      //let setMutatedGenes = localStorage.getItem("mutatedGenes");
-      //alert("setting: "+ setMutatedGenes);
-      //item.push(setMutatedGenes);
-      //this.mutations = this.getQueryParametersMutations;
-      //this.mutatedGenes = this.getQueryParametersMutations;
-      //alert(this.diagnosis);
-      //this.selectedDiagnosis = this.getQueryParametersDiagnosis;
-      //this.tumorMorphology = this.getQueryParameterTumorMorphology;
-      //this.drugs = this.getQueryParametersDrugs;
-      //this.responses = this.getQueryParametersResponses;
-      //this.localQuery = this.getQueryParametersFederated;
-    },
-
-    addDrug() {
-      //var drugToAdd = { drug: this.drugs, usage: this.selectedDrugUsage };
-      var obj = {
-        drug: this.drugs[this.drugs.length - 1],
-        usage: this.selectedDrugUsage,
-      };
-      this.drugQuery.push(obj);
     },
 
     testJson() {

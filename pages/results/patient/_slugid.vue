@@ -55,31 +55,8 @@
       </v-card>
     </v-layout>
 
-    <!--
     <br />
-    <v-flex>
-      <v-btn flat fab dark medium color="red accent-3" @click="snackbar = true">
-        @click="notifyCase"
-        <v-icon>fas fa-bell</v-icon>
-      </v-btn>
-
-      <v-snackbar
-        v-model="snackbar"
-        :bottom="y === 'bottom'"
-        :left="x === 'left'"
-        :multi-line="mode === 'multi-line'"
-        :right="x === 'right'"
-        :timeout="timeout"
-        :top="y === 'top'"
-        :vertical="mode === 'vertical'"
-      >
-        ⚠️ Demo 🚧 Der behandelnde Arzt oder die behandelnde Einrichtung
-        benachrichtigt.
-        <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
-      </v-snackbar>
-    </v-flex>
-    -->
-
+   
     <!-- DIAGNOSES VIEW -->
     <div id="diagnoses"></div>
 
@@ -1427,7 +1404,7 @@ export default {
           value: "levelOfEvidence",
         },
         {
-          text: "Stützende Varianten",
+          text: "Stützende Molekulare Alterationen",
           align: "left",
           sortable: true,
           value: "supportingVariants",

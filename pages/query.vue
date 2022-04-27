@@ -36,6 +36,22 @@
       <v-col v-for="(issue, i) in issues" :key="i">
         <div class="caption">{{ issue.details }}</div>
       </v-col>
+
+      <v-snackbar
+        v-model="snackbarParameters"
+        :bottom="y === 'bottom'"
+        :left="x === 'left'"
+        :multi-line="mode === 'multi-line'"
+        :right="x === 'right'"
+        :timeout="timeout"
+        :top="y === 'top'"
+        :vertical="mode === 'vertical'"
+      >
+        Abfrageparameter zurückgesetzt
+        <v-btn color="blue" flat @click="snackbarParameters = false"
+          >Schließen</v-btn
+        >
+      </v-snackbar>
     </v-container>
   </v-responsive>
 </template>
@@ -53,21 +69,13 @@ export default {
   loading: "~/components/loading.vue",
 
   data: () => ({
-    password: "",
-    mutationOptions: "radioAll",
-    drugUsage: "radioUsed",
-    drugUsageCat: ["Recommended", "Used"],
     errorMessages: "",
-    diagnosis: Array(),
-    genes: Array(),
-    drugs: null,
-    responses: null,
-    localQuery: false,
     formHasErrors: false,
     nameLimit: 60,
     isLoading: false,
     search: null,
-    federatedQueryDialog: false,
+    snackbarParameters: false,
+    y: "top",
   }),
 
   components: {
@@ -174,16 +182,24 @@ export default {
         drugsCat,
         responsesCat,
       };
+      
     } catch (err) {
       if (err.status === 401) {
         return redirect("/");
       } else if (err.status === 403) {
         return redirect("/403");
+      } else {
+        return redirect("/file");
       }
     }
   },
 
+  mounted() {
+    this.resetParameters();
+  },
+
   methods: {
+    /*
     async submitQuery() {
       try {
         let diagnosis = Array();
@@ -218,7 +234,7 @@ export default {
           return redirect("/" + err.response.status);
         }
       }
-    },
+    }, */
 
     goBack() {
       return window.history.back();
@@ -238,6 +254,7 @@ export default {
       this.queryMutationChips = [this.gene, this.mutationType];
     },
 
+    /*
     async printQuery() {
       var diagnosis = Array();
       for (var i = 0; i < this.diagnosis.length; i++) {
@@ -259,6 +276,7 @@ export default {
         request
       );
     },
+    */
 
     addDrug() {
       var obj = {
@@ -276,12 +294,22 @@ export default {
         this.$refs[f].reset();
       });
     },
+
+    resetParameters() {
+      this.snackbarParameters = true;
+      localStorage.removeItem("diagnosis");
+      localStorage.removeItem("tumorMorphology");
+      localStorage.removeItem("mutatedGenes");
+      localStorage.removeItem("selectedDrugs");
+      localStorage.removeItem("responses");
+      localStorage.removeItem("queryId");
+    },
   },
 
   watch: {
     search(val) {
       // Items have already been loaded
-      if (this.genesCat.length > 0) return;
+      if (this.diagnosisCatRaw.length > 0) return;
 
       // Items have already been requested
       if (this.isLoading) return;
@@ -292,7 +320,7 @@ export default {
       fetch(process.env.baseUrl + process.env.port + process.env.coding)
         .then((res) => res.json())
         .then((res) => {
-          this.genesCat = res.genes;
+          this.diagnosisCatRaw = res.genesCat;
         })
         .catch((err) => {
           console.log(err);
