@@ -314,6 +314,7 @@
                 <td>{{ props.item.groupIndex }}</td>
                 <td>{{ props.item.icd10 }}</td>
                 <td>{{ props.item.medication }}</td>
+                <td>{{ props.item.medicationClasses }}</td>
                 <td>{{ props.item.priority }}</td>
                 <td>{{ props.item.levelOfEvidence }}</td>
                 <td>{{ props.item.ecogStatus }}</td>
@@ -346,6 +347,7 @@
                 <td>{{ props.item.recordedOn }}</td>
                 <td>{{ props.item.recommendationPriority }}</td>
                 <td>{{ props.item.medication }}</td>
+                <td>{{ props.item.medicationClasses }}</td>
                 <td>{{ props.item.supportingVariants.join(", ") }}</td>
                 <td>{{ props.item.dosage }}</td>
                 <td>{{ props.item.period }}</td>
@@ -444,6 +446,11 @@ export default {
           value: "medication",
         },
         {
+          text: "Wirkstoff-Klassen",
+          align: "left",
+          value: "medicationClasses",
+        },
+        {
           text: "Stützende Molekulare Alterationen",
           align: "left",
           value: "supportingVariants",
@@ -478,6 +485,11 @@ export default {
           value: "icd10",
         },
         { text: "Medikation", align: "left", value: "medication" },
+        {
+          text: "Wirkstoff-Klassen",
+          align: "left",
+          value: "medicationClasses",
+        },
         {
           text: "Priorität",
           align: "left",
@@ -569,7 +581,6 @@ export default {
 
       let queryparams = await axios.get(`${serverBaseURL}/${params.id}`);
       let filter = queryparams.data.filter;
-
 
       localStorage.setItem("queryId", queryparams.data.id);
 
@@ -772,7 +783,6 @@ export default {
         } else if (
           queryparams.data.parameters.medicationsWithUsage[i].usage.length === 1
         ) {
-
           getQueryParametersDrugs.push(
             queryparams.data.parameters.medicationsWithUsage[i].medication
               .display +
@@ -799,8 +809,6 @@ export default {
         } else if (
           queryparams.data.parameters.medicationsWithUsage[i].usage.length === 0
         ) {
-
-
           getQueryParametersDrugs.push(
             queryparams.data.parameters.medicationsWithUsage[i].medication
               .display +
@@ -820,7 +828,6 @@ export default {
           );
         }
       }
-
 
       let getQueryParametersResponses = Array();
       for (var i = 0; i < queryparams.data.parameters.responses.length; i++) {

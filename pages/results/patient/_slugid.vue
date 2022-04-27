@@ -56,7 +56,7 @@
     </v-layout>
 
     <br />
-   
+
     <!-- DIAGNOSES VIEW -->
     <div id="diagnoses"></div>
 
@@ -147,6 +147,7 @@
           <td>{{ props.item.therapyLine }}</td>
           <td>{{ props.item.period }}</td>
           <td>{{ props.item.medication }}</td>
+          <td>{{ props.item.medicationClasses }}</td>
           <td>{{ props.item.reasonStopped }}</td>
           <td>{{ props.item.response }}</td>
           <td>{{ props.item.progressionDate }}</td>
@@ -661,21 +662,12 @@
           >
             <template slot="items" slot-scope="props">
               <tr>
-                <td>
-                  {{ props.item.icd10 }}
-                </td>
-                <td>
-                  {{ props.item.medication }}
-                </td>
-                <td>
-                  {{ props.item.priority }}
-                </td>
-                <td>
-                  {{ props.item.levelOfEvidence }}
-                </td>
-                <td>
-                  {{ props.item.supportingVariants }}
-                </td>
+                <td>{{ props.item.icd10 }}</td>
+                <td>{{ props.item.medication }}</td>
+                <td>{{ props.item.medicationClasses }}</td>
+                <td>{{ props.item.priority }}</td>
+                <td>{{ props.item.levelOfEvidence }}</td>
+                <td>{{ props.item.supportingVariants }}</td>
               </tr>
             </template>
           </v-data-table>
@@ -751,6 +743,7 @@
           <td>{{ props.item.recordedOn }}</td>
           <td>{{ props.item.recommendation }}</td>
           <td>{{ props.item.medication }}</td>
+          <td>{{ props.item.medicationClasses }}</td>
           <td>{{ props.item.dosage }}</td>
           <td>{{ props.item.period }}</td>
           <td>{{ props.item.reasonStopped }}</td>
@@ -865,6 +858,11 @@ export default {
           align: "left",
           sortable: true,
           value: "medication",
+        },
+        {
+          text: "Wirkstoff-Klassen",
+          align: "left",
+          value: "medicationClasses",
         },
         {
           text: "Abbruchsgrund",
@@ -1392,6 +1390,11 @@ export default {
           value: "medication",
         },
         {
+          text: "Wirkstoff-Klassen",
+          align: "left",
+          value: "medicationClasses",
+        },
+        {
           text: "Priorität",
           align: "left",
           sortable: true,
@@ -1474,6 +1477,11 @@ export default {
           align: "left",
           sortable: true,
           value: "medication",
+        },
+        {
+          text: "Wirkstoff-Klassen",
+          align: "left",
+          value: "medicationClasses",
         },
         {
           text: "Dosisdichte",
@@ -1591,6 +1599,8 @@ export default {
           therapyLine: mtbFileView.data.guidelineTherapies[i].therapyLine,
           period: mtbFileView.data.guidelineTherapies[i].period,
           medication: mtbFileView.data.guidelineTherapies[i].medication,
+          medicationClasses:
+            mtbFileView.data.guidelineTherapies[i].medicationClasses,
           reasonStopped: mtbFileView.data.guidelineTherapies[i].reasonStopped,
           response: mtbFileView.data.guidelineTherapies[i].response,
           progressionDate:
@@ -1741,6 +1751,8 @@ export default {
           period: mtbFileView.data.molecularTherapies[i].period,
           notDoneReason: mtbFileView.data.molecularTherapies[i].notDoneReason,
           medication: mtbFileView.data.molecularTherapies[i].medication,
+          medicationClasses:
+            mtbFileView.data.molecularTherapies[i].medicationClasses,
           reasonStopped: mtbFileView.data.molecularTherapies[i].reasonStopped,
           dosage: mtbFileView.data.molecularTherapies[i].dosage,
           note: mtbFileView.data.molecularTherapies[i].note,

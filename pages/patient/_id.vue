@@ -225,6 +225,7 @@
           <td>{{ props.item.therapyLine }}</td>
           <td>{{ props.item.period }}</td>
           <td>{{ props.item.medication }}</td>
+          <td>{{ props.item.medicationClasses }}</td>
           <td>{{ props.item.reasonStopped }}</td>
           <td>{{ props.item.response }}</td>
           <td>{{ props.item.progressionDate }}</td>
@@ -746,6 +747,9 @@
                   {{ props.item.medication }}
                 </td>
                 <td>
+                  {{ props.item.medicationClasses }}
+                </td>
+                <td>
                   {{ props.item.priority }}
                 </td>
                 <td>
@@ -831,6 +835,7 @@
           <td>{{ props.item.recordedOn }}</td>
           <td>{{ props.item.recommendation }}</td>
           <td>{{ props.item.medication }}</td>
+          <td>{{ props.item.medicationClasses }}</td>
           <td>{{ props.item.dosage }}</td>
           <td>{{ props.item.period }}</td>   
           <td>{{ props.item.reasonStopped }}</td>  
@@ -988,6 +993,7 @@ export default {
         sortable: true,
         value: "medication",
       },
+      { text: "Wirkstoff-Klassen", align: "left", value: "medicationClasses" },
       {
         text: "Abbruchsgrund",
         align: "left",
@@ -1549,6 +1555,7 @@ export default {
         sortable: true,
         value: "medication",
       },
+      { text: "Wirkstoff-Klassen", align: "left", value: "medicationClasses" },
       {
         text: "Priorität",
         align: "left",
@@ -1645,6 +1652,7 @@ export default {
         sortable: true,
         value: "medication",
       },
+      { text: "Wirkstoff-Klassen", align: "left", value: "medicationClasses" },
       {
         text: "Dosisdichte",
         align: "left",
@@ -1802,6 +1810,7 @@ export default {
             therapyLine: mtbFileView.data.guidelineTherapies[i].therapyLine,
             period: mtbFileView.data.guidelineTherapies[i].period,
             medication: mtbFileView.data.guidelineTherapies[i].medication,
+            medicationClasses: mtbFileView.data.guidelineTherapies[i].medicationClasses,
             reasonStopped: mtbFileView.data.guidelineTherapies[i].reasonStopped,
             response: mtbFileView.data.guidelineTherapies[i].response,
             progressionDate:
@@ -1956,6 +1965,7 @@ export default {
             period: mtbFileView.data.molecularTherapies[i].period,
             notDoneReason: mtbFileView.data.molecularTherapies[i].notDoneReason,
             medication: mtbFileView.data.molecularTherapies[i].medication,
+            medicationClasses: mtbFileView.data.molecularTherapies[i].medicationClasses,
             reasonStopped: mtbFileView.data.molecularTherapies[i].reasonStopped,
             dosage: mtbFileView.data.molecularTherapies[i].dosage,
             note: mtbFileView.data.molecularTherapies[i].note,
