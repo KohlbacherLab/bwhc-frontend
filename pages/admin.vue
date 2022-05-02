@@ -18,35 +18,36 @@
     </v-flex>
 
     <v-divider class="my-3"></v-divider>
+
     <v-card-title class="headline font-weight-light"
-      >bwHC-Knoten: Verbindungsstatus</v-card-title
+      >bwHC-Knoten · Verbindungsstatus</v-card-title
     >
-    <v-flex d-flex xs5 sm3 md1>
-      <v-col v-for="(peer, i) in peers" :key="i">
-        <v-card flat left max-width="200">
-          <v-card-title class="subtitle"
-            >{{ peer.site }}
-            <div class="caption">
-              {{ peer.status }}
-            </div></v-card-title
-          >
-          <v-card-actions>
-            <v-flex text-xs-center>
-              <div v-if="peer.status == 'Online'">
-                <v-icon style="font-size: 2.5rem" color="green accent-4"
-                  >fas fa-satellite-dish</v-icon
-                >
-              </div>
-              <div v-else>
-                <v-icon style="font-size: 2.5rem" color="red accent-4"
-                  >fas fa-satellite-dish</v-icon
-                >
-              </div>
-            </v-flex>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-flex>
+    <div class="peers">
+      <v-layout row wrap>
+        <v-flex v-for="peer in peers" :key="peer.site">
+          <v-card flat class="text-xs-center ma-0">
+            <v-responsive class="pt-4">
+              <v-avatar size="70" class="grey lighten-2">
+                <div v-if="peer.status == 'Online'">
+                  <v-icon style="font-size: 2.5rem" color="green accent-4"
+                    >fas fa-satellite-dish</v-icon
+                  >
+                </div>
+                <div v-else>
+                  <v-icon style="font-size: 2.5rem" color="red accent-4"
+                    >fas fa-satellite-dish</v-icon
+                  >
+                </div>
+              </v-avatar>
+            </v-responsive>
+            <v-card-text>
+              <div class="subheading">{{ peer.site }}</div>
+              <div color="grey" class="grey--text">{{ peer.status }}</div>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </div>
 
     <v-divider class="my-3"></v-divider>
 
@@ -65,13 +66,7 @@
       <i class="fas fa-exclamation-triangle"></i>
     </v-card-text>
 
-    <v-btn
-      color="indigo darken-1"
-      @click="addNewUserDialog = true"
-      small
-      dark
-      class="mb-2 font-weight-bold"
-      v-on="on"
+    <v-btn color="blue accent-2" @click="addNewUserDialog = true" dark v-on="on"
       >Nutzer hinzufügen</v-btn
     >
     <br /><br />
@@ -81,6 +76,13 @@
         <td>
           {{ props.item.id }}
         </td>
+        <!--
+        <td>
+          <v-avatar size="30" class="grey lighten-2">
+            <v-icon style="font-size: 1rem">fas fa-user</v-icon>
+          </v-avatar>
+        </td>
+        -->
         <td>
           {{ props.item.username }}
         </td>
@@ -178,7 +180,7 @@
           >
           <v-btn
             dark
-            color="indigo darken-1"
+            color="blue accent-2"
             type="editUserDetails"
             @click="updateOwnDetails"
             :disabled="invalid"
@@ -270,7 +272,7 @@
           >
           <v-btn
             dark
-            color="indigo darken-1"
+            color="blue accent-2"
             type="addNewUser"
             @click="addNewUser"
             :disabled="invalid"
@@ -318,7 +320,7 @@
           >
           <v-btn
             dark
-            color="indigo darken-1"
+            color="blue accent-2"
             type="editUserRoles"
             @click="updateUserRoles"
             :disabled="invalid"
@@ -395,7 +397,7 @@
           >
           <v-btn
             dark
-            color="indigo darken-1"
+            color="blue accent-2"
             type="editUserDetails"
             @click="updateUserDetails"
             :disabled="invalid"
@@ -495,6 +497,7 @@ export default {
 
     headerUsers: [
       { text: "Benutzeridentifikation", value: "id" },
+      //{ text: "Avatar", value: "avatar" },
       { text: "Nutzername", value: "username" },
       { text: "Rollen", value: "role" },
       { text: "Nachname", value: "family" },
@@ -579,7 +582,6 @@ export default {
 
         this.addNewUser = false;
         window.location.reload();
-      
       } catch (err) {
         alert("catch");
         if (response.status === 404) {

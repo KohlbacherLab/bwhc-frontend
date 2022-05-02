@@ -12,31 +12,92 @@
           @click="$router.push('/main')"
         >
           <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-        >Benutzerdetails. Klicken Sie auf das unten stehende Feld Ihre Benutzerdaten und Passwort zu bearbeiten. 
+        >Benutzerdetails. Klicken Sie auf das unten stehende Feld Ihre
+        Benutzerdaten und Passwort zu bearbeiten.
         <strong @click="$router.push('help')">Hilfe?</strong>
       </span>
     </v-flex>
     <v-divider class="my-3"></v-divider>
 
     <v-layout>
-      <v-flex d-flex xs12 sm6 md3>
+      <v-layout row wrap>
+        <v-flex>
+          <v-card flat class="text-xs-center ma-2">
+            <v-responsive class="pt-4">
+              <v-avatar size="100" class="grey lighten-2">
+                <v-icon style="font-size: 2.5rem">fas fa-user</v-icon>
+              </v-avatar>
+            </v-responsive>
+            <v-card-text>
+              <div class="subheading">
+                {{ me.givenName }} {{ me.familyName }}
+              </div>
+              <span class="grey--text">·<br />Nutzername:</span>
+              <div class="subheading">{{ me.username }}</div>
+            </v-card-text>
+            <span class="grey--text">Rolle(n):</span>
+            <v-chip
+              outline
+              disabled
+              color="grey darken-1"
+              v-for="role in roles"
+              :key="role"
+            >
+              {{ role }}
+            </v-chip>
+
+            <v-card-actions class="text-xs-center ma-5">
+              <v-btn
+                dark
+                flat
+                color="blue accent-2"
+                icon
+                large
+                @click="editOwnDetails()"
+              >
+                <v-icon>fas fa-user-edit</v-icon></v-btn
+              >
+              <v-spacer></v-spacer>
+              <v-btn flat color="grey" icon @click="show = !show">
+                <v-icon>{{
+                  show ? "keyboard_arrow_down" : "keyboard_arrow_up"
+                }}</v-icon>
+              </v-btn>
+            </v-card-actions>
+            <v-slide-y-transition>
+              <v-card-text class="grey--text" v-show="show">
+                Zum Bearbeiten bitte auf das Symbol oben links klicken, dann
+                'Speichern'.<br />
+                Das Passwort muss mind. 8 Zeichen haben, davon mind. ein
+                Großbuchstabe, eine Ziffer und ein Sonderzeichen
+                <br />
+                *** Weitere Beschreibungstext kann hier hinzugefügt werden. ***
+              </v-card-text>
+            </v-slide-y-transition>
+          </v-card>
+        </v-flex>
+      </v-layout>
+
+      <!--
+      <v-flex d-flex>
         <v-card light flat left max-width="450">
           <v-card-title primary-title>
             <div>
-              <span class="grey--text">Herzlich willkommen,</span>
+              <span class="grey--text"></span>
               <div class="headline font-weight-thin">
                 {{ me.givenName }} {{ me.familyName }}
               </div>
               Nutzername: <span class="grey--text">{{ me.username }}</span
               ><br />
               Rolle(n):
-              <span class="grey--text">{{ me.roles.join(", ") }}</span>
+             <v-chip outline disabled v-for="role in roles" :key="role">
+               {{ role }}
+             </v-chip>
             </div>
           </v-card-title>
           <v-card-actions>
-            <v-btn flat color="grey" icon @click="editOwnDetails()"
-              ><i class="fas fa-user-edit"></i
-            ></v-btn>
+            <v-btn dark color="blue accent-2" @click="editOwnDetails()"
+              >Edit</v-btn>
             <v-spacer></v-spacer>
             <v-btn flat color="grey" icon @click="show = !show">
               <v-icon>{{
@@ -52,7 +113,9 @@
           </v-slide-y-transition>
         </v-card>
       </v-flex>
+      -->
     </v-layout>
+
     <v-divider class="my-3"></v-divider>
 
     <v-dialog v-model="editOwnDetailsDialog" width="500">
@@ -102,7 +165,8 @@
                 ></v-text-field>
               </v-flex>
               <v-card-text class="grey--text">
-                Das Passwort muss mind. 8 Zeichen haben, davon mind. ein Großbuchstabe, eine Ziffer und ein Sonderzeichen
+                Das Passwort muss mind. 8 Zeichen haben, davon mind. ein
+                Großbuchstabe, eine Ziffer und ein Sonderzeichen
               </v-card-text>
             </v-layout>
           </form>
@@ -120,7 +184,7 @@
           >
           <v-btn
             dark
-            color="indigo darken-1"
+            color="blue accent-2"
             type="editUserDetails"
             @click="updateOwnDetails"
             :disabled="invalid"
@@ -281,7 +345,7 @@
           >
           <v-btn
             dark
-            color="indigo darken-1"
+            color="blue accent-2"
             type="editUserDetails"
             @click="updateUserDetails"
             :disabled="invalid"
@@ -374,7 +438,7 @@
           >
           <v-btn
             dark
-            color="indigo darken-1"
+            color="blue accent-2"
             type="editUserRoles"
             @click="updateUserRoles"
             :disabled="invalid"
@@ -417,42 +481,6 @@ export default {
         );
       },
     },
-
-    roles: [
-      "Admin",
-      "Documentarist",
-      "LocalZPMCoordinator",
-      "GlobalZPMCoordinator",
-      "MTBCoordinator",
-      "Researcher",
-    ],
-
-    headerUsers: [
-      { text: "User ID", value: "id" },
-      { text: "Username", value: "username" },
-      { text: "Roles", value: "role" },
-      { text: "Surname", value: "family" },
-      { text: "Name", value: "given" },
-      { text: "Status", value: "status" },
-      {
-        text: "Details",
-        align: "right",
-        sortable: false,
-        value: "details",
-      },
-      {
-        text: "Roles",
-        align: "right",
-        sortable: false,
-        value: "roles",
-      },
-      {
-        text: "Delete",
-        align: "right",
-        sortable: false,
-        value: "delete",
-      },
-    ],
   }),
 
   components: {
@@ -464,10 +492,10 @@ export default {
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${localStorage.token}`;
-            
+
       let pass = null;
       if (this.password) {
-        pass = this.password
+        pass = this.password;
       }
 
       try {
@@ -507,7 +535,6 @@ export default {
 
       setTimeout(() => {
         this.editOwnDetailsDialog = false;
-
         this.id = "";
         this.usernameOwn = "";
         this.givenOwn = "";
@@ -528,6 +555,7 @@ export default {
 
       return {
         me: whoami.data,
+        roles: whoami.data.roles,
       };
     } catch (err) {
       if (err.response.status === 401) {

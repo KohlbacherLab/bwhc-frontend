@@ -990,11 +990,14 @@ export default {
         ) {
           this.addTumorMorphology(this.getQueryParametersTumorMorphology[i]);
         }
-      
+
       this.drugs = this.getQueryParametersDrugs;
       if (this.getQueryParametersDrugs)
         for (var i = 0; i < this.getQueryParametersDrugs.length; i++) {
-          this.addDrugs(this.getQueryParametersDrugs[i],this.getQueryParametersDrugsUsage[i]);
+          this.addDrugs(
+            this.getQueryParametersDrugs[i],
+            this.getQueryParametersDrugsUsage[i]
+          );
         }
 
       this.responses = this.getQueryParametersResponses;
