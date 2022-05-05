@@ -19,62 +19,48 @@
             >bwHC Übersicht</v-card-title
           >
           <v-card-text class="subheading font-weight-thin">
-            Herzlich Willkommen,  <strong>{{ me.givenName }}</strong
-            >,
-          </v-card-text>
-          <v-card-text class="subheading grey--text font-weight-light">
-            Bitte überprüfen Sie Ihre Rollen unten und werfen Sie einen Blick auf die entsprechenden Zugriffsrechte in der Tabelle rechts unten.
-            <i class="fas fa-user-tag"></i> Falls Sie denken, dass Ihre Rollen nicht vollständig sind, nehmen Sie bitte Kontakt mit Ihrem lokalen bwHealthCloud Administrator auf.  <br /><br />
-            Falls Sie Fragen oder Anregungen in Bezug auf die Bedienung des bwHealthCloud Portals haben, zögern Sie bitte nicht, uns zu kontaktieren. 
-            Sie können eine E-Mail an <a href="mailto:aydin-can.polatkan@uni-tuebingen.de">Aydin</a> senden.
-            <br /><br />
-            <i class="fas fa-exclamation-triangle"></i> Falls Sie einen Fehler entdecken, füllen Sie bitte das 
-            <a href="https://forms.gle/w8Z3CnB3zLN6iNMb7" target="_blank"
-              >Bug-Report-Formular</a
-            > aus. <br /><br />
-            <i class="far fa-comments"></i> Wir können bwHealthCloud nicht ohne Ihr wertvolles Feedback verbessern. Bitte helfen Sie uns, indem Sie das folgende 
-            <a href="https://forms.gle/zb7SPH5WEmSurh376" target="_blank"
-              >UI / UX Feedback-Formular</a
-            > ausfüllen. <br /><br />
-            Danke im Voraus.<br />
-            - Ihr bwHealthCloud Entwicklungsteam.
-          </v-card-text>
-          <v-card-text class="subheading grey--text font-weight-thin">
+            Herzlich Willkommen, <strong>{{ me.givenName }}</strong
+            >,<br />
             Sie haben die folgende(n) Rolle(n):
             <strong>{{ me.roles.join(", ") }}</strong>
+          </v-card-text>
+          <v-card-text class="subheading grey--text font-weight-light">
+            Bitte überprüfen Sie Ihre Rollen unten und werfen Sie einen Blick
+            auf die entsprechenden Zugriffsrechte in der Tabelle rechts.
+            <i class="fas fa-user-tag"></i> <br />Falls Sie denken, dass Ihre
+            Rollen nicht vollständig sind, nehmen Sie bitte Kontakt mit Ihrem
+            lokalen bwHealthCloud Administrator auf. <br /><br />
+            Falls Sie Fragen oder Anregungen in Bezug auf die Bedienung des
+            bwHealthCloud Portals haben, zögern Sie bitte nicht, uns zu
+            kontaktieren. Sie können eine E-Mail an
+            <a href="mailto:aydin-can.polatkan@uni-tuebingen.de">uns</a>
+            senden. <br /><br />
+            <i class="fas fa-exclamation-triangle"></i> Falls Sie einen Fehler
+            entdecken,<br />füllen Sie bitte das
+            <a href="https://forms.gle/w8Z3CnB3zLN6iNMb7" target="_blank"
+              >Bug-Report-Formular</a
+            >
+            aus. <br /><br />
+            <i class="far fa-comments"></i> Wir können bwHealthCloud nicht ohne
+            Ihr wertvolles Feedback verbessern. Bitte helfen Sie uns, indem Sie
+            das folgende
+            <a href="https://forms.gle/zb7SPH5WEmSurh376" target="_blank"
+              >UI / UX Feedback-Formular</a
+            >
+            ausfüllen. <br /><br />
+            Danke im Voraus.<br /><br />
+            - Ihr bwHealthCloud Entwicklungsteam.
           </v-card-text>
         </v-card>
       </v-flex>
       <v-flex d-flex xs12 sm6 md6>
         <v-layout row wrap>
           <v-flex d-flex>
-            <v-card flat>
-              <v-card-title class="headline font-weight-light">
-                Screencasts
-                <v-icon></v-icon>
-              </v-card-title>
-              <v-card-text class="subheading grey--text font-weight-light">
-                <i class="fas fa-desktop"></i> Nächste Version wird Screencasts Links enthalten.
-              </v-card-text>
-            </v-card>
-          </v-flex>
-          <v-flex d-flex>
-            <v-card flat>
-              <v-card-title class="headline font-weight-light">
-                Versionshinweise
-                <v-icon></v-icon>
-              </v-card-title>
-              <v-card-text class="subheading grey--text font-weight-light">
-                <i class="far fa-sticky-note"></i>  Nächste Version wird die Release Notes hier enthalten.
-              </v-card-text>
-            </v-card>
-          </v-flex>
-          <v-flex d-flex>
             <v-layout row wrap>
               <v-flex v-for="n in 1" :key="n" d-flex xs12>
                 <v-card flat>
                   <v-card-title class="headline font-weight-light">
-                    <strong> Rollen </strong>
+                    Rollen
                     <v-icon></v-icon>
                   </v-card-title>
                   <v-card-text class="subheading font-weight-light">
@@ -84,23 +70,7 @@
                         <td></td>
                         <td>
                           <v-tooltip top>
-                            <v-btn
-                              icon
-                              slot="activator"
-                            >
-                              <v-icon style="font-size: 1.4rem"
-                                >fas fa-user</v-icon
-                              >
-                            </v-btn>
-                            <span>Nutzerdetails</span>
-                          </v-tooltip>
-                        </td>
-                        <td>
-                          <v-tooltip top>
-                            <v-btn
-                              icon
-                              slot="activator"
-                            >
+                            <v-btn icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-user-shield</v-icon
                               >
@@ -115,28 +85,12 @@
                         <td></td>
                         <td>
                           <v-tooltip top>
-                            <v-btn
-                              icon
-                              slot="activator"
-                            >
+                            <v-btn icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-server</v-icon
                               >
                             </v-btn>
                             <span>Datenvalidierung</span>
-                          </v-tooltip>
-                        </td>
-                        <td>
-                          <v-tooltip top>
-                            <v-btn
-                              icon
-                              slot="activator"
-                            >
-                              <v-icon style="font-size: 1.4rem"
-                                >fas fa-user</v-icon
-                              >
-                            </v-btn>
-                            <span>Nutzerdetails</span>
                           </v-tooltip>
                         </td>
                         <td></td>
@@ -146,10 +100,7 @@
                         <td></td>
                         <td>
                           <v-tooltip top>
-                            <v-btn
-                              icon
-                              slot="activator"
-                            >
+                            <v-btn icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-check-double</v-icon
                               >
@@ -159,28 +110,12 @@
                         </td>
                         <td>
                           <v-tooltip top>
-                            <v-btn
-                              icon
-                              slot="activator"
-                            >
+                            <v-btn icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-search</v-icon
                               >
                             </v-btn>
                             <span>Abfrage-Portal</span>
-                          </v-tooltip>
-                        </td>
-                        <td>
-                          <v-tooltip top>
-                            <v-btn
-                              icon
-                              slot="activator"
-                            >
-                              <v-icon style="font-size: 1.4rem"
-                                >fas fa-user</v-icon
-                              >
-                            </v-btn>
-                            <span>Nutzerdetails</span>
                           </v-tooltip>
                         </td>
                       </tr>
@@ -189,10 +124,7 @@
                         <td></td>
                         <td>
                           <v-tooltip top>
-                            <v-btn
-                              icon
-                              slot="activator"
-                            >
+                            <v-btn icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-check-double</v-icon
                               >
@@ -202,41 +134,22 @@
                         </td>
                         <td>
                           <v-tooltip top>
-                          <v-btn
-                            icon
-                            slot="activator"
-                          >
-                            <v-icon style="font-size: 1.4rem"
-                              >fas fa-globe-europe</v-icon
-                            >
-                          </v-btn>
-                          <span>Globale Qualitätskontrolle Statistik</span>
+                            <v-btn icon slot="activator">
+                              <v-icon style="font-size: 1.4rem"
+                                >fas fa-globe-europe</v-icon
+                              >
+                            </v-btn>
+                            <span>Globale Qualitätskontrolle Statistik</span>
                           </v-tooltip>
                         </td>
                         <td>
                           <v-tooltip top>
-                            <v-btn
-                              icon
-                              slot="activator"
-                            >
+                            <v-btn icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-search</v-icon
                               >
                             </v-btn>
                             <span>Abfrage-Portal</span>
-                          </v-tooltip>
-                        </td>
-                        <td>
-                          <v-tooltip top>
-                            <v-btn
-                              icon
-                              slot="activator"
-                            >
-                              <v-icon style="font-size: 1.4rem"
-                                >fas fa-user</v-icon
-                              >
-                            </v-btn>
-                            <span>Nutzerdetails</span>
                           </v-tooltip>
                         </td>
                       </tr>
@@ -245,28 +158,12 @@
                         <td></td>
                         <td>
                           <v-tooltip top>
-                            <v-btn
-                              icon
-                              slot="activator"
-                            >
+                            <v-btn icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-check-double</v-icon
                               >
                             </v-btn>
                             <span>Lokale Qualitätskontrolle Statistik</span>
-                          </v-tooltip>
-                        </td>
-                        <td>
-                          <v-tooltip top>
-                            <v-btn
-                              icon
-                              slot="activator"
-                            >
-                              <v-icon style="font-size: 1.4rem"
-                                >fas fa-user</v-icon
-                              >
-                            </v-btn>
-                            <span>Nutzerdetails</span>
                           </v-tooltip>
                         </td>
                         <td></td>
@@ -276,28 +173,12 @@
                         <td></td>
                         <td>
                           <v-tooltip top>
-                            <v-btn
-                              icon
-                              slot="activator"
-                            >
+                            <v-btn icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-search</v-icon
                               >
                             </v-btn>
                             <span>Abfrage-Portal</span>
-                          </v-tooltip>
-                        </td>
-                        <td>
-                          <v-tooltip top>
-                            <v-btn
-                              icon
-                              slot="activator"
-                            >
-                              <v-icon style="font-size: 1.4rem"
-                                >fas fa-user</v-icon
-                              >
-                            </v-btn>
-                            <span>Nutzerdetails</span>
                           </v-tooltip>
                         </td>
                         <td></td>
@@ -307,10 +188,7 @@
                         <td></td>
                         <td>
                           <v-tooltip top>
-                            <v-btn
-                              icon
-                              slot="activator"
-                            >
+                            <v-btn icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-search</v-icon
                               >
@@ -318,22 +196,33 @@
                             <span>Abfrage-Portal</span>
                           </v-tooltip>
                         </td>
-                        <td>
-                          <v-tooltip top>
-                            <v-btn
-                              icon
-                              slot="activator"
-                            >
-                              <v-icon style="font-size: 1.4rem"
-                                >fas fa-user</v-icon
-                              >
-                            </v-btn>
-                            <span>Nutzerdetails</span>
-                          </v-tooltip>
-                        </td>
                         <td></td>
                       </tr>
                     </table>
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+              <v-flex d-flex>
+                <v-card flat>
+                  <v-card-title class="headline font-weight-light">
+                    Screencasts
+                    <v-icon></v-icon>
+                  </v-card-title>
+                  <v-card-text class="subheading grey--text font-weight-light">
+                    <i class="fas fa-desktop"></i> Nächste Version wird
+                    Screencasts Links enthalten.
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+              <v-flex d-flex>
+                <v-card flat>
+                  <v-card-title class="headline font-weight-light">
+                    Versionshinweise
+                    <v-icon></v-icon>
+                  </v-card-title>
+                  <v-card-text class="subheading grey--text font-weight-light">
+                    <i class="far fa-sticky-note"></i> Nächste Version wird die
+                    Release Notes hier enthalten.
                   </v-card-text>
                 </v-card>
               </v-flex>
