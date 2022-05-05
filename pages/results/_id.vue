@@ -177,6 +177,9 @@
             <v-hover>
               <v-card flat>
                 <v-card-text small class="font-weight-thin">
+                  <v-btn small flat color="blue" dark>
+                    Suche ändern </v-btn
+                  ><br />
                   <span v-if="getQueryParametersMutations.length > 0">
                     <strong>Mutationen:</strong>
                     {{ getQueryParametersMutations.join(", ") }}

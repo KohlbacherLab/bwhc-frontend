@@ -30,7 +30,7 @@
             ></v-checkbox>
             <v-checkbox
               v-model="gender"
-              label="Andere"
+              label="Sonstiges"
               color="gray"
               value="other"
               hide-details
