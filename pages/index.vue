@@ -69,28 +69,32 @@
     <v-layout row wrap>
       <v-flex d-flex xs12 sm6 md6>
         <v-card flat>
-          <v-card-title primary class="headline font-weight-light"
-            >Ziel des Projektes:</v-card-title
+          <v-card-title primary class="headline"
+            >Ziel des Projektes</v-card-title
           >
           <v-card-text class="subheading font-weight-light">
             <p>
               Primäres Ziel ist der Entwurf einer sicheren Datenintegrations-
               und -verwaltungsplattform, die in einer späteren Phase produktiv
-              aufgebaut werden soll. Klinische Daten der Patienten werden
-              landesweit verschlüsselt gespeichert. So soll ein großer Datenpool
-              geschaffen werden, der aussagekräftigere Auswertungen erlaubt.
+              aufgebaut werden soll.
+              <br /><br />
+              Klinische Daten der Patienten werden landesweit verschlüsselt
+              gespeichert. So soll ein großer Datenpool geschaffen werden, der
+              aussagekräftigere Auswertungen erlaubt.
               <br /><br />
               Im fertigen Zustand soll die Plattform Patienten, Ärzten und
               Wissenschaftlern Zugang zu den integrierten Daten geben. Ärzte und
               Wissenschaftler werden die Daten auswerten, um z.B. die Therapie
-              zu verbessern oder um verschiedene Therapien zu vergleichen. Im
-              Rahmen der Personalisierten Medizin sollen durch die Auswertung
+              zu verbessern oder um verschiedene Therapien zu vergleichen.
+              <br /><br />
+              Im Rahmen der Personalisierten Medizin sollen durch die Auswertung
               der Daten Verbesserungen der Behandlungen für den einzelnen
               Patienten gefunden werden und weitere Hinweise auf die Ursachen
               und den Verlauf der Erkrankung.
             </p>
           </v-card-text>
-          <v-card-title class="headline font-weight-light">
+          <br />
+          <v-card-title class="headline">
             Kontakt
             <br />
             <v-icon></v-icon>
@@ -113,7 +117,7 @@
         <v-layout row wrap>
           <v-flex d-flex>
             <v-card flat>
-              <v-card-title class="headline font-weight-light">
+              <v-card-title class="headline">
                 bwHC Portal
                 <br />
                 <v-icon></v-icon>
@@ -126,8 +130,8 @@
                 Rahmen der Personalisierten Medizin (PM) sollen die Daten
                 insgesamt und für jeden Patienten einzeln ausgewertet werden.
               </v-card-text>
-              <v-card-title class="headline font-weight-light">
-                Medizinische Fachrichtung:
+              <v-card-title class="headline">
+                Medizinische Fachrichtung
                 <br />
                 <v-icon></v-icon>
               </v-card-title>
@@ -141,17 +145,19 @@
             <v-layout row wrap>
               <v-flex v-for="n in 1" :key="n" d-flex xs12>
                 <v-card flat>
-                  <v-card-title class="headline font-weight-light">
+                  <v-card-title class="headline">
                     Kooperationspartner
                     <br />
-                    <v-icon></v-icon>
                   </v-card-title>
+                  <img width="400px" src="bwHC_partners.jpg" />
                   <v-card-text class="subheading font-weight-light">
+                    Universitätskliniken Tübingen, Freiburg, Heidelberg, Ulm
+                    <br /><br />
                     <p>
-                      Universitätskliniken Tübingen, Heidelberg, Ulm, Freiburg
+                      <i>Finanzierung</i><br />Baden-Württemberg Ministerium für
+                      Soziales und Integration
                     </p>
-                    Finanzierung <br />Ministerium für Soziales und Integration
-                    Baden-Württemberg
+                    <img width="200px" src="bwHC_bw-msi_flat.jpg" />
                   </v-card-text>
                 </v-card>
               </v-flex>
@@ -167,7 +173,6 @@
 import { mapActions } from "vuex";
 
 export default {
-
   data: () => ({
     loginDialog: false,
     username: "",

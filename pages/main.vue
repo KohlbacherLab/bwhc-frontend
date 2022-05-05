@@ -27,9 +27,12 @@
           <v-card-text class="subheading grey--text font-weight-light">
             Bitte überprüfen Sie Ihre Rollen unten und werfen Sie einen Blick
             auf die entsprechenden Zugriffsrechte in der Tabelle rechts.
-            <i class="fas fa-user-tag"></i> <br />Falls Sie denken, dass Ihre
-            Rollen nicht vollständig sind, nehmen Sie bitte Kontakt mit Ihrem
-            lokalen bwHealthCloud Administrator auf. <br /><br />
+            <i class="fas fa-user-tag"></i> 
+            <br /><br />
+            Falls Sie denken, dass Ihre Rollen nicht vollständig sind,
+            nehmen Sie bitte Kontakt mit Ihrem lokalen bwHealthCloud
+            Administrator auf. <br />
+            <br />
             Falls Sie Fragen oder Anregungen in Bezug auf die Bedienung des
             bwHealthCloud Portals haben, zögern Sie bitte nicht, uns zu
             kontaktieren. Sie können eine E-Mail an
