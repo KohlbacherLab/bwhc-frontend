@@ -382,10 +382,10 @@
             </v-autocomplete>
 
             <v-radio-group v-model="drugUsage" row>
-              <v-radio label="Egal" value="egal"></v-radio>
               <v-radio label="Verabreicht" value="used"></v-radio>
               <v-radio label="Empfohlen" value="recommended"></v-radio>
               <v-radio label="Beide" value="beide"></v-radio>
+              <v-radio label="Egal" value="egal"></v-radio>
             </v-radio-group>
           </v-card-text>
         </v-card>

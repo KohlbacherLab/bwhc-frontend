@@ -33,6 +33,7 @@
         clipped-right
       />
       <v-divider class="my-3"></v-divider>
+  
       <v-col v-for="(issue, i) in issues" :key="i">
         <div class="caption">{{ issue.details }}</div>
       </v-col>
