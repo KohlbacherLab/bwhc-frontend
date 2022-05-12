@@ -254,7 +254,7 @@
 
       <!-- CASES -->
       <v-tab-item>
-        <v-layout row justify-start class="my-3">
+        <v-layout v-if="itemsFiles.length > 0" row justify-start class="my-3">
           <v-tooltip top>
             <v-btn
               small
@@ -345,6 +345,17 @@
           <v-divider class="my-3"></v-divider>
         </v-card>
 
+         <span v-if="itemsFiles.length == 0">
+          <br />
+          <v-alert :value="true" type="warning">
+            <span class="subheading font-weight-light"
+              >Keine ergebnisse gefunden.</span
+            >
+          </v-alert></span
+        >
+        <span v-if="itemsFiles.length > 0">
+
+
         <v-btn
           small
           icon
@@ -384,6 +395,7 @@
         >
           Alle anzeigen
         </v-btn>
+        </span>
         <!--
         <v-card flat light>
           <v-data-table
@@ -412,7 +424,9 @@
 
       <!-- NGS SUMMARIES -->
       <v-tab-item>
-        <v-layout row justify-start class="my-3">
+
+        
+        <v-layout v-if="itemsGenomicReports.length > 0" row justify-start class="my-3">
           <v-tooltip top>
             <v-btn
               small
@@ -492,6 +506,17 @@
           <v-divider class="my-3"></v-divider>
         </v-card>
 
+
+        <span v-if="itemsGenomicReports.length == 0">
+          <br />
+          <v-alert :value="true" type="warning">
+            <span class="subheading font-weight-light"
+              >Keine ergebnisse gefunden.</span
+            >
+          </v-alert></span
+        >
+        <span v-if="itemsGenomicReports.length > 0">
+
         <v-btn
           small
           icon
@@ -531,6 +556,7 @@
         >
           Alle anzeigen
         </v-btn>
+        </span>
 
         <!--
         <v-card flat light>
@@ -560,7 +586,7 @@
 
       <!-- RECOMMENDATIONS -->
       <v-tab-item>
-        <v-layout row justify-start class="my-3">
+        <v-layout v-if="itemsRecommendations.length > 0" row justify-start class="my-3">
           <v-tooltip top>
             <v-btn
               small
@@ -666,45 +692,59 @@
           <v-divider class="my-3"></v-divider>
         </v-card>
 
-        <v-btn
-          small
-          icon
-          @click="$vuetify.goTo('#ergebnisse', options)"
-          flat
-          color="grey"
+        <span v-if="itemsRecommendations.length == 0">
+          <br />
+          <v-alert :value="true" type="warning">
+            <span class="subheading font-weight-light"
+              >Keine ergebnisse gefunden.</span
+            >
+          </v-alert></span
         >
-          <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
-        </v-btn>
-        <v-btn
-          small
-          icon
-          flat
-          color="blue"
-          @click="limitNumberItemsRecommendations -= 5"
-          dark
-        >
-          <v-icon style="font-size: 1.2rem">fas fa-minus-circle</v-icon>
-        </v-btn>
+        <span v-if="itemsRecommendations.length > 0">
+          <v-btn
+            small
+            icon
+            @click="$vuetify.goTo('#ergebnisse', options)"
+            flat
+            color="grey"
+          >
+            <v-icon style="font-size: 1.2rem"
+              >fas fa-arrow-alt-circle-up</v-icon
+            >
+          </v-btn>
+          <v-btn
+            small
+            icon
+            flat
+            color="blue"
+            @click="limitNumberItemsRecommendations -= 5"
+            dark
+          >
+            <v-icon style="font-size: 1.2rem">fas fa-minus-circle</v-icon>
+          </v-btn>
 
-        <v-btn
-          small
-          icon
-          flat
-          color="blue"
-          @click="limitNumberItemsRecommendations += 5"
-          dark
-        >
-          <v-icon style="font-size: 1.2rem">fas fa-plus-circle</v-icon>
-        </v-btn>
-        <v-btn
-          small
-          flat
-          color="blue"
-          @click="limitNumberItemsRecommendations = itemsRecommendations.length"
-          dark
-        >
-          Alle anzeigen
-        </v-btn>
+          <v-btn
+            small
+            icon
+            flat
+            color="blue"
+            @click="limitNumberItemsRecommendations += 5"
+            dark
+          >
+            <v-icon style="font-size: 1.2rem">fas fa-plus-circle</v-icon>
+          </v-btn>
+          <v-btn
+            small
+            flat
+            color="blue"
+            @click="
+              limitNumberItemsRecommendations = itemsRecommendations.length
+            "
+            dark
+          >
+            Alle anzeigen
+          </v-btn>
+        </span>
         <!--
         <v-card flat light>
           <v-data-table
@@ -735,7 +775,12 @@
 
       <!-- THERAPIES -->
       <v-tab-item>
-        <v-layout row justify-start class="my-3">
+        <v-layout
+          v-if="itemsTherapies.length > 0"
+          row
+          justify-start
+          class="my-3"
+        >
           <v-tooltip top>
             <v-btn
               small
@@ -889,45 +934,59 @@
           <v-divider class="my-3"></v-divider>
         </v-card>
 
-        <v-btn
-          small
-          icon
-          @click="$vuetify.goTo('#ergebnisse', options)"
-          flat
-          color="grey"
+        <span v-if="itemsTherapies.length == 0">
+          <br />
+          <v-alert
+            :value="true"
+            type="warning"
+          >
+            <span class="subheading font-weight-light"
+              >Keine ergebnisse gefunden.</span
+            >
+          </v-alert></span
         >
-          <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
-        </v-btn>
-        <v-btn
-          small
-          icon
-          flat
-          color="blue"
-          @click="limitNumberItemsTherapies -= 5"
-          dark
-        >
-          <v-icon style="font-size: 1.2rem">fas fa-minus-circle</v-icon>
-        </v-btn>
-
-        <v-btn
-          small
-          icon
-          flat
-          color="blue"
-          @click="limitNumberItemsTherapies += 5"
-          dark
-        >
-          <v-icon style="font-size: 1.2rem">fas fa-plus-circle</v-icon>
-        </v-btn>
-        <v-btn
-          small
-          flat
-          color="blue"
-          @click="limitNumberItemsTherapies = itemsTherapies.length"
-          dark
-        >
-          Alle anzeigen
-        </v-btn>
+        <span v-if="itemsTherapies.length > 0">
+          <v-btn
+            small
+            icon
+            @click="$vuetify.goTo('#ergebnisse', options)"
+            flat
+            color="grey"
+          >
+            <v-icon style="font-size: 1.2rem"
+              >fas fa-arrow-alt-circle-up</v-icon
+            >
+          </v-btn>
+          <v-btn
+            small
+            icon
+            flat
+            color="blue"
+            @click="limitNumberItemsTherapies -= 5"
+            dark
+          >
+            <v-icon style="font-size: 1.2rem">fas fa-minus-circle</v-icon>
+          </v-btn>
+          <v-btn
+            small
+            icon
+            flat
+            color="blue"
+            @click="limitNumberItemsTherapies += 5"
+            dark
+          >
+            <v-icon style="font-size: 1.2rem">fas fa-plus-circle</v-icon>
+          </v-btn>
+          <v-btn
+            small
+            flat
+            color="blue"
+            @click="limitNumberItemsTherapies = itemsTherapies.length"
+            dark
+          >
+            Alle anzeigen
+          </v-btn>
+        </span>
         <!--
         <v-card flat light>
           <v-data-table
