@@ -345,7 +345,7 @@
           <v-divider class="my-3"></v-divider>
         </v-card>
 
-         <span v-if="itemsFiles.length == 0">
+        <span v-if="itemsFiles.length == 0">
           <br />
           <v-alert :value="true" type="warning">
             <span class="subheading font-weight-light"
@@ -354,47 +354,47 @@
           </v-alert></span
         >
         <span v-if="itemsFiles.length > 0">
+          <v-btn
+            small
+            icon
+            @click="$vuetify.goTo('#ergebnisse', options)"
+            flat
+            color="grey"
+          >
+            <v-icon style="font-size: 1.2rem"
+              >fas fa-arrow-alt-circle-up</v-icon
+            >
+          </v-btn>
+          <v-btn
+            small
+            icon
+            flat
+            color="blue"
+            @click="limitNumberItemsFiles -= 5"
+            dark
+          >
+            <v-icon style="font-size: 1.2rem">fas fa-minus-circle</v-icon>
+          </v-btn>
 
-
-        <v-btn
-          small
-          icon
-          @click="$vuetify.goTo('#ergebnisse', options)"
-          flat
-          color="grey"
-        >
-          <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
-        </v-btn>
-        <v-btn
-          small
-          icon
-          flat
-          color="blue"
-          @click="limitNumberItemsFiles -= 5"
-          dark
-        >
-          <v-icon style="font-size: 1.2rem">fas fa-minus-circle</v-icon>
-        </v-btn>
-
-        <v-btn
-          small
-          icon
-          flat
-          color="blue"
-          @click="limitNumberItemsFiles += 5"
-          dark
-        >
-          <v-icon style="font-size: 1.2rem">fas fa-plus-circle</v-icon>
-        </v-btn>
-        <v-btn
-          small
-          flat
-          color="blue"
-          @click="limitNumberItemsFiles = itemsFiles.length"
-          dark
-        >
-          Alle anzeigen
-        </v-btn>
+          <v-btn
+            small
+            icon
+            flat
+            color="blue"
+            @click="limitNumberItemsFiles += 5"
+            dark
+          >
+            <v-icon style="font-size: 1.2rem">fas fa-plus-circle</v-icon>
+          </v-btn>
+          <v-btn
+            small
+            flat
+            color="blue"
+            @click="limitNumberItemsFiles = itemsFiles.length"
+            dark
+          >
+            Alle anzeigen
+          </v-btn>
         </span>
         <!--
         <v-card flat light>
@@ -424,9 +424,12 @@
 
       <!-- NGS SUMMARIES -->
       <v-tab-item>
-
-        
-        <v-layout v-if="itemsGenomicReports.length > 0" row justify-start class="my-3">
+        <v-layout
+          v-if="itemsGenomicReports.length > 0"
+          row
+          justify-start
+          class="my-3"
+        >
           <v-tooltip top>
             <v-btn
               small
@@ -506,7 +509,6 @@
           <v-divider class="my-3"></v-divider>
         </v-card>
 
-
         <span v-if="itemsGenomicReports.length == 0">
           <br />
           <v-alert :value="true" type="warning">
@@ -516,46 +518,47 @@
           </v-alert></span
         >
         <span v-if="itemsGenomicReports.length > 0">
+          <v-btn
+            small
+            icon
+            @click="$vuetify.goTo('#ergebnisse', options)"
+            flat
+            color="grey"
+          >
+            <v-icon style="font-size: 1.2rem"
+              >fas fa-arrow-alt-circle-up</v-icon
+            >
+          </v-btn>
+          <v-btn
+            small
+            icon
+            flat
+            color="blue"
+            @click="limitNumberItemsGenomicReports -= 5"
+            dark
+          >
+            <v-icon style="font-size: 1.2rem">fas fa-minus-circle</v-icon>
+          </v-btn>
 
-        <v-btn
-          small
-          icon
-          @click="$vuetify.goTo('#ergebnisse', options)"
-          flat
-          color="grey"
-        >
-          <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
-        </v-btn>
-        <v-btn
-          small
-          icon
-          flat
-          color="blue"
-          @click="limitNumberItemsGenomicReports -= 5"
-          dark
-        >
-          <v-icon style="font-size: 1.2rem">fas fa-minus-circle</v-icon>
-        </v-btn>
-
-        <v-btn
-          small
-          icon
-          flat
-          color="blue"
-          @click="limitNumberItemsGenomicReports += 5"
-          dark
-        >
-          <v-icon style="font-size: 1.2rem">fas fa-plus-circle</v-icon>
-        </v-btn>
-        <v-btn
-          small
-          flat
-          color="blue"
-          @click="limitNumberItemsGenomicReports = itemsGenomicReports.length"
-          dark
-        >
-          Alle anzeigen
-        </v-btn>
+          <v-btn
+            small
+            icon
+            flat
+            color="blue"
+            @click="limitNumberItemsGenomicReports += 5"
+            dark
+          >
+            <v-icon style="font-size: 1.2rem">fas fa-plus-circle</v-icon>
+          </v-btn>
+          <v-btn
+            small
+            flat
+            color="blue"
+            @click="limitNumberItemsGenomicReports = itemsGenomicReports.length"
+            dark
+          >
+            Alle anzeigen
+          </v-btn>
         </span>
 
         <!--
@@ -586,7 +589,12 @@
 
       <!-- RECOMMENDATIONS -->
       <v-tab-item>
-        <v-layout v-if="itemsRecommendations.length > 0" row justify-start class="my-3">
+        <v-layout
+          v-if="itemsRecommendations.length > 0"
+          row
+          justify-start
+          class="my-3"
+        >
           <v-tooltip top>
             <v-btn
               small
@@ -850,6 +858,7 @@
           v-for="itemsTherapie in limitItemsTherapies"
           :key="itemsTherapie.id"
         >
+
           <v-layout row wrap :class="`pa-3`">
             <v-flex xs6 sm4 md1>
               <div class="caption grey--text">Index</div>
@@ -930,16 +939,15 @@
               </div>
             </v-flex>
           </v-layout>
+          
+
 
           <v-divider class="my-3"></v-divider>
         </v-card>
 
         <span v-if="itemsTherapies.length == 0">
           <br />
-          <v-alert
-            :value="true"
-            type="warning"
-          >
+          <v-alert :value="true" type="warning">
             <span class="subheading font-weight-light"
               >Keine ergebnisse gefunden.</span
             >
@@ -1539,55 +1547,30 @@ export default {
         genomicReportsEntries != undefined ||
         indexTherapiesEntries != undefined
       ) {
-        var indexFiles = 0;
-        for (var i = 0; i < filesEntries.length; i++) {
-          let x;
-          let y;
-          x = filesEntries[i].id;
-          for (var j = 0; j < filesEntries.length; j++) {
-            y = filesEntries[j].id;
-            if (x === y) filesEntries[j].groupIndex = indexFiles + 1;
-          }
-          indexFiles++;
-        }
+        let x;
+        let y;
+        let z;
+        let w;
 
-        var indexRecommendations = 0;
-        for (var i = 0; i < recommendationsEntries.length; i++) {
-          let x;
-          let y;
-          x = recommendationsEntries[i].patient;
+        for (var i = 0; i < filesEntries.length; i++) {
+          x = filesEntries[i].id;
+
           for (var j = 0; j < recommendationsEntries.length; j++) {
             y = recommendationsEntries[j].patient;
-            if (x === y)
-              recommendationsEntries[j].groupIndex = indexRecommendations + 1;
+            if (x === y) recommendationsEntries[j].groupIndex = i + 1;
           }
-          indexRecommendations++;
-        }
 
-        var indexGenomicReports = 0;
-        for (var i = 0; i < genomicReportsEntries.length; i++) {
-          let x;
-          let y;
-          x = genomicReportsEntries[i].patient;
-          for (var j = 0; j < genomicReportsEntries.length; j++) {
-            y = genomicReportsEntries[j].patient;
-            if (x === y)
-              genomicReportsEntries[j].groupIndex = indexGenomicReports + 1;
+          for (var k = 0; k < genomicReportsEntries.length; k++) {
+            z = genomicReportsEntries[k].patient;
+            if (x === z) genomicReportsEntries[k].groupIndex = i + 1;
           }
-          indexGenomicReports++;
-        }
 
-        var indexTherapiesEntries = 0;
-        for (var i = 0; i < therapiesEntries.length; i++) {
-          let x;
-          let y;
-          x = therapiesEntries[i].patient;
-          for (var j = 0; j < therapiesEntries.length; j++) {
-            y = therapiesEntries[j].patient;
-            if (x === y)
-              therapiesEntries[j].groupIndex = indexTherapiesEntries + 1;
+          for (var l = 0; l < therapiesEntries.length; l++) {
+            w = therapiesEntries[l].patient;
+            if (x === w) therapiesEntries[l].groupIndex = i + 1;
           }
-          indexTherapiesEntries++;
+
+          filesEntries[i].groupIndex = i + 1;
         }
       }
 
@@ -1661,6 +1644,17 @@ export default {
 }
 .status {
   border-left: 4px solid #cccccc;
+}
+
+
+.index.i0 {
+  border-left: 4px solid #585858;
+}
+.index.i1 {
+  border-left: 4px solid #cfcfcf;
+}
+.index {
+  border-left: 4px solid #585858;
 }
 
 .v-chip.Abgebrochen {
