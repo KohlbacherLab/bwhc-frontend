@@ -1,19 +1,313 @@
 <template>
   <v-container fluid grid-list-md>
     <v-layout wrap>
-      <v-flex d-flex xs12 md6>
-        <v-card
-          class="mx-auto"
-          flat
-          color="purple lighten-4"
-          light
-          max-width="1200"
-        >
-          <v-card-text class="headline font-weight-thin">
-            <br />Mutationen
-            <v-icon color="purple" dark>fas fa-dna</v-icon>
+      <v-flex xs12 md6>
+        <v-card flat color="" light max-width="1200">
+          <v-flex d-flex>
+            <v-card
+              class="mx-auto"
+              flat
+              color="purple lighten-4"
+              light
+              max-width="1200"
+            >
+              <v-card-text class="headline font-weight-thin">
+                <br />Alterationen
+                <v-icon color="purple" dark>fas fa-dna</v-icon>
 
-            <!--
+                <v-flex d-flex>
+                  <v-card color="purple lighten-4" flat>
+                    <v-card-text class="headline font-weight-thin">
+                      <span class="grey--text">Beliebig</span>
+
+                      <v-autocomplete
+                        v-model="mutatedGenes"
+                        :items="genesCat"
+                        :loading="isLoading"
+                        item-text="name"
+                        item-value="id"
+                        label="Gen-Name oder HGNC Symbol"
+                        ref="mutatedGenes"
+                        chips
+                        cache-items
+                        deletable-chips
+                        dense
+                        hide-no-data
+                        multiple
+                        @input="
+                          addMutatedGenes(mutatedGenes[mutatedGenes.length - 1])
+                        "
+                      >
+                        <template slot="selection" slot-scope="data">
+                          <v-chip
+                            :selected="data.selected"
+                            close
+                            @input="removeMutatedGenes(data.item)"
+                          >
+                            {{ data.item }}
+                          </v-chip>
+                        </template>
+                        <!--           
+              <template v-slot:selection="{ item }">
+                <v-chip>
+                  <span v-text="item[1]"></span>
+                </v-chip>
+              </template>
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item[1]"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+  -->
+                      </v-autocomplete>
+                    </v-card-text>
+                  </v-card>
+                </v-flex>
+
+                <v-flex d-flex>
+                  <v-card color="red lighten-4" flat>
+                    <v-card-text class="headline font-weight-thin">
+                      <span class="grey--text">SNV</span>
+
+                      <v-container fluid>
+                        <v-autocomplete
+                          v-model="mutatedGenesSNV"
+                          :items="genesCat"
+                          :loading="isLoading"
+                          label="Gen-Name oder HGNC Symbol"
+                          ref="mutatedGenes"
+                          cache-items
+                          deletable-chips
+                          hide-selected
+                          dense
+                          chips
+                          clearable
+                          hide-no-data
+                          placeholder
+                        >
+                          <!--           
+              <template v-slot:selection="{ item }">
+                <v-chip>
+                  <span v-text="item[1]"></span>
+                </v-chip>
+              </template>
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item[1]"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+              -->
+                        </v-autocomplete>
+                        <v-layout row wrap>
+                          <v-flex xs12 sm6 md5>
+                            <v-text-field
+                              v-model="dnaChange"
+                              clearable
+                              placeholder="cDNA Change"
+                            ></v-text-field>
+                          </v-flex>
+                          <v-flex xs12 sm6 md4>
+                            <v-text-field
+                              v-model="aminoAcidChange"
+                              clearable
+                              placeholder="Protein Change"
+                            ></v-text-field>
+                          </v-flex>
+
+                          <v-flex xs12 sm6 md3>
+                            <v-btn
+                              large
+                              icon
+                              flat
+                              color="grey darken-1"
+                              @click="
+                                addMutatedGenesSNV(
+                                  dnaChange,
+                                  aminoAcidChange,
+                                  mutatedGenesSNV
+                                )
+                              "
+                              dark
+                            >
+                              <v-icon style="font-size: 2rem"
+                                >fas fa-plus-circle</v-icon
+                              >
+                            </v-btn>
+                          </v-flex>
+                          <v-layout row wrap>
+                            <v-combobox
+                              v-model="selectedMutatedGenesSNV"
+                              :items="items"
+                              clearable
+                              chips
+                              cache-items
+                              deletable-chips
+                              dense
+                              hide-no-data
+                              multiple
+                              overflow
+                              hide-selected
+                            >
+                              <template v-slot:selection="data">
+                                <v-chip
+                                  :selected="data.selected"
+                                  label
+                                  close
+                                  @input="removeMutatedGenesSNV(data.item)"
+                                >
+                                <!--
+                                  <v-avatar class="orange darken-3 white--text">
+                                    SNV
+                                  </v-avatar>
+                                -->
+                                  <strong>
+                                    <strong>{{ data.item.gene.code }}</strong>
+                                    {{ data.item.dnaChange }}
+                                    <i>{{ data.item.aminoAcidChange }}</i>
+
+                                  </strong>
+                                </v-chip>
+                              </template>
+                            </v-combobox></v-layout
+                          >
+                        </v-layout>
+                      </v-container>
+                    </v-card-text>
+                  </v-card>
+                </v-flex>
+
+                <v-flex d-flex>
+                  <v-card color="pink lighten-4" flat>
+                    <v-card-text class="headline font-weight-thin">
+                      <span class="grey--text">CNV</span>
+                      <v-container fluid>
+                        <v-autocomplete
+                          v-model="mutatedGenesCNV"
+                          :items="genesCat"
+                          :loading="isLoading"
+                          item-text="name"
+                          item-value="id"
+                          label="Gen-Name oder HGNC Symbol"
+                          ref="mutatedGenes"
+                          chips
+                          cache-items
+                          deletable-chips
+                          dense
+                          hide-no-data
+                          multiple
+                          hide-selected
+                        >
+                          <template slot="selection" slot-scope="data">
+                            <v-chip
+                              :selected="data.selected"
+                              close
+                              @input="removeMutatedGenesCNV(data.item)"
+                            >
+                              {{ data.item }}
+                            </v-chip>
+                          </template>
+                          <!--           
+              <template v-slot:selection="{ item }">
+                <v-chip>
+                  <span v-text="item[1]"></span>
+                </v-chip>
+              </template>
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item[1]"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+              -->
+                        </v-autocomplete>
+                        <v-layout row wrap>
+                          <v-flex xs12 sm6 md3>
+                            <v-select
+                              v-model="cnvType"
+                              :items="cnvTypCat"
+                              label="CNV Typ"
+                            ></v-select>
+                          </v-flex>
+                          
+                          <v-flex xs12 sm6 md3>
+                            <v-text-field
+                              v-model="cnvMin"
+                              clearable
+                              placeholder="Min Copy#"
+                            ></v-text-field>
+                          </v-flex>
+
+                          <v-flex xs12 sm6 md3>
+                            <v-text-field
+                              v-model="cnvMax"
+                              clearable
+                              placeholder="Max Copy#"
+                            ></v-text-field>
+                          </v-flex>
+
+                          <v-flex xs12 sm6 md3>
+                            <v-btn
+                              large
+                              icon
+                              flat
+                              color="grey darken-2"
+                              @click="
+                                addMutatedGenesCNV(
+                                  cnvType,
+                                  cnvMax,
+                                  cnvMin,
+                                  mutatedGenesCNV
+                                )
+                              "
+                              dark
+                            >
+                              <v-icon style="font-size: 2rem"
+                                >fas fa-plus-circle</v-icon
+                              >
+                            </v-btn>
+                          </v-flex>
+                          <v-layout row wrap>
+                            <v-combobox
+                              v-model="selectedMutatedGenesCNV"
+                              :items="items"
+                              clearable
+                              chips
+                              cache-items
+                              deletable-chips
+                              dense
+                              hide-no-data
+                              multiple
+                              overflow
+                              hide-selected
+                            >
+                              <template v-slot:selection="data">
+                                <v-chip
+                                  :selected="data.selected"
+                                  label
+                                  close
+                                  @input="removeMutatedGenesCNV(data.item)"
+                                >
+                                <!--
+                                  <v-avatar class="red white--text">
+                                    CNV
+                                  </v-avatar>
+                                -->
+                                  <strong>
+                                   <strong>{{ data.item.genes }}</strong>
+                                    {{ data.item.type }}
+                                    <i>{{ data.item.copyNumber.max }}</i>
+                                    <i>{{ data.item.copyNumber.min }}</i>
+                                  </strong>
+                                </v-chip>
+                              </template>
+                            </v-combobox></v-layout
+                          >
+                        </v-layout>
+                      </v-container>
+                    </v-card-text>
+                  </v-card>
+                </v-flex>
+
+                <!--
             <v-radio-group v-model="mutationOptions" row>
               <v-radio
                 label="All"
@@ -22,9 +316,9 @@
                   (showSNV = false),
                     (showCNV = false),
                     (showSCNV = false),
-                    (showSV = false)
-                "
-              ></v-radio>
+                    (showSV = false),
+                    (expansion = false)">
+                    </v-radio>
               <v-radio
                 label="SNV"
                 value="radioSNV"
@@ -32,9 +326,9 @@
                   (showSNV = true),
                     (showCNV = false),
                     (showSCNV = false),
-                    (showSV = false)
-                "
-              ></v-radio>
+                    (showSV = false),
+                    (expansion = false)">
+                    </v-radio>
               <v-radio
                 label="CNV"
                 value="radioCNV"
@@ -42,9 +336,19 @@
                   (showSNV = false),
                     (showCNV = true),
                     (showSCNV = false),
-                    (showSV = false)
-                "
-              ></v-radio>
+                    (showSV = false),
+                    (expansion = false)">
+                    </v-radio>
+              <v-radio
+                label="Expansion"
+                value="expansion"
+                @change="
+                  (showSNV = false),
+                    (showCNV = false),
+                    (showSCNV = false),
+                    (showSV = false),
+                    (expansion = true)">
+                    </v-radio>
               <v-radio
                 label="SNV + CNV"
                 value="radioSCNV"
@@ -52,9 +356,8 @@
                   (showSNV = false),
                     (showCNV = false),
                     (showSCNV = true),
-                    (showSV = false)
-                "
-              ></v-radio>
+                    (showSV = false)">
+                    </v-radio>
               <v-radio
                 label="SV"
                 value="radioSV"
@@ -62,13 +365,31 @@
                   (showSNV = false),
                     (showCNV = false),
                     (showSCNV = false),
-                    (showSV = true)
-                "
-              ></v-radio>
+                    (showSV = true)">
+                    </v-radio>
             </v-radio-group>
+            -->
 
+                <v-layout v-if="showSNV" justify-left row>
+                  <v-card color="grey lighten-4" flat>
+                    <v-container fluid>
+                      <v-layout row wrap>
+                        <v-flex xs12 sm6 md6>
+                          <v-text-field
+                            placeholder="cDNA Change"
+                          ></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md6>
+                          <v-text-field
+                            label=""
+                            placeholder="Protein Change"
+                          ></v-text-field>
+                        </v-flex>
+                      </v-layout>
+                    </v-container>
+                  </v-card>
 
-            <v-layout v-if="showSNV" justify-center row>
+                  <!--
               <v-flex xs4>
                 <v-autocomplete
                   v-model="baseChange"
@@ -112,10 +433,28 @@
                   return-object
                 ></v-autocomplete>
               </v-flex>
-            </v-layout>
+              -->
+                </v-layout>
 
-            <v-layout v-if="showCNV" justify-center row>
-              <v-flex xs4>
+                <v-layout v-if="showCNV" justify-left row>
+                  <v-card color="blue-grey lighten-4" flat>
+                    <v-container fluid>
+                      <v-layout row wrap>
+                        <v-flex xs12 sm6 md4>
+                          <v-select :items="items" label="Typ"></v-select>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field placeholder="Copy# Max"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field placeholder="Copy# Min"></v-text-field>
+                        </v-flex>
+                      </v-layout>
+                    </v-container>
+                  </v-card>
+
+                  <!--
+                  <v-flex xs4>
                 <v-autocomplete
                   v-model="baseChange"
                   :items="baseChangeCat"
@@ -158,26 +497,27 @@
                   return-object
                 ></v-autocomplete>
               </v-flex>
-            </v-layout>
+              -->
+                </v-layout>
 
-            <v-layout v-if="showSCNV" justify-center row>
-              <v-flex xs5>
-                <v-autocomplete
-                  v-model="variantEffect"
-                  :items="variantEffectsCat"
-                  :loading="isLoading"
-                  item-text="name"
-                  item-value="id"
-                  label="Variant Effect"
-                  prepend-icon="vaccine"
-                  chips
-                  deletable-chips
-                  dense
-                  return-object
-                ></v-autocomplete>
-              </v-flex>
-            </v-layout>
-
+                <v-layout v-if="showSCNV" justify-center row>
+                  <v-flex xs5>
+                    <v-autocomplete
+                      v-model="variantEffect"
+                      :items="variantEffectsCat"
+                      :loading="isLoading"
+                      item-text="name"
+                      item-value="id"
+                      label="Variant Effect"
+                      prepend-icon="vaccine"
+                      chips
+                      deletable-chips
+                      dense
+                      return-object
+                    ></v-autocomplete>
+                  </v-flex>
+                </v-layout>
+                <!--
             <v-layout v-if="showSV" justify-center row>
               <v-flex xs4>
                 <v-autocomplete
@@ -223,8 +563,8 @@
                 ></v-autocomplete>
               </v-flex>
             </v-layout>
- -->
-
+            -->
+                <!--
             <v-autocomplete
               v-model="mutatedGenes"
               :items="genesCat"
@@ -250,7 +590,7 @@
                   {{ data.item }}
                 </v-chip>
               </template>
-              <!--           
+                       
               <template v-slot:selection="{ item }">
                 <v-chip>
                   <span v-text="item[1]"></span>
@@ -261,105 +601,163 @@
                   <v-list-item-title v-text="item[1]"></v-list-item-title>
                 </v-list-item-content>
               </template>
-  -->
+
             </v-autocomplete>
-          </v-card-text>
+-->
+                <v-expansion-panel v-if="expansion" inset focusable>
+                  <v-expansion-panel-content>
+                    <template flat v-slot:header>
+                      <div class="caption">SNVs</div>
+                    </template>
+                    <v-card color="pink lighten-4" flat>
+                      <v-container flat fluid>
+                        <v-layout row wrap>
+                          <v-flex xs12 sm6 md6>
+                            <v-text-field
+                              placeholder="cDNA Change"
+                            ></v-text-field>
+                          </v-flex>
+                          <v-flex xs12 sm6 md6>
+                            <v-text-field
+                              label=""
+                              placeholder="Protein Change"
+                            ></v-text-field>
+                          </v-flex>
+                        </v-layout>
+                      </v-container>
+                    </v-card>
+                  </v-expansion-panel-content>
+                  <v-expansion-panel-content>
+                    <template v-slot:header>
+                      <div class="caption">CNVs</div>
+                    </template>
+                    <v-card color="pink lighten-4" flat>
+                      <v-container fluid>
+                        <v-layout row wrap>
+                          <v-flex xs12 sm6 md6>
+                            <v-select :items="items" label="Typ"></v-select>
+                          </v-flex>
+                          <v-flex xs12 sm6 md3>
+                            <v-text-field
+                              placeholder="Copy# Max"
+                            ></v-text-field>
+                          </v-flex>
+                          <v-flex xs12 sm6 md3>
+                            <v-text-field
+                              placeholder="Copy# Min"
+                            ></v-text-field>
+                          </v-flex>
+                        </v-layout>
+                      </v-container>
+                    </v-card>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-card-text>
+            </v-card>
+          </v-flex>
         </v-card>
       </v-flex>
 
-      <v-flex d-flex xs12 sm6 md6>
-        <v-card
-          class="mx-auto"
-          flat
-          color="indigo lighten-4"
-          light
-          max-width="1200"
-        >
-          <v-card-text class="headline font-weight-thin">
-            <br />Diagnose
-            <v-icon color="indigo" dark>fas fa-diagnoses</v-icon>
-            <v-autocomplete
-              v-model="diagnosis"
-              :items="diagnosisCat"
-              :loading="isLoading"
-              label="Diagnose-Text oder ICD-10 Code"
-              ref="diagnosis"
-              chips
-              deletable-chips
-              dense
-              multiple
-              placeholder
-              @input="addDiagnosis(diagnosis[diagnosis.length - 1])"
+      <v-flex xs12 sm12 md6>
+        <v-card class="mx-auto" flat color="" light max-width="1200">
+          <v-flex d-flex>
+            <v-card
+              class="mx-auto"
+              flat
+              color="indigo lighten-4"
+              light
+              max-width="1200"
             >
-              <template slot="selection" slot-scope="data">
-                <v-chip
-                  :selected="data.selected"
-                  close
-                  @input="removeDiagnosis(data.item)"
+              <v-card-text class="headline font-weight-thin">
+                <br />Diagnose
+                <v-icon color="indigo" dark>fas fa-diagnoses</v-icon>
+                <v-autocomplete
+                  v-model="diagnosis"
+                  :items="diagnosisCat"
+                  :loading="isLoading"
+                  label="Diagnose-Text oder ICD-10 Code"
+                  ref="diagnosis"
+                  chips
+                  cache-items
+                  deletable-chips
+                  dense
+                  hide-no-data
+                  multiple
+                  placeholder
+                  @input="addDiagnosis(diagnosis[diagnosis.length - 1])"
                 >
-                  {{ data.item }}
-                </v-chip>
-              </template>
-            </v-autocomplete>
+                  <template slot="selection" slot-scope="data">
+                    <v-chip
+                      :selected="data.selected"
+                      close
+                      @input="removeDiagnosis(data.item)"
+                    >
+                      {{ data.item }}
+                    </v-chip>
+                  </template>
+                </v-autocomplete>
 
-            <v-autocomplete
-              v-model="tumorMorphology"
-              :items="tumorMorphologyCat"
-              :loading="isLoading"
-              label="Tumor Morphology oder ICD-O-3-M Code"
-              ref="tumorMorphology"
-              chips
-              deletable-chips
-              dense
-              multiple
-              placeholder
-              @input="
-                addTumorMorphology(tumorMorphology[tumorMorphology.length - 1])
-              "
-            >
-              <template slot="selection" slot-scope="data">
-                <v-chip
-                  :selected="data.selected"
-                  close
-                  @input="removeTumorMorphology(data.item)"
+                <v-autocomplete
+                  v-model="tumorMorphology"
+                  :items="tumorMorphologyCat"
+                  :loading="isLoading"
+                  label="Tumor Morphologie oder ICD-O-3-M Code"
+                  ref="tumorMorphology"
+                  chips
+                  deletable-chips
+                  dense
+                  multiple
+                  hide-selected
+                  placeholder
+                  @input="
+                    addTumorMorphology(
+                      tumorMorphology[tumorMorphology.length - 1]
+                    )
+                  "
                 >
-                  {{ data.item }}
-                </v-chip>
-              </template>
-            </v-autocomplete>
-          </v-card-text>
-        </v-card>
-      </v-flex>
+                  <template slot="selection" slot-scope="data">
+                    <v-chip
+                      :selected="data.selected"
+                      close
+                      @input="removeTumorMorphology(data.item)"
+                    >
+                      {{ data.item }}
+                    </v-chip>
+                  </template>
+                </v-autocomplete>
+              </v-card-text>
+            </v-card>
+          </v-flex>
 
-      <v-flex d-flex xs12 sm6 md6>
-        <v-card
-          class="mx-auto"
-          flat
-          color="blue lighten-4"
-          light
-          max-width="1200"
-        >
-          <v-card-text class="headline font-weight-thin">
-            <strong></strong>
-            <br />Wirkstoffe
-            <v-icon color="blue">fas fa-pills</v-icon>
-
-            <v-autocomplete
-              v-model="drugs"
-              :items="drugsCat"
-              :itemscope="used"
-              :loading="isLoading"
-              label="Wirkstoff-Name oder ATC Code"
-              ref="drugUsage"
-              chips
-              deletable-chips
-              hide-selected
-              dense
-              multiple
-              placeholder
-              @input="addDrugs(drugs[drugs.length - 1], drugUsage)"
+          <v-flex d-flex>
+            <v-card
+              class="mx-auto"
+              flat
+              color="blue lighten-4"
+              light
+              max-width="1200"
             >
-              <!--
+              <v-card-text class="headline font-weight-thin">
+                <strong></strong>
+                <br />Wirkstoffe
+                <v-icon color="blue">fas fa-pills</v-icon>
+
+                <v-autocomplete
+                  v-model="drugs"
+                  :items="drugsCat"
+                  :itemscope="used"
+                  :loading="isLoading"
+                  label="Wirkstoff-Name oder ATC Code"
+                  ref="drugUsage"
+                  chips
+                  deletable-chips
+                  hide-selected
+                  dense
+                  multiple
+                  placeholder
+                  @input="addDrugs(drugs[drugs.length - 1], drugUsage)"
+                >
+                  <!--
               <template slot="selection" slot-scope="data">
                 <v-chip :selected="data.selected" close @input="removeDrug(data.item)">
                   <strong>{{ data.item }}</strong>&nbsp;
@@ -368,68 +766,71 @@
               </template>
               -->
 
-              <template slot="selection" slot-scope="data">
-                <v-chip
-                  :selected="data.selected"
-                  close
-                  @input="removeDrugs(data.item)"
-                >
-                  <strong>{{ data.item }}</strong>
-                  &nbsp;
-                  {{ selectedDrugsDisplay[data.index].usage }}
-                </v-chip>
-              </template>
-            </v-autocomplete>
+                  <template slot="selection" slot-scope="data">
+                    <v-chip
+                      :selected="data.selected"
+                      close
+                      label
+                      @input="removeDrugs(data.item)"
+                    >
+                      <strong>{{ data.item }}</strong>
+                      &nbsp;
+                      {{ selectedDrugsDisplay[data.index].usage }}
+                    </v-chip>
+                  </template>
+                </v-autocomplete>
 
-            <v-radio-group v-model="drugUsage" row>
-              <v-radio label="Verabreicht" value="used"></v-radio>
-              <v-radio label="Empfohlen" value="recommended"></v-radio>
-              <v-radio label="Beide" value="beide"></v-radio>
-              <v-radio label="Egal" value="egal"></v-radio>
-            </v-radio-group>
-          </v-card-text>
-        </v-card>
-      </v-flex>
+                <v-radio-group v-model="drugUsage" row>
+                  <v-radio label="Empfohlen" value="recommended"></v-radio>
+                  <v-radio label="Verabreicht" value="used"></v-radio>
+                  <v-radio label="Beide" value="beide"></v-radio>
+                  <v-radio label="Egal" value="egal"></v-radio>
+                </v-radio-group>
+              </v-card-text>
+            </v-card>
+          </v-flex>
 
-      <v-flex d-flex xs12 sm6 md6>
-        <v-card
-          class="mx-auto"
-          flat
-          color="cyan lighten-4"
-          light
-          max-width="1200"
-        >
-          <v-card-text class="headline font-weight-thin">
-            <strong></strong>
-            <br />Response
-            <v-icon color="cyan">fas fa-vials</v-icon>
-            <v-autocomplete
-              v-model="responses"
-              :items="responsesCat"
-              :loading="isLoading"
-              label="Response oder RECIST Code"
-              ref="responses"
-              chips
-              deletable-chips
-              dense
-              multiple
-              placeholder
-              @input="addResponses(responses[responses.length - 1])"
+          <v-flex d-flex>
+            <v-card
+              class="mx-auto"
+              flat
+              color="cyan lighten-4"
+              light
+              max-width="1200"
             >
-              <template slot="selection" slot-scope="data">
-                <v-chip
-                  :selected="data.selected"
-                  close
-                  @input="removeResponses(data.item)"
+              <v-card-text class="headline font-weight-thin">
+                <strong></strong>
+                <br />Response
+                <v-icon color="cyan">fas fa-vials</v-icon>
+                <v-autocomplete
+                  v-model="responses"
+                  :items="responsesCat"
+                  :loading="isLoading"
+                  label="Response oder RECIST Code"
+                  ref="responses"
+                  chips
+                  deletable-chips
+                  hide-selected
+                  dense
+                  multiple
+                  placeholder
+                  @input="addResponses(responses[responses.length - 1])"
                 >
-                  {{ data.item }}
-                </v-chip>
-              </template>
-            </v-autocomplete>
-          </v-card-text>
+                  <template slot="selection" slot-scope="data">
+                    <v-chip
+                      :selected="data.selected"
+                      close
+                      @input="removeResponses(data.item)"
+                    >
+                      {{ data.item }}
+                    </v-chip>
+                  </template>
+                </v-autocomplete>
+              </v-card-text>
+            </v-card>
+          </v-flex>
         </v-card>
       </v-flex>
-
       <!--
       <v-flex d-flex xs12 sm6 md6>
         <v-select
@@ -596,12 +997,15 @@ export default {
     "genesCat",
     "diagnosisCat",
     "tumorMorphologyCat",
+    "cnvTypCat",
     "drugsCat",
     "responsesCat",
     "baseChangeCat",
     "aminoAcidChangesCat",
     "variantEffectsCat",
     "getQueryParametersMutations",
+    "getQueryParametersSimpleVariants",
+    "getQueryParametersCopyNumberVariants",
     "getQueryParametersDiagnosis",
     "getQueryParametersTumorMorphology",
     "getQueryParametersDrugs",
@@ -612,13 +1016,16 @@ export default {
   ],
 
   data: () => ({
-    //mutationOptions: "radioAll",
-    //showSNV: false,
-    //showCNV: false,
-    //showSCNV: false,
-    //showSV: false,
+    mutationOptions: "radioAll",
+    showSNV: false,
+    showCNV: false,
+    showSCNV: false,
+    showSV: false,
+    expansion: false,
 
     selectedMutatedGenes: Array(),
+    selectedMutatedGenesSNV: Array(),
+    selectedMutatedGenesCNV: Array(),
     selectedDiagnosis: Array(),
     selectedTumorMorphology: Array(),
     selectedDrugs: Array(),
@@ -732,6 +1139,8 @@ export default {
             },
             parameters: {
               mutatedGenes: this.selectedMutatedGenes,
+              simpleVariants: this.selectedMutatedGenesSNV,
+              copyNumberVariants: this.selectedMutatedGenesCNV,
               diagnoses: this.selectedDiagnosis,
               tumorMorphology: this.selectedTumorMorphology,
               medicationsWithUsage: this.selectedDrugs,
@@ -741,6 +1150,8 @@ export default {
               //drugs:[{usage:"recommended",drug:"something"}],
             },
           };
+
+          //alert(JSON.stringify(request));
 
           let Response = await axios.post(
             process.env.baseUrl + process.env.port + `/bwhc/mtb/api/query/`,
@@ -780,6 +1191,8 @@ export default {
             id: this.queryId,
             parameters: {
               mutatedGenes: this.selectedMutatedGenes,
+              simpleVariants: this.selectedMutatedGenesSNV,
+              copyNumberVariants: this.selectedMutatedGenesCNV,
               diagnoses: this.selectedDiagnosis,
               tumorMorphology: this.selectedTumorMorphology,
               medicationsWithUsage: this.selectedDrugs,
@@ -789,6 +1202,8 @@ export default {
               //drugs:[{usage:"recommended",drug:"something"}],
             },
           };
+
+          //alert(JSON.stringify(request));
 
           let Response = await axios.post(
             process.env.baseUrl +
@@ -845,14 +1260,51 @@ export default {
       this.selectedMutatedGenes.push({ code });
     },
 
+    addMutatedGenesSNV(dnaChange, aminoAcidChange, mutatedGenesSNV) {
+      this.selectedMutatedGenesSNV.push({
+        dnaChange: dnaChange,
+        aminoAcidChange: aminoAcidChange,
+        gene: { code: mutatedGenesSNV.split(" · ")[1] },
+      });
+
+      this.mutatedGenesSNV = this.selectedMutatedGenesSNV;
+    },
+
+    addMutatedGenesCNV(cnvType, cnvMax, cnvMin, mutatedGenesCNV) {
+      let code = Array();
+      for (var i = 0; i < mutatedGenesCNV.length; i++) {
+        code.push({ code: mutatedGenesCNV[i].split(" · ")[1] });
+      }
+
+      this.selectedMutatedGenesCNV.push({
+        copyNumber: { max: parseInt(cnvMax), min: parseInt(cnvMin) },
+        type: cnvType,
+        genes: code,
+      });
+    },
+
     removeMutatedGenes(item) {
       const index = this.mutatedGenes.indexOf(item);
       if (index >= 0) this.selectedMutatedGenes.splice(index, 1);
       this.mutatedGenes.splice(index, 1);
     },
 
+    removeMutatedGenesSNV(item) {
+      const index = this.mutatedGenesSNV.indexOf(item);
+      if (index >= 0) this.selectedMutatedGenesSNV.splice(index, 1);
+      this.mutatedGenesSNV.splice(index, 1);
+    },
+
+    removeMutatedGenesCNV(item) {
+      const index = this.mutatedGenesCNV.indexOf(item);
+      if (index >= 0) this.selectedMutatedGenesCNV.splice(index, 1);
+      this.mutatedGenesCNV.splice(index, 1);
+    },
+
     resetMutatedGenes() {
       this.selectedMutatedGenes = [];
+      this.selectedMutatedGenesSNV = [];
+      this.selectedMutatedGenesCNV = [];
     },
 
     // DIAGNOSIS (ICD-10)
@@ -927,6 +1379,7 @@ export default {
           });
         }
       }
+      //alert(JSON.stringify(this.selectedDrugs));
     },
 
     addDrug() {
@@ -973,6 +1426,25 @@ export default {
       if (this.getQueryParametersMutations)
         for (var i = 0; i < this.getQueryParametersMutations.length; i++) {
           this.addMutatedGenes(this.getQueryParametersMutations[i]);
+        }
+
+      this.mutatedGenesSNV = this.getQueryParametersSimpleVariants;
+      if (this.getQueryParametersSimpleVariants)
+        for (var i = 0; i < this.getQueryParametersSimpleVariants.length; i++) {
+          //alert(i + " SNV " + this.getQueryParametersSimpleVariants[i]),
+            //alert(this.getQueryParametersSimpleVariants[i]);
+        }
+
+      this.mutatedGenesCNV = this.getQueryParametersCopyNumberVariants;
+      if (this.getQueryParametersCopyNumberVariants)
+        for (
+          var i = 0;
+          i < this.getQueryParametersCopyNumberVariants.length;
+          i++
+        ) {
+          //alert(i + " CNV " + this.getQueryParametersCopyNumberVariants[i]),
+            //alert(this.getQueryParametersCopyNumberVariants[i]);
+          //this.addMutatedGenesCNV(this.getQueryParametersCopyNumberVariants[i]);
         }
 
       this.diagnosis = this.getQueryParametersDiagnosis;

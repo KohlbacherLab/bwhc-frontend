@@ -38,7 +38,8 @@
         >
           <v-card-text class="headline font-weight-thin">
             <v-icon color="indigo">fas fa-stethoscope</v-icon>
-            <strong>{{ itemsGenomicReportsCount }}</strong> NGS Übersichten
+            <strong>{{ itemsGenomicReportsCount }}</strong> Molekulare
+            Diagnostik
           </v-card-text>
         </v-card>
       </v-flex>
@@ -69,7 +70,7 @@
         >
           <v-card-text class="headline font-weight-thin">
             <v-icon color="cyan" dark>fas fa-file-medical</v-icon>
-            <strong>{{ itemsTherapiesCount }}</strong> Molekulare Therapien
+            <strong>{{ itemsTherapiesCount }}</strong> Systemische Therapien
           </v-card-text>
         </v-card>
       </v-flex>
@@ -186,6 +187,16 @@
                     {{ getQueryParametersMutations.join(", ") }}
                     <br />
                   </span>
+                  <span v-if="getQueryParametersSimpleVariants.length > 0">
+                    <strong>Simple Variants:</strong>
+                    {{ getQueryParametersSimpleVariants.join(", ") }}
+                    <br />
+                  </span>
+                  <span v-if="getQueryParametersCopyNumberVariants.length > 0">
+                    <strong>Copy Number Variants:</strong>
+                    {{ getQueryParametersCopyNumberVariants.join(", ") }}
+                    <br />
+                  </span>
                   <span v-if="getQueryParametersDiagnosis.length > 0">
                     <strong>Diagnose:</strong>
                     {{ getQueryParametersDiagnosis.join(", ") }}
@@ -217,12 +228,15 @@
           v-bind:genesCat="genesCat"
           :diagnosisCat="diagnosisCat"
           :tumorMorphologyCat="tumorMorphologyCat"
+          :cnvTypCat="cnvTypCat"
           :drugsCat="drugsCat"
           :responsesCat="responsesCat"
           :baseChangeCat="baseChangeCat"
           :aminoAcidChangesCat="aminoAcidChangesCat"
           :variantEffectsCat="variantEffectsCat"
           :getQueryParametersMutations="getQueryParametersMutations"
+          :getQueryParametersSimpleVariants="getQueryParametersSimpleVariants"
+          :getQueryParametersCopyNumberVariants="getQueryParametersCopyNumberVariants"
           :getQueryParametersDiagnosis="getQueryParametersDiagnosis"
           :getQueryParametersTumorMorphology="getQueryParametersTumorMorphology"
           :getQueryParametersDrugs="getQueryParametersDrugs"
@@ -240,7 +254,7 @@
         >Patienten <v-icon color="purple" dark>fas fa-street-view</v-icon>
       </v-tab>
       <v-tab class="subheading font-weight-regular" :key="genomics"
-        >NGS Übersichten
+        >Molekulare Diagnostik
         <v-icon color="indigo">fas fa-stethoscope</v-icon></v-tab
       >
       <v-tab class="subheading font-weight-regular" :key="recommendations"
@@ -248,7 +262,7 @@
         <v-icon color="blue">fas fa-comment-medical</v-icon></v-tab
       >
       <v-tab class="subheading font-weight-regular" :key="therapies"
-        >Molekulare Therapien
+        >Systemische Therapien
         <v-icon color="cyan" dark>fas fa-file-medical</v-icon></v-tab
       >
 
@@ -320,7 +334,9 @@
 
             <v-flex xs6 sm4 md5>
               <div class="caption grey--text">Diagnose</div>
-              <div>{{ itemsFile.diagnosis }}</div>
+              <div>
+                {{ itemsFile.diagnosis }}<br />
+              </div>
             </v-flex>
             <v-flex xs6 sm4 md2>
               <div class="caption grey--text">Vital-Status</div>
@@ -473,7 +489,9 @@
             </v-flex>
             <v-flex xs6 sm4 md2>
               <div class="caption grey--text">Tumorentität</div>
-              <div>{{ itemsGenomicReport.tumorEntity }}</div>
+              <div>
+                {{ itemsGenomicReport.tumorEntity }}
+              </div>
             </v-flex>
             <v-flex xs6 sm4 md2>
               <div class="caption grey--text">Probenart</div>
@@ -664,7 +682,14 @@
             </v-flex>
             <v-flex xs6 sm4 md2>
               <div class="caption grey--text">Level of Evidence</div>
-              <div>{{ itemsRecommendation.levelOfEvidence }}</div>
+              <div>
+                <strong>{{
+                  itemsRecommendation.levelOfEvidence.split(", ")[0]
+                }}</strong
+                ><br />
+                Zusätze:
+                {{ itemsRecommendation.levelOfEvidence.split(": ")[1] }}
+              </div>
             </v-flex>
             <v-flex xs6 sm4 md2>
               <div class="caption grey--text">ECOG Status</div>
@@ -672,10 +697,10 @@
             </v-flex>
 
             <v-flex xs6 sm4 md10>
-              <div class=" caption grey--text">
+              <div class="caption grey--text">
                 Stützende Molekulare Alterationen
               </div>
-              <div>{{ itemsRecommendation.supportingVariants }}</div>
+              <div>{{ itemsRecommendation.supportingVariants.join(", ") }}</div>
             </v-flex>
             <v-flex xs2 sm4 md1>
               <div>
@@ -858,7 +883,6 @@
           v-for="itemsTherapie in limitItemsTherapies"
           :key="itemsTherapie.id"
         >
-
           <v-layout row wrap :class="`pa-3`">
             <v-flex xs6 sm4 md1>
               <div class="caption grey--text">Index</div>
@@ -888,11 +912,11 @@
               <div class="caption grey--text">Wirkstoff Klasssen</div>
               <div>{{ itemsTherapie.medicationClasses }}</div>
             </v-flex>
-            <v-flex xs6 sm4 md8>
+            <v-flex xs6 sm4 md7>
               <div class="caption grey--text">
                 Stützende Molekulare Alterationen
               </div>
-              <div>{{ itemsTherapie.supportingVariants }}</div>
+              <div>{{ itemsTherapie.supportingVariants.join(", ") }}</div>
             </v-flex>
             <v-flex xs6 sm4 md2>
               <div class="caption grey--text">Dosisdichte</div>
@@ -902,7 +926,7 @@
               <div class="caption grey--text">Zeitraum</div>
               <div>{{ itemsTherapie.period }}</div>
             </v-flex>
-            <v-flex xs6 sm4 md2>
+            <v-flex xs6 sm4 md3>
               <div class="caption grey--text">Response</div>
               <div>{{ itemsTherapie.response }}</div>
             </v-flex>
@@ -919,10 +943,10 @@
               <div>{{ itemsTherapie.progressionDate }}</div>
             </v-flex>
             <v-flex xs6 sm4 md2>
-              <div class=" caption grey--text">Nicht-Umsetzungs-Grund</div>
+              <div class="caption grey--text">Nicht-Umsetzungs-Grund</div>
               <div>{{ itemsTherapie.notDoneReason }}</div>
             </v-flex>
-            <v-flex xs2 sm4 md2>
+            <v-flex xs2 sm4 md1>
               <div>
                 <v-tooltip top>
                   <v-btn
@@ -939,8 +963,6 @@
               </div>
             </v-flex>
           </v-layout>
-          
-
 
           <v-divider class="my-3"></v-divider>
         </v-card>
@@ -1203,6 +1225,7 @@ export default {
     dataExists() {
       return this.itemsFiles.length > 0;
     },
+
     limitItemsFiles() {
       if (this.limitNumberItemsFiles <= 0) this.limitNumberItemsFiles = 5;
       return this.itemsFiles.slice(0, this.limitNumberItemsFiles);
@@ -1282,6 +1305,12 @@ export default {
           `/RECIST`
       );
 
+      let cnvTypCatRaw = await axios.get(
+        process.env.baseUrl +
+          process.env.port +
+          `/bwhc/catalogs/api/ValueSet?name=cnv-typ`
+      );
+
       let queryparams = await axios.get(`${serverBaseURL}/${params.id}`);
       let filter = queryparams.data.filter;
 
@@ -1353,6 +1382,7 @@ export default {
 
       let diagnosisCat = Array();
       let genesCat = Array();
+      let cnvTypCat = Array();
       let drugsCat = Array();
       let responsesCat = Array();
       let tumorMorphologyCat = Array();
@@ -1383,6 +1413,14 @@ export default {
         );
       }
 
+      for (var i = 0; i < cnvTypCatRaw.data.concepts.length; i++) {
+        cnvTypCat.push(
+          cnvTypCatRaw.data.concepts[i].code 
+          //+ " - " +
+          //  cnvTypCatRaw.data.concepts[i].display
+        );
+      }
+
       for (var i = 0; i < drugsCatRaw.data.entries.length; i++) {
         drugsCat.push(
           drugsCatRaw.data.entries[i].name +
@@ -1400,8 +1438,8 @@ export default {
       }
 
       let ageRangeRaw = Array();
-      ageRangeRaw[0] = filter.ageRange.l;
-      ageRangeRaw[1] = filter.ageRange.r;
+      ageRangeRaw[0] = filter.ageRange.min;
+      ageRangeRaw[1] = filter.ageRange.max;
 
       let getQueryParametersMutations = Array();
       for (
@@ -1420,6 +1458,55 @@ export default {
             getQueryParametersMutations.push(genesCat[j]);
         }
       }
+
+      let getQueryParametersSimpleVariants = Array();
+
+      //alert("SNV parameters "+ JSON.stringify(queryparams.data.parameters.simpleVariants.length));
+      for (
+        var i = 0;
+        i < queryparams.data.parameters.simpleVariants.length;
+        i++
+      ) {
+        for (var j = 0; j < genesCat.length; j++) {
+          if (
+            genesCat[j].includes(
+              queryparams.data.parameters.simpleVariants[i].gene.display +
+                " · " +
+                queryparams.data.parameters.simpleVariants[i].gene.code
+            )
+          )
+            getQueryParametersSimpleVariants.push(genesCat[j]);
+        }
+      }
+
+      let getQueryParametersCopyNumberVariants = Array();
+      for (
+        var i = 0;
+        i < queryparams.data.parameters.copyNumberVariants.length;
+        i++
+      ) {
+        for (var j = 0; j < genesCat.length; j++) {
+          for (
+            var k = 0;
+            k < queryparams.data.parameters.copyNumberVariants[i].genes.length;
+            k++
+          ) {
+            if (
+              genesCat[j].includes(
+                queryparams.data.parameters.copyNumberVariants[i].genes[k]
+                  .display +
+                  " · " +
+                  queryparams.data.parameters.copyNumberVariants[i].genes[k]
+                    .code
+              )
+            )
+              getQueryParametersCopyNumberVariants.push(genesCat[j]);
+          }
+        }
+      }
+
+      //alert(JSON.stringify(queryparams.data.parameters.simpleVariants));
+      //alert(JSON.stringify(queryparams.data.parameters.copyNumberVariants));
 
       let getQueryParametersDiagnosis = Array();
       for (var i = 0; i < queryparams.data.parameters.diagnoses.length; i++) {
@@ -1604,11 +1691,14 @@ export default {
 
         diagnosisCat,
         genesCat,
+        cnvTypCat,
         drugsCat,
         responsesCat,
         tumorMorphologyCat,
 
         getQueryParametersMutations,
+        getQueryParametersSimpleVariants,
+        getQueryParametersCopyNumberVariants,
         getQueryParametersDiagnosis,
         getQueryParametersTumorMorphology,
         getQueryParametersDrugs,
@@ -1645,7 +1735,6 @@ export default {
 .status {
   border-left: 4px solid #cccccc;
 }
-
 
 .index.i0 {
   border-left: 4px solid #585858;

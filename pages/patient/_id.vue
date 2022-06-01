@@ -22,6 +22,101 @@
     <v-divider class="my-3"></v-divider>
     <div id="patientCard"></div>
     <v-layout>
+      <v-card flat dark>
+        <v-layout row wrap :class="`pa-3`">
+          <v-flex xs6 sm4 md3>
+            <div class="caption grey--text">
+              <v-icon style="font-size: 1rem" slot="activator" class="mr-1"
+                >fas fa-venus-mars</v-icon
+              >
+              Geschlecht
+            </div>
+            <div>{{ patient.gender }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md3>
+            <div class="caption grey--text">
+              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+                >fas fa-calendar-week</v-icon
+              >
+              Geburtsdatum
+            </div>
+            <div>{{ patient.birthDate }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md3>
+            <div class="caption grey--text">
+              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+                >fa-solid fa-skull</v-icon
+              >
+              Todesdatum
+            </div>
+            <div>{{ patient.dateOfDeath }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md3>
+            <div class="caption grey--text">
+              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+                >fas fa-location-arrow</v-icon
+              >
+              ZPM
+            </div>
+            <div>{{ patient.managingZPM }}</div>
+          </v-flex>
+
+          <v-flex xs6 sm4 md3>
+            <div class="caption grey--text">
+              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+                >fas fa-shield-alt</v-icon
+              >
+              Versicherung
+            </div>
+            <div>{{ patient.insurance }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md3>
+            <div class="caption grey--text">
+              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+                >fas fa-file-signature</v-icon
+              >
+              Einwilligung
+            </div>
+            <div>{{ patient.consentStatus }}</div>
+            <br />
+          </v-flex>
+          <v-flex xs6 sm4 md3>
+            <div class="caption grey--text">
+              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+                >fas fa-asterisk</v-icon
+              >
+              Datum der Erstüberweisung
+            </div>
+            <div>{{ patient.firstReferralDate }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md4>
+            <div class="caption grey--text">
+              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+                >fas fa-id-badge</v-icon
+              >
+              Patienten ID
+            </div>
+            <div>{{ patient.id }}</div>
+          </v-flex>
+          <!--
+            <v-flex xs2 sm4 md1>
+              <div>
+                <v-tooltip top>
+                  <v-btn
+                    icon
+                    @click=""
+                    slot="activator"
+                  >
+                    <v-icon style="font-size: 1.4rem" color="grey">fas fa-copy</v-icon>
+                  </v-btn>
+                  <span>patienten ID kopieren</span>
+                </v-tooltip>
+              </div>
+            </v-flex>
+            -->
+        </v-layout>
+      </v-card>
+      <!--
       <v-card flat dark left max-width="450">
         <br />
         <v-card-actions>
@@ -63,6 +158,7 @@
           Patienten ID: {{ patient.id }}
         </v-card-title>
       </v-card>
+        -->
     </v-layout>
 
     <template v-slot:header>
@@ -1810,7 +1906,8 @@ export default {
             therapyLine: mtbFileView.data.guidelineTherapies[i].therapyLine,
             period: mtbFileView.data.guidelineTherapies[i].period,
             medication: mtbFileView.data.guidelineTherapies[i].medication,
-            medicationClasses: mtbFileView.data.guidelineTherapies[i].medicationClasses,
+            medicationClasses:
+              mtbFileView.data.guidelineTherapies[i].medicationClasses,
             reasonStopped: mtbFileView.data.guidelineTherapies[i].reasonStopped,
             response: mtbFileView.data.guidelineTherapies[i].response,
             progressionDate:
@@ -1965,7 +2062,8 @@ export default {
             period: mtbFileView.data.molecularTherapies[i].period,
             notDoneReason: mtbFileView.data.molecularTherapies[i].notDoneReason,
             medication: mtbFileView.data.molecularTherapies[i].medication,
-            medicationClasses: mtbFileView.data.molecularTherapies[i].medicationClasses,
+            medicationClasses:
+              mtbFileView.data.molecularTherapies[i].medicationClasses,
             reasonStopped: mtbFileView.data.molecularTherapies[i].reasonStopped,
             dosage: mtbFileView.data.molecularTherapies[i].dosage,
             note: mtbFileView.data.molecularTherapies[i].note,

@@ -124,9 +124,7 @@ export default {
       age: [this.ageRange[0], this.ageRange[1]],
     };
   },
-
   
-
   methods: {
     async filterQuery() {
       axios.defaults.headers.common[
@@ -140,7 +138,7 @@ export default {
           id: `${queryId}`,
           filter: {
             genders: this.gender,
-            ageRange: { l: this.age[0], r: this.age[1] },
+            ageRange: { min: this.age[0], max: this.age[1] },
             vitalStatus: this.vitalStatus,
           },
         };

@@ -29,7 +29,7 @@
             auf die entsprechenden Zugriffsrechte in der Tabelle rechts.
             <i class="fas fa-user-tag"></i> 
             <br /><br />
-            Falls Sie denken, dass Ihre Rollen nicht vollständig sind,
+            eFalls Sie denken, dass Ihre Rollen nicht vollständig sind,
             nehmen Sie bitte Kontakt mit Ihrem lokalen bwHealthCloud
             Administrator auf. <br />
             <br />

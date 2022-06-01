@@ -12,6 +12,85 @@
     <v-divider class="my-3"></v-divider>
     <div id="patientCard"></div>
     <v-layout>
+      <v-card flat dark>
+        <v-layout row wrap :class="`pa-3`">
+          <v-flex xs6 sm4 md3>
+            <div class="caption grey--text">
+              <v-icon style="font-size: 1rem" slot="activator" class="mr-1"
+                >fas fa-venus-mars</v-icon
+              >
+              Geschlecht
+            </div>
+            <div>{{ patient.gender }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md3>
+            <div class="caption grey--text">
+              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+                >fas fa-calendar-week</v-icon
+              >
+              Geburtsdatum
+            </div>
+            <div>{{ patient.birthDate }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md3>
+            <div class="caption grey--text">
+              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+                >fa-solid fa-skull</v-icon
+              >
+              Todesdatum
+            </div>
+            <div>{{ patient.dateOfDeath }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md3>
+            <div class="caption grey--text">
+              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+                >fas fa-location-arrow</v-icon
+              >
+              ZPM
+            </div>
+            <div>{{ patient.managingZPM }}</div>
+          </v-flex>
+
+          <v-flex xs6 sm4 md3>
+            <div class="caption grey--text">
+              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+                >fas fa-shield-alt</v-icon
+              >
+              Versicherung
+            </div>
+            <div>{{ patient.insurance }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md3>
+            <div class="caption grey--text">
+              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+                >fas fa-file-signature</v-icon
+              >
+              Einwilligung
+            </div>
+            <div>{{ patient.consentStatus }}</div>
+            <br />
+          </v-flex>
+          <v-flex xs6 sm4 md3>
+            <div class="caption grey--text">
+              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+                >fas fa-asterisk</v-icon
+              >
+              Datum der Erstüberweisung
+            </div>
+            <div>{{ patient.firstReferralDate }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md4>
+            <div class="caption grey--text">
+              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+                >fas fa-id-badge</v-icon
+              >
+              Patienten ID
+            </div>
+            <div>{{ patient.id }}</div>
+          </v-flex>
+        </v-layout>
+      </v-card>
+      <!--
       <v-card flat dark left max-width="450">
         <br />
         <v-card-actions>
@@ -53,6 +132,7 @@
           Patienten ID: {{ patient.id }}
         </v-card-title>
       </v-card>
+        -->
     </v-layout>
 
     <br />
