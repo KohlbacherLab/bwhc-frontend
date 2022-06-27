@@ -17,7 +17,7 @@ foo@bar: ./install.sh /path/to/target/dir
 
 ## 2. Manual Installation
 
-## 2.1. Pre-requisites
+### 2.1. Pre-requisites
 
 * [node.js](https://nodejs.org/en/download/) (version > 10.23.0)
 * [npm](https://www.npmjs.com/) (version > 6.14.8)
@@ -27,7 +27,7 @@ In case your Linux distribution's repositories do not contain a high-enough vers
 
 --------
 
-## 2.2. Installation
+### 2.2. Installation
 
 * Unzip application package
 * Change into unpacked directory
@@ -45,7 +45,7 @@ foo@bar: npm install
 
 --------
 
-## 2.3. Server configuration
+### 2.3. Server configuration
 
 By default, the Node.js server running the frontend will run on __localhost__ and __port 3000__. This can be changed in _package.json_:
 
@@ -62,7 +62,7 @@ By default, the Node.js server running the frontend will run on __localhost__ an
 
 --------
 
-## 2.4. Backend Access Set-up / Web Page generation
+### 2.4. Backend Access Set-up / Web Page generation
 
 As explained above, the data displayed in the web portal is fetched directly from the backend by the browser. This connection must therefore be configured so that the web pages can be generated accordingly from templates.
 In _nuxt.config.js_ adapt the PROTOCOL, HOSTNAME, and PORT of the __backend__ server:
@@ -85,7 +85,7 @@ foo@bar: npm run generate
 
 --------
 
-## 2.5. Operation
+### 2.5. Operation
 
 __Starting__ the frontend service:
 
