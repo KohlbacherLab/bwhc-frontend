@@ -8,40 +8,20 @@
       <v-divider></v-divider>
 
       <!-- Gender -->
-      <v-subheader class="subheading font-weight-regular"
-        >Geschlecht</v-subheader
-      >
+      <v-subheader class="subheading font-weight-regular">{{
+        gender.name
+      }}</v-subheader>
       <v-container fluid>
         <v-layout row wrap>
           <v-flex xs12 sm4 md4>
-            <v-checkbox
-              v-model="gender"
-              label="Männlich"
-              color="indigo"
-              value="male"
-              hide-details
-            ></v-checkbox>
-            <v-checkbox
-              v-model="gender"
-              label="Weiblich"
-              color="pink"
-              value="female"
-              hide-details
-            ></v-checkbox>
-            <v-checkbox
-              v-model="gender"
-              label="Sonstiges"
-              color="gray"
-              value="other"
-              hide-details
-            ></v-checkbox>
-            <v-checkbox
-              v-model="gender"
-              label="Unbekannt"
-              color="gray"
-              value="unknown"
-              hide-details
-            ></v-checkbox>
+            <v-flex v-for="gender in gender.items" :key="gender.id">
+              <v-checkbox
+                v-model="gender.selected"
+                :label="gender.value.display"
+                hide-details
+              >
+              </v-checkbox>
+            </v-flex>
           </v-flex>
         </v-layout>
       </v-container>
@@ -62,26 +42,21 @@
       <v-divider></v-divider>
 
       <!-- Gender -->
-      <v-subheader class="subheading font-weight-regular"
-        >Vital-Status</v-subheader
-      >
+      <v-subheader class="subheading font-weight-regular">{{
+        vitalStatus.name
+      }}</v-subheader>
       <v-container fluid>
         <v-layout row wrap>
-          <v-flex xs12 sm4 md4>
+          <v-flex
+            v-for="vitalStatus in vitalStatus.items"
+            :key="vitalStatus.id"
+          >
             <v-checkbox
-              v-model="vitalStatus"
-              label="Lebend"
-              color="green"
-              value="Alive"
+              v-model="vitalStatus.selected"
+              :label="vitalStatus.value.display"
               hide-details
-            ></v-checkbox>
-            <v-checkbox
-              v-model="vitalStatus"
-              label="Verstorben"
-              color="red"
-              value="Deceased"
-              hide-details
-            ></v-checkbox>
+            >
+            </v-checkbox>
           </v-flex>
         </v-layout>
       </v-container>
@@ -124,7 +99,7 @@ export default {
       age: [this.ageRange[0], this.ageRange[1]],
     };
   },
-  
+
   methods: {
     async filterQuery() {
       axios.defaults.headers.common[
@@ -136,15 +111,15 @@ export default {
 
         let filter = {
           id: `${queryId}`,
-          filter: {
-            genders: this.gender,
+          patientFilter: {
+            gender: this.gender,
             ageRange: { min: this.age[0], max: this.age[1] },
             vitalStatus: this.vitalStatus,
-          },
+          }
         };
 
         let Response = await axios.put(
-          `${serverBaseURL}/${queryId}/filter`,
+          `${serverBaseURL}/${queryId}/filters`,
           filter
         );
 

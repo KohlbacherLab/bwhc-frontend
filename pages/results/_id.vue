@@ -236,7 +236,9 @@
           :variantEffectsCat="variantEffectsCat"
           :getQueryParametersMutations="getQueryParametersMutations"
           :getQueryParametersSimpleVariants="getQueryParametersSimpleVariants"
-          :getQueryParametersCopyNumberVariants="getQueryParametersCopyNumberVariants"
+          :getQueryParametersCopyNumberVariants="
+            getQueryParametersCopyNumberVariants
+          "
           :getQueryParametersDiagnosis="getQueryParametersDiagnosis"
           :getQueryParametersTumorMorphology="getQueryParametersTumorMorphology"
           :getQueryParametersDrugs="getQueryParametersDrugs"
@@ -267,152 +269,161 @@
       >
 
       <!-- CASES -->
+
       <v-tab-item>
-        <v-layout v-if="itemsFiles.length > 0" row justify-start class="my-3">
-          <v-tooltip top>
-            <v-btn
-              small
+        <v-layout flex-child wrap>
+          <!--
+          <v-flex xs12 md1 d-flex> </v-flex>
+          -->
+          <v-flex xs12 md12>
+            <v-layout
+              v-if="itemsFiles.length > 0"
+              row
+              justify-start
+              class="my-3"
+            >
+              <v-tooltip top>
+                <v-btn
+                  small
+                  flat
+                  color="grey"
+                  @click="sortBy(itemsFiles, 'groupIndex')"
+                  slot="activator"
+                >
+                  <v-icon small left>sort</v-icon>
+                  <span class="caption text-none">Index</span>
+                </v-btn>
+                <span>Sortieren nach Index</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <v-btn
+                  small
+                  flat
+                  color="grey"
+                  @click="sortBy(itemsFiles, 'managingZPM')"
+                  slot="activator"
+                >
+                  <span class="caption text-none">ZPM</span>
+                </v-btn>
+                <span>Sortieren nach ZPM</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <v-btn
+                  small
+                  flat
+                  color="grey"
+                  @click="sortBy(itemsFiles, 'age')"
+                  slot="activator"
+                >
+                  <span class="caption text-none">Alter</span>
+                </v-btn>
+                <span>Sortieren nach Alter</span>
+              </v-tooltip>
+            </v-layout>
+
+            <v-card
               flat
-              color="grey"
-              @click="sortBy(itemsFiles, 'groupIndex')"
-              slot="activator"
+              hover
+              v-for="itemsFile in limitItemsFiles"
+              :key="itemsFile.id"
             >
-              <v-icon small left>sort</v-icon>
-              <span class="caption text-none">Index</span>
-            </v-btn>
-            <span>Sortieren nach Index</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <v-btn
-              small
-              flat
-              color="grey"
-              @click="sortBy(itemsFiles, 'managingZPM')"
-              slot="activator"
+              <v-layout row wrap :class="`pa-3`">
+                <v-flex xs6 sm4 md1>
+                  <div class="caption grey--text">Index</div>
+                  <div>{{ itemsFile.groupIndex }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md1>
+                  <div class="caption grey--text">ZPM</div>
+                  {{ itemsFile.managingZPM }}
+                </v-flex>
+                <v-flex xs6 sm4 md1>
+                  <div class="caption grey--text">Geschlecht</div>
+                  <div>{{ itemsFile.gender }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md1>
+                  <div class="caption grey--text">Alter</div>
+                  <div>{{ itemsFile.age }}</div>
+                </v-flex>
+
+                <v-flex xs6 sm4 md5>
+                  <div class="caption grey--text">Diagnose</div>
+                  <div>{{ itemsFile.diagnosis }}<br /></div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Vital-Status</div>
+                  <div>{{ itemsFile.vitalStatus }}</div>
+                </v-flex>
+                <v-flex xs2 sm4 md1>
+                  <div>
+                    <v-tooltip top>
+                      <v-btn
+                        icon
+                        @click="routeToPatient(queryId + '&' + itemsFile.id)"
+                        slot="activator"
+                      >
+                        <v-icon color="blue">folder</v-icon>
+                      </v-btn>
+                      <span>öffne die Datei</span>
+                    </v-tooltip>
+                  </div>
+                </v-flex>
+              </v-layout>
+
+              <v-divider class="my-3"></v-divider>
+            </v-card>
+
+            <span v-if="itemsFiles.length == 0">
+              <br />
+              <v-alert :value="true" type="warning">
+                <span class="subheading font-weight-light"
+                  >Keine ergebnisse gefunden.</span
+                >
+              </v-alert></span
             >
-              <span class="caption text-none">ZPM</span>
-            </v-btn>
-            <span>Sortieren nach ZPM</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <v-btn
-              small
-              flat
-              color="grey"
-              @click="sortBy(itemsFiles, 'age')"
-              slot="activator"
-            >
-              <span class="caption text-none">Alter</span>
-            </v-btn>
-            <span>Sortieren nach Alter</span>
-          </v-tooltip>
-        </v-layout>
+            <span v-if="itemsFiles.length > 0">
+              <v-btn
+                small
+                icon
+                @click="$vuetify.goTo('#ergebnisse', options)"
+                flat
+                color="grey"
+              >
+                <v-icon style="font-size: 1.2rem"
+                  >fas fa-arrow-alt-circle-up</v-icon
+                >
+              </v-btn>
+              <v-btn
+                small
+                icon
+                flat
+                color="blue"
+                @click="limitNumberItemsFiles -= 5"
+                dark
+              >
+                <v-icon style="font-size: 1.2rem">fas fa-minus-circle</v-icon>
+              </v-btn>
 
-        <v-card
-          flat
-          hover
-          v-for="itemsFile in limitItemsFiles"
-          :key="itemsFile.id"
-        >
-          <v-layout row wrap :class="`pa-3`">
-            <v-flex xs6 sm4 md1>
-              <div class="caption grey--text">Index</div>
-              <div>{{ itemsFile.groupIndex }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md1>
-              <div class="caption grey--text">ZPM</div>
-              {{ itemsFile.managingZPM }}
-            </v-flex>
-            <v-flex xs6 sm4 md1>
-              <div class="caption grey--text">Geschlecht</div>
-              <div>{{ itemsFile.gender }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md1>
-              <div class="caption grey--text">Alter</div>
-              <div>{{ itemsFile.age }}</div>
-            </v-flex>
-
-            <v-flex xs6 sm4 md5>
-              <div class="caption grey--text">Diagnose</div>
-              <div>
-                {{ itemsFile.diagnosis }}<br />
-              </div>
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Vital-Status</div>
-              <div>{{ itemsFile.vitalStatus }}</div>
-            </v-flex>
-            <v-flex xs2 sm4 md1>
-              <div>
-                <v-tooltip top>
-                  <v-btn
-                    icon
-                    @click="routeToPatient(queryId + '&' + itemsFile.id)"
-                    slot="activator"
-                  >
-                    <v-icon color="blue">folder</v-icon>
-                  </v-btn>
-                  <span>öffne die Datei</span>
-                </v-tooltip>
-              </div>
-            </v-flex>
-          </v-layout>
-
-          <v-divider class="my-3"></v-divider>
-        </v-card>
-
-        <span v-if="itemsFiles.length == 0">
-          <br />
-          <v-alert :value="true" type="warning">
-            <span class="subheading font-weight-light"
-              >Keine ergebnisse gefunden.</span
-            >
-          </v-alert></span
-        >
-        <span v-if="itemsFiles.length > 0">
-          <v-btn
-            small
-            icon
-            @click="$vuetify.goTo('#ergebnisse', options)"
-            flat
-            color="grey"
-          >
-            <v-icon style="font-size: 1.2rem"
-              >fas fa-arrow-alt-circle-up</v-icon
-            >
-          </v-btn>
-          <v-btn
-            small
-            icon
-            flat
-            color="blue"
-            @click="limitNumberItemsFiles -= 5"
-            dark
-          >
-            <v-icon style="font-size: 1.2rem">fas fa-minus-circle</v-icon>
-          </v-btn>
-
-          <v-btn
-            small
-            icon
-            flat
-            color="blue"
-            @click="limitNumberItemsFiles += 5"
-            dark
-          >
-            <v-icon style="font-size: 1.2rem">fas fa-plus-circle</v-icon>
-          </v-btn>
-          <v-btn
-            small
-            flat
-            color="blue"
-            @click="limitNumberItemsFiles = itemsFiles.length"
-            dark
-          >
-            Alle anzeigen
-          </v-btn>
-        </span>
-        <!--
+              <v-btn
+                small
+                icon
+                flat
+                color="blue"
+                @click="limitNumberItemsFiles += 5"
+                dark
+              >
+                <v-icon style="font-size: 1.2rem">fas fa-plus-circle</v-icon>
+              </v-btn>
+              <v-btn
+                small
+                flat
+                color="blue"
+                @click="limitNumberItemsFiles = itemsFiles.length"
+                dark
+              >
+                Alle anzeigen
+              </v-btn>
+            </span>
+            <!--
         <v-card flat light>
           <v-data-table
             :headers="headerFiles"
@@ -436,150 +447,272 @@
           </v-data-table>
         </v-card>
         -->
+          </v-flex>
+        </v-layout>
       </v-tab-item>
 
       <!-- NGS SUMMARIES -->
+
       <v-tab-item>
-        <v-layout
-          v-if="itemsGenomicReports.length > 0"
-          row
-          justify-start
-          class="my-3"
-        >
-          <v-tooltip top>
-            <v-btn
-              small
-              flat
-              color="grey"
-              @click="sortBy(itemsGenomicReports, 'groupIndex')"
-              slot="activator"
-            >
-              <v-icon small left>sort</v-icon>
-              <span class="caption text-none">Index</span>
-            </v-btn>
-            <span>Sortieren nach Index</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <v-btn
-              small
-              flat
-              color="grey"
-              @click="sortBy(itemsGenomicReports, 'specimenLocalization')"
-              slot="activator"
-            >
-              <span class="caption text-none">Proben-Lokalization</span>
-            </v-btn>
-            <span>Sortieren nach Proben-Lokalization</span>
-          </v-tooltip>
-        </v-layout>
-        <v-card
-          flat
-          hover
-          v-for="itemsGenomicReport in limitItemsGenomicReports"
-          :key="itemsGenomicReport.id"
-        >
-          <v-layout row wrap :class="`pa-3`">
-            <v-flex xs6 sm4 md1>
-              <div class="caption grey--text">Index</div>
-              <div>{{ itemsGenomicReport.groupIndex }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Proben-Lokalisation</div>
-              {{ itemsGenomicReport.specimenLocalization }}
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Tumorentität</div>
-              <div>
-                {{ itemsGenomicReport.tumorEntity }}
-              </div>
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Probenart</div>
-              <div>{{ itemsGenomicReport.specimenType }}</div>
-            </v-flex>
+        <v-layout flex-child wrap>
+          <v-flex xs12 md2 class="my-3">
+            <v-tooltip top>
+              <v-btn small flat color="grey" slot="activator">
+                <v-icon small left>filter_list</v-icon>
+                <span class="caption text-none">Filter</span>
+              </v-btn>
+              <span>Molekulare Diagnostik Filtern</span>
+            </v-tooltip>
+            <br /><br />
 
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Sequenzierungs-Art</div>
-              <div>{{ itemsGenomicReport.sequencingType }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Tumor-Zellgehalt</div>
-              <div>{{ itemsGenomicReport.tumorCellContent }}</div>
-            </v-flex>
-            <v-flex xs2 sm4 md1>
-              <div>
-                <v-tooltip top>
-                  <v-btn
-                    icon
-                    @click="
-                      routeToPatient(queryId + '&' + itemsGenomicReport.patient)
-                    "
-                    slot="activator"
+            <v-layout row wrap>
+              <v-card flat color="transparent">
+                <v-card-title>
+                  <div>
+                    <h3>{{ specimenTypeFilter.name }}</h3>
+                  </div>
+                </v-card-title>
+                <v-flex
+                  class="mx-4"
+                  v-for="specimenTypeFilter in specimenTypeFilter.items"
+                  :key="specimenTypeFilter.id"
+                >
+                  <v-checkbox
+                    v-model="specimenTypeFilter.selected"
+                    :label="specimenTypeFilter.value.display"
+                    hide-details
                   >
-                    <v-icon color="blue">folder</v-icon>
-                  </v-btn>
-                  <span>öffne die Datei</span>
-                </v-tooltip>
-              </div>
-            </v-flex>
-          </v-layout>
+                  </v-checkbox>
+                </v-flex>
+              </v-card>
+              <v-card flat color="transparent">
+                <v-card-title>
+                  <div>
+                    <h3>{{ specimenLocalizationFilter.name }}</h3>
+                  </div>
+                </v-card-title>
+                <v-flex
+                  class="mx-4"
+                  v-for="specimenLocalizationFilter in specimenLocalizationFilter.items"
+                  :key="specimenLocalizationFilter.id"
+                >
+                  <v-checkbox
+                    v-model="specimenLocalizationFilter.selected"
+                    :label="specimenLocalizationFilter.value.display"
+                    hide-details
+                  >
+                  </v-checkbox>
+                </v-flex>
+              </v-card>
 
-          <v-divider class="my-3"></v-divider>
-        </v-card>
+              <v-card flat color="transparent">
+                <v-card-title>
+                  <div>
+                    <h3>{{ specimenTypeFilter.name }}</h3>
+                  </div>
+                </v-card-title>
+                <v-flex
+                  class="mx-4"
+                  v-for="specimenTypeFilter in specimenTypeFilter.items"
+                  :key="specimenTypeFilter.id"
+                >
+                  <v-checkbox
+                    v-model="specimenTypeFilter.selected"
+                    :label="specimenTypeFilter.value.display"
+                    hide-details
+                  >
+                  </v-checkbox>
+                </v-flex>
+              </v-card>
+              <v-card flat color="transparent">
+                <v-card-title>
+                  <div>
+                    <h3>Tumor Mutational Burden</h3>
+                  </div>
+                </v-card-title>
 
-        <span v-if="itemsGenomicReports.length == 0">
-          <br />
-          <v-alert :value="true" type="warning">
-            <span class="subheading font-weight-light"
-              >Keine ergebnisse gefunden.</span
+                <v-text-field
+                  v-model="tumorMutationalBurdenFilter.min"
+                  class="mt-0"
+                  hide-details
+                  single-line
+                  type="number"
+                ></v-text-field>
+
+                <v-text-field
+                  v-model="tumorMutationalBurdenFilter.max"
+                  class="mt-0"
+                  hide-details
+                  single-line
+                  type="number"
+                ></v-text-field>
+              </v-card>
+
+              <v-tooltip bottom>
+                <v-btn
+                  class="subheading font-weight-thin my-4"
+                  left
+                  dark
+                  slot="activator"
+                  color="blue accent-3"
+                  @click="filterQuery"
+                  >Filtern</v-btn
+                >
+                <span
+                  >Klicken Sie hier, um die Molekulare Diagnostik Tabelle zu
+                  filtern</span
+                >
+              </v-tooltip>
+            </v-layout>
+          </v-flex>
+          <v-flex xs12 md10>
+            <v-layout
+              v-if="itemsGenomicReports.length > 0"
+              row
+              justify-start
+              class="my-3"
             >
-          </v-alert></span
-        >
-        <span v-if="itemsGenomicReports.length > 0">
-          <v-btn
-            small
-            icon
-            @click="$vuetify.goTo('#ergebnisse', options)"
-            flat
-            color="grey"
-          >
-            <v-icon style="font-size: 1.2rem"
-              >fas fa-arrow-alt-circle-up</v-icon
+              <v-tooltip top>
+                <v-btn
+                  small
+                  flat
+                  color="grey"
+                  @click="sortBy(itemsGenomicReports, 'groupIndex')"
+                  slot="activator"
+                >
+                  <v-icon small left>sort</v-icon>
+                  <span class="caption text-none">Index</span>
+                </v-btn>
+                <span>Sortieren nach Index</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <v-btn
+                  small
+                  flat
+                  color="grey"
+                  @click="sortBy(itemsGenomicReports, 'specimenLocalization')"
+                  slot="activator"
+                >
+                  <span class="caption text-none">Proben-Lokalization</span>
+                </v-btn>
+                <span>Sortieren nach Proben-Lokalization</span>
+              </v-tooltip>
+
+              <v-icon small left>filter_list</v-icon>
+            </v-layout>
+
+            <v-card
+              flat
+              hover
+              v-for="itemsGenomicReport in limitItemsGenomicReports"
+              :key="itemsGenomicReport.id"
             >
-          </v-btn>
-          <v-btn
-            small
-            icon
-            flat
-            color="blue"
-            @click="limitNumberItemsGenomicReports -= 5"
-            dark
-          >
-            <v-icon style="font-size: 1.2rem">fas fa-minus-circle</v-icon>
-          </v-btn>
+              <v-layout row wrap :class="`pa-3`">
+                <v-flex xs6 sm4 md1>
+                  <div class="caption grey--text">Index</div>
+                  <div>{{ itemsGenomicReport.groupIndex }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Proben-Lokalisation</div>
+                  {{ itemsGenomicReport.specimenLocalization }}
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Tumorentität</div>
+                  <div>
+                    {{ itemsGenomicReport.tumorEntity }}
+                  </div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Probenart</div>
+                  <div>{{ itemsGenomicReport.specimenType }}</div>
+                </v-flex>
 
-          <v-btn
-            small
-            icon
-            flat
-            color="blue"
-            @click="limitNumberItemsGenomicReports += 5"
-            dark
-          >
-            <v-icon style="font-size: 1.2rem">fas fa-plus-circle</v-icon>
-          </v-btn>
-          <v-btn
-            small
-            flat
-            color="blue"
-            @click="limitNumberItemsGenomicReports = itemsGenomicReports.length"
-            dark
-          >
-            Alle anzeigen
-          </v-btn>
-        </span>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Sequenzierungs-Art</div>
+                  <div>{{ itemsGenomicReport.sequencingType }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Tumor-Zellgehalt</div>
+                  <div>{{ itemsGenomicReport.tumorCellContent }}</div>
+                </v-flex>
+                <v-flex xs2 sm4 md1>
+                  <div>
+                    <v-tooltip top>
+                      <v-btn
+                        icon
+                        @click="
+                          routeToPatient(
+                            queryId + '&' + itemsGenomicReport.patient
+                          )
+                        "
+                        slot="activator"
+                      >
+                        <v-icon color="blue">folder</v-icon>
+                      </v-btn>
+                      <span>öffne die Datei</span>
+                    </v-tooltip>
+                  </div>
+                </v-flex>
+              </v-layout>
 
-        <!--
+              <v-divider class="my-3"></v-divider>
+            </v-card>
+
+            <span v-if="itemsGenomicReports.length == 0">
+              <br />
+              <v-alert :value="true" type="warning">
+                <span class="subheading font-weight-light"
+                  >Keine ergebnisse gefunden.</span
+                >
+              </v-alert></span
+            >
+            <span v-if="itemsGenomicReports.length > 0">
+              <v-btn
+                small
+                icon
+                @click="$vuetify.goTo('#ergebnisse', options)"
+                flat
+                color="grey"
+              >
+                <v-icon style="font-size: 1.2rem"
+                  >fas fa-arrow-alt-circle-up</v-icon
+                >
+              </v-btn>
+              <v-btn
+                small
+                icon
+                flat
+                color="blue"
+                @click="limitNumberItemsGenomicReports -= 5"
+                dark
+              >
+                <v-icon style="font-size: 1.2rem">fas fa-minus-circle</v-icon>
+              </v-btn>
+
+              <v-btn
+                small
+                icon
+                flat
+                color="blue"
+                @click="limitNumberItemsGenomicReports += 5"
+                dark
+              >
+                <v-icon style="font-size: 1.2rem">fas fa-plus-circle</v-icon>
+              </v-btn>
+              <v-btn
+                small
+                flat
+                color="blue"
+                @click="
+                  limitNumberItemsGenomicReports = itemsGenomicReports.length
+                "
+                dark
+              >
+                Alle anzeigen
+              </v-btn>
+            </span>
+
+            <!--
         <v-card flat light>
           <v-data-table
             :headers="headerGenomicReports"
@@ -603,182 +736,274 @@
           </v-data-table>
         </v-card>
         -->
+          </v-flex>
+        </v-layout>
       </v-tab-item>
 
       <!-- RECOMMENDATIONS -->
+
       <v-tab-item>
-        <v-layout
-          v-if="itemsRecommendations.length > 0"
-          row
-          justify-start
-          class="my-3"
-        >
-          <v-tooltip top>
-            <v-btn
-              small
-              flat
-              color="grey"
-              @click="sortBy(itemsRecommendations, 'groupIndex')"
-              slot="activator"
-            >
-              <v-icon small left>sort</v-icon>
-              <span class="caption text-none">Index</span>
-            </v-btn>
-            <span>Sortieren nach Index</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <v-btn
-              small
-              flat
-              color="grey"
-              @click="sortBy(itemsRecommendations, 'icd10')"
-              slot="activator"
-            >
-              <span class="caption text-none">Diagnose</span>
-            </v-btn>
-            <span>Sortieren nach Diagnose</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <v-btn
-              small
-              flat
-              color="grey"
-              @click="sortBy(itemsRecommendations, 'priority')"
-              slot="activator"
-            >
-              <span class="caption text-none">Priorität</span>
-            </v-btn>
-            <span>Sortieren nach Priorität</span>
-          </v-tooltip>
-        </v-layout>
+        <v-layout flex-child wrap>
+          <v-flex xs12 md2 class="my-3">
+            <v-tooltip top>
+              <v-btn small flat color="grey" slot="activator">
+                <v-icon small left>filter_list</v-icon>
+                <span class="caption text-none">Filter</span>
+              </v-btn>
+              <span>Therapie-Empfehlungen Filtern</span>
+            </v-tooltip>
+            <br /><br />
 
-        <v-card
-          flat
-          hover
-          v-for="itemsRecommendation in limitItemsRecommendations"
-          :key="itemsRecommendation.id"
-        >
-          <v-layout row wrap :class="`pa-3`">
-            <v-flex xs6 sm4 md1>
-              <div class="caption grey--text">Index</div>
-              <div>{{ itemsRecommendation.groupIndex }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Diagnose</div>
-              {{ itemsRecommendation.icd10 }}
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Medikation</div>
-              <div>{{ itemsRecommendation.medication }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Medikation Klassen</div>
-              <div>{{ itemsRecommendation.medicationClasses }}</div>
-            </v-flex>
-
-            <v-flex xs6 sm4 md1>
-              <div class="caption grey--text">Priorität</div>
-              <div>{{ itemsRecommendation.priority }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Level of Evidence</div>
-              <div>
-                <strong>{{
-                  itemsRecommendation.levelOfEvidence.split(", ")[0]
-                }}</strong
-                ><br />
-                Zusätze:
-                {{ itemsRecommendation.levelOfEvidence.split(": ")[1] }}
-              </div>
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">ECOG Status</div>
-              <div>{{ itemsRecommendation.ecogStatus }}</div>
-            </v-flex>
-
-            <v-flex xs6 sm4 md10>
-              <div class="caption grey--text">
-                Stützende Molekulare Alterationen
-              </div>
-              <div>{{ itemsRecommendation.supportingVariants.join(", ") }}</div>
-            </v-flex>
-            <v-flex xs2 sm4 md1>
-              <div>
-                <v-tooltip top>
-                  <v-btn
-                    icon
-                    @click="
-                      routeToPatient(
-                        queryId + '&' + itemsRecommendation.patient
-                      )
-                    "
-                    slot="activator"
+            <v-layout row wrap>
+              <v-card flat color="transparent">
+                <v-card-title>
+                  <div>
+                    <h3>{{ priorityFilter.name }}</h3>
+                  </div>
+                </v-card-title>
+                <v-flex
+                  class="mx-4"
+                  v-for="priorityFilter in priorityFilter.items"
+                  :key="priorityFilter.id"
+                >
+                  <v-checkbox
+                    v-model="priorityFilter.selected"
+                    :label="priorityFilter.value"
+                    hide-details
                   >
-                    <v-icon color="blue">folder</v-icon>
-                  </v-btn>
-                  <span>öffne die Datei</span>
-                </v-tooltip>
-              </div>
-            </v-flex>
-          </v-layout>
+                  </v-checkbox>
+                </v-flex>
+              </v-card>
 
-          <v-divider class="my-3"></v-divider>
-        </v-card>
+              <v-card flat color="transparent">
+                <v-card-title>
+                  <div>
+                    <h3>{{ levelOfEvidenceFilter.name }}</h3>
+                  </div>
+                </v-card-title>
 
-        <span v-if="itemsRecommendations.length == 0">
-          <br />
-          <v-alert :value="true" type="warning">
-            <span class="subheading font-weight-light"
-              >Keine ergebnisse gefunden.</span
+                <v-flex
+                  class="mx-4"
+                  v-for="levelOfEvidenceFilter in levelOfEvidenceFilter.items"
+                  :key="levelOfEvidenceFilter.id"
+                >
+                  <v-checkbox
+                    v-model="levelOfEvidenceFilter.selected"
+                    :label="levelOfEvidenceFilter.value"
+                    hide-details
+                  >
+                  </v-checkbox>
+                </v-flex>
+              </v-card>
+
+              <v-card flat color="transparent">
+                <v-card-title>
+                  <div>
+                    <h3>{{ therapyRecommendationMedicationFilter.name }}</h3>
+                  </div>
+                </v-card-title>
+
+                <v-flex
+                  class="mx-4"
+                  v-for="therapyRecommendationMedicationFilter in therapyRecommendationMedicationFilter.items"
+                  :key="therapyRecommendationMedicationFilter.id"
+                >
+                  <v-checkbox
+                    v-model="therapyRecommendationMedicationFilter.selected"
+                    :label="therapyRecommendationMedicationFilter.value.display"
+                    hide-details
+                  >
+                  </v-checkbox>
+                </v-flex>
+              </v-card>
+
+              <v-tooltip bottom>
+                <v-btn
+                  class="subheading font-weight-thin my-4"
+                  left
+                  dark
+                  slot="activator"
+                  color="blue accent-3"
+                  @click="filterQuery"
+                  >Filtern</v-btn
+                >
+                <span
+                  >Klicken Sie hier, um die Therapie Empfehlungen Tabelle zu
+                  filtern</span
+                >
+              </v-tooltip>
+            </v-layout>
+          </v-flex>
+          <v-flex xs12 md10>
+            <v-layout
+              v-if="itemsRecommendations.length > 0"
+              row
+              justify-start
+              class="my-3"
             >
-          </v-alert></span
-        >
-        <span v-if="itemsRecommendations.length > 0">
-          <v-btn
-            small
-            icon
-            @click="$vuetify.goTo('#ergebnisse', options)"
-            flat
-            color="grey"
-          >
-            <v-icon style="font-size: 1.2rem"
-              >fas fa-arrow-alt-circle-up</v-icon
-            >
-          </v-btn>
-          <v-btn
-            small
-            icon
-            flat
-            color="blue"
-            @click="limitNumberItemsRecommendations -= 5"
-            dark
-          >
-            <v-icon style="font-size: 1.2rem">fas fa-minus-circle</v-icon>
-          </v-btn>
+              <v-tooltip top>
+                <v-btn
+                  small
+                  flat
+                  color="grey"
+                  @click="sortBy(itemsRecommendations, 'groupIndex')"
+                  slot="activator"
+                >
+                  <v-icon small left>sort</v-icon>
+                  <span class="caption text-none">Index</span>
+                </v-btn>
+                <span>Sortieren nach Index</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <v-btn
+                  small
+                  flat
+                  color="grey"
+                  @click="sortBy(itemsRecommendations, 'icd10')"
+                  slot="activator"
+                >
+                  <span class="caption text-none">Diagnose</span>
+                </v-btn>
+                <span>Sortieren nach Diagnose</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <v-btn
+                  small
+                  flat
+                  color="grey"
+                  @click="sortBy(itemsRecommendations, 'priority')"
+                  slot="activator"
+                >
+                  <span class="caption text-none">Priorität</span>
+                </v-btn>
+                <span>Sortieren nach Priorität</span>
+              </v-tooltip>
+            </v-layout>
 
-          <v-btn
-            small
-            icon
-            flat
-            color="blue"
-            @click="limitNumberItemsRecommendations += 5"
-            dark
-          >
-            <v-icon style="font-size: 1.2rem">fas fa-plus-circle</v-icon>
-          </v-btn>
-          <v-btn
-            small
-            flat
-            color="blue"
-            @click="
-              limitNumberItemsRecommendations = itemsRecommendations.length
-            "
-            dark
-          >
-            Alle anzeigen
-          </v-btn>
-        </span>
-        <!--
+            <v-card
+              flat
+              hover
+              v-for="itemsRecommendation in limitItemsRecommendations"
+              :key="itemsRecommendation.id"
+            >
+              <v-layout row wrap :class="`pa-3`">
+                <v-flex xs6 sm4 md1>
+                  <div class="caption grey--text">Index</div>
+                  <div>{{ itemsRecommendation.groupIndex }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Diagnose</div>
+                  {{ itemsRecommendation.icd10 }}
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Medikation</div>
+                  <div>{{ itemsRecommendation.medication }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Medikation Klassen</div>
+                  <div>{{ itemsRecommendation.medicationClasses }}</div>
+                </v-flex>
+
+                <v-flex xs6 sm4 md1>
+                  <div class="caption grey--text">Priorität</div>
+                  <div>{{ itemsRecommendation.priority }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Level of Evidence</div>
+                  <div>
+                    <strong>{{ itemsRecommendation.levelOfEvidence }}</strong>
+                  </div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">ECOG Status</div>
+                  <div>{{ itemsRecommendation.ecogStatus }}</div>
+                </v-flex>
+
+                <v-flex xs6 sm4 md10>
+                  <div class="caption grey--text">
+                    Stützende Molekulare Alterationen
+                  </div>
+                  <div>
+                    {{ itemsRecommendation.supportingVariants.join(", ") }}
+                  </div>
+                </v-flex>
+                <v-flex xs2 sm4 md1>
+                  <div>
+                    <v-tooltip top>
+                      <v-btn
+                        icon
+                        @click="
+                          routeToPatient(
+                            queryId + '&' + itemsRecommendation.patient
+                          )
+                        "
+                        slot="activator"
+                      >
+                        <v-icon color="blue">folder</v-icon>
+                      </v-btn>
+                      <span>öffne die Datei</span>
+                    </v-tooltip>
+                  </div>
+                </v-flex>
+              </v-layout>
+
+              <v-divider class="my-3"></v-divider>
+            </v-card>
+
+            <span v-if="itemsRecommendations.length == 0">
+              <br />
+              <v-alert :value="true" type="warning">
+                <span class="subheading font-weight-light"
+                  >Keine ergebnisse gefunden.</span
+                >
+              </v-alert></span
+            >
+            <span v-if="itemsRecommendations.length > 0">
+              <v-btn
+                small
+                icon
+                @click="$vuetify.goTo('#ergebnisse', options)"
+                flat
+                color="grey"
+              >
+                <v-icon style="font-size: 1.2rem"
+                  >fas fa-arrow-alt-circle-up</v-icon
+                >
+              </v-btn>
+              <v-btn
+                small
+                icon
+                flat
+                color="blue"
+                @click="limitNumberItemsRecommendations -= 5"
+                dark
+              >
+                <v-icon style="font-size: 1.2rem">fas fa-minus-circle</v-icon>
+              </v-btn>
+
+              <v-btn
+                small
+                icon
+                flat
+                color="blue"
+                @click="limitNumberItemsRecommendations += 5"
+                dark
+              >
+                <v-icon style="font-size: 1.2rem">fas fa-plus-circle</v-icon>
+              </v-btn>
+              <v-btn
+                small
+                flat
+                color="blue"
+                @click="
+                  limitNumberItemsRecommendations = itemsRecommendations.length
+                "
+                dark
+              >
+                Alle anzeigen
+              </v-btn>
+            </span>
+            <!--
         <v-card flat light>
           <v-data-table
             :headers="headerRecommendations"
@@ -804,220 +1029,413 @@
           </v-data-table>
         </v-card>
         -->
+          </v-flex>
+        </v-layout>
       </v-tab-item>
 
       <!-- THERAPIES -->
       <v-tab-item>
-        <v-layout
-          v-if="itemsTherapies.length > 0"
-          row
-          justify-start
-          class="my-3"
-        >
-          <v-tooltip top>
-            <v-btn
-              small
-              flat
-              color="grey"
-              @click="sortBy(itemsTherapies, 'groupIndex')"
-              slot="activator"
-            >
-              <v-icon small left>sort</v-icon>
-              <span class="caption text-none">Index</span>
-            </v-btn>
-            <span>Sortieren nach Index</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <v-btn
-              small
-              flat
-              color="grey"
-              @click="sortBy(itemsTherapies, 'status')"
-              slot="activator"
-            >
-              <span class="caption text-none">Status</span>
-            </v-btn>
-            <span>Sortieren nach Status</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <v-btn
-              small
-              flat
-              color="grey"
-              @click="sortBy(itemsTherapies, 'recordedOn')"
-              slot="activator"
-            >
-              <span class="caption text-none">Erfassungsdatum</span>
-            </v-btn>
-            <span>Sortieren nach Erfassungsdatum</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <v-btn
-              small
-              flat
-              color="grey"
-              @click="sortBy(itemsTherapies, 'recommendationPriority')"
-              slot="activator"
-            >
-              <span class="caption text-none">Empfehlungens Priorität</span>
-            </v-btn>
-            <span>Sortieren nach Empfehlungens Priorität</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <v-btn
-              small
-              flat
-              color="grey"
-              @click="sortBy(itemsTherapies, 'medication')"
-              slot="activator"
-            >
-              <span class="caption text-none">Medikation</span>
-            </v-btn>
-            <span>Sortieren nach Medikation</span>
-          </v-tooltip>
-        </v-layout>
+        <v-layout flex-child wrap>
+          <v-flex xs12 md2 class="my-3">
+            <v-tooltip top>
+              <v-btn small flat color="grey" slot="activator">
+                <v-icon small left>filter_list</v-icon>
+                <span class="caption text-none">Filter</span>
+              </v-btn>
+              <span>Systemische Therapien Filtern</span>
+            </v-tooltip>
+            <br /><br />
 
-        <v-card
-          flat
-          hover
-          v-for="itemsTherapie in limitItemsTherapies"
-          :key="itemsTherapie.id"
-        >
-          <v-layout row wrap :class="`pa-3`">
-            <v-flex xs6 sm4 md1>
-              <div class="caption grey--text">Index</div>
-              <div>{{ itemsTherapie.groupIndex }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Status</div>
-              <v-chip
-                small
-                :class="`${itemsTherapie.status} white--text my-2 caption`"
-                >{{ itemsTherapie.status }}</v-chip
-              >
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Erfassungsdatum</div>
-              <div>{{ itemsTherapie.recordedOn }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Empfehlungens Priorität</div>
-              <div>{{ itemsTherapie.recommendationPriority }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Medikation</div>
-              <div>{{ itemsTherapie.medication }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md3>
-              <div class="caption grey--text">Wirkstoff Klasssen</div>
-              <div>{{ itemsTherapie.medicationClasses }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md7>
-              <div class="caption grey--text">
-                Stützende Molekulare Alterationen
-              </div>
-              <div>{{ itemsTherapie.supportingVariants.join(", ") }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Dosisdichte</div>
-              <div>{{ itemsTherapie.dosage }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Zeitraum</div>
-              <div>{{ itemsTherapie.period }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md3>
-              <div class="caption grey--text">Response</div>
-              <div>{{ itemsTherapie.response }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Abbruchsgrund</div>
-              <div>{{ itemsTherapie.reasonStopped }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Bemerkungen</div>
-              <div>{{ itemsTherapie.note }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Progressionsdatum</div>
-              <div>{{ itemsTherapie.progressionDate }}</div>
-            </v-flex>
-            <v-flex xs6 sm4 md2>
-              <div class="caption grey--text">Nicht-Umsetzungs-Grund</div>
-              <div>{{ itemsTherapie.notDoneReason }}</div>
-            </v-flex>
-            <v-flex xs2 sm4 md1>
-              <div>
-                <v-tooltip top>
-                  <v-btn
-                    icon
-                    @click="
-                      routeToPatient(queryId + '&' + itemsTherapie.patient)
-                    "
-                    slot="activator"
+            <v-layout row wrap>
+              <v-card flat color="transparent">
+                <v-card-title>
+                  <div>
+                    <h3>{{ molecularTherapyResponseFilter.name }}</h3>
+                  </div>
+                </v-card-title>
+                <v-flex
+                  class="mx-4"
+                  v-for="molecularTherapyResponseFilter in molecularTherapyResponseFilter.items"
+                  :key="molecularTherapyResponseFilter.id"
+                >
+                  <v-checkbox
+                    v-model="molecularTherapyResponseFilter.selected"
+                    :label="molecularTherapyResponseFilter.value.display"
+                    hide-details
                   >
-                    <v-icon color="blue">folder</v-icon>
-                  </v-btn>
-                  <span>öffne die Datei</span>
-                </v-tooltip>
-              </div>
-            </v-flex>
-          </v-layout>
+                  </v-checkbox>
+                </v-flex>
+              </v-card>
 
-          <v-divider class="my-3"></v-divider>
-        </v-card>
+              <v-card flat color="transparent">
+                <v-card-title>
+                  <div>
+                    <h3>{{ molecularTherapyStatusFilter.name }}</h3>
+                  </div>
+                </v-card-title>
 
-        <span v-if="itemsTherapies.length == 0">
-          <br />
-          <v-alert :value="true" type="warning">
-            <span class="subheading font-weight-light"
-              >Keine ergebnisse gefunden.</span
+                <v-flex
+                  class="mx-4"
+                  v-for="molecularTherapyStatusFilter in molecularTherapyStatusFilter.items"
+                  :key="molecularTherapyStatusFilter.id"
+                >
+                  <v-checkbox
+                    v-model="molecularTherapyStatusFilter.selected"
+                    :label="molecularTherapyStatusFilter.value.display"
+                    hide-details
+                  >
+                  </v-checkbox>
+                </v-flex>
+              </v-card>
+
+              <v-card flat color="transparent">
+                <v-card-title>
+                  <div>
+                    <h3>{{ molecularTherapyMedicationFilter.name }}</h3>
+                  </div>
+                </v-card-title>
+
+                <v-flex
+                  class="mx-4"
+                  v-for="molecularTherapyMedicationFilter in molecularTherapyMedicationFilter.items"
+                  :key="molecularTherapyMedicationFilter.id"
+                >
+                  <v-checkbox
+                    v-model="molecularTherapyMedicationFilter.selected"
+                    :label="molecularTherapyMedicationFilter.value.display"
+                    hide-details
+                  >
+                  </v-checkbox>
+                </v-flex>
+              </v-card>
+
+              <v-card flat color="transparent">
+                <v-card-title>
+                  <div>
+                    <h3>Erfassungsdatum</h3>
+                  </div>
+                </v-card-title>
+
+                <v-menu
+                  ref="menuMin"
+                  v-model="menuMin"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  :return-value.sync="molecularTherapyRecordingDateFilter.min"
+                  lazy
+                  transition="scale-transition"
+                  offset-y
+                  full-width
+                  max-width="290px"
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                      v-model="molecularTherapyRecordingDateFilter.min"
+                      label="Min"
+                      prepend-icon="event"
+                      readonly
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="molecularTherapyRecordingDateFilter.min"
+                    type="month"
+                    no-title
+                    scrollable
+                  >
+                    <v-spacer></v-spacer>
+                    <v-btn flat color="primary" @click="menuMin = false"
+                      >Cancel</v-btn
+                    >
+                    <v-btn
+                      flat
+                      color="primary"
+                      @click="
+                        $refs.menuMin.save(
+                          molecularTherapyRecordingDateFilter.min
+                        )
+                      "
+                      >OK</v-btn
+                    >
+                  </v-date-picker>
+                </v-menu>
+
+                <v-spacer></v-spacer>
+
+                <v-menu
+                  ref="menuMax"
+                  v-model="menuMax"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  :return-value.sync="molecularTherapyRecordingDateFilter.max"
+                  lazy
+                  transition="scale-transition"
+                  offset-y
+                  full-width
+                  max-width="290px"
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                      v-model="molecularTherapyRecordingDateFilter.max"
+                      label="Max"
+                      prepend-icon="event"
+                      readonly
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="molecularTherapyRecordingDateFilter.max"
+                    type="month"
+                    no-title
+                    scrollable
+                  >
+                    <v-spacer></v-spacer>
+                    <v-btn flat color="primary" @click="menuMax = false"
+                      >Cancel</v-btn
+                    >
+                    <v-btn
+                      flat
+                      color="primary"
+                      @click="
+                        $refs.menuMax.save(
+                          molecularTherapyRecordingDateFilter.max
+                        )
+                      "
+                      >OK</v-btn
+                    >
+                  </v-date-picker>
+                </v-menu>
+              </v-card>
+              <v-tooltip bottom>
+                <v-btn
+                  class="subheading font-weight-thin my-4"
+                  left
+                  dark
+                  slot="activator"
+                  color="blue accent-3"
+                  @click="filterQuery"
+                  >Filtern</v-btn
+                >
+                <span
+                  >Klicken Sie hier, um die Systemische Therapien Tabelle zu
+                  filtern</span
+                >
+              </v-tooltip>
+            </v-layout>
+          </v-flex>
+          <v-flex xs12 md10>
+            <v-layout
+              v-if="itemsTherapies.length > 0"
+              row
+              justify-start
+              class="my-3"
             >
-          </v-alert></span
-        >
-        <span v-if="itemsTherapies.length > 0">
-          <v-btn
-            small
-            icon
-            @click="$vuetify.goTo('#ergebnisse', options)"
-            flat
-            color="grey"
-          >
-            <v-icon style="font-size: 1.2rem"
-              >fas fa-arrow-alt-circle-up</v-icon
+              <v-tooltip top>
+                <v-btn
+                  small
+                  flat
+                  color="grey"
+                  @click="sortBy(itemsTherapies, 'groupIndex')"
+                  slot="activator"
+                >
+                  <v-icon small left>sort</v-icon>
+                  <span class="caption text-none">Index</span>
+                </v-btn>
+                <span>Sortieren nach Index</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <v-btn
+                  small
+                  flat
+                  color="grey"
+                  @click="sortBy(itemsTherapies, 'status')"
+                  slot="activator"
+                >
+                  <span class="caption text-none">Status</span>
+                </v-btn>
+                <span>Sortieren nach Status</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <v-btn
+                  small
+                  flat
+                  color="grey"
+                  @click="sortBy(itemsTherapies, 'recordedOn')"
+                  slot="activator"
+                >
+                  <span class="caption text-none">Erfassungsdatum</span>
+                </v-btn>
+                <span>Sortieren nach Erfassungsdatum</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <v-btn
+                  small
+                  flat
+                  color="grey"
+                  @click="sortBy(itemsTherapies, 'recommendationPriority')"
+                  slot="activator"
+                >
+                  <span class="caption text-none">Empfehlungens Priorität</span>
+                </v-btn>
+                <span>Sortieren nach Empfehlungens Priorität</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <v-btn
+                  small
+                  flat
+                  color="grey"
+                  @click="sortBy(itemsTherapies, 'medication')"
+                  slot="activator"
+                >
+                  <span class="caption text-none">Medikation</span>
+                </v-btn>
+                <span>Sortieren nach Medikation</span>
+              </v-tooltip>
+            </v-layout>
+
+            <v-card
+              flat
+              hover
+              v-for="itemsTherapie in limitItemsTherapies"
+              :key="itemsTherapie.id"
             >
-          </v-btn>
-          <v-btn
-            small
-            icon
-            flat
-            color="blue"
-            @click="limitNumberItemsTherapies -= 5"
-            dark
-          >
-            <v-icon style="font-size: 1.2rem">fas fa-minus-circle</v-icon>
-          </v-btn>
-          <v-btn
-            small
-            icon
-            flat
-            color="blue"
-            @click="limitNumberItemsTherapies += 5"
-            dark
-          >
-            <v-icon style="font-size: 1.2rem">fas fa-plus-circle</v-icon>
-          </v-btn>
-          <v-btn
-            small
-            flat
-            color="blue"
-            @click="limitNumberItemsTherapies = itemsTherapies.length"
-            dark
-          >
-            Alle anzeigen
-          </v-btn>
-        </span>
-        <!--
+              <v-layout row wrap :class="`pa-3`">
+                <v-flex xs6 sm4 md1>
+                  <div class="caption grey--text">Index</div>
+                  <div>{{ itemsTherapie.groupIndex }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Status</div>
+                  <v-chip
+                    small
+                    :class="`${itemsTherapie.status} white--text my-2 caption`"
+                    >{{ itemsTherapie.status }}</v-chip
+                  >
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Erfassungsdatum</div>
+                  <div>{{ itemsTherapie.recordedOn }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Empfehlungens Priorität</div>
+                  <div>{{ itemsTherapie.recommendationPriority }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Medikation</div>
+                  <div>{{ itemsTherapie.medication }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md3>
+                  <div class="caption grey--text">Wirkstoff Klasssen</div>
+                  <div>{{ itemsTherapie.medicationClasses }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md7>
+                  <div class="caption grey--text">
+                    Stützende Molekulare Alterationen
+                  </div>
+                  <div>{{ itemsTherapie.supportingVariants.join(", ") }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Dosisdichte</div>
+                  <div>{{ itemsTherapie.dosage }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Zeitraum</div>
+                  <div>{{ itemsTherapie.period }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md3>
+                  <div class="caption grey--text">Response</div>
+                  <div>{{ itemsTherapie.response }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Abbruchsgrund</div>
+                  <div>{{ itemsTherapie.reasonStopped }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Bemerkungen</div>
+                  <div>{{ itemsTherapie.note }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Progressionsdatum</div>
+                  <div>{{ itemsTherapie.progressionDate }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Nicht-Umsetzungs-Grund</div>
+                  <div>{{ itemsTherapie.notDoneReason }}</div>
+                </v-flex>
+                <v-flex xs2 sm4 md1>
+                  <div>
+                    <v-tooltip top>
+                      <v-btn
+                        icon
+                        @click="
+                          routeToPatient(queryId + '&' + itemsTherapie.patient)
+                        "
+                        slot="activator"
+                      >
+                        <v-icon color="blue">folder</v-icon>
+                      </v-btn>
+                      <span>öffne die Datei</span>
+                    </v-tooltip>
+                  </div>
+                </v-flex>
+              </v-layout>
+
+              <v-divider class="my-3"></v-divider>
+            </v-card>
+
+            <span v-if="itemsTherapies.length == 0">
+              <br />
+              <v-alert :value="true" type="warning">
+                <span class="subheading font-weight-light"
+                  >Keine ergebnisse gefunden.</span
+                >
+              </v-alert></span
+            >
+            <span v-if="itemsTherapies.length > 0">
+              <v-btn
+                small
+                icon
+                @click="$vuetify.goTo('#ergebnisse', options)"
+                flat
+                color="grey"
+              >
+                <v-icon style="font-size: 1.2rem"
+                  >fas fa-arrow-alt-circle-up</v-icon
+                >
+              </v-btn>
+              <v-btn
+                small
+                icon
+                flat
+                color="blue"
+                @click="limitNumberItemsTherapies -= 5"
+                dark
+              >
+                <v-icon style="font-size: 1.2rem">fas fa-minus-circle</v-icon>
+              </v-btn>
+              <v-btn
+                small
+                icon
+                flat
+                color="blue"
+                @click="limitNumberItemsTherapies += 5"
+                dark
+              >
+                <v-icon style="font-size: 1.2rem">fas fa-plus-circle</v-icon>
+              </v-btn>
+              <v-btn
+                small
+                flat
+                color="blue"
+                @click="limitNumberItemsTherapies = itemsTherapies.length"
+                dark
+              >
+                Alle anzeigen
+              </v-btn>
+            </span>
+            <!--
         <v-card flat light>
           <v-data-table
             fluid
@@ -1052,6 +1470,8 @@
           </v-data-table>
         </v-card>
         -->
+          </v-flex>
+        </v-layout>
       </v-tab-item>
     </v-tabs>
 
@@ -1088,6 +1508,9 @@ export default {
   loading: "~/components/loading.vue",
 
   name: "ProfilePage",
+
+  menuMin: false,
+  menuMax: false,
 
   components: {
     userPanel,
@@ -1269,6 +1692,52 @@ export default {
     sortBy(dataset, prop) {
       dataset.sort((a, b) => (a[prop] < b[prop] ? -1 : 1));
     },
+
+    async filterQuery() {
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${localStorage.token}`;
+
+      try {
+        let queryId = this.$route.params.id;
+
+        let filter = {
+          id: `${queryId}`,
+          molecularTherapyFilter: {
+            medication: this.molecularTherapyMedicationFilter,
+            recordingDate: this.molecularTherapyRecordingDateFilter,
+            response: this.molecularTherapyResponseFilter,
+            status: this.molecularTherapyStatusFilter,
+          },
+          ngsSummaryFilter: {
+            specimenLocalization: this.specimenLocalizationFilter,
+            specimenType: this.specimenTypeFilter,
+            tumorMutationalBurden: this.tumorMutationalBurdenFilter,
+          },
+          therapyRecommendationFilter: {
+            levelOfEvidence: this.levelOfEvidenceFilter,
+            medication: this.therapyRecommendationMedicationFilter,
+            priority: this.priorityFilter,
+          },
+        };
+
+        let Response = await axios.put(
+          `${serverBaseURL}/${queryId}/filters`,
+          filter
+        );
+
+        this.$router.push(`${Response.data.id}`);
+        window.location.reload(true);
+      } catch (err) {
+        if (err.response.status === 401) {
+          this.$router.push(`/`);
+        } else if (err.response.status === 403) {
+          return redirect("/403");
+        } else {
+          return redirect("/" + err.response.status);
+        }
+      }
+    },
   },
 
   async asyncData({ params, redirect, error }) {
@@ -1312,12 +1781,9 @@ export default {
       );
 
       let queryparams = await axios.get(`${serverBaseURL}/${params.id}`);
-      let filter = queryparams.data.filter;
+      let filters = queryparams.data.filters;
 
       localStorage.setItem("queryId", queryparams.data.id);
-
-      //console.log(`${serverBaseURL}/${params.id}`);
-      //console.log(JSON.stringify(queryparams));
 
       let resultSummary;
       let results;
@@ -1415,7 +1881,7 @@ export default {
 
       for (var i = 0; i < cnvTypCatRaw.data.concepts.length; i++) {
         cnvTypCat.push(
-          cnvTypCatRaw.data.concepts[i].code 
+          cnvTypCatRaw.data.concepts[i].code
           //+ " - " +
           //  cnvTypCatRaw.data.concepts[i].display
         );
@@ -1438,8 +1904,8 @@ export default {
       }
 
       let ageRangeRaw = Array();
-      ageRangeRaw[0] = filter.ageRange.min;
-      ageRangeRaw[1] = filter.ageRange.max;
+      ageRangeRaw[0] = filters.patientFilter.ageRange.min;
+      ageRangeRaw[1] = filters.patientFilter.ageRange.max;
 
       let getQueryParametersMutations = Array();
       for (
@@ -1461,7 +1927,6 @@ export default {
 
       let getQueryParametersSimpleVariants = Array();
 
-      //alert("SNV parameters "+ JSON.stringify(queryparams.data.parameters.simpleVariants.length));
       for (
         var i = 0;
         i < queryparams.data.parameters.simpleVariants.length;
@@ -1504,9 +1969,6 @@ export default {
           }
         }
       }
-
-      //alert(JSON.stringify(queryparams.data.parameters.simpleVariants));
-      //alert(JSON.stringify(queryparams.data.parameters.copyNumberVariants));
 
       let getQueryParametersDiagnosis = Array();
       for (var i = 0; i < queryparams.data.parameters.diagnoses.length; i++) {
@@ -1685,9 +2147,32 @@ export default {
         itemsRecommendationsCount: recommendationsCount,
         itemsGenomicReportsCount: genomicReportsCount,
 
-        gender: filter.genders,
-        vitalStatus: filter.vitalStatus,
+        // Patient Filters
+        gender: filters.patientFilter.gender,
+        vitalStatus: filters.patientFilter.vitalStatus,
         ageRange: ageRangeRaw,
+
+        // NGS Summary Filters
+        specimenTypeFilter: filters.ngsSummaryFilter.specimenType,
+        specimenLocalizationFilter:
+          filters.ngsSummaryFilter.specimenLocalization,
+        tumorMutationalBurdenFilter:
+          filters.ngsSummaryFilter.tumorMutationalBurden,
+
+        // Therapy Recommendation Filters
+        priorityFilter: filters.therapyRecommendationFilter.priority,
+        levelOfEvidenceFilter:
+          filters.therapyRecommendationFilter.levelOfEvidence,
+        therapyRecommendationMedicationFilter:
+          filters.therapyRecommendationFilter.medication,
+
+        //Molecular Therapy Filters
+        molecularTherapyMedicationFilter:
+          filters.molecularTherapyFilter.medication,
+        molecularTherapyRecordingDateFilter:
+          filters.molecularTherapyFilter.recordingDate,
+        molecularTherapyResponseFilter: filters.molecularTherapyFilter.response,
+        molecularTherapyStatusFilter: filters.molecularTherapyFilter.status,
 
         diagnosisCat,
         genesCat,
