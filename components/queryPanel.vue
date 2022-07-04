@@ -1297,8 +1297,6 @@ export default {
             },
           };
 
-          alert(JSON.stringify(request));
-
           let Response = await axios.post(
             process.env.baseUrl + process.env.port + `/bwhc/mtb/api/query/`,
             request
@@ -1512,7 +1510,6 @@ export default {
       }
 
       if (fusionType == "rnaFusions" && primeType == "bothPrimes") {
-        alert("rnaFusions");
         this.selectedRnaFusions.push({
           fivePrimeGene: {
             code: fusions.split(" · ")[1],
@@ -1524,7 +1521,6 @@ export default {
       }
 
       if (fusionType == "rnaFusions" && primeType == "fivePrimeGene") {
-        alert("dnaFusions");
         this.selectedRnaFusions.push({
           fivePrimeGene: {
             code: fusions.split(" · ")[1],
