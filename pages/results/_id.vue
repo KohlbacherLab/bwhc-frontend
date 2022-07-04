@@ -197,6 +197,19 @@
                     {{ getQueryParametersCopyNumberVariants.join(", ") }}
                     <br />
                   </span>
+
+                  <span v-if="getQueryParametersDnaFusions.length > 0">
+                    <strong>DNA Fusionen:</strong>
+                    {{ getQueryParametersDnaFusions.join(", ") }}
+                    <br />
+                  </span>
+
+                  <span v-if="getQueryParametersRnaFusions.length > 0">
+                    <strong>RNA Fusionen:</strong>
+                    {{ getQueryParametersRnaFusions.join(", ") }}
+                    <br />
+                  </span>
+
                   <span v-if="getQueryParametersDiagnosis.length > 0">
                     <strong>Diagnose:</strong>
                     {{ getQueryParametersDiagnosis.join(", ") }}
@@ -239,6 +252,8 @@
           :getQueryParametersCopyNumberVariants="
             getQueryParametersCopyNumberVariants
           "
+          :getQueryParametersDnaFusions="getQueryParametersDnaFusions"
+          :getQueryParametersRnaFusions="getQueryParametersRnaFusions"
           :getQueryParametersDiagnosis="getQueryParametersDiagnosis"
           :getQueryParametersTumorMorphology="getQueryParametersTumorMorphology"
           :getQueryParametersDrugs="getQueryParametersDrugs"
@@ -505,25 +520,6 @@
                 </v-flex>
               </v-card>
 
-              <v-card flat color="transparent">
-                <v-card-title>
-                  <div>
-                    <h3>{{ specimenTypeFilter.name }}</h3>
-                  </div>
-                </v-card-title>
-                <v-flex
-                  class="mx-4"
-                  v-for="specimenTypeFilter in specimenTypeFilter.items"
-                  :key="specimenTypeFilter.id"
-                >
-                  <v-checkbox
-                    v-model="specimenTypeFilter.selected"
-                    :label="specimenTypeFilter.value.display"
-                    hide-details
-                  >
-                  </v-checkbox>
-                </v-flex>
-              </v-card>
               <v-card flat color="transparent">
                 <v-card-title>
                   <div>
@@ -1970,6 +1966,58 @@ export default {
         }
       }
 
+      let getQueryParametersDnaFusions = Array();
+      
+      //alert(JSON.stringify(queryparams.data.parameters.dnaFusions));
+      
+      /*
+
+      for (var i = 0; i < queryparams.data.parameters.dnaFusions.length; i++) {
+        for (var j = 0; j < genesCat.length; j++) {
+          for (
+            var k = 0;
+            k < queryparams.data.parameters.dnaFusions[i].genes.length;
+            k++
+          ) {
+            if (
+              genesCat[j].includes(
+                queryparams.data.parameters.dnaFusions[i].genes[k].display +
+                  " · " +
+                  queryparams.data.parameters.dnaFusions[i].genes[k].code
+              )
+            )
+              getQueryParametersDnaFusions.push(genesCat[j]);
+          }
+        }
+      }
+      */
+
+      //alert(JSON.stringify(queryparams.data.parameters.rnaFusions));
+
+      let getQueryParametersRnaFusions = Array();
+
+      /*
+
+      for (var i = 0; i < queryparams.data.parameters.rnaFusions.length; i++) {
+        for (var j = 0; j < genesCat.length; j++) {
+          for (
+            var k = 0;
+            k < queryparams.data.parameters.rnaFusions[i].genes.length;
+            k++
+          ) {
+            if (
+              genesCat[j].includes(
+                queryparams.data.parameters.rnaFusions[i].genes[k].display +
+                  " · " +
+                  queryparams.data.parameters.rnaFusions[i].genes[k].code
+              )
+            )
+              getQueryParametersRnaFusions.push(genesCat[j]);
+          }
+        }
+      }
+      */
+
       let getQueryParametersDiagnosis = Array();
       for (var i = 0; i < queryparams.data.parameters.diagnoses.length; i++) {
         getQueryParametersDiagnosis.push(
@@ -2184,6 +2232,8 @@ export default {
         getQueryParametersMutations,
         getQueryParametersSimpleVariants,
         getQueryParametersCopyNumberVariants,
+        getQueryParametersDnaFusions,
+        getQueryParametersRnaFusions,
         getQueryParametersDiagnosis,
         getQueryParametersTumorMorphology,
         getQueryParametersDrugs,
