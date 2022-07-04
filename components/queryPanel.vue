@@ -16,7 +16,7 @@
 
                 <!--
                         <span class="grey--text">Beliebig</span>
-                      -->
+                -->
 
                 <v-autocomplete
                   v-model="mutatedGenes"
@@ -59,7 +59,44 @@
   -->
                 </v-autocomplete>
 
-                <v-flex d-flex>
+                <v-radio-group v-model="mutationOptions" row>
+                  <v-radio
+                    label="SNV"
+                    value="radioSNV"
+                    @change="
+                      (showSNV = true), (showCNV = false), (showFusions = false)
+                    "
+                  >
+                  </v-radio>
+                  <v-radio
+                    label="CNV"
+                    value="radioCNV"
+                    @change="
+                      (showSNV = false), (showCNV = true), (showFusions = false)
+                    "
+                  >
+                  </v-radio>
+                  <v-radio
+                    label="Fusionen"
+                    value="radioFusions"
+                    @change="
+                      (showSNV = false), (showCNV = false), (showFusions = true)
+                    "
+                  >
+                  </v-radio>
+                  <!--
+                  <v-radio
+                    label="Alle"
+                    value="radioAll"
+                    @change="
+                      (showSNV = true), (showCNV = true), (showFusions = true)
+                    "
+                  >
+                  </v-radio>
+                  -->
+                </v-radio-group>
+
+                <v-flex d-flex v-if="showSNV">
                   <v-card color="pink lighten-4" flat>
                     <v-card-text class="headline font-weight-thin">
                       <!--
@@ -168,7 +205,7 @@
                   </v-card>
                 </v-flex>
 
-                <v-flex d-flex>
+                <v-flex d-flex v-if="showCNV">
                   <v-card color="red lighten-4" flat>
                     <v-card-text class="headline font-weight-thin">
                       <!-- 
@@ -302,7 +339,7 @@
                   </v-card>
                 </v-flex>
 
-                <v-flex d-flex>
+                <v-flex d-flex v-if="showFusions">
                   <v-card color="deep-orange lighten-4" flat>
                     <v-card-text class="headline font-weight-thin">
                       <!-- 
@@ -512,7 +549,7 @@
                     (showSV = true)">
                     </v-radio>
             </v-radio-group>
-            -->
+
 
                 <v-layout v-if="showSNV" justify-left row>
                   <v-card color="grey lighten-4" flat>
@@ -530,10 +567,12 @@
                           ></v-text-field>
                         </v-flex>
                       </v-layout>
+
+                      
                     </v-container>
                   </v-card>
 
-                  <!--
+
               <v-flex xs4>
                 <v-autocomplete
                   v-model="baseChange"
@@ -577,7 +616,7 @@
                   return-object
                 ></v-autocomplete>
               </v-flex>
-              -->
+
                 </v-layout>
 
                 <v-layout v-if="showCNV" justify-left row>
@@ -597,7 +636,7 @@
                     </v-container>
                   </v-card>
 
-                  <!--
+
                   <v-flex xs4>
                 <v-autocomplete
                   v-model="baseChange"
@@ -641,7 +680,7 @@
                   return-object
                 ></v-autocomplete>
               </v-flex>
-              -->
+
                 </v-layout>
 
                 <v-layout v-if="showSCNV" justify-center row>
@@ -661,7 +700,7 @@
                     ></v-autocomplete>
                   </v-flex>
                 </v-layout>
-                <!--
+
             <v-layout v-if="showSV" justify-center row>
               <v-flex xs4>
                 <v-autocomplete
@@ -1156,9 +1195,10 @@ export default {
   ],
 
   data: () => ({
-    mutationOptions: "radioAll",
+    //mutationOptions: "radioAll",
     showSNV: false,
     showCNV: false,
+    showFusions: false,
     showSCNV: false,
     showSV: false,
     expansion: false,
@@ -1428,7 +1468,6 @@ export default {
     },
 
     addFusions(fusions, fusionType, primeType) {
-
       if (fusionType == "bothFusions" && primeType == "bothPrimes") {
         this.selectedDnaFusions.push({
           fivePrimeGene: {
