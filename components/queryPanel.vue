@@ -98,7 +98,12 @@
 
                 <v-flex d-flex v-if="showSNV">
                   <v-card color="pink lighten-4" flat>
-                    <v-card-text class="headline font-weight-thin">
+                      <v-card-text class="headline font-weight-thin">
+                      <div class="caption grey--text">
+                        Bitte wählen Sie zuerst einen Gen-Name oder HGNC Symbol,
+                        dann cDNA change, protein change aus
+                        und klicken Sie dann anschließend auf das + Symbol.
+                      </div>
                       <!--
                       <span class="grey--text">SNV</span>>
                       -->
@@ -169,7 +174,7 @@
                         <v-combobox
                           v-model="selectedMutatedGenesSNV"
                           :items="items"
-                          label="Das ausgewählte SVN wird hier angezeigt"
+                          label="Das ausgewählte SNV wird hier angezeigt"
                           clearable
                           chips
                           cache-items
@@ -177,7 +182,6 @@
                           dense
                           hide-no-data
                           multiple
-                          overflow
                           hide-selected
                         >
                           <template v-slot:selection="data">
@@ -208,6 +212,11 @@
                 <v-flex d-flex v-if="showCNV">
                   <v-card color="red lighten-4" flat>
                     <v-card-text class="headline font-weight-thin">
+                       <div class="caption grey--text">
+                        Bitte wählen Sie zuerst einen oder mehrere Gen-Name oder HGNC Symbol,
+                        dann CNV typ, Min Copy#, Max Copy# saus
+                        und klicken Sie dann anschließend auf das + Symbol.
+                      </div>
                       <!-- 
                         <span class="grey--text">CNV</span>
                       -->
@@ -300,13 +309,13 @@
                           v-model="selectedMutatedGenesCNV"
                           :items="items"
                           clearable
+                          label="Das ausgewählte CNV wird hier angezeigt"
                           chips
                           cache-items
                           deletable-chips
                           dense
                           hide-no-data
                           multiple
-                          overflow
                           hide-selected
                         >
                           <template v-slot:selection="data">
@@ -342,9 +351,16 @@
                 <v-flex d-flex v-if="showFusions">
                   <v-card color="deep-orange lighten-4" flat>
                     <v-card-text class="headline font-weight-thin">
+                      <div class="caption grey--text">
+                        Bitte wählen Sie zuerst einen Gen-Name oder HGNC Symbol,
+                        dann den Fusionstyp (dna, rna), den Prime-Typ (5',3') aus
+                        und klicken Sie dann anschließend auf das + Symbol.
+                      </div>
+
                       <!-- 
                         <span class="grey--text">CNV</span>
                       -->
+
                       <v-autocomplete
                         v-model="fusions"
                         :items="genesCatSimplified"
@@ -425,13 +441,13 @@
                           v-model="selectedDnaFusions"
                           :items="items"
                           clearable
+                          label="Das ausgewählte DNA Fusion wird hier angezeigt"
                           chips
                           cache-items
                           deletable-chips
                           dense
                           hide-no-data
                           multiple
-                          overflow
                           hide-selected
                         >
                           <template v-slot:selection="data">
@@ -456,13 +472,13 @@
                           v-model="selectedRnaFusions"
                           :items="items"
                           clearable
+                          label="Das ausgewählte RNA Fusion wird hier angezeigt"
                           chips
                           cache-items
                           deletable-chips
                           dense
                           hide-no-data
                           multiple
-                          overflow
                           hide-selected
                         >
                           <template v-slot:selection="data">
