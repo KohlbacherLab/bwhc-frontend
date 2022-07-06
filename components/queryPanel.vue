@@ -19,7 +19,7 @@
                 -->
 
                 <v-autocomplete
-                v-if="showAll"
+                  v-if="showAll"
                   v-model="mutatedGenes"
                   :items="genesCat"
                   :loading="isLoading"
@@ -65,7 +65,10 @@
                     label="SNV"
                     value="radioSNV"
                     @change="
-                      (showSNV = true), (showCNV = false), (showFusions = false), (showAll = false)
+                      (showSNV = true),
+                        (showCNV = false),
+                        (showFusions = false),
+                        (showAll = false)
                     "
                   >
                   </v-radio>
@@ -73,7 +76,10 @@
                     label="CNV"
                     value="radioCNV"
                     @change="
-                      (showSNV = false), (showCNV = true), (showFusions = false), (showAll = false)
+                      (showSNV = false),
+                        (showCNV = true),
+                        (showFusions = false),
+                        (showAll = false)
                     "
                   >
                   </v-radio>
@@ -81,15 +87,21 @@
                     label="Fusionen"
                     value="radioFusions"
                     @change="
-                      (showSNV = false), (showCNV = false), (showFusions = true), (showAll = false)
+                      (showSNV = false),
+                        (showCNV = false),
+                        (showFusions = true),
+                        (showAll = false)
                     "
                   >
                   </v-radio>
-                   <v-radio
+                  <v-radio
                     label="Beliebig"
                     value="radioBeliebig"
                     @change="
-                      (showSNV = false), (showCNV = false), (showFusions = false), (showAll = true)
+                      (showSNV = false),
+                        (showCNV = false),
+                        (showFusions = false),
+                        (showAll = true)
                     "
                   >
                   </v-radio>
@@ -122,8 +134,6 @@
                         :loading="isLoading"
                         label="SNV · Gen-Name oder HGNC Symbol"
                         ref="mutatedGenes"
-                        cache-items
-                        deletable-chips
                         hide-selected
                         dense
                         chips
@@ -244,6 +254,7 @@
                         hide-no-data
                         multiple
                         hide-selected
+                        clearable
                       >
                         <template slot="selection" slot-scope="data">
                           <v-chip
@@ -362,8 +373,9 @@
                     <v-card-text class="headline font-weight-thin">
                       <div class="caption grey--text">
                         Bitte wählen Sie zuerst einen Gen-Name oder HGNC Symbol,
-                        dann den Fusionstyp (DNA, RNA), den Fusionpartner (5',3')
-                        aus und klicken Sie dann anschließend auf das + Symbol.
+                        dann den Fusionstyp (DNA, RNA), den Fusionpartner
+                        (5',3') aus und klicken Sie dann anschließend auf das +
+                        Symbol.
                       </div>
 
                       <!-- 
@@ -379,12 +391,12 @@
                         label="RNA & DNA Fusions · Gen-Name oder HGNC Symbol"
                         ref="fusions"
                         chips
-                        cache-items
-                        deletable-chips
                         dense
                         hide-no-data
                         hide-selected
+                        clearable
                       >
+                        <!--
                         <template slot="selection" slot-scope="data">
                           <v-chip
                             :selected="data.selected"
@@ -394,6 +406,9 @@
                             {{ data.item }}
                           </v-chip>
                         </template>
+
+                        -->
+
                         <!--           
               <template v-slot:selection="{ item }">
                 <v-chip>
@@ -1261,7 +1276,6 @@ export default {
     localButton: false,
     federatedButton: false,
 
-
     mutationOptions: "radioBeliebig",
     drugUsage: "egal",
     fusionType: "bothFusions",
@@ -1489,138 +1503,150 @@ export default {
     },
 
     addMutatedGenesSNV(dnaChange, aminoAcidChange, mutatedGenesSNV) {
-      this.selectedMutatedGenesSNV.push({
-        dnaChange: dnaChange,
-        aminoAcidChange: aminoAcidChange,
-        gene: { code: mutatedGenesSNV.split(" · ")[1] },
-      });
+      if (mutatedGenesSNV) {
+        this.selectedMutatedGenesSNV.push({
+          dnaChange: dnaChange,
+          aminoAcidChange: aminoAcidChange,
+          gene: { code: mutatedGenesSNV.split(" · ")[1] },
+        });
 
-      this.mutatedGenesSNV = this.selectedMutatedGenesSNV;
+        this.mutatedGenesSNV = this.selectedMutatedGenesSNV;
+      } else {
+        alert("Bitte fügen Sie zuerst die relevanten Parameter hinzu!");
+      }
     },
 
     addMutatedGenesCNV(cnvType, cnvMax, cnvMin, mutatedGenesCNV) {
-      let code = Array();
-      for (var i = 0; i < mutatedGenesCNV.length; i++) {
-        code.push({ code: mutatedGenesCNV[i].split(" · ")[1] });
-      }
+      if (mutatedGenesCNV) {
+        let code = Array();
+        for (var i = 0; i < mutatedGenesCNV.length; i++) {
+          code.push({ code: mutatedGenesCNV[i].split(" · ")[1] });
+        }
 
-      this.selectedMutatedGenesCNV.push({
-        copyNumber: { max: parseInt(cnvMax), min: parseInt(cnvMin) },
-        type: cnvType,
-        genes: code,
-      });
+        this.selectedMutatedGenesCNV.push({
+          copyNumber: { max: parseInt(cnvMax), min: parseInt(cnvMin) },
+          type: cnvType,
+          genes: code,
+        });
+      } else {
+        alert("Bitte fügen Sie zuerst die relevanten Parameter hinzu!");
+      }
     },
 
     addFusions(fusions, fusionType, primeType) {
-      if (fusionType == "bothFusions" && primeType == "bothPrimes") {
-        this.selectedDnaFusions.push({
-          fivePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-          threePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-        });
-        this.selectedRnaFusions.push({
-          fivePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-          threePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-        });
-      }
+      if (fusions) {
+        if (fusionType == "bothFusions" && primeType == "bothPrimes") {
+          this.selectedDnaFusions.push({
+            fivePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+            threePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+          });
+          this.selectedRnaFusions.push({
+            fivePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+            threePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+          });
+        }
 
-      if (fusionType == "bothFusions" && primeType == "fivePrimeGene") {
-        this.selectedDnaFusions.push({
-          fivePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-        });
-        this.selectedRnaFusions.push({
-          fivePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-        });
-      }
+        if (fusionType == "bothFusions" && primeType == "fivePrimeGene") {
+          this.selectedDnaFusions.push({
+            fivePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+          });
+          this.selectedRnaFusions.push({
+            fivePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+          });
+        }
 
-      if (fusionType == "bothFusions" && primeType == "threePrimeGene") {
-        this.selectedDnaFusions.push({
-          threePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-        });
-        this.selectedRnaFusions.push({
-          threePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-        });
-      }
+        if (fusionType == "bothFusions" && primeType == "threePrimeGene") {
+          this.selectedDnaFusions.push({
+            threePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+          });
+          this.selectedRnaFusions.push({
+            threePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+          });
+        }
 
-      if (fusionType == "dnaFusions" && primeType == "bothPrimes") {
-        this.selectedDnaFusions.push({
-          fivePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-          threePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-        });
-        this.selectedRnaFusions.push({
-          fivePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-          threePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-        });
-      }
+        if (fusionType == "dnaFusions" && primeType == "bothPrimes") {
+          this.selectedDnaFusions.push({
+            fivePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+            threePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+          });
+          this.selectedRnaFusions.push({
+            fivePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+            threePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+          });
+        }
 
-      if (fusionType == "dnaFusions" && primeType == "fivePrimeGene") {
-        this.selectedDnaFusions.push({
-          fivePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-        });
-      }
+        if (fusionType == "dnaFusions" && primeType == "fivePrimeGene") {
+          this.selectedDnaFusions.push({
+            fivePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+          });
+        }
 
-      if (fusionType == "dnaFusions" && primeType == "threePrimeGene") {
-        this.selectedDnaFusions.push({
-          threePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-        });
-      }
+        if (fusionType == "dnaFusions" && primeType == "threePrimeGene") {
+          this.selectedDnaFusions.push({
+            threePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+          });
+        }
 
-      if (fusionType == "rnaFusions" && primeType == "bothPrimes") {
-        this.selectedRnaFusions.push({
-          fivePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-          threePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-        });
-      }
+        if (fusionType == "rnaFusions" && primeType == "bothPrimes") {
+          this.selectedRnaFusions.push({
+            fivePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+            threePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+          });
+        }
 
-      if (fusionType == "rnaFusions" && primeType == "fivePrimeGene") {
-        this.selectedRnaFusions.push({
-          fivePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-        });
-      }
+        if (fusionType == "rnaFusions" && primeType == "fivePrimeGene") {
+          this.selectedRnaFusions.push({
+            fivePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+          });
+        }
 
-      if (fusionType == "rnaFusions" && primeType == "threePrimeGene") {
-        this.selectedRnaFusions.push({
-          threePrimeGene: {
-            code: fusions.split(" · ")[1],
-          },
-        });
-      }
+        if (fusionType == "rnaFusions" && primeType == "threePrimeGene") {
+          this.selectedRnaFusions.push({
+            threePrimeGene: {
+              code: fusions.split(" · ")[1],
+            },
+          });
+        }
 
-      this.dnaFusions = this.selectedDnaFusions;
-      this.rnaFusions = this.selectedRnaFusions;
+        this.dnaFusions = this.selectedDnaFusions;
+        this.rnaFusions = this.selectedRnaFusions;
+      } else {
+        alert("Bitte fügen Sie zuerst die relevanten Parameter hinzu!");
+      }
     },
 
     removeMutatedGenes(item) {
@@ -1630,15 +1656,15 @@ export default {
     },
 
     removeMutatedGenesSNV(item) {
-      const index = this.selectedMutatedGenesSNV.indexOf(item);
+      const index = this.mutatedGenesSNV.indexOf(item);
       if (index >= 0) this.selectedMutatedGenesSNV.splice(index, 1);
-      this.selectedMutatedGenesSNV.splice(index, 1);
+      this.mutatedGenesSNV.splice(index, 1);
     },
 
     removeMutatedGenesCNV(item) {
-      const index = this.selectedMutatedGenesCNV.indexOf(item);
+      const index = this.mutatedGenesCNV.indexOf(item);
       if (index >= 0) this.selectedMutatedGenesCNV.splice(index, 1);
-      this.selectedMutatedGenesCNV.splice(index, 1);
+      this.mutatedGenesCNV.splice(index, 1);
     },
 
     removeFusions(item) {
