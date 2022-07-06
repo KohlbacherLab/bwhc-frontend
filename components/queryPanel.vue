@@ -19,6 +19,7 @@
                 -->
 
                 <v-autocomplete
+                v-if="showAll"
                   v-model="mutatedGenes"
                   :items="genesCat"
                   :loading="isLoading"
@@ -64,7 +65,7 @@
                     label="SNV"
                     value="radioSNV"
                     @change="
-                      (showSNV = true), (showCNV = false), (showFusions = false)
+                      (showSNV = true), (showCNV = false), (showFusions = false), (showAll = false)
                     "
                   >
                   </v-radio>
@@ -72,7 +73,7 @@
                     label="CNV"
                     value="radioCNV"
                     @change="
-                      (showSNV = false), (showCNV = true), (showFusions = false)
+                      (showSNV = false), (showCNV = true), (showFusions = false), (showAll = false)
                     "
                   >
                   </v-radio>
@@ -80,7 +81,15 @@
                     label="Fusionen"
                     value="radioFusions"
                     @change="
-                      (showSNV = false), (showCNV = false), (showFusions = true)
+                      (showSNV = false), (showCNV = false), (showFusions = true), (showAll = false)
+                    "
+                  >
+                  </v-radio>
+                   <v-radio
+                    label="Beliebig"
+                    value="radioBeliebig"
+                    @change="
+                      (showSNV = false), (showCNV = false), (showFusions = false), (showAll = true)
                     "
                   >
                   </v-radio>
@@ -98,11 +107,11 @@
 
                 <v-flex d-flex v-if="showSNV">
                   <v-card color="pink lighten-4" flat>
-                      <v-card-text class="headline font-weight-thin">
+                    <v-card-text class="headline font-weight-thin">
                       <div class="caption grey--text">
                         Bitte wählen Sie zuerst einen Gen-Name oder HGNC Symbol,
-                        dann cDNA change, protein change aus
-                        und klicken Sie dann anschließend auf das + Symbol.
+                        dann cDNA change, protein change aus und klicken Sie
+                        dann anschließend auf das + Symbol.
                       </div>
                       <!--
                       <span class="grey--text">SNV</span>>
@@ -212,10 +221,10 @@
                 <v-flex d-flex v-if="showCNV">
                   <v-card color="red lighten-4" flat>
                     <v-card-text class="headline font-weight-thin">
-                       <div class="caption grey--text">
-                        Bitte wählen Sie zuerst einen oder mehrere Gen-Name oder HGNC Symbol,
-                        dann CNV typ, Min Copy#, Max Copy# saus
-                        und klicken Sie dann anschließend auf das + Symbol.
+                      <div class="caption grey--text">
+                        Bitte wählen Sie zuerst einen oder mehrere Gen-Name oder
+                        HGNC Symbol, dann CNV typ, Min Copy#, Max Copy# saus und
+                        klicken Sie dann anschließend auf das + Symbol.
                       </div>
                       <!-- 
                         <span class="grey--text">CNV</span>
@@ -353,8 +362,8 @@
                     <v-card-text class="headline font-weight-thin">
                       <div class="caption grey--text">
                         Bitte wählen Sie zuerst einen Gen-Name oder HGNC Symbol,
-                        dann den Fusionstyp (dna, rna), den Prime-Typ (5',3') aus
-                        und klicken Sie dann anschließend auf das + Symbol.
+                        dann den Fusionstyp (DNA, RNA), den Fusionpartner (5',3')
+                        aus und klicken Sie dann anschließend auf das + Symbol.
                       </div>
 
                       <!-- 
@@ -368,7 +377,7 @@
                         item-text="name"
                         item-value="id"
                         label="RNA & DNA Fusions · Gen-Name oder HGNC Symbol"
-                        ref="mutatedGenes"
+                        ref="fusions"
                         chips
                         cache-items
                         deletable-chips
@@ -455,16 +464,24 @@
                               :selected="data.selected"
                               label
                               close
-                              @input="removeSelectedFusions(data.item)"
+                              @input="removeSelectedDnaFusions(data.item)"
                             >
-                              <!--
-                                  <v-avatar class="red white--text">
-                                    CNV
-                                  </v-avatar>
-                                -->
-                              <strong>
-                                <strong>{{ data.item }}</strong>
+                              <strong
+                                ><strong v-if="data.item.fivePrimeGene"
+                                  >{{ data.item.fivePrimeGene.code }}
+                                </strong>
                               </strong>
+                              <i v-if="data.item.fivePrimeGene">
+                                5' <br /><br />
+                              </i>
+                              <strong
+                                ><strong v-if="data.item.threePrimeGene"
+                                  >{{ data.item.threePrimeGene.code }}
+                                </strong></strong
+                              >
+                              <i v-if="data.item.threePrimeGene">
+                                3' <br /><br />
+                              </i>
                             </v-chip>
                           </template>
                         </v-combobox>
@@ -486,16 +503,24 @@
                               :selected="data.selected"
                               label
                               close
-                              @input="removeSelectedFusions(data.item)"
+                              @input="removeSelectedRnaFusions(data.item)"
                             >
-                              <!--
-                                  <v-avatar class="red white--text">
-                                    CNV
-                                  </v-avatar>
-                                -->
-                              <strong>
-                                <strong>{{ data.item }}</strong>
+                              <strong
+                                ><strong v-if="data.item.fivePrimeGene"
+                                  >{{ data.item.fivePrimeGene.code }}
+                                </strong>
                               </strong>
+                              <i v-if="data.item.fivePrimeGene">
+                                5' <br /><br />
+                              </i>
+                              <strong
+                                ><strong v-if="data.item.threePrimeGene"
+                                  >{{ data.item.threePrimeGene.code }}
+                                </strong></strong
+                              >
+                              <i v-if="data.item.threePrimeGene">
+                                3' <br /><br />
+                              </i>
                             </v-chip>
                           </template>
                         </v-combobox>
@@ -1215,6 +1240,7 @@ export default {
     showSNV: false,
     showCNV: false,
     showFusions: false,
+    showAll: true,
     showSCNV: false,
     showSV: false,
     expansion: false,
@@ -1235,6 +1261,8 @@ export default {
     localButton: false,
     federatedButton: false,
 
+
+    mutationOptions: "radioBeliebig",
     drugUsage: "egal",
     fusionType: "bothFusions",
     primeType: "bothPrimes",
@@ -1602,15 +1630,31 @@ export default {
     },
 
     removeMutatedGenesSNV(item) {
-      const index = this.mutatedGenesSNV.indexOf(item);
+      const index = this.selectedMutatedGenesSNV.indexOf(item);
       if (index >= 0) this.selectedMutatedGenesSNV.splice(index, 1);
-      this.mutatedGenesSNV.splice(index, 1);
+      this.selectedMutatedGenesSNV.splice(index, 1);
     },
 
     removeMutatedGenesCNV(item) {
-      const index = this.mutatedGenesCNV.indexOf(item);
+      const index = this.selectedMutatedGenesCNV.indexOf(item);
       if (index >= 0) this.selectedMutatedGenesCNV.splice(index, 1);
-      this.mutatedGenesCNV.splice(index, 1);
+      this.selectedMutatedGenesCNV.splice(index, 1);
+    },
+
+    removeFusions(item) {
+      //TBA
+    },
+
+    removeSelectedDnaFusions(item) {
+      const index = this.selectedDnaFusions.indexOf(item);
+      if (index >= 0) this.selectedDnaFusions.splice(index, 1);
+      this.selectedDnaFusions.splice(index, 1);
+    },
+
+    removeSelectedRnaFusions(item) {
+      const index = this.selectedRnaFusions.indexOf(item);
+      if (index >= 0) this.selectedRnaFusions.splice(index, 1);
+      this.selectedRnaFusions.splice(index, 1);
     },
 
     resetMutatedGenes() {
@@ -1796,6 +1840,7 @@ export default {
       localStorage.removeItem("diagnosis");
       localStorage.removeItem("tumorMorphology");
       localStorage.removeItem("mutatedGenes");
+      localStorage.removeItem("fusions");
       localStorage.removeItem("selectedDrugs");
       localStorage.removeItem("responses");
       localStorage.removeItem("queryId");
