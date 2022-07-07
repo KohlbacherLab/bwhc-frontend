@@ -202,7 +202,6 @@
               <v-flex d-flex xs12 sm6 md6>
                 <v-text-field
                   v-model="username"
-                  :counter="20"
                   :error-messages="errors"
                   label="Nutzername"
                   required
@@ -223,7 +222,6 @@
               <v-flex d-flex xs12 sm6 md6>
                 <v-text-field
                   v-model="given"
-                  :counter="10"
                   :error-messages="errors"
                   label="Vorname"
                   required
