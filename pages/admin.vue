@@ -129,7 +129,6 @@
               <v-flex d-flex xs12 sm6 md6>
                 <v-text-field
                   v-model="usernameOwn"
-                  :counter="20"
                   :error-messages="errors"
                   label="Username"
                   required
@@ -150,7 +149,6 @@
               <v-flex d-flex xs12 sm6 md6>
                 <v-text-field
                   v-model="givenOwn"
-                  :counter="10"
                   :error-messages="errors"
                   label="Name"
                   required
@@ -340,7 +338,6 @@
               <v-flex d-flex xs12 sm6 md6>
                 <v-text-field
                   v-model="usernameEdit"
-                  :counter="20"
                   :error-messages="errors"
                   label="Nutzername"
                   required
@@ -361,7 +358,6 @@
               <v-flex d-flex xs12 sm6 md6>
                 <v-text-field
                   v-model="givenEdit"
-                  :counter="20"
                   :error-messages="errors"
                   label="Vorname"
                   required
