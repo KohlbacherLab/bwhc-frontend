@@ -523,7 +523,7 @@
               <v-card flat color="transparent">
                 <v-card-title>
                   <div>
-                    <h3>Tumor Mutational Burden</h3>
+                    <h3>Tumor Mutational Burden (mut/MBase)</h3>
                   </div>
                 </v-card-title>
 

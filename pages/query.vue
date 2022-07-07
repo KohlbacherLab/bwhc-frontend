@@ -22,8 +22,10 @@
 
       <queryPanel
         v-bind:genesCat="genesCat"
+        :genesCatSimplified="genesCatSimplified"
         :diagnosisCat="diagnosisCat"
         :tumorMorphologyCat="tumorMorphologyCat"
+        :cnvTypCat="cnvTypCat"
         :drugsCat="drugsCat"
         :responsesCat="responsesCat"
         :baseChangeCat="baseChangeCat"
@@ -33,7 +35,7 @@
         clipped-right
       />
       <v-divider class="my-3"></v-divider>
-  
+
       <v-col v-for="(issue, i) in issues" :key="i">
         <div class="caption">{{ issue.details }}</div>
       </v-col>
@@ -117,6 +119,12 @@ export default {
         process.env.baseUrl + process.env.port + process.env.coding + "/HGNC"
       );
 
+      let cnvTypCatRaw = await axios.get(
+        process.env.baseUrl +
+          process.env.port +
+          `/bwhc/catalogs/api/ValueSet?name=cnv-typ`
+      );
+
       let drugsCatRaw = await axios.get(
         process.env.baseUrl + process.env.port + process.env.coding + "/ATC"
       );
@@ -131,6 +139,8 @@ export default {
       let diagnosisCat = Array();
       let tumorMorphologyCat = Array();
       let genesCat = Array();
+      let genesCatSimplified = Array();
+      let cnvTypCat = Array();
       let drugsCat = Array();
       let responsesCat = Array();
 
@@ -160,6 +170,22 @@ export default {
         );
       }
 
+      for (var i = 0; i < genesCatRaw.data.entries.length; i++) {
+        genesCatSimplified.push(
+          genesCatRaw.data.entries[i].symbol +
+            " · " +
+            genesCatRaw.data.entries[i].hgncId
+        );
+      }
+
+      for (var i = 0; i < cnvTypCatRaw.data.concepts.length; i++) {
+        cnvTypCat.push(
+          cnvTypCatRaw.data.concepts[i].code
+          //  + " - " +
+          //  cnvTypCatRaw.data.concepts[i].display
+        );
+      }
+
       for (var i = 0; i < drugsCatRaw.data.entries.length; i++) {
         drugsCat.push(
           drugsCatRaw.data.entries[i].name +
@@ -180,10 +206,11 @@ export default {
         diagnosisCat,
         tumorMorphologyCat,
         genesCat,
+        genesCatSimplified,
+        cnvTypCat,
         drugsCat,
         responsesCat,
       };
-      
     } catch (err) {
       if (err.status === 401) {
         return redirect("/");
