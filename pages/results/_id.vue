@@ -1046,26 +1046,6 @@
               <v-card flat color="transparent">
                 <v-card-title>
                   <div>
-                    <h3>{{ molecularTherapyResponseFilter.name }}</h3>
-                  </div>
-                </v-card-title>
-                <v-flex
-                  class="mx-4"
-                  v-for="molecularTherapyResponseFilter in molecularTherapyResponseFilter.items"
-                  :key="molecularTherapyResponseFilter.id"
-                >
-                  <v-checkbox
-                    v-model="molecularTherapyResponseFilter.selected"
-                    :label="molecularTherapyResponseFilter.value.display"
-                    hide-details
-                  >
-                  </v-checkbox>
-                </v-flex>
-              </v-card>
-
-              <v-card flat color="transparent">
-                <v-card-title>
-                  <div>
                     <h3>{{ molecularTherapyStatusFilter.name }}</h3>
                   </div>
                 </v-card-title>
@@ -1099,6 +1079,26 @@
                   <v-checkbox
                     v-model="molecularTherapyMedicationFilter.selected"
                     :label="molecularTherapyMedicationFilter.value.display"
+                    hide-details
+                  >
+                  </v-checkbox>
+                </v-flex>
+              </v-card>
+
+               <v-card flat color="transparent">
+                <v-card-title>
+                  <div>
+                    <h3>{{ molecularTherapyResponseFilter.name }}</h3>
+                  </div>
+                </v-card-title>
+                <v-flex
+                  class="mx-4"
+                  v-for="molecularTherapyResponseFilter in molecularTherapyResponseFilter.items"
+                  :key="molecularTherapyResponseFilter.id"
+                >
+                  <v-checkbox
+                    v-model="molecularTherapyResponseFilter.selected"
+                    :label="molecularTherapyResponseFilter.value.display"
                     hide-details
                   >
                   </v-checkbox>
