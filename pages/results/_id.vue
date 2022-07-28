@@ -23,7 +23,7 @@
         >
           <v-card-text class="headline font-weight-thin">
             <v-icon color="purple" dark>fas fa-street-view</v-icon>
-            <strong>{{ displayResults.patientTotal }}</strong> Patienten
+            <strong>{{ displayResults.patientCount }}</strong> Patienten
           </v-card-text>
         </v-card>
       </v-flex>
@@ -38,7 +38,7 @@
         >
           <v-card-text class="headline font-weight-thin">
             <v-icon color="indigo">fas fa-stethoscope</v-icon>
-            <strong>{{ itemsGenomicReportsCount }}</strong> Molekulare
+            <strong>{{ displayResults.ngsReportCount }}</strong> Molekulare
             Diagnostik
           </v-card-text>
         </v-card>
@@ -54,7 +54,7 @@
         >
           <v-card-text class="headline font-weight-thin">
             <v-icon color="blue">fas fa-comment-medical</v-icon>
-            <strong>{{ itemsRecommendationsCount }}</strong>
+            <strong>{{ displayResults.therapyRecommendationCount }}</strong>
             Therapie-Empfehlungen
           </v-card-text>
         </v-card>
@@ -70,7 +70,7 @@
         >
           <v-card-text class="headline font-weight-thin">
             <v-icon color="cyan" dark>fas fa-file-medical</v-icon>
-            <strong>{{ itemsTherapiesCount }}</strong> Systemische Therapien
+            <strong>{{ displayResults.therapyCount }}</strong> Systemische Therapien
           </v-card-text>
         </v-card>
       </v-flex>
