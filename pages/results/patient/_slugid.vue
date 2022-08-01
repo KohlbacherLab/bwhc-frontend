@@ -11,86 +11,86 @@
 
     <v-divider class="my-3"></v-divider>
     <div id="patientCard"></div>
-    <v-layout>
-      <v-card flat dark>
-        <v-layout row wrap :class="`pa-3`">
-          <v-flex xs6 sm4 md3>
-            <div class="caption grey--text">
-              <v-icon style="font-size: 1rem" slot="activator" class="mr-1"
-                >fas fa-venus-mars</v-icon
-              >
-              Geschlecht
-            </div>
-            <div>{{ patient.gender }}</div>
-          </v-flex>
-          <v-flex xs6 sm4 md3>
-            <div class="caption grey--text">
-              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
-                >fas fa-calendar-week</v-icon
-              >
-              Geburtsdatum
-            </div>
-            <div>{{ patient.birthDate }}</div>
-          </v-flex>
-          <v-flex xs6 sm4 md3>
-            <div class="caption grey--text">
-              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
-                >fa-solid fa-skull</v-icon
-              >
-              Todesdatum
-            </div>
-            <div>{{ patient.dateOfDeath }}</div>
-          </v-flex>
-          <v-flex xs6 sm4 md3>
-            <div class="caption grey--text">
-              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
-                >fas fa-location-arrow</v-icon
-              >
-              ZPM
-            </div>
-            <div>{{ patient.managingZPM }}</div>
-          </v-flex>
 
-          <v-flex xs6 sm4 md3>
-            <div class="caption grey--text">
-              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
-                >fas fa-shield-alt</v-icon
-              >
-              Versicherung
-            </div>
-            <div>{{ patient.insurance }}</div>
-          </v-flex>
-          <v-flex xs6 sm4 md3>
-            <div class="caption grey--text">
-              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
-                >fas fa-file-signature</v-icon
-              >
-              Einwilligung
-            </div>
-            <div>{{ patient.consentStatus }}</div>
-            <br />
-          </v-flex>
-          <v-flex xs6 sm4 md3>
-            <div class="caption grey--text">
-              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
-                >fas fa-asterisk</v-icon
-              >
-              Datum der Erstüberweisung
-            </div>
-            <div>{{ patient.firstReferralDate }}</div>
-          </v-flex>
-          <v-flex xs6 sm4 md4>
-            <div class="caption grey--text">
-              <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
-                >fas fa-id-badge</v-icon
-              >
-              Patienten ID
-            </div>
-            <div>{{ patient.id }}</div>
-          </v-flex>
-        </v-layout>
-      </v-card>
-      <!--
+    <v-card flat dark>
+      <v-layout row wrap :class="`pa-3`">
+        <v-flex xs6 sm4 md3>
+          <div class="caption grey--text">
+            <v-icon style="font-size: 1rem" slot="activator" class="mr-1"
+              >fas fa-venus-mars</v-icon
+            >
+            Geschlecht
+          </div>
+          <div>{{ patient.gender }}</div>
+        </v-flex>
+        <v-flex xs6 sm4 md3>
+          <div class="caption grey--text">
+            <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+              >fas fa-calendar-week</v-icon
+            >
+            Geburtsdatum
+          </div>
+          <div>{{ patient.birthDate }}</div>
+        </v-flex>
+        <v-flex xs6 sm4 md3>
+          <div class="caption grey--text">
+            <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+              >fa-solid fa-skull</v-icon
+            >
+            Todesdatum
+          </div>
+          <div>{{ patient.dateOfDeath }}</div>
+        </v-flex>
+        <v-flex xs6 sm4 md3>
+          <div class="caption grey--text">
+            <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+              >fas fa-location-arrow</v-icon
+            >
+            ZPM
+          </div>
+          <div>{{ patient.managingZPM }}</div>
+        </v-flex>
+
+        <v-flex xs6 sm4 md3>
+          <div class="caption grey--text">
+            <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+              >fas fa-shield-alt</v-icon
+            >
+            Versicherung
+          </div>
+          <div>{{ patient.insurance }}</div>
+        </v-flex>
+        <v-flex xs6 sm4 md3>
+          <div class="caption grey--text">
+            <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+              >fas fa-file-signature</v-icon
+            >
+            Einwilligung
+          </div>
+          <div>{{ patient.consentStatus }}</div>
+          <br />
+        </v-flex>
+        <v-flex xs6 sm4 md3>
+          <div class="caption grey--text">
+            <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+              >fas fa-asterisk</v-icon
+            >
+            Datum der Erstüberweisung
+          </div>
+          <div>{{ patient.firstReferralDate }}</div>
+        </v-flex>
+        <v-flex xs6 sm4 md3>
+          <div class="caption grey--text">
+            <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
+              >fas fa-id-badge</v-icon
+            >
+            Patienten ID
+          </div>
+          <div>{{ patient.id }}</div>
+        </v-flex>
+      </v-layout>
+    </v-card>
+    <!--
       <v-card flat dark left max-width="450">
         <br />
         <v-card-actions>
@@ -133,7 +133,6 @@
         </v-card-title>
       </v-card>
         -->
-    </v-layout>
 
     <br />
 
@@ -386,6 +385,304 @@
     <v-card-title class="headline font-weight-light"
       >Somatische NGS-Berichte</v-card-title
     >
+
+    <v-card flat v-for="ngsReport in ngsReports" :key="ngsReport.id">
+      <v-layout row wrap :class="`pa-3`">
+        <v-flex xs6 sm4 md12>
+          <div class="caption grey--text">Probe</div>
+          <div>{{ ngsReport.specimen }}</div>
+        </v-flex>
+        <v-flex xs6 sm4 md2>
+          <div class="caption grey--text">Erstellungsdatum</div>
+          {{ ngsReport.issueDate }}
+        </v-flex>
+        <v-flex xs6 sm4 md2>
+          <div class="caption grey--text">Sequenzierungs-Art</div>
+          <div>{{ ngsReport.sequencingType }}</div>
+        </v-flex>
+        <v-flex xs6 sm4 md2>
+          <div class="caption grey--text">Tumor-Zellgehalt</div>
+          <div>{{ ngsReport.tumorCellContent }}</div>
+        </v-flex>
+        <v-flex xs6 sm4 md2>
+          <div class="caption grey--text">Brcaness</div>
+          {{ ngsReport.brcaness }}
+        </v-flex>
+        <v-flex xs6 sm2 md2>
+          <div class="caption grey--text">Micro-Satellite Instabilitäten</div>
+          <div>{{ ngsReport.microSatelliteInstabilities }}</div>
+        </v-flex>
+
+        <v-flex xs6 sm4 md2>
+          <div class="caption grey--text">Mutationslast</div>
+          <div>{{ ngsReport.tumorMutationalBurden }}</div>
+        </v-flex>
+
+        <v-flex xs2 sm4 md12> </v-flex>
+      </v-layout>
+
+      <v-card-title class="font-weight-normal">Metadaten</v-card-title>
+      <v-card
+        flat
+        color="#f0f0f0"
+        v-for="metadata in ngsReport.metadata"
+        :key="metadata.id"
+      >
+        <v-layout row wrap :class="`pa-3`">
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Kit-Typ</div>
+            <div>{{ metadata.kitType }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Kit Hersteller</div>
+            {{ metadata.kitManufacturer }}
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Sequenziergerät</div>
+            <div>{{ metadata.sequencer }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Ref. Genom</div>
+            {{ metadata.referenceGenome }}
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Pipeline</div>
+            <div>{{ metadata.pipeline }}</div>
+          </v-flex>
+        </v-layout>
+      </v-card>
+
+      <v-card-title class="font-weight-normal">Einfache Varianten</v-card-title>
+      <v-card
+        flat
+        color="#e8e8e8"
+        v-for="simpleVariant in ngsReport.simpleVariants"
+        :key="simpleVariant.id"
+      >
+        <v-layout row wrap :class="`pa-3`">
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Chr</div>
+            <div>{{ simpleVariant.chromosome }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Gen</div>
+            {{ simpleVariant.gene }}
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Start/Ende</div>
+            <div>{{ simpleVariant.startEnd }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Ref Allel</div>
+            {{ simpleVariant.refAllele }}
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Alt Allel</div>
+            <div>{{ simpleVariant.altAllele }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">DNA Change</div>
+            <div>{{ simpleVariant.dnaChange }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Amino Acid Change</div>
+            <div>{{ simpleVariant.aminoAcidChange }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Read Depth</div>
+            {{ simpleVariant.readDepth }}
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Allel-Frequenz</div>
+            <div>{{ simpleVariant.allelicFrequency }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">COSMIC ID</div>
+            <div>{{ simpleVariant.cosmicId }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">dbSNP ID</div>
+            <div>{{ simpleVariant.dbSNPId }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Interpretation</div>
+            <div>{{ simpleVariant.interpretation }}</div>
+          </v-flex>
+        </v-layout>
+      </v-card>
+
+      <v-card-title class="font-weight-normal"
+        >Copy Number Varianten</v-card-title
+      >
+      <v-card
+        flat
+        color="#f0f0f0"
+        v-for="copyNumberVariant in ngsReport.copyNumberVariants"
+        :key="copyNumberVariant.id"
+      >
+        <v-layout row wrap :class="`pa-3`">
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Chr</div>
+            <div>{{ copyNumberVariant.chromosome }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Reported Affected Genes</div>
+            {{ copyNumberVariant.reportedAffectedGenes }}
+          </v-flex>
+          <v-flex xs6 sm4 md4>
+            <div class="caption grey--text">Anfangsbereich</div>
+            <div>{{ copyNumberVariant.startRange }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md4>
+            <div class="caption grey--text">Endbereich</div>
+            {{ copyNumberVariant.endRange }}
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Kopienzahl</div>
+            <div>{{ copyNumberVariant.totalCopyNumber }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Rel. Kopienzahl</div>
+            <div>{{ copyNumberVariant.relativeCopyNumber }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md1>
+            <div class="caption grey--text">CNA</div>
+            <div>{{ copyNumberVariant.cnA }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md1>
+            <div class="caption grey--text">CNB</div>
+            {{ copyNumberVariant.cnB }}
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Reported Focality</div>
+            <div>{{ copyNumberVariant.reportedFocality }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Art</div>
+            <div>{{ copyNumberVariant.type }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Copy Number Neutral LoH</div>
+            <div>{{ copyNumberVariant.copyNumberNeutralLoH }}</div>
+          </v-flex>
+        </v-layout>
+      </v-card>
+
+      <v-card-title class="font-weight-normal">DNA-Fusions</v-card-title>
+      <v-card
+        flat
+        color="#e8e8e8"
+        v-for="dnaFusion in ngsReport.dnaFusions"
+        :key="dnaFusion.id"
+      >
+        <v-layout row wrap :class="`pa-3`">
+          <v-flex xs6 sm4 md10>
+            <div class="caption grey--text">Chr</div>
+            <div>{{ dnaFusion.representation }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Reported Affected Genes</div>
+            {{ dnaFusion.reportedNumReads }}
+          </v-flex>
+        </v-layout>
+      </v-card>
+
+      <v-card-title class="font-weight-normal">RNA-Fusions</v-card-title>
+      <v-card
+        flat
+        color="#f0f0f0"
+        v-for="rnaFusion in ngsReport.rnaFusions"
+        :key="rnaFusion.id"
+      >
+        <v-layout row wrap :class="`pa-3`">
+          <v-flex xs6 sm4 md12>
+            <div class="caption grey--text">Formatierte Darstellung</div>
+            <div>{{ rnaFusion.representation }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">5' Pos.</div>
+            {{ rnaFusion.position5pr }}
+          </v-flex>
+          <v-flex xs6 sm4 md1>
+            <div class="caption grey--text">5' Strand</div>
+            <div>{{ rnaFusion.strand5pr }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">3' Pos.</div>
+            {{ rnaFusion.position3pr }}
+          </v-flex>
+          <v-flex xs6 sm4 md1>
+            <div class="caption grey--text">3' Strand</div>
+            <div>{{ rnaFusion.strand3pr }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Effekt</div>
+            {{ rnaFusion.effect }}
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">COSMIC ID</div>
+            <div>{{ rnaFusion.cosmicId }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Anzahl Reads</div>
+            {{ rnaFusion.reportedNumReads }}
+          </v-flex>
+        </v-layout>
+      </v-card>
+
+      <v-card-title class="font-weight-normal">RNA Seqs</v-card-title>
+      <v-card
+        flat
+        color="#e8e8e8"
+        v-for="rnaSeq in ngsReport.rnaSeqs"
+        :key="rnaSeq.id"
+      >
+        <v-layout row wrap :class="`pa-3`">
+          <v-flex xs6 sm4 md4>
+            <div class="caption grey--text">Entrez ID</div>
+            <div>{{ rnaSeq.entrezId }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md4>
+            <div class="caption grey--text">Ensembl ID</div>
+            {{ rnaSeq.ensemblId }}
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Gen</div>
+            <div>{{ rnaSeq.gene }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Transcript ID</div>
+            {{ rnaSeq.transcriptId }}
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Fragmente / kBaseMillion</div>
+            <div>{{ rnaSeq.fragmentsPerKilobaseMillion }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">von NGS</div>
+            {{ rnaSeq.fromNGS }}
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Tissue Corrected Expression</div>
+            <div>{{ rnaSeq.tissueCorrectedExpression }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Raw Counts</div>
+            {{ rnaSeq.rawCounts }}
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Library Size</div>
+            {{ rnaSeq.librarySize }}
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Cohort Ranking</div>
+            {{ rnaSeq.cohortRanking }}
+          </v-flex>
+        </v-layout>
+      </v-card>
+    </v-card>
+
+    <!--
     <v-data-table
       :headers="headerNgsReports"
       :items="ngsReports"
@@ -397,9 +694,9 @@
     >
       <template slot="items" slot-scope="props">
         <tr @click="props.expanded = !props.expanded">
-          <!--
-          <td>{{ props.item.id }}</td>
-          -->
+
+          // <td>{{ props.item.id }}</td>
+        
           <td>{{ props.item.specimen }}</td>
           <td>{{ props.item.issueDate }}</td>
           <td>{{ props.item.sequencingType }}</td>
@@ -448,10 +745,10 @@
             </template>
           </v-data-table>
         </v-card>
+
         <v-card color="grey lighten-3" flat light left>
           <v-card-title>Einfache Varianten </v-card-title>
         </v-card>
-
         <v-card flat>
           <v-data-table
             :headers="headerSimpleVariants"
@@ -689,6 +986,8 @@
       <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
     </v-btn>
 
+    -->
+
     <!-- CARE PLANS VIEW -->
     <div id="carePlans"></div>
 
@@ -697,6 +996,76 @@
       >MTB-Beschluss</v-card-title
     >
 
+    <v-card flat v-for="carePlan in carePlans" :key="carePlan.id">
+      <v-layout row wrap :class="`pa-3`">
+        <v-flex xs6 sm4 md6>
+          <div class="caption grey--text">ICD-10</div>
+          <div>{{ carePlan.icd10 }}</div>
+        </v-flex>
+        <v-flex xs6 sm4 md3>
+          <div class="caption grey--text">Erstellungsdatum</div>
+          {{ carePlan.issuedOn }}
+        </v-flex>
+        <v-flex xs6 sm4 md3>
+          <div class="caption grey--text">Target verfügbar</div>
+          <div>{{ carePlan.targetAvailable }}</div>
+        </v-flex>
+        <v-flex xs6 sm4 md6>
+          <div class="caption grey--text">
+            <v-icon color="blue" small>fas fa-info-circle</v-icon> Protokoll
+          </div>
+          <div>{{ carePlan.protocol }}</div>
+        </v-flex>
+        <v-flex xs6 sm4 md3>
+          <div class="caption grey--text">Human-genetische Beratung</div>
+          {{ carePlan.geneticCounsellingRecommendation }}
+        </v-flex>
+        <v-flex xs6 sm4 md3>
+          <div class="caption grey--text">Einschluss in Studie</div>
+          <div>{{ carePlan.inclusionInStudyRecommendation }}</div>
+        </v-flex>
+
+        <v-flex xs2 sm4 md12> </v-flex>
+      </v-layout>
+
+      <v-card
+        flat
+        color="#f0f0f0"
+        v-for="therapyRecommendation in carePlan.therapyRecommendations"
+        :key="therapyRecommendation.id"
+      >
+        <v-layout row wrap :class="`pa-3`">
+          <v-flex class="center" xs6 sm4 md12
+            ><i class="fa fa-angle-down"></i
+          ></v-flex>
+          <v-flex xs6 sm4 md4>
+            <div class="caption grey--text">ICD-10</div>
+            <div>{{ therapyRecommendation.icd10 }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Erstellungsdatum</div>
+            {{ therapyRecommendation.medication }}
+          </v-flex>
+          <v-flex xs6 sm4 md3>
+            <div class="caption grey--text">Target verfügbar</div>
+            <div>{{ therapyRecommendation.medicationClasses }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md1>
+            <div class="caption grey--text">Protokoll</div>
+            <div>{{ therapyRecommendation.priority }}</div>
+          </v-flex>
+          <v-flex xs6 sm4 md2>
+            <div class="caption grey--text">Human-genetische Beratung</div>
+            {{ therapyRecommendation.levelOfEvidence }}
+          </v-flex>
+          <v-flex xs6 sm4 md12>
+            <div class="caption grey--text">Einschluss in Studie</div>
+            <div>{{ therapyRecommendation.supportingVariants.join(", ") }}</div>
+          </v-flex>
+        </v-layout>
+      </v-card>
+    </v-card>
+    <!--
     <v-data-table
       :headers="headerCarePlans"
       :items="carePlans"
@@ -763,6 +1132,7 @@
     >
       <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
     </v-btn>
+    -->
 
     <!-- CLAIM STATUS VIEW -->
     <div id="claimResponses"></div>
