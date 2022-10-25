@@ -682,6 +682,16 @@
       </v-card>
     </v-card>
 
+    <v-btn
+      small
+      icon
+      @click="$vuetify.goTo('#patientCard', options)"
+      flat
+      color="grey"
+    >
+      <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
+    </v-btn>
+
     <!--
     <v-data-table
       :headers="headerNgsReports"
@@ -1043,28 +1053,38 @@
             <div>{{ therapyRecommendation.icd10 }}</div>
           </v-flex>
           <v-flex xs6 sm4 md2>
-            <div class="caption grey--text">Erstellungsdatum</div>
+            <div class="caption grey--text">Medikation</div>
             {{ therapyRecommendation.medication }}
           </v-flex>
           <v-flex xs6 sm4 md3>
-            <div class="caption grey--text">Target verfügbar</div>
+            <div class="caption grey--text">Wirkstoff-Klassen</div>
             <div>{{ therapyRecommendation.medicationClasses }}</div>
           </v-flex>
           <v-flex xs6 sm4 md1>
-            <div class="caption grey--text">Protokoll</div>
+            <div class="caption grey--text">Priorität</div>
             <div>{{ therapyRecommendation.priority }}</div>
           </v-flex>
           <v-flex xs6 sm4 md2>
-            <div class="caption grey--text">Human-genetische Beratung</div>
+            <div class="caption grey--text">Level of Evidence</div>
             {{ therapyRecommendation.levelOfEvidence }}
           </v-flex>
           <v-flex xs6 sm4 md12>
-            <div class="caption grey--text">Einschluss in Studie</div>
+            <div class="caption grey--text">Stützende Molekulare Alterationen</div>
             <div>{{ therapyRecommendation.supportingVariants.join(", ") }}</div>
           </v-flex>
         </v-layout>
       </v-card>
     </v-card>
+
+     <v-btn
+      small
+      icon
+      @click="$vuetify.goTo('#patientCard', options)"
+      flat
+      color="grey"
+    >
+      <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
+    </v-btn>
     <!--
     <v-data-table
       :headers="headerCarePlans"
@@ -1994,242 +2014,260 @@ export default {
     },
   },
 
-  async asyncData({ params, error }) {
+  async asyncData({ params, redirect, error }) {
     axios.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${localStorage.token}`;
+    try {
+      const [slug, id] = params.slugid.split("&");
 
-    const [slug, id] = params.slugid.split("&");
+      let mtbFile = await axios.get(`${serverBaseURL}/${slug}/mtbfiles/${id}`);
 
-    let mtbFile = await axios.get(`${serverBaseURL}/${slug}/mtbfiles/${id}`);
+      let mtbFileView = await axios.get(
+        `${serverBaseURL}/${slug}/mtbfileViews/${id}`
+      );
 
-    let mtbFileView = await axios.get(
-      `${serverBaseURL}/${slug}/mtbfileViews/${id}`
-    );
+      // DIAGNOSES VIEW
+      let rawDiagnoses = Array();
+      if (mtbFileView.data.diagnoses) {
+        for (var i = 0; i < mtbFileView.data.diagnoses.length; i++) {
+          let item = {
+            id: mtbFileView.data.diagnoses[i].id,
+            patient: mtbFileView.data.diagnoses[i].patient,
+            recordedOn: mtbFileView.data.diagnoses[i].recordedOn,
+            icd10: mtbFileView.data.diagnoses[i].icd10,
+            icdO3T: mtbFileView.data.diagnoses[i].icdO3T,
+            whoGrade: mtbFileView.data.diagnoses[i].whoGrade,
+            statusHistory: mtbFileView.data.diagnoses[i].statusHistory,
+            guidelineTreatmentStatus:
+              mtbFileView.data.diagnoses[i].guidelineTreatmentStatus,
+          };
+          rawDiagnoses.push(item);
+        }
+      }
 
-    // DIAGNOSES VIEW
-    let rawDiagnoses = Array();
-    if (mtbFileView.data.diagnoses) {
-      for (var i = 0; i < mtbFileView.data.diagnoses.length; i++) {
-        let item = {
-          id: mtbFileView.data.diagnoses[i].id,
-          patient: mtbFileView.data.diagnoses[i].patient,
-          recordedOn: mtbFileView.data.diagnoses[i].recordedOn,
-          icd10: mtbFileView.data.diagnoses[i].icd10,
-          icdO3T: mtbFileView.data.diagnoses[i].icdO3T,
-          whoGrade: mtbFileView.data.diagnoses[i].whoGrade,
-          statusHistory: mtbFileView.data.diagnoses[i].statusHistory,
-          guidelineTreatmentStatus:
-            mtbFileView.data.diagnoses[i].guidelineTreatmentStatus,
-        };
-        rawDiagnoses.push(item);
+      // FAMILY MEMBER DIAGNOSES VIEW
+      let rawFamilyMemberDiagnoses = Array();
+      if (mtbFileView.data.familyMemberDiagnoses) {
+        for (
+          var i = 0;
+          i < mtbFileView.data.familyMemberDiagnoses.length;
+          i++
+        ) {
+          let item = {
+            id: mtbFileView.data.familyMemberDiagnoses[i].id,
+            patient: mtbFileView.data.familyMemberDiagnoses[i].patient,
+            relationship:
+              mtbFileView.data.familyMemberDiagnoses[i].relationship,
+          };
+          rawFamilyMemberDiagnoses.push(item);
+        }
+      }
+
+      // GUIDELINE THERAPIES VIEW
+      let rawGuidelineTherapies = Array();
+      if (mtbFileView.data.guidelineTherapies) {
+        for (var i = 0; i < mtbFileView.data.guidelineTherapies.length; i++) {
+          let item = {
+            id: mtbFileView.data.guidelineTherapies[i].id,
+            diagnosis: mtbFileView.data.guidelineTherapies[i].diagnosis,
+            therapyLine: mtbFileView.data.guidelineTherapies[i].therapyLine,
+            period: mtbFileView.data.guidelineTherapies[i].period,
+            medication: mtbFileView.data.guidelineTherapies[i].medication,
+            medicationClasses:
+              mtbFileView.data.guidelineTherapies[i].medicationClasses,
+            reasonStopped: mtbFileView.data.guidelineTherapies[i].reasonStopped,
+            response: mtbFileView.data.guidelineTherapies[i].response,
+            progressionDate:
+              mtbFileView.data.guidelineTherapies[i].progressionDate,
+          };
+          rawGuidelineTherapies.push(item);
+        }
+      }
+
+      // ECOG STATUS VIEW
+      let rawEcogStatus = Array();
+      if (mtbFileView.data.ecogStatus) {
+        for (var i = 0; i < mtbFileView.data.ecogStatus.values.length; i++) {
+          let item = {
+            date: mtbFileView.data.ecogStatus.values[i].date,
+            value: mtbFileView.data.ecogStatus.values[i].value,
+          };
+          rawEcogStatus.push(item);
+        }
+      }
+
+      // SPECIMENS VIEW
+      let rawSpecimens = Array();
+      if (mtbFileView.data.specimens) {
+        for (var i = 0; i < mtbFileView.data.specimens.length; i++) {
+          let item = {
+            id: mtbFileView.data.specimens[i].id,
+            icd10: mtbFileView.data.specimens[i].icd10,
+            type: mtbFileView.data.specimens[i].type,
+            collectionDate: mtbFileView.data.specimens[i].collectionDate,
+            localization: mtbFileView.data.specimens[i].localization,
+            collectionMethod: mtbFileView.data.specimens[i].collectionMethod,
+          };
+          rawSpecimens.push(item);
+        }
+      }
+
+      // MOLECULAR PATHOLOGY FINDINGS VIEW
+      let rawMolecularPathologyFindings = Array();
+      if (mtbFileView.data.molecularPathologyFindings) {
+        for (
+          var i = 0;
+          i < mtbFileView.data.molecularPathologyFindings.length;
+          i++
+        ) {
+          let item = {
+            id: mtbFileView.data.molecularPathologyFindings[i].id,
+            specimen: mtbFileView.data.molecularPathologyFindings[i].specimen,
+            performingInstitute:
+              mtbFileView.data.molecularPathologyFindings[i]
+                .performingInstitute,
+            issuedOn: mtbFileView.data.molecularPathologyFindings[i].issuedOn,
+            note: mtbFileView.data.molecularPathologyFindings[i].note,
+          };
+          rawMolecularPathologyFindings.push(item);
+        }
+      }
+
+      // HISTOLOGY REPORTS VIEW
+      let rawHistologyReports = Array();
+      if (mtbFileView.data.histologyReports) {
+        for (var i = 0; i < mtbFileView.data.histologyReports.length; i++) {
+          let item = {
+            id: mtbFileView.data.histologyReports[i].id,
+            specimen: mtbFileView.data.histologyReports[i].specimen,
+            issuedOn: mtbFileView.data.histologyReports[i].issuedOn,
+            tumorMorphology:
+              mtbFileView.data.histologyReports[i].tumorMorphology,
+            tumorCellContent:
+              mtbFileView.data.histologyReports[i].tumorCellContent,
+            note: mtbFileView.data.histologyReports[i].note,
+          };
+          rawHistologyReports.push(item);
+        }
+      }
+
+      // NGS REPORTS VIEW
+      let rawNgsReports = Array();
+      if (mtbFileView.data.ngsReports) {
+        for (var i = 0; i < mtbFileView.data.ngsReports.length; i++) {
+          let item = {
+            id: mtbFileView.data.ngsReports[i].id,
+            specimen: mtbFileView.data.ngsReports[i].specimen,
+            issueDate: mtbFileView.data.ngsReports[i].issueDate,
+            sequencingType: mtbFileView.data.ngsReports[i].sequencingType,
+            metadata: mtbFileView.data.ngsReports[i].metadata,
+            tumorCellContent: mtbFileView.data.ngsReports[i].tumorCellContent,
+            brcaness: mtbFileView.data.ngsReports[i].brcaness,
+            microSatelliteInstabilities:
+              mtbFileView.data.ngsReports[i].microSatelliteInstabilities,
+            tumorMutationalBurden:
+              mtbFileView.data.ngsReports[i].tumorMutationalBurden,
+            simpleVariants: mtbFileView.data.ngsReports[i].simpleVariants,
+            copyNumberVariants:
+              mtbFileView.data.ngsReports[i].copyNumberVariants,
+            dnaFusions: mtbFileView.data.ngsReports[i].dnaFusions,
+            rnaFusions: mtbFileView.data.ngsReports[i].rnaFusions,
+            rnaSeqs: mtbFileView.data.ngsReports[i].rnaSeqs,
+          };
+          rawNgsReports.push(item);
+        }
+      }
+
+      // CARE PLANS VIEW
+      let rawCarePlans = Array();
+      if (mtbFileView.data.carePlans) {
+        for (var i = 0; i < mtbFileView.data.carePlans.length; i++) {
+          let item = {
+            id: mtbFileView.data.carePlans[i].id,
+            icd10: mtbFileView.data.carePlans[i].icd10,
+            issuedOn: mtbFileView.data.carePlans[i].issuedOn,
+            protocol: mtbFileView.data.carePlans[i].protocol,
+            geneticCounsellingRecommendation:
+              mtbFileView.data.carePlans[i].geneticCounsellingRecommendation,
+            inclusionInStudyRecommendation:
+              mtbFileView.data.carePlans[i].inclusionInStudyRecommendation,
+            targetAvailable: mtbFileView.data.carePlans[i].targetAvailable,
+            therapyRecommendations:
+              mtbFileView.data.carePlans[i].therapyRecommendations,
+          };
+          rawCarePlans.push(item);
+        }
+      }
+
+      // CLAIM STATUS VIEW
+      let rawClaimStatus = Array();
+      if (mtbFileView.data.claimStatus) {
+        for (var i = 0; i < mtbFileView.data.claimStatus.length; i++) {
+          let item = {
+            id: mtbFileView.data.claimStatus[i].id,
+            therapy: mtbFileView.data.claimStatus[i].therapy,
+            issueDate: mtbFileView.data.claimStatus[i].issueDate,
+            responseDate: mtbFileView.data.claimStatus[i].responseDate,
+            status: mtbFileView.data.claimStatus[i].status,
+            reason: mtbFileView.data.claimStatus[i].reason,
+          };
+          rawClaimStatus.push(item);
+        }
+      }
+
+      // MOLECULAR THERAPIES VIEW
+      let rawMolecularTherapies = Array();
+      if (mtbFileView.data.molecularTherapies) {
+        for (var i = 0; i < mtbFileView.data.molecularTherapies.length; i++) {
+          let item = {
+            id: mtbFileView.data.molecularTherapies[i].id,
+            diagnosis: mtbFileView.data.molecularTherapies[i].diagnosis,
+            status: mtbFileView.data.molecularTherapies[i].status,
+            recordedOn: mtbFileView.data.molecularTherapies[i].recordedOn,
+            recommendation:
+              mtbFileView.data.molecularTherapies[i].recommendation,
+            period: mtbFileView.data.molecularTherapies[i].period,
+            notDoneReason: mtbFileView.data.molecularTherapies[i].notDoneReason,
+            medication: mtbFileView.data.molecularTherapies[i].medication,
+            medicationClasses:
+              mtbFileView.data.molecularTherapies[i].medicationClasses,
+            reasonStopped: mtbFileView.data.molecularTherapies[i].reasonStopped,
+            dosage: mtbFileView.data.molecularTherapies[i].dosage,
+            note: mtbFileView.data.molecularTherapies[i].note,
+            response: mtbFileView.data.molecularTherapies[i].response,
+            progressionDate:
+              mtbFileView.data.molecularTherapies[i].progressionDate,
+          };
+          rawMolecularTherapies.push(item);
+        }
+      }
+
+      return {
+        baseURL: `${serverBaseURL}/${params.id}/files`,
+
+        patient: mtbFileView.data.patient,
+        diagnoses: rawDiagnoses,
+        familyMemberDiagnoses: rawFamilyMemberDiagnoses,
+        guidelineTherapies: rawGuidelineTherapies,
+        ecogStatus: rawEcogStatus,
+        specimens: rawSpecimens,
+        molecularPathologyFindings: rawMolecularPathologyFindings,
+        histologyReports: rawHistologyReports,
+        ngsReports: rawNgsReports,
+        carePlans: rawCarePlans,
+        claimStatus: rawClaimStatus,
+        molecularTherapies: rawMolecularTherapies,
+      };
+    } catch (err) {
+      if (err.response.status === 401) {
+        this.$router.push(`/`);
+      } else if (err.response.status === 403) {
+        return redirect("/403");
+      } else {
+        return redirect("/" + err.response.status);
       }
     }
-
-    // FAMILY MEMBER DIAGNOSES VIEW
-    let rawFamilyMemberDiagnoses = Array();
-    if (mtbFileView.data.familyMemberDiagnoses) {
-      for (var i = 0; i < mtbFileView.data.familyMemberDiagnoses.length; i++) {
-        let item = {
-          id: mtbFileView.data.familyMemberDiagnoses[i].id,
-          patient: mtbFileView.data.familyMemberDiagnoses[i].patient,
-          relationship: mtbFileView.data.familyMemberDiagnoses[i].relationship,
-        };
-        rawFamilyMemberDiagnoses.push(item);
-      }
-    }
-
-    // GUIDELINE THERAPIES VIEW
-    let rawGuidelineTherapies = Array();
-    if (mtbFileView.data.guidelineTherapies) {
-      for (var i = 0; i < mtbFileView.data.guidelineTherapies.length; i++) {
-        let item = {
-          id: mtbFileView.data.guidelineTherapies[i].id,
-          diagnosis: mtbFileView.data.guidelineTherapies[i].diagnosis,
-          therapyLine: mtbFileView.data.guidelineTherapies[i].therapyLine,
-          period: mtbFileView.data.guidelineTherapies[i].period,
-          medication: mtbFileView.data.guidelineTherapies[i].medication,
-          medicationClasses:
-            mtbFileView.data.guidelineTherapies[i].medicationClasses,
-          reasonStopped: mtbFileView.data.guidelineTherapies[i].reasonStopped,
-          response: mtbFileView.data.guidelineTherapies[i].response,
-          progressionDate:
-            mtbFileView.data.guidelineTherapies[i].progressionDate,
-        };
-        rawGuidelineTherapies.push(item);
-      }
-    }
-
-    // ECOG STATUS VIEW
-    let rawEcogStatus = Array();
-    if (mtbFileView.data.ecogStatus) {
-      for (var i = 0; i < mtbFileView.data.ecogStatus.values.length; i++) {
-        let item = {
-          date: mtbFileView.data.ecogStatus.values[i].date,
-          value: mtbFileView.data.ecogStatus.values[i].value,
-        };
-        rawEcogStatus.push(item);
-      }
-    }
-
-    // SPECIMENS VIEW
-    let rawSpecimens = Array();
-    if (mtbFileView.data.specimens) {
-      for (var i = 0; i < mtbFileView.data.specimens.length; i++) {
-        let item = {
-          id: mtbFileView.data.specimens[i].id,
-          icd10: mtbFileView.data.specimens[i].icd10,
-          type: mtbFileView.data.specimens[i].type,
-          collectionDate: mtbFileView.data.specimens[i].collectionDate,
-          localization: mtbFileView.data.specimens[i].localization,
-          collectionMethod: mtbFileView.data.specimens[i].collectionMethod,
-        };
-        rawSpecimens.push(item);
-      }
-    }
-
-    // MOLECULAR PATHOLOGY FINDINGS VIEW
-    let rawMolecularPathologyFindings = Array();
-    if (mtbFileView.data.molecularPathologyFindings) {
-      for (
-        var i = 0;
-        i < mtbFileView.data.molecularPathologyFindings.length;
-        i++
-      ) {
-        let item = {
-          id: mtbFileView.data.molecularPathologyFindings[i].id,
-          specimen: mtbFileView.data.molecularPathologyFindings[i].specimen,
-          performingInstitute:
-            mtbFileView.data.molecularPathologyFindings[i].performingInstitute,
-          issuedOn: mtbFileView.data.molecularPathologyFindings[i].issuedOn,
-          note: mtbFileView.data.molecularPathologyFindings[i].note,
-        };
-        rawMolecularPathologyFindings.push(item);
-      }
-    }
-
-    // HISTOLOGY REPORTS VIEW
-    let rawHistologyReports = Array();
-    if (mtbFileView.data.histologyReports) {
-      for (var i = 0; i < mtbFileView.data.histologyReports.length; i++) {
-        let item = {
-          id: mtbFileView.data.histologyReports[i].id,
-          specimen: mtbFileView.data.histologyReports[i].specimen,
-          issuedOn: mtbFileView.data.histologyReports[i].issuedOn,
-          tumorMorphology: mtbFileView.data.histologyReports[i].tumorMorphology,
-          tumorCellContent:
-            mtbFileView.data.histologyReports[i].tumorCellContent,
-          note: mtbFileView.data.histologyReports[i].note,
-        };
-        rawHistologyReports.push(item);
-      }
-    }
-
-    // NGS REPORTS VIEW
-    let rawNgsReports = Array();
-    if (mtbFileView.data.ngsReports) {
-      for (var i = 0; i < mtbFileView.data.ngsReports.length; i++) {
-        let item = {
-          id: mtbFileView.data.ngsReports[i].id,
-          specimen: mtbFileView.data.ngsReports[i].specimen,
-          issueDate: mtbFileView.data.ngsReports[i].issueDate,
-          sequencingType: mtbFileView.data.ngsReports[i].sequencingType,
-          metadata: mtbFileView.data.ngsReports[i].metadata,
-          tumorCellContent: mtbFileView.data.ngsReports[i].tumorCellContent,
-          brcaness: mtbFileView.data.ngsReports[i].brcaness,
-          microSatelliteInstabilities:
-            mtbFileView.data.ngsReports[i].microSatelliteInstabilities,
-          tumorMutationalBurden:
-            mtbFileView.data.ngsReports[i].tumorMutationalBurden,
-          simpleVariants: mtbFileView.data.ngsReports[i].simpleVariants,
-          copyNumberVariants: mtbFileView.data.ngsReports[i].copyNumberVariants,
-          dnaFusions: mtbFileView.data.ngsReports[i].dnaFusions,
-          rnaFusions: mtbFileView.data.ngsReports[i].rnaFusions,
-          rnaSeqs: mtbFileView.data.ngsReports[i].rnaSeqs,
-        };
-        rawNgsReports.push(item);
-      }
-    }
-
-    // CARE PLANS VIEW
-    let rawCarePlans = Array();
-    if (mtbFileView.data.carePlans) {
-      for (var i = 0; i < mtbFileView.data.carePlans.length; i++) {
-        let item = {
-          id: mtbFileView.data.carePlans[i].id,
-          icd10: mtbFileView.data.carePlans[i].icd10,
-          issuedOn: mtbFileView.data.carePlans[i].issuedOn,
-          protocol: mtbFileView.data.carePlans[i].protocol,
-          geneticCounsellingRecommendation:
-            mtbFileView.data.carePlans[i].geneticCounsellingRecommendation,
-          inclusionInStudyRecommendation:
-            mtbFileView.data.carePlans[i].inclusionInStudyRecommendation,
-          targetAvailable: mtbFileView.data.carePlans[i].targetAvailable,
-          therapyRecommendations:
-            mtbFileView.data.carePlans[i].therapyRecommendations,
-        };
-        rawCarePlans.push(item);
-      }
-    }
-
-    // CLAIM STATUS VIEW
-    let rawClaimStatus = Array();
-    if (mtbFileView.data.claimStatus) {
-      for (var i = 0; i < mtbFileView.data.claimStatus.length; i++) {
-        let item = {
-          id: mtbFileView.data.claimStatus[i].id,
-          therapy: mtbFileView.data.claimStatus[i].therapy,
-          issueDate: mtbFileView.data.claimStatus[i].issueDate,
-          responseDate: mtbFileView.data.claimStatus[i].responseDate,
-          status: mtbFileView.data.claimStatus[i].status,
-          reason: mtbFileView.data.claimStatus[i].reason,
-        };
-        rawClaimStatus.push(item);
-      }
-    }
-
-    // MOLECULAR THERAPIES VIEW
-    let rawMolecularTherapies = Array();
-    if (mtbFileView.data.molecularTherapies) {
-      for (var i = 0; i < mtbFileView.data.molecularTherapies.length; i++) {
-        let item = {
-          id: mtbFileView.data.molecularTherapies[i].id,
-          diagnosis: mtbFileView.data.molecularTherapies[i].diagnosis,
-          status: mtbFileView.data.molecularTherapies[i].status,
-          recordedOn: mtbFileView.data.molecularTherapies[i].recordedOn,
-          recommendation: mtbFileView.data.molecularTherapies[i].recommendation,
-          period: mtbFileView.data.molecularTherapies[i].period,
-          notDoneReason: mtbFileView.data.molecularTherapies[i].notDoneReason,
-          medication: mtbFileView.data.molecularTherapies[i].medication,
-          medicationClasses:
-            mtbFileView.data.molecularTherapies[i].medicationClasses,
-          reasonStopped: mtbFileView.data.molecularTherapies[i].reasonStopped,
-          dosage: mtbFileView.data.molecularTherapies[i].dosage,
-          note: mtbFileView.data.molecularTherapies[i].note,
-          response: mtbFileView.data.molecularTherapies[i].response,
-          progressionDate:
-            mtbFileView.data.molecularTherapies[i].progressionDate,
-        };
-        rawMolecularTherapies.push(item);
-      }
-    }
-
-    return {
-      baseURL: `${serverBaseURL}/${params.id}/files`,
-
-      patient: mtbFileView.data.patient,
-      diagnoses: rawDiagnoses,
-      familyMemberDiagnoses: rawFamilyMemberDiagnoses,
-      guidelineTherapies: rawGuidelineTherapies,
-      ecogStatus: rawEcogStatus,
-      specimens: rawSpecimens,
-      molecularPathologyFindings: rawMolecularPathologyFindings,
-      histologyReports: rawHistologyReports,
-      ngsReports: rawNgsReports,
-      carePlans: rawCarePlans,
-      claimStatus: rawClaimStatus,
-      molecularTherapies: rawMolecularTherapies,
-    };
   },
 };
 </script>
