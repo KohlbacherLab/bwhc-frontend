@@ -118,13 +118,15 @@
                 </v-radio-group>
 
                 <v-flex d-flex v-if="showSNV">
-                  <v-card color="pink lighten-4" flat>
+                  <v-card color="grey lighten-3" flat>
                     <v-card-text class="headline font-weight-thin">
-                      <div class="caption grey--text">
-                        Bitte wählen Sie zuerst einen Gen-Name oder HGNC Symbol,
-                        dann cDNA change, protein change aus und klicken Sie
-                        dann anschließend auf das + Symbol.
+                      <div class="grey--text">
+                        Bitte wählen Sie das vom SNV betroffene Gen, und
+                        optional cDNA change, protein change aus. Klicken Sie
+                        auf die <strong>Hinzufügen</strong> Taste, um die Auswahl in die Suche zu
+                        übernehmen.
                       </div>
+                      <br />
                       <!--
                       <span class="grey--text">SNV</span>>
                       -->
@@ -137,6 +139,7 @@
                         hide-selected
                         dense
                         chips
+                        solo-inverted
                         clearable
                         hide-no-data
                         placeholder
@@ -155,26 +158,24 @@
               -->
                       </v-autocomplete>
                       <v-layout row wrap>
-                        <v-flex xs12 sm6 md5>
+                        <v-flex xs12 sm6 md9>
                           <v-text-field
                             v-model="dnaChange"
                             clearable
                             placeholder="cDNA Change"
+                            counter="3"
+                            solo-inverted
                           ></v-text-field>
-                        </v-flex>
-                        <v-flex xs12 sm6 md4>
+       
                           <v-text-field
                             v-model="aminoAcidChange"
                             clearable
                             placeholder="Protein Change"
+                            solo-inverted
                           ></v-text-field>
-                        </v-flex>
 
-                        <v-flex xs12 sm6 md3>
                           <v-btn
                             large
-                            icon
-                            flat
                             color="grey darken-1"
                             @click="
                               addMutatedGenesSNV(
@@ -185,9 +186,7 @@
                             "
                             dark
                           >
-                            <v-icon style="font-size: 2rem"
-                              >fas fa-plus-circle</v-icon
-                            >
+                          Hinzufügen
                           </v-btn>
                         </v-flex>
                         <v-combobox
@@ -229,13 +228,15 @@
                 </v-flex>
 
                 <v-flex d-flex v-if="showCNV">
-                  <v-card color="red lighten-4" flat>
+                  <v-card color="grey lighten-3" flat>
                     <v-card-text class="headline font-weight-thin">
-                      <div class="caption grey--text">
-                        Bitte wählen Sie zuerst einen oder mehrere Gen-Name oder
-                        HGNC Symbol, dann CNV typ, Min Copy#, Max Copy# saus und
-                        klicken Sie dann anschließend auf das + Symbol.
+                      <div class="grey--text">
+                        Bitte wählen Sie ein oder mehrere vom CNV betroffene
+                        Gene, und optional CNV-Typ, Min- und Max-Kopienzahl.
+                        Klicken Sie auf die <strong>Hinzufügen</strong> Taste, um die Auswahl in die
+                        Suche zu übernehmen.
                       </div>
+                      <br />
                       <!-- 
                         <span class="grey--text">CNV</span>
                       -->
@@ -255,6 +256,7 @@
                         multiple
                         hide-selected
                         clearable
+                        solo-inverted
                       >
                         <template slot="selection" slot-scope="data">
                           <v-chip
@@ -279,35 +281,30 @@
               -->
                       </v-autocomplete>
                       <v-layout row wrap>
-                        <v-flex xs12 sm6 md3>
+                        <v-flex xs12 sm6 md9>
                           <v-select
                             v-model="cnvType"
                             :items="cnvTypCat"
+                            solo-inverted
                             label="CNV Typ"
                           ></v-select>
-                        </v-flex>
 
-                        <v-flex xs12 sm6 md3>
                           <v-text-field
                             v-model="cnvMin"
                             clearable
-                            placeholder="Min Copy#"
+                            solo-inverted
+                            label="Min Copy Number"
                           ></v-text-field>
-                        </v-flex>
 
-                        <v-flex xs12 sm6 md3>
                           <v-text-field
                             v-model="cnvMax"
                             clearable
-                            placeholder="Max Copy#"
+                            solo-inverted
+                            label="Max Copy Number"
                           ></v-text-field>
-                        </v-flex>
 
-                        <v-flex xs12 sm6 md3>
                           <v-btn
                             large
-                            icon
-                            flat
                             color="grey darken-2"
                             @click="
                               addMutatedGenesCNV(
@@ -319,9 +316,7 @@
                             "
                             dark
                           >
-                            <v-icon style="font-size: 2rem"
-                              >fas fa-plus-circle</v-icon
-                            >
+                            Hinzufügen
                           </v-btn>
                         </v-flex>
 
@@ -369,21 +364,22 @@
                 </v-flex>
 
                 <v-flex d-flex v-if="showFusions">
-                  <v-card color="deep-orange lighten-4" flat>
+                  <v-card color="grey lighten-3" flat>
                     <v-card-text class="headline font-weight-thin">
-                      <div class="caption grey--text">
-                        Bitte wählen Sie zuerst einen Gen-Name oder HGNC Symbol,
-                        dann den Fusionstyp (DNA, RNA), den Fusionpartner
-                        (5',3') aus und klicken Sie dann anschließend auf das +
-                        Symbol.
+                      <div class="grey--text">
+                        Bitte wählen Sie ein Fusionspartner-Gen und
+                        (5',3')-Zuordnung, sowie den Fusionstyp (DNA, RNA).
+                        Klicken Sie auf die <strong>Hinzufügen</strong> Taste, um die Auswahl in die
+                        Suche zu übernehmen.
                       </div>
+                      <br>
 
                       <!-- 
                         <span class="grey--text">CNV</span>
                       -->
 
                       <v-autocomplete
-                        v-model="fusions"
+                        v-model="fusions5"
                         :items="genesCatSimplified"
                         :loading="isLoading"
                         item-text="name"
@@ -392,6 +388,7 @@
                         ref="fusions"
                         chips
                         dense
+                        solo-inverted
                         hide-no-data
                         hide-selected
                         clearable
@@ -423,18 +420,38 @@
               -->
                       </v-autocomplete>
 
+                      <v-autocomplete
+                        v-model="fusions3"
+                        :items="genesCatSimplified"
+                        :loading="isLoading"
+                        item-text="name"
+                        item-value="id"
+                        label="RNA & DNA Fusions · Gen-Name oder HGNC Symbol"
+                        ref="fusions"
+                        chips
+                        dense
+                        solo-inverted
+                        hide-no-data
+                        hide-selected
+                        clearable
+                      >
+                      </v-autocomplete>
+
                       <v-layout row wrap>
-                        <v-flex xs12 sm6 md3>
-                          <v-radio-group v-model="fusionType" row>
+                        <v-flex xs12 sm6 md9>
+                          <v-radio-group v-model="fusionType">
                             <v-radio label="RNA" value="rnaFusions"></v-radio>
                             <v-radio label="DNA" value="dnaFusions"></v-radio>
+                            <!-- 
                             <v-radio
                               label="Beide"
                               value="bothFusions"
                             ></v-radio>
+                            -->
                           </v-radio-group>
-                        </v-flex>
 
+
+                        <!--
                         <v-flex xs12 sm6 md3>
                           <v-radio-group v-model="primeType" row>
                             <v-radio label="5'" value="fivePrimeGene"></v-radio>
@@ -445,21 +462,19 @@
                             <v-radio label="Beide" value="bothPrimes"></v-radio>
                           </v-radio-group>
                         </v-flex>
+                        -->
 
-                        <v-flex xs12 sm6 md3>
                           <v-btn
                             large
-                            icon
-                            flat
                             color="grey darken-2"
-                            @click="addFusions(fusions, fusionType, primeType)"
+                            @click="addFusions(fusions5, fusions3, fusionType)"
                             dark
                           >
-                            <v-icon style="font-size: 2rem"
-                              >fas fa-plus-circle</v-icon
-                            >
+                          Hinzufügen
                           </v-btn>
                         </v-flex>
+
+              
 
                         <v-combobox
                           v-model="selectedDnaFusions"
@@ -1530,6 +1545,25 @@ export default {
         });
       } else {
         alert("Bitte fügen Sie zuerst die relevanten Parameter hinzu!");
+      }
+    },
+
+    addFusions(fusions5, fusions3, fusionType) {
+      if (fusions5 || fusions3) {
+        if (fusionType == "dnaFusions") {
+          if (fusions5) {
+            this.selectedDnaFusions.push({
+              fivePrimeGene: {
+                code: fusions.split(" · ")[1],
+              },
+              threePrimeGene: {
+                code: fusions.split(" · ")[1],
+              },
+            });
+          }
+        } else if (fusionType == "dnaFusions") {
+        } else {
+        }
       }
     },
 
