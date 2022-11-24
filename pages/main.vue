@@ -221,11 +221,9 @@
                 <v-card flat>
                   <v-card-title class="headline font-weight-light">
                     Versionshinweise
-                    <v-icon></v-icon>
                   </v-card-title>
                   <v-card-text class="subheading grey--text font-weight-light">
-                    <i class="far fa-sticky-note"></i> Nächste Version wird die
-                    Release Notes hier enthalten.
+                  Frontend {{version}}<br>
                   </v-card-text>
                 </v-card>
               </v-flex>
@@ -244,6 +242,7 @@ import userPanel from "~/components/userPanel";
 export default {
   data: () => ({
     me: "",
+    version: process.env.version
   }),
 
   components: {

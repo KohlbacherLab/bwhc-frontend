@@ -118,6 +118,14 @@
 
     <v-divider class="my-3"></v-divider>
 
+    <v-flex d-flex>
+                <v-card flat>
+                  <v-card-text class="subheading grey--text font-weight-light">
+                    Frontend {{version}}<br>
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+
     <v-dialog v-model="editOwnDetailsDialog" width="500">
       <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>
@@ -468,6 +476,7 @@ export default {
     password: "",
     valid: true,
     value: true,
+    version: process.env.version,
     rules: {
       required: (value) => !!value || "Required.",
       password: (value) => {
@@ -758,10 +767,12 @@ export default {
       let users = await axios.get(
         process.env.baseUrl + process.env.port + process.env.users
       );
+      
 
       let peerStatusReport = await axios.get(
         process.env.baseUrl + process.env.port + process.env.peerStatusReport
       );
+      
 
       return {
         itemsUsers: users.data.entries,

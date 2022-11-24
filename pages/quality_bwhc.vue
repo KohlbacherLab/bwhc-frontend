@@ -268,7 +268,7 @@
             >
               <v-card-text class="title font-weight-thin">
                 <p>
-                  <v-icon style="font-size: 1.4rem">fas fa-file-alt</v-icon>
+                  <v-icon style="font-size: 1.4rem">fas fa-clipboard-check</v-icon>
                 </p>
                 <strong
                   >{{
@@ -294,7 +294,7 @@
             >
               <v-card-text class="title font-weight-thin">
                 <p>
-                  <v-icon style="font-size: 1.4rem">fas fa-file-alt</v-icon>
+                  <v-icon style="font-size: 1.4rem">fas fa-id-badge</v-icon>
                 </p>
                 <strong
                   >{{
@@ -321,7 +321,7 @@
             >
               <v-card-text class="title font-weight-thin">
                 <p>
-                  <v-icon style="font-size: 1.4rem">fas fa-file-alt</v-icon>
+                  <v-icon style="font-size: 1.4rem">fas fa-exclamation-triangle</v-icon>
                 </p>
                 <strong
                   >{{

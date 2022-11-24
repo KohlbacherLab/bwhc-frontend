@@ -45,7 +45,9 @@ module.exports = {
 
     users: process.env.users || '/bwhc/user/api/users',
     me: process.env.me || '/bwhc/user/api/whoami',
-    logout: process.env.logout || '/bwhc/user/api/logout'
+    logout: process.env.logout || '/bwhc/user/api/logout',
+
+    version: 'v.2022-11'
 
   },
 
