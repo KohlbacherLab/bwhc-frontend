@@ -1,4 +1,4 @@
-# bwHC Frontend 
+# bwHC Frontend
 
 __bwHC Frontend__ is a web application developed using the [nuxt.js](https://nuxtjs.org/docs/get-started/installation/) framework. It is designed to run complementary with the bwHC Backend application.
 
@@ -6,7 +6,7 @@ __bwHC Frontend__ is a web application developed using the [nuxt.js](https://nux
 
 ## 1. Installation with Install script
 
-* Define the directory for the installation 
+* Define the directory for the installation
 * Run the install script
 
 ```
@@ -100,6 +100,25 @@ Initial Login ⚠️
 Login credentials into the freshly installed system, without any users: admin/admin
 This allows log-in as a temp-user to create a first real user account, and becomes effectless once a user has been created in the system.
 The first created user MUST thus be given "Admin" rights to be able to create more user accounts.
+
+## 3 Docker image
+
+Use the following command to build the docker image
+
+```
+docker build -t bwhc-frontend .
+```
+
+This will create the image using default build arguments and mark it as `bwhc-frontend`. To customize the build, spezify custom values.
+
+* `NUXT_HOST` and `NUXT_PORT`: Server configuration, see 2.3 of bwHC manual for more information.
+* `BACKEND_PROTOCOL`, `BACKEND_HOSTNAME` and `BACKEND_PORT`: Backend access, see 2.4 of bwHC manual for more information.
+
+e.g.:
+
+```
+docker build -t bwhc-frontend --build-arg NUXT_PORT=1234 .
+```
 
 ## License Information
 
