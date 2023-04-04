@@ -18,7 +18,7 @@
 
           <v-list-tile-content>
             <v-list-tile-title>{{ showName }}</v-list-tile-title>
-            <v-list-tile-sub-title>{{ showUsername }}</v-list-tile-sub-title>
+            <v-list-tile-sub-title><strong>{{ showUsername }}</strong> _ {{ version }} </v-list-tile-sub-title>
           </v-list-tile-content>
 
           <span v-if="iconMenu">
@@ -223,6 +223,7 @@ import axios from "axios";
 
 export default {
   data: () => ({
+    version: process.env.version,
     iconMenu: true,
     snackbar: false,
     localIcon: false,

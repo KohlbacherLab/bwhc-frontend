@@ -21,6 +21,7 @@
         </span>
         <v-divider class="my-3"></v-divider>
       </v-flex>
+      
       <v-layout wrap>
         <v-flex d-flex xs12 sm6 md3>
           <v-card

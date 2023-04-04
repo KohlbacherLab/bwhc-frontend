@@ -32,9 +32,7 @@
             Bezahlung erforderlich.
           </div>
 
-          <div v-else-if="this.$route.path.slice(1) == 403">
-            Verboten.
-          </div>
+          <div v-else-if="this.$route.path.slice(1) == 403">Verboten.</div>
 
           <div v-else-if="this.$route.path.slice(1) == 404">
             Nicht gefunden / benutzer existiert nicht.
@@ -48,9 +46,7 @@
             Nicht implementiert.
           </div>
 
-          <div v-else-if="this.$route.path.slice(1) == 502">
-            Bad Gateway.
-          </div>
+          <div v-else-if="this.$route.path.slice(1) == 502">Bad Gateway.</div>
 
           <div v-else-if="this.$route.path.slice(1) == 503">
             Dienst nicht verfügbar.
@@ -80,9 +76,7 @@
             Nicht verlängert.
           </div>
 
-          <div v-else>
-            Nicht gefunden.
-          </div>
+          <div v-else>Nicht gefunden.</div>
         </v-card-text>
       </v-card>
     </v-flex>
@@ -184,14 +178,20 @@
           sie erfüllen kann.
         </div>
 
-        <div v-else>
-          Die angeforderte Ressource wurde nicht gefunden.
-        </div>
+        <div v-else>Die angeforderte Ressource wurde nicht gefunden.</div>
       </span>
     </v-flex>
   </v-container>
 </template>
 
 <script>
-export default {};
+export default {
+  async asyncData(context) {
+    try {
+      const response = await context.$axios(options);
+    } catch (error) {
+      context.error({ statusCode: 404, message: "Page not found" });
+    }
+  },
+};
 </script>

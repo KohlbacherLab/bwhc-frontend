@@ -428,7 +428,7 @@
         v-for="metadata in ngsReport.metadata"
         :key="metadata.id"
       >
-      <v-divider></v-divider>
+        <v-divider></v-divider>
         <v-layout row wrap :class="`pa-3`">
           <v-flex xs6 sm4 md2>
             <div class="caption grey--text">Kit-Typ</div>
@@ -460,8 +460,8 @@
         v-for="simpleVariant in ngsReport.simpleVariants"
         :key="simpleVariant.id"
       >
-      <v-divider></v-divider>
-      <v-layout row wrap :class="`pa-3`">
+        <v-divider></v-divider>
+        <v-layout row wrap :class="`pa-3`">
           <v-flex xs6 sm4 md2>
             <div class="caption grey--text">Chr</div>
             <div>{{ simpleVariant.chromosome }}</div>
@@ -521,8 +521,8 @@
         color="#f0f0f0"
         v-for="copyNumberVariant in ngsReport.copyNumberVariants"
         :key="copyNumberVariant.id"
-      >  
-      <v-divider></v-divider>
+      >
+        <v-divider></v-divider>
         <v-layout row wrap :class="`pa-3`">
           <v-flex xs6 sm4 md2>
             <div class="caption grey--text">Chr</div>
@@ -578,7 +578,7 @@
         v-for="dnaFusion in ngsReport.dnaFusions"
         :key="dnaFusion.id"
       >
-      <v-divider></v-divider>
+        <v-divider></v-divider>
         <v-layout row wrap :class="`pa-3`">
           <v-flex xs6 sm4 md10>
             <div class="caption grey--text">Chr</div>
@@ -598,7 +598,7 @@
         v-for="rnaFusion in ngsReport.rnaFusions"
         :key="rnaFusion.id"
       >
-      <v-divider></v-divider>
+        <v-divider></v-divider>
         <v-layout row wrap :class="`pa-3`">
           <v-flex xs6 sm4 md12>
             <div class="caption grey--text">Formatierte Darstellung</div>
@@ -642,7 +642,7 @@
         v-for="rnaSeq in ngsReport.rnaSeqs"
         :key="rnaSeq.id"
       >
-      <v-divider></v-divider>
+        <v-divider></v-divider>
         <v-layout row wrap :class="`pa-3`">
           <v-flex xs6 sm4 md4>
             <div class="caption grey--text">Entrez ID</div>
@@ -1051,7 +1051,7 @@
         v-for="therapyRecommendation in carePlan.therapyRecommendations"
         :key="therapyRecommendation.id"
       >
-      <v-divider></v-divider>
+        <v-divider></v-divider>
         <v-layout row wrap :class="`pa-3`">
           <v-flex class="center" xs6 sm4 md12
             ><i class="fa fa-angle-down"></i
@@ -1077,14 +1077,16 @@
             {{ therapyRecommendation.levelOfEvidence }}
           </v-flex>
           <v-flex xs6 sm4 md12>
-            <div class="caption grey--text">Stützende Molekulare Alterationen</div>
+            <div class="caption grey--text">
+              Stützende Molekulare Alterationen
+            </div>
             <div>{{ therapyRecommendation.supportingVariants.join(", ") }}</div>
           </v-flex>
         </v-layout>
       </v-card>
     </v-card>
 
-     <v-btn
+    <v-btn
       small
       icon
       @click="$vuetify.goTo('#patientCard', options)"

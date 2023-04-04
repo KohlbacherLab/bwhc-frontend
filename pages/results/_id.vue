@@ -2137,7 +2137,6 @@ export default {
             queryparams.data.parameters.responses[i].display
         );
       }
-
       if (
         filesEntries != undefined ||
         recommendationsEntries != undefined ||

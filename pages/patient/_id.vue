@@ -21,7 +21,6 @@
 
     <v-divider class="my-3"></v-divider>
     <div id="patientCard"></div>
-    <v-layout>
       <v-card flat dark>
         <v-layout row wrap :class="`pa-3`">
           <v-flex xs6 sm4 md3>
@@ -89,7 +88,7 @@
             </div>
             <div>{{ patient.firstReferralDate }}</div>
           </v-flex>
-          <v-flex xs6 sm4 md4>
+          <v-flex xs6 sm4 md3>
             <div class="caption grey--text">
               <v-icon style="font-size: 0.9rem" slot="activator" class="mr-1"
                 >fas fa-id-badge</v-icon
@@ -159,7 +158,6 @@
         </v-card-title>
       </v-card>
         -->
-    </v-layout>
 
     <template v-slot:header>
       <span>

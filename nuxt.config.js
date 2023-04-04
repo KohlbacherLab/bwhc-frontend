@@ -33,6 +33,7 @@ module.exports = {
     port: process.env.port || ':9000',
 
     query: process.env.query || '/bwhc/mtb/api/query',
+    catalogs: process.env.catalogs || '/bwhc/catalogs/api/',
     coding: process.env.coding || '/bwhc/catalogs/api/Coding',
     valueSet: process.env.valueSet || '/bwhc/catalogs/api/ValueSet',
     patient: process.env.patient || '/bwhc/mtb/api/data/qc/Patient',
@@ -47,7 +48,7 @@ module.exports = {
     me: process.env.me || '/bwhc/user/api/whoami',
     logout: process.env.logout || '/bwhc/user/api/logout',
 
-    version: 'v.2022-11'
+    version: 'v.2023-02'
 
   },
 

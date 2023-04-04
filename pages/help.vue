@@ -22,6 +22,7 @@
 
         <v-container style="max-width: 600px">
           <v-timeline dense clipped>
+            <!--
             <v-timeline-item
               fill-dot
               class="white--text mb-5"
@@ -60,9 +61,40 @@
                 </v-layout>
               </v-timeline-item>
             </v-slide-x-transition>
+            -->
 
             <v-timeline-item class="mb-4" hide-dot>
               <span>TODAY</span>
+            </v-timeline-item>
+
+            <v-timeline-item class="mb-3" color="orange" small>
+              <v-layout justify-space-between>
+                <v-chip class="white--text ml-0" color="orange" label small
+                  >PUBLICITY</v-chip
+                >
+                <v-flex xs7>bwHC presented at the JIM Symposium.</v-flex>
+                <v-flex xs5 text-xs-right>Dec 2021</v-flex>
+              </v-layout>
+            </v-timeline-item>
+
+            <v-timeline-item class="mb-3" color="orange" small>
+              <v-layout justify-space-between>
+                <v-chip class="white--text ml-0" color="orange" label small
+                  >KICK OFF</v-chip
+                >
+                <v-flex xs7>DNPM Kickoff!</v-flex>
+                <v-flex xs5 text-xs-right>Dec 2021</v-flex>
+              </v-layout>
+            </v-timeline-item>
+
+            <v-timeline-item class="mb-3" color="blue" small>
+              <v-layout justify-space-between>
+                <v-chip class="white--text ml-0" color="blue" label small
+                  >EVENT</v-chip
+                >
+                <v-flex xs7>bwHC Development is in progress.</v-flex>
+                <v-flex xs5 text-xs-right>Dec 2020</v-flex>
+              </v-layout>
             </v-timeline-item>
 
             <v-timeline-item class="mb-3" color="purple" small>
@@ -75,68 +107,78 @@
               </v-layout>
             </v-timeline-item>
 
-            <v-timeline-item class="mb-3" color="grey" small>
+            <v-timeline-item class="mb-3" color="blue" small>
               <v-layout justify-space-between>
+                <v-chip class="white--text ml-0" color="blue" label small
+                  >EVENT</v-chip
+                >
                 <v-flex xs7>bwHC Meeting in Stuttgart.</v-flex>
                 <v-flex xs5 text-xs-right>Feb 2020</v-flex>
               </v-layout>
             </v-timeline-item>
 
-            <v-timeline-item class="mb-3" color="grey" small>
+            <v-timeline-item class="mb-3" color="purple" small>
               <v-layout justify-space-between>
-                <v-flex xs7>bwHC Patient Entry Portal v1 completed.</v-flex>
-                <v-flex xs5 text-xs-right>Mar 2019</v-flex>
-              </v-layout>
-            </v-timeline-item>
-
-            <v-timeline-item class="mb-3" color="grey" small>
-              <v-layout justify-space-between>
+                <v-chip class="white--text ml-0" color="purple" label small
+                  >DEV</v-chip
+                >
                 <v-flex xs7>bwHC Query Portal v2 completed.</v-flex>
                 <v-flex xs5 text-xs-right>Sep 2018</v-flex>
               </v-layout>
             </v-timeline-item>
 
-            <v-timeline-item class="mb-3" color="grey" small>
+            <v-timeline-item class="mb-3" color="purple" small>
               <v-layout justify-space-between>
+                <v-chip class="white--text ml-0" color="purple" label small
+                  >DEV</v-chip
+                >
                 <v-flex xs7>bwHC Query Portal v1 completed.</v-flex>
                 <v-flex xs5 text-xs-right>May 2018</v-flex>
               </v-layout>
             </v-timeline-item>
 
-            <v-timeline-item class="mb-3" color="grey" small>
+
+            <v-timeline-item class="mb-3" color="green" small>
               <v-layout justify-space-between>
-                <v-flex xs7
-                  >bwHC User Stories has been completed and shared with the
-                  partners.</v-flex
+                <v-chip class="white--text ml-0" color="green" label small
+                  >DESIGN</v-chip
                 >
+                <v-flex xs7>bwHC User Stories has been completed and shared with the
+                  partners.</v-flex>
                 <v-flex xs5 text-xs-right>Feb 2018</v-flex>
               </v-layout>
             </v-timeline-item>
 
-            <v-timeline-item class="mb-3" color="grey" small>
+            <v-timeline-item class="mb-3" color="blue" small>
               <v-layout justify-space-between>
-                <v-flex xs7
-                  >bwHC first consortium meeting took place in Tübingen.</v-flex
+                <v-chip class="white--text ml-0" color="blue" label small
+                  >EVENT</v-chip
                 >
+                <v-flex xs7>bwHC first consortium meeting took place in Tübingen.</v-flex>
                 <v-flex xs5 text-xs-right>Dec 2018</v-flex>
               </v-layout>
             </v-timeline-item>
 
-            <v-timeline-item class="mb-3" color="grey" small>
+            <v-timeline-item class="mb-3" color="green" small>
               <v-layout justify-space-between>
-                <v-flex xs7
-                  >bwHC Specification Document shared with partners.</v-flex
+                <v-chip class="white--text ml-0" color="green" label small
+                  >DESIGN</v-chip
                 >
+                <v-flex xs7>bwHC Specification Document shared with partners.</v-flex>
                 <v-flex xs5 text-xs-right>Oct 2018</v-flex>
               </v-layout>
             </v-timeline-item>
 
-            <v-timeline-item color="grey" small>
+            <v-timeline-item class="mb-3" color="orange" small>
               <v-layout justify-space-between>
+                <v-chip class="white--text ml-0" color="orange" label small
+                  >KICK OFF</v-chip
+                >
                 <v-flex xs7>bwHC project started!</v-flex>
                 <v-flex xs5 text-xs-right>Aug 2018</v-flex>
               </v-layout>
             </v-timeline-item>
+
           </v-timeline>
         </v-container>
       </v-flex>
@@ -150,7 +192,8 @@ import userPanel from "~/components/userPanel";
 
 export default {
   data: () => ({
-    events: [],
+    events: [
+    ],
     input: null,
     nonce: 0,
   }),

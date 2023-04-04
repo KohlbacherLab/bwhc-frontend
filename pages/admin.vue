@@ -480,7 +480,7 @@ export default {
     rules: {
       required: (value) => !!value || "Required.",
       password: (value) => {
-        const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+        const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!?._,@#\$%\^&\*?])(?=.{8,})/;
         return (
           pattern.test(value) ||
           "Mindest. 8 Zeichen, inkl. ein Großbuchstabe, eine Zahl und ein Sonderzeichen."
