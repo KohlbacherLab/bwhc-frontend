@@ -70,7 +70,8 @@
         >
           <v-card-text class="headline font-weight-thin">
             <v-icon color="cyan" dark>fas fa-file-medical</v-icon>
-            <strong>{{ displayResults.therapyCount }}</strong> Systemische Therapien
+            <strong>{{ displayResults.therapyCount }}</strong> Systemische
+            Therapien
           </v-card-text>
         </v-card>
       </v-flex>
@@ -180,7 +181,7 @@
             <v-hover>
               <v-card flat>
                 <v-card-text small class="font-weight-thin">
-                  <v-btn small flat color="blue" dark> Suche ändern </v-btn
+                  <v-btn small color="red" dark> Suche ändern ?</v-btn
                   ><br />
                   <span v-if="getQueryParametersMutations.length > 0">
                     <strong>Mutationen:</strong>
@@ -239,6 +240,7 @@
         </template>
         <queryPanel
           v-bind:genesCat="genesCat"
+          :genesCatSimplified="genesCatSimplified"
           :diagnosisCat="diagnosisCat"
           :tumorMorphologyCat="tumorMorphologyCat"
           :cnvTypCat="cnvTypCat"
@@ -249,9 +251,7 @@
           :variantEffectsCat="variantEffectsCat"
           :getQueryParametersMutations="getQueryParametersMutations"
           :getQueryParametersSimpleVariants="getQueryParametersSimpleVariants"
-          :getQueryParametersCopyNumberVariants="
-            getQueryParametersCopyNumberVariants
-          "
+          :getQueryParametersCopyNumberVariants="getQueryParametersCopyNumberVariants"
           :getQueryParametersDnaFusions="getQueryParametersDnaFusions"
           :getQueryParametersRnaFusions="getQueryParametersRnaFusions"
           :getQueryParametersDiagnosis="getQueryParametersDiagnosis"
@@ -1085,7 +1085,7 @@
                 </v-flex>
               </v-card>
 
-               <v-card flat color="transparent">
+              <v-card flat color="transparent">
                 <v-card-title>
                   <div>
                     <h3>{{ molecularTherapyResponseFilter.name }}</h3>
@@ -1844,6 +1844,7 @@ export default {
 
       let diagnosisCat = Array();
       let genesCat = Array();
+      let genesCatSimplified = Array();
       let cnvTypCat = Array();
       let drugsCat = Array();
       let responsesCat = Array();
@@ -1870,6 +1871,14 @@ export default {
           genesCatRaw.data.entries[i].symbol +
             " - " +
             genesCatRaw.data.entries[i].name +
+            " · " +
+            genesCatRaw.data.entries[i].hgncId
+        );
+      }
+
+      for (var i = 0; i < genesCatRaw.data.entries.length; i++) {
+        genesCatSimplified.push(
+          genesCatRaw.data.entries[i].symbol +
             " · " +
             genesCatRaw.data.entries[i].hgncId
         );
@@ -1967,9 +1976,9 @@ export default {
       }
 
       let getQueryParametersDnaFusions = Array();
-      
+
       //alert(JSON.stringify(queryparams.data.parameters.dnaFusions));
-      
+
       /*
 
       for (var i = 0; i < queryparams.data.parameters.dnaFusions.length; i++) {
@@ -2223,6 +2232,7 @@ export default {
 
         diagnosisCat,
         genesCat,
+        genesCatSimplified,
         cnvTypCat,
         drugsCat,
         responsesCat,

@@ -135,7 +135,7 @@
                         :items="genesCatSimplified"
                         :loading="isLoading"
                         label="SNV · Gen-Name oder HGNC Symbol"
-                        ref="mutatedGenes"
+                        ref="mutatedGenesSNV"
                         hide-selected
                         dense
                         chips
@@ -247,7 +247,7 @@
                         item-text="name"
                         item-value="id"
                         label="CNV · Gen-Name oder HGNC Symbol"
-                        ref="mutatedGenes"
+                        ref="mutatedGenesCNV"
                         chips
                         cache-items
                         deletable-chips
@@ -427,7 +427,7 @@
                         item-text="name"
                         item-value="id"
                         label="RNA & DNA Fusions · Gen-Name oder HGNC Symbol"
-                        ref="fusions"
+                        ref="fusions3"
                         chips
                         dense
                         solo-inverted
@@ -520,6 +520,7 @@
                           :items="items"
                           clearable
                           label="Das ausgewählte RNA Fusion wird hier angezeigt"
+                          ref="selectedRnaFusions"
                           chips
                           cache-items
                           deletable-chips
@@ -860,7 +861,7 @@
 -->
                 <v-expansion-panel v-if="expansion" inset focusable>
                   <v-expansion-panel-content>
-                    <template flat v-slot:header>
+                    <template v-slot:header>
                       <div class="caption">SNVs</div>
                     </template>
                     <v-card color="pink lighten-4" flat>
