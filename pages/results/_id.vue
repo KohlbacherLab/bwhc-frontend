@@ -181,8 +181,7 @@
             <v-hover>
               <v-card flat>
                 <v-card-text small class="font-weight-thin">
-                  <v-btn small color="red" dark> Suche ändern ?</v-btn
-                  ><br />
+                  <v-btn small color="red" dark> Suche ändern ?</v-btn><br />
                   <span v-if="getQueryParametersMutations.length > 0">
                     <strong>Mutationen:</strong>
                     {{ getQueryParametersMutations.join(", ") }}
@@ -190,7 +189,16 @@
                   </span>
                   <span v-if="getQueryParametersSimpleVariants.length > 0">
                     <strong>Simple Variants:</strong>
-                    {{ getQueryParametersSimpleVariants.join(", ") }}
+                    <li
+                      v-for="(
+                        getQueryParametersSimpleVariant, index
+                      ) in getQueryParametersSimpleVariants"
+                      :key="index"
+                    >
+                       {{ getQueryParametersSimpleVariant.display }} · {{ getQueryParametersSimpleVariant.code }} 
+                       <span v-if="getQueryParametersSimpleVariant.dnaChange"> - {{ getQueryParametersSimpleVariant.dnaChange }}</span> 
+                       <span v-if="getQueryParametersSimpleVariant.aminoAcidChange "> - {{ getQueryParametersSimpleVariant.aminoAcidChange }}</span>
+                    </li>
                     <br />
                   </span>
                   <span v-if="getQueryParametersCopyNumberVariants.length > 0">
@@ -251,7 +259,9 @@
           :variantEffectsCat="variantEffectsCat"
           :getQueryParametersMutations="getQueryParametersMutations"
           :getQueryParametersSimpleVariants="getQueryParametersSimpleVariants"
-          :getQueryParametersCopyNumberVariants="getQueryParametersCopyNumberVariants"
+          :getQueryParametersCopyNumberVariants="
+            getQueryParametersCopyNumberVariants
+          "
           :getQueryParametersDnaFusions="getQueryParametersDnaFusions"
           :getQueryParametersRnaFusions="getQueryParametersRnaFusions"
           :getQueryParametersDiagnosis="getQueryParametersDiagnosis"
@@ -1932,6 +1942,8 @@ export default {
 
       let getQueryParametersSimpleVariants = Array();
 
+      //alert(JSON.stringify(queryparams.data.parameters.simpleVariants));
+
       for (
         var i = 0;
         i < queryparams.data.parameters.simpleVariants.length;
@@ -1945,7 +1957,15 @@ export default {
                 queryparams.data.parameters.simpleVariants[i].gene.code
             )
           )
-            getQueryParametersSimpleVariants.push(genesCat[j]);
+            getQueryParametersSimpleVariants.push({
+              dnaChange:
+                queryparams.data.parameters.simpleVariants[i].dnaChange,
+              aminoAcidChange:
+                queryparams.data.parameters.simpleVariants[i].aminoAcidChange,
+              code: queryparams.data.parameters.simpleVariants[i].gene.code,
+              display:
+                queryparams.data.parameters.simpleVariants[i].gene.display,
+            });
         }
       }
 

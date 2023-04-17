@@ -123,8 +123,8 @@
                       <div class="grey--text">
                         Bitte wählen Sie das vom SNV betroffene Gen, und
                         optional cDNA change, protein change aus. Klicken Sie
-                        auf die <strong>Hinzufügen</strong> Taste, um die Auswahl in die Suche zu
-                        übernehmen.
+                        auf die <strong>Hinzufügen</strong> Taste, um die
+                        Auswahl in die Suche zu übernehmen.
                       </div>
                       <br />
                       <!--
@@ -165,13 +165,16 @@
                             placeholder="cDNA Change"
                             counter="3"
                             solo-inverted
+                            :rules="[rules.validateDnaChange]"
                           ></v-text-field>
-       
+
                           <v-text-field
                             v-model="aminoAcidChange"
                             clearable
                             placeholder="Protein Change"
                             solo-inverted
+                            counter="7"
+                            :rules="[rules.validateAminoAcidChange]"
                           ></v-text-field>
 
                           <v-btn
@@ -186,7 +189,7 @@
                             "
                             dark
                           >
-                          Hinzufügen
+                            Hinzufügen
                           </v-btn>
                         </v-flex>
                         <v-combobox
@@ -233,8 +236,8 @@
                       <div class="grey--text">
                         Bitte wählen Sie ein oder mehrere vom CNV betroffene
                         Gene, und optional CNV-Typ, Min- und Max-Kopienzahl.
-                        Klicken Sie auf die <strong>Hinzufügen</strong> Taste, um die Auswahl in die
-                        Suche zu übernehmen.
+                        Klicken Sie auf die <strong>Hinzufügen</strong> Taste,
+                        um die Auswahl in die Suche zu übernehmen.
                       </div>
                       <br />
                       <!-- 
@@ -294,6 +297,7 @@
                             clearable
                             solo-inverted
                             label="Min Copy Number"
+                            :rules="[rules.validateNumbers]"
                           ></v-text-field>
 
                           <v-text-field
@@ -301,6 +305,7 @@
                             clearable
                             solo-inverted
                             label="Max Copy Number"
+                            :rules="[rules.validateNumbers]"
                           ></v-text-field>
 
                           <v-btn
@@ -346,7 +351,7 @@
                                   </v-avatar>
                                 -->
                               <strong>
-                                <strong>{{ data.item.genes[0].code }}</strong>
+                                <strong>{{ data.item.genes.length }}</strong>
                                 {{ data.item.type }}
                                 <i v-if="data.item.copyNumber.max">{{
                                   data.item.copyNumber.max
@@ -369,10 +374,10 @@
                       <div class="grey--text">
                         Bitte wählen Sie ein Fusionspartner-Gen und
                         (5',3')-Zuordnung, sowie den Fusionstyp (DNA, RNA).
-                        Klicken Sie auf die <strong>Hinzufügen</strong> Taste, um die Auswahl in die
-                        Suche zu übernehmen.
+                        Klicken Sie auf die <strong>Hinzufügen</strong> Taste,
+                        um die Auswahl in die Suche zu übernehmen.
                       </div>
-                      <br>
+                      <br />
 
                       <!-- 
                         <span class="grey--text">CNV</span>
@@ -450,8 +455,7 @@
                             -->
                           </v-radio-group>
 
-
-                        <!--
+                          <!--
                         <v-flex xs12 sm6 md3>
                           <v-radio-group v-model="primeType" row>
                             <v-radio label="5'" value="fivePrimeGene"></v-radio>
@@ -470,11 +474,9 @@
                             @click="addFusions(fusions5, fusions3, fusionType)"
                             dark
                           >
-                          Hinzufügen
+                            Hinzufügen
                           </v-btn>
                         </v-flex>
-
-              
 
                         <v-combobox
                           v-model="selectedDnaFusions"
@@ -1276,6 +1278,21 @@ export default {
     showSV: false,
     expansion: false,
 
+    rules: {
+      validateDnaChange: (value) => {
+        const pattern = /[AGTC]>(?:(?![AG])[AGTC]|-)/;
+        return pattern.test(value) || "Ungültiges DNA-Änderungsmuster zB. T>C";
+      },
+      validateAminoAcidChange: (value) => {
+        const pattern = /^[A-Z][a-z][a-z]\d+[A-Z][a-z][a-z]$/;
+        return pattern.test(value) || "Ungültiges Aminosäure-Änderungsmuster. Dieses Feld akzeptiert nur 3-Buchstaben-Abkürzungen für Aminosäuren. zB. Ser123Thr";
+      },
+      validateNumbers: (value) => {
+        const pattern = /^[0-9]+$/;
+        return pattern.test(value) || "Dieses Feld akzeptiert nur Zahlen.";
+      },
+    },
+
     selectedMutatedGenes: Array(),
     selectedMutatedGenesSNV: Array(),
     selectedMutatedGenesCNV: Array(),
@@ -1519,6 +1536,7 @@ export default {
     },
 
     addMutatedGenesSNV(dnaChange, aminoAcidChange, mutatedGenesSNV) {
+      //this.selectedMutatedGenesSNV = [];
       if (mutatedGenesSNV) {
         this.selectedMutatedGenesSNV.push({
           dnaChange: dnaChange,
@@ -1529,6 +1547,22 @@ export default {
         this.mutatedGenesSNV = this.selectedMutatedGenesSNV;
       } else {
         alert("Bitte fügen Sie zuerst die relevanten Parameter hinzu!");
+      }
+    },
+
+    reAddMutatedGenesSNV(dnaChange, aminoAcidChange, code) {
+      if (code) {
+        this.selectedMutatedGenesSNV.push({
+          dnaChange: dnaChange,
+          aminoAcidChange: aminoAcidChange,
+          gene: { code: code },
+        });
+
+        this.mutatedGenesSNV = this.selectedMutatedGenesSNV;
+      } else {
+        alert(
+          "Beim Anzeigen der SVN-Abfrageparameter ist ein Problem aufgetreten"
+        );
       }
     },
 
@@ -1544,6 +1578,8 @@ export default {
           type: cnvType,
           genes: code,
         });
+
+        alert(JSON.stringify(this.selectedMutatedGenesCNV));
       } else {
         alert("Bitte fügen Sie zuerst die relevanten Parameter hinzu!");
       }
@@ -1848,8 +1884,11 @@ export default {
       this.mutatedGenesSNV = this.getQueryParametersSimpleVariants;
       if (this.getQueryParametersSimpleVariants)
         for (var i = 0; i < this.getQueryParametersSimpleVariants.length; i++) {
-          //alert(i + " SNV " + this.getQueryParametersSimpleVariants[i]),
-          //alert(this.getQueryParametersSimpleVariants[i]);
+          this.reAddMutatedGenesSNV(
+            this.getQueryParametersSimpleVariants[i].dnaChange,
+            this.getQueryParametersSimpleVariants[i].aminoAcidChange,
+            this.getQueryParametersSimpleVariants[i].code
+          );
         }
 
       this.mutatedGenesCNV = this.getQueryParametersCopyNumberVariants;
@@ -1861,7 +1900,7 @@ export default {
         ) {
           //alert(i + " CNV " + this.getQueryParametersCopyNumberVariants[i]),
           //alert(this.getQueryParametersCopyNumberVariants[i]);
-          //this.addMutatedGenesCNV(this.getQueryParametersCopyNumberVariants[i]);
+          this.addMutatedGenesCNV(this.getQueryParametersCopyNumberVariants[i]);
         }
 
       this.diagnosis = this.getQueryParametersDiagnosis;
