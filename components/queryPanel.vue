@@ -1478,8 +1478,6 @@ export default {
             },
           };
 
-          //alert(JSON.stringify(request));
-
           let Response = await axios.post(
             process.env.baseUrl +
               process.env.port +
@@ -1579,7 +1577,6 @@ export default {
           genes: code,
         });
 
-        alert(JSON.stringify(this.selectedMutatedGenesCNV));
       } else {
         alert("Bitte fügen Sie zuerst die relevanten Parameter hinzu!");
       }
@@ -1832,7 +1829,6 @@ export default {
           });
         }
       }
-      //alert(JSON.stringify(this.selectedDrugs));
     },
 
     addDrug() {
@@ -1898,8 +1894,6 @@ export default {
           i < this.getQueryParametersCopyNumberVariants.length;
           i++
         ) {
-          //alert(i + " CNV " + this.getQueryParametersCopyNumberVariants[i]),
-          //alert(this.getQueryParametersCopyNumberVariants[i]);
           this.addMutatedGenesCNV(this.getQueryParametersCopyNumberVariants[i]);
         }
 
