@@ -1281,15 +1281,24 @@ export default {
     rules: {
       validateDnaChange: (value) => {
         const pattern = /[AGTC]>(?:(?![AG])[AGTC]|-)/;
-        return pattern.test(value) || "Ungültiges DNA-Änderungsmuster zB. T>C";
+        return (
+          pattern.test(value) ||
+          "Ungültiges DNA-Änderungsmuster zB. T>C"
+        );
       },
       validateAminoAcidChange: (value) => {
         const pattern = /^[A-Z][a-z][a-z]\d+[A-Z][a-z][a-z]$/;
-        return pattern.test(value) || "Ungültiges Aminosäure-Änderungsmuster. Dieses Feld akzeptiert nur 3-Buchstaben-Abkürzungen für Aminosäuren. zB. Ser123Thr";
+        return (
+          pattern.test(value) ||
+          "Ungültiges Aminosäure-Änderungsmuster. Dieses Feld akzeptiert nur 3-Buchstaben-Abkürzungen für Aminosäuren. zB. Ser123Thr"
+        );
       },
       validateNumbers: (value) => {
         const pattern = /^[0-9]+$/;
-        return pattern.test(value) || "Dieses Feld akzeptiert nur Zahlen.";
+        return (
+          pattern.test(value) ||
+          "Dieses Feld akzeptiert nur Zahlen."
+        );
       },
     },
 
@@ -1478,6 +1487,8 @@ export default {
             },
           };
 
+          //alert(JSON.stringify(request));
+
           let Response = await axios.post(
             process.env.baseUrl +
               process.env.port +
@@ -1569,14 +1580,16 @@ export default {
         let code = Array();
         for (var i = 0; i < mutatedGenesCNV.length; i++) {
           code.push({ code: mutatedGenesCNV[i].split(" · ")[1] });
+
         }
 
         this.selectedMutatedGenesCNV.push({
           copyNumber: { max: parseInt(cnvMax), min: parseInt(cnvMin) },
           type: cnvType,
-          genes: code,
+          genes: code
         });
 
+        //alert(JSON.stringify(this.selectedMutatedGenesCNV));
       } else {
         alert("Bitte fügen Sie zuerst die relevanten Parameter hinzu!");
       }
@@ -1829,6 +1842,7 @@ export default {
           });
         }
       }
+      //alert(JSON.stringify(this.selectedDrugs));
     },
 
     addDrug() {
@@ -1894,6 +1908,8 @@ export default {
           i < this.getQueryParametersCopyNumberVariants.length;
           i++
         ) {
+          //alert(i + " CNV " + this.getQueryParametersCopyNumberVariants[i]),
+          //alert(this.getQueryParametersCopyNumberVariants[i]);
           this.addMutatedGenesCNV(this.getQueryParametersCopyNumberVariants[i]);
         }
 

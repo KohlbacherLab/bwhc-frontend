@@ -174,17 +174,150 @@
     <v-expansion-panel popout>
       <v-expansion-panel-content>
         <template v-slot:actions>
-          <v-icon color="blue accent-3">fas fa-search</v-icon>
+          <v-btn small color="red" dark> Suche ändern ?</v-btn>
         </template>
         <template v-slot:header>
           <span>
             <v-hover>
               <v-card flat>
+                <v-layout row>
+                  <v-flex xs2 order-lg1>
+                    <v-card flat>
+                      <v-card-text pb-5 small class="font-weight-thin">
+                        <strong>Abfragetyp:</strong>
+                        {{ getQueryParametersFederated.display }}
+                      </v-card-text>
+                    </v-card>
+                  </v-flex>
+
+                  <v-flex order-lg2>
+                    <v-card flat>
+                      <v-card-text small class="font-weight-thin">
+                        <span v-if="getQueryParametersMutations.length > 0">
+                          <strong>Mutationen:</strong>
+                          <li
+                            v-for="(
+                              getQueryParametersMutation, index
+                            ) in getQueryParametersMutations"
+                            :key="index"
+                          >
+                            {{ getQueryParametersMutation }}
+                          </li>
+                        </span>
+                        <span
+                          v-if="getQueryParametersSimpleVariants.length > 0"
+                        >
+                          <strong>Simple Variants:</strong>
+                          <li
+                            v-for="(
+                              getQueryParametersSimpleVariant, index
+                            ) in getQueryParametersSimpleVariants"
+                            :key="index"
+                          >
+                            {{ getQueryParametersSimpleVariant.display }} ·
+                            {{ getQueryParametersSimpleVariant.code }}
+                            <span
+                              v-if="getQueryParametersSimpleVariant.dnaChange"
+                            >
+                              -
+                              {{
+                                getQueryParametersSimpleVariant.dnaChange
+                              }}</span
+                            >
+                            <span
+                              v-if="
+                                getQueryParametersSimpleVariant.aminoAcidChange
+                              "
+                            >
+                              -
+                              {{
+                                getQueryParametersSimpleVariant.aminoAcidChange
+                              }}</span
+                            >
+                          </li>
+                          <span
+                            v-if="
+                              getQueryParametersCopyNumberVariants.length > 0
+                            "
+                          >
+                            <strong>Copy Number Variants:</strong>
+                            {{
+                              getQueryParametersCopyNumberVariants.join(", ")
+                            }}
+                          </span>
+                        </span>
+                      </v-card-text>
+                    </v-card>
+                  </v-flex>
+                  <v-flex order-lg3>
+                    <v-card flat>
+                      <v-card-text small class="font-weight-thin">
+                        <span v-if="getQueryParametersDiagnosis.length > 0">
+                          <strong>Diagnose:</strong>
+                          <li
+                            v-for="(
+                              getQueryParametersDiagnosis, index
+                            ) in getQueryParametersDiagnosis"
+                            :key="index"
+                          >
+                            {{ getQueryParametersDiagnosis }}
+                          </li>
+                        </span>
+                        <span
+                          v-if="getQueryParametersTumorMorphology.length > 0"
+                        >
+                          <strong>Tumor Morphologie:</strong>
+
+                          <li
+                            v-for="(
+                              getQueryParametersTumorMorphology, index
+                            ) in getQueryParametersTumorMorphology"
+                            :key="index"
+                          >
+                            {{ getQueryParametersTumorMorphology }}
+                          </li>
+                        </span>
+                        <span v-if="getQueryParametersDrugsDisplay.length > 0">
+                          <strong>Wirkstoffe:</strong>
+                          <li
+                            v-for="(
+                              getQueryParametersDrugsDisplay, index
+                            ) in getQueryParametersDrugsDisplay"
+                            :key="index"
+                          >
+                            {{ getQueryParametersDrugsDisplay }}
+                          </li>
+                        </span>
+                        <span v-if="getQueryParametersResponses.length > 0">
+                          <strong>Responses:</strong>
+                          <li
+                            v-for="(
+                              getQueryParametersResponse, index
+                            ) in getQueryParametersResponses"
+                            :key="index"
+                          >
+                            {{ getQueryParametersResponse }}
+                          </li>
+                        </span>
+                      </v-card-text>
+                    </v-card>
+                  </v-flex>
+                </v-layout>
+
+                <!--
+
                 <v-card-text small class="font-weight-thin">
-                  <v-btn small color="red" dark> Suche ändern ?</v-btn><br />
                   <span v-if="getQueryParametersMutations.length > 0">
                     <strong>Mutationen:</strong>
                     {{ getQueryParametersMutations.join(", ") }}
+                    <li
+                      v-for="(
+                        getQueryParametersMutation, index
+                      ) in getQueryParametersMutations"
+                      :key="index"
+                    >
+                       {{ getQueryParametersMutation }}
+                    </li>
                     <br />
                   </span>
                   <span v-if="getQueryParametersSimpleVariants.length > 0">
@@ -242,6 +375,7 @@
                   <strong>Abfragetyp:</strong>
                   {{ getQueryParametersFederated.display }}
                 </v-card-text>
+                              -->
               </v-card>
             </v-hover>
           </span>
