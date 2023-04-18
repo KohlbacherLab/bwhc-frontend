@@ -725,6 +725,7 @@
                 </v-btn>
                 <span>Sortieren nach Index</span>
               </v-tooltip>
+
               <v-tooltip top>
                 <v-btn
                   small
@@ -737,8 +738,18 @@
                 </v-btn>
                 <span>Sortieren nach Proben-Lokalization</span>
               </v-tooltip>
-
-              <v-icon small left>filter_list</v-icon>
+              <v-tooltip top>
+                <v-btn small flat disabled slot="activator">
+                  <span class="caption text-none"
+                    >{{ itemsGenomicReports.length }} Treffer</span
+                  >
+                </v-btn>
+                <span
+                  >Die Tabelle unten enthält
+                  {{ itemsGenomicReports.length }} übereinstimmende
+                  Ergebnisse</span
+                >
+              </v-tooltip>
             </v-layout>
 
             <v-card
@@ -766,7 +777,6 @@
                   <div class="caption grey--text">Probenart</div>
                   <div>{{ itemsGenomicReport.specimenType }}</div>
                 </v-flex>
-
                 <v-flex xs6 sm4 md2>
                   <div class="caption grey--text">Sequenzierungs-Art</div>
                   <div>{{ itemsGenomicReport.sequencingType }}</div>
@@ -1017,6 +1027,18 @@
                   <span class="caption text-none">Priorität</span>
                 </v-btn>
                 <span>Sortieren nach Priorität</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <v-btn small flat disabled slot="activator">
+                  <span class="caption text-none"
+                    >{{ itemsRecommendations.length }} Treffer</span
+                  >
+                </v-btn>
+                <span
+                  >Die Tabelle unten enthält
+                  {{ itemsRecommendations.length }} übereinstimmende
+                  Ergebnisse</span
+                >
               </v-tooltip>
             </v-layout>
 
@@ -1432,6 +1454,17 @@
                   <span class="caption text-none">Medikation</span>
                 </v-btn>
                 <span>Sortieren nach Medikation</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <v-btn small flat disabled slot="activator">
+                  <span class="caption text-none"
+                    >{{ itemsTherapies.length }} Treffer</span
+                  >
+                </v-btn>
+                <span
+                  >Die Tabelle unten enthält
+                  {{ itemsTherapies.length }} übereinstimmende Ergebnisse</span
+                >
               </v-tooltip>
             </v-layout>
 

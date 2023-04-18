@@ -145,10 +145,19 @@
         </v-flex>
       </v-layout>
 
-      <v-card-title class="title font-weight-light"
+      <v-flex d-flex>
+        <v-switch
+          v-model="displayCompletionStats"
+          :label="`Mittlere Dauern einblenden`"
+        ></v-switch>
+      </v-flex>
+
+      <v-card-title
+        v-if="displayCompletionStats"
+        class="title font-weight-light"
         >Globale Mittlere Dauern</v-card-title
       >
-      <v-layout wrap fluid>
+      <v-layout v-if="displayCompletionStats" wrap fluid>
         <v-flex d-flex xs12 sm6 md3>
           <v-card
             flat
@@ -363,7 +372,7 @@
             :key="itemsFile.patient.id"
           >
             <v-layout row wrap :class="`pa-3`">
-              <v-flex  xs12 sm4 md2>
+              <v-flex xs12 sm4 md2>
                 <div class="caption grey--text">Index</div>
                 <div>{{ itemsFile.groupIndex }}</div>
               </v-flex>
@@ -600,11 +609,11 @@
           </v-flex>
         </v-layout>
         <v-flex d-flex xs12 sm6 md3>
-          <v-card-title class="title font-weight-light"
+          <v-card-title v-if="displayCompletionStats" class="title font-weight-light"
             >Mittlere Dauern</v-card-title
           >
         </v-flex>
-        <v-layout wrap fluid>
+        <v-layout v-if="displayCompletionStats" wrap fluid>
           <v-flex d-flex xs12 sm6 md3>
             <v-card
               flat
@@ -1324,6 +1333,7 @@ export default {
         drugsGroupCat,
         itemsFiles,
         limitNumberItemsFiles,
+        displayCompletionStats: false,
       };
     } catch (err) {
       if (err.response.status === 401) {

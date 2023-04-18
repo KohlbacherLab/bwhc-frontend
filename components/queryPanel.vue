@@ -119,7 +119,7 @@
 
                 <v-flex d-flex v-if="showSNV">
                   <v-card color="grey lighten-3" flat>
-                    <v-card-text class="headline font-weight-thin">
+                    <v-card-text class="title font-weight-thin">
                       <div class="grey--text">
                         Bitte wählen Sie das vom SNV betroffene Gen, und
                         optional cDNA change, protein change aus. Klicken Sie
@@ -139,6 +139,7 @@
                         hide-selected
                         dense
                         chips
+                        flat
                         solo-inverted
                         clearable
                         hide-no-data
@@ -162,6 +163,7 @@
                           <v-text-field
                             v-model="dnaChange"
                             clearable
+                            flat
                             placeholder="cDNA Change"
                             counter="3"
                             solo-inverted
@@ -171,6 +173,7 @@
                           <v-text-field
                             v-model="aminoAcidChange"
                             clearable
+                            flat
                             placeholder="Protein Change"
                             solo-inverted
                             counter="7"
@@ -232,7 +235,7 @@
 
                 <v-flex d-flex v-if="showCNV">
                   <v-card color="grey lighten-3" flat>
-                    <v-card-text class="headline font-weight-thin">
+                    <v-card-text class="title font-weight-thin">
                       <div class="grey--text">
                         Bitte wählen Sie ein oder mehrere vom CNV betroffene
                         Gene, und optional CNV-Typ, Min- und Max-Kopienzahl.
@@ -252,6 +255,7 @@
                         label="CNV · Gen-Name oder HGNC Symbol"
                         ref="mutatedGenesCNV"
                         chips
+                        flat
                         cache-items
                         deletable-chips
                         dense
@@ -286,6 +290,7 @@
                       <v-layout row wrap>
                         <v-flex xs12 sm6 md9>
                           <v-select
+                            flat
                             v-model="cnvType"
                             :items="cnvTypCat"
                             solo-inverted
@@ -293,6 +298,7 @@
                           ></v-select>
 
                           <v-text-field
+                            flat
                             v-model="cnvMin"
                             clearable
                             solo-inverted
@@ -301,6 +307,7 @@
                           ></v-text-field>
 
                           <v-text-field
+                            flat
                             v-model="cnvMax"
                             clearable
                             solo-inverted
@@ -370,12 +377,16 @@
 
                 <v-flex d-flex v-if="showFusions">
                   <v-card color="grey lighten-3" flat>
-                    <v-card-text class="headline font-weight-thin">
+                    <v-card-text class="title font-weight-thin">
+                      <b>Diese Funktion ist noch nicht vollständig!!</b
+                      ><br /><br />
                       <div class="grey--text">
-                        Bitte wählen Sie ein Fusionspartner-Gen und
-                        (5',3')-Zuordnung, sowie den Fusionstyp (DNA, RNA).
-                        Klicken Sie auf die <strong>Hinzufügen</strong> Taste,
-                        um die Auswahl in die Suche zu übernehmen.
+                        <p>
+                          Bitte wählen Sie ein Fusionspartner-Gen und
+                          (5',3')-Zuordnung, sowie den Fusionstyp (DNA, RNA).
+                          Klicken Sie auf die <strong>Hinzufügen</strong> Taste,
+                          um die Auswahl in die Suche zu übernehmen.
+                        </p>
                       </div>
                       <br />
 
@@ -392,6 +403,7 @@
                         label="RNA & DNA Fusions · Gen-Name oder HGNC Symbol"
                         ref="fusions"
                         chips
+                        flat
                         dense
                         solo-inverted
                         hide-no-data
@@ -434,6 +446,7 @@
                         label="RNA & DNA Fusions · Gen-Name oder HGNC Symbol"
                         ref="fusions3"
                         chips
+                        flat
                         dense
                         solo-inverted
                         hide-no-data
@@ -1281,10 +1294,7 @@ export default {
     rules: {
       validateDnaChange: (value) => {
         const pattern = /[AGTC]>(?:(?![AG])[AGTC]|-)/;
-        return (
-          pattern.test(value) ||
-          "Ungültiges DNA-Änderungsmuster zB. T>C"
-        );
+        return pattern.test(value) || "Ungültiges DNA-Änderungsmuster zB. T>C";
       },
       validateAminoAcidChange: (value) => {
         const pattern = /^[A-Z][a-z][a-z]\d+[A-Z][a-z][a-z]$/;
@@ -1295,10 +1305,7 @@ export default {
       },
       validateNumbers: (value) => {
         const pattern = /^[0-9]+$/;
-        return (
-          pattern.test(value) ||
-          "Dieses Feld akzeptiert nur Zahlen."
-        );
+        return pattern.test(value) || "Dieses Feld akzeptiert nur Zahlen.";
       },
     },
 
@@ -1580,16 +1587,20 @@ export default {
         let code = Array();
         for (var i = 0; i < mutatedGenesCNV.length; i++) {
           code.push({ code: mutatedGenesCNV[i].split(" · ")[1] });
-
+          console.log("code:" + mutatedGenesCNV[i].split(" · ")[1]);
         }
+        console.log(JSON.stringify(mutatedGenesCNV));
+        console.log("CNV length " + code.length + " and code: " + code);
 
         this.selectedMutatedGenesCNV.push({
           copyNumber: { max: parseInt(cnvMax), min: parseInt(cnvMin) },
           type: cnvType,
-          genes: code
+          genes: code,
         });
 
-        //alert(JSON.stringify(this.selectedMutatedGenesCNV));
+        console.log("code array " + this.selectedMutatedGenesCNV);
+
+        alert(JSON.stringify(this.selectedMutatedGenesCNV));
       } else {
         alert("Bitte fügen Sie zuerst die relevanten Parameter hinzu!");
       }
@@ -1894,6 +1905,16 @@ export default {
       this.mutatedGenesSNV = this.getQueryParametersSimpleVariants;
       if (this.getQueryParametersSimpleVariants)
         for (var i = 0; i < this.getQueryParametersSimpleVariants.length; i++) {
+          console.log(
+            "SNV: " +
+              this.getQueryParametersSimpleVariants[i].dnaChange +
+              " " +
+              this.getQueryParametersSimpleVariants[i].aminoAcidChange +
+              " " +
+              this.getQueryParametersSimpleVariants[i].code +
+              " " +
+              this.getQueryParametersSimpleVariants[i].display
+          );
           this.reAddMutatedGenesSNV(
             this.getQueryParametersSimpleVariants[i].dnaChange,
             this.getQueryParametersSimpleVariants[i].aminoAcidChange,
