@@ -139,11 +139,18 @@
         </v-flex>
       </v-layout>
 
-      <v-card-title class="title font-weight-light"
+      <v-flex d-flex>
+        <v-switch
+          v-model="displayCompletionStats"
+          :label="`Mittlere Dauern einblenden`"
+        ></v-switch>
+      </v-flex>
+
+      <v-card-title v-if="displayCompletionStats" class="title font-weight-light"
         >Mittlere Dauern</v-card-title
       >
 
-      <v-layout wrap fluid>
+      <v-layout v-if="displayCompletionStats" wrap fluid>
         <v-flex d-flex xs12 sm6 md3>
           <v-card
             flat
@@ -283,6 +290,7 @@ export default {
         localReport,
         localCompletionStats: rawLocalCompletionStats,
         localAverageDurations: rawLocalAverageDurations,
+        displayCompletionStats: false,
       };
     } catch (err) {
       if (err.response.status === 401) {
