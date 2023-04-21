@@ -167,7 +167,7 @@
                             placeholder="cDNA Change"
                             counter="3"
                             solo-inverted
-                            :rules="[rules.validateDnaChange]"
+                            :rules="[rulesSNV.validateDnaChange]"
                           ></v-text-field>
 
                           <v-text-field
@@ -177,7 +177,7 @@
                             placeholder="Protein Change"
                             solo-inverted
                             counter="7"
-                            :rules="[rules.validateAminoAcidChange]"
+                            :rules="[rulesSNV.validateAminoAcidChange]"
                           ></v-text-field>
 
                           <v-btn
@@ -303,7 +303,6 @@
                             clearable
                             solo-inverted
                             label="Min Copy Number"
-                            :rules="[rules.validateNumbers]"
                           ></v-text-field>
 
                           <v-text-field
@@ -312,7 +311,6 @@
                             clearable
                             solo-inverted
                             label="Max Copy Number"
-                            :rules="[rules.validateNumbers]"
                           ></v-text-field>
 
                           <v-btn
@@ -346,6 +344,7 @@
                           hide-selected
                         >
                           <template v-slot:selection="data">
+                            
                             <v-chip
                               :selected="data.selected"
                               label
@@ -358,7 +357,7 @@
                                   </v-avatar>
                                 -->
                               <strong>
-                                <strong>{{ data.item.genes.length }}</strong>
+                                <strong>{{ data.item.genes.length }} Gene(s)</strong>
                                 {{ data.item.type }}
                                 <i v-if="data.item.copyNumber.max">{{
                                   data.item.copyNumber.max
@@ -1291,18 +1290,20 @@ export default {
     showSV: false,
     expansion: false,
 
-    rules: {
+    rulesSNV: {
       validateDnaChange: (value) => {
         const pattern = /[AGTC]>(?:(?![AG])[AGTC]|-)/;
-        return pattern.test(value) || "Ungültiges DNA-Änderungsmuster zB. T>C";
+        return pattern.test(value) || "DNA-Änderungsmuster beispiel T>C";
       },
       validateAminoAcidChange: (value) => {
         const pattern = /^[A-Z][a-z][a-z]\d+[A-Z][a-z][a-z]$/;
         return (
           pattern.test(value) ||
-          "Ungültiges Aminosäure-Änderungsmuster. Dieses Feld akzeptiert nur 3-Buchstaben-Abkürzungen für Aminosäuren. zB. Ser123Thr"
+          "Bitte geben Sie nur Aminosäure-Abkürzungen mit drei Buchstaben ein."
         );
       },
+    },
+    rulesCNV: {
       validateNumbers: (value) => {
         const pattern = /^[0-9]+$/;
         return pattern.test(value) || "Dieses Feld akzeptiert nur Zahlen.";
@@ -1553,7 +1554,7 @@ export default {
 
     addMutatedGenesSNV(dnaChange, aminoAcidChange, mutatedGenesSNV) {
       //this.selectedMutatedGenesSNV = [];
-      if (mutatedGenesSNV) {
+      if (mutatedGenesSNV.length > 0) {
         this.selectedMutatedGenesSNV.push({
           dnaChange: dnaChange,
           aminoAcidChange: aminoAcidChange,
@@ -1581,26 +1582,49 @@ export default {
         );
       }
     },
+    
 
     addMutatedGenesCNV(cnvType, cnvMax, cnvMin, mutatedGenesCNV) {
-      if (mutatedGenesCNV) {
+      if (mutatedGenesCNV.length > 0) {
         let code = Array();
+        //alert(JSON.stringify(mutatedGenesCNV));
         for (var i = 0; i < mutatedGenesCNV.length; i++) {
           code.push({ code: mutatedGenesCNV[i].split(" · ")[1] });
-          console.log("code:" + mutatedGenesCNV[i].split(" · ")[1]);
+          //console.log("code:" + mutatedGenesCNV[i].split(" · ")[1]);
         }
-        console.log(JSON.stringify(mutatedGenesCNV));
-        console.log("CNV length " + code.length + " and code: " + code);
+        //console.log(JSON.stringify(mutatedGenesCNV));
+        //console.log("CNV length " + code.length + " and code: " + code);
 
+        //alert(JSON.stringify(code));
+        
         this.selectedMutatedGenesCNV.push({
           copyNumber: { max: parseInt(cnvMax), min: parseInt(cnvMin) },
           type: cnvType,
           genes: code,
         });
 
-        console.log("code array " + this.selectedMutatedGenesCNV);
+        //console.log("code array " + this.selectedMutatedGenesCNV);
 
-        alert(JSON.stringify(this.selectedMutatedGenesCNV));
+        
+      } else {
+        alert("Bitte fügen Sie zuerst die relevanten Parameter hinzu!");
+      }
+    },
+
+    reAddMutatedGenesCNV(cnvType, cnvMax, cnvMin, codes) {
+      //alert(JSON.stringify(codes));
+
+      if (codes) {
+        let code = Array();
+        for (var i = 0; i < codes.length; i++) {
+         code.push({ code: codes.code });
+      }
+
+        this.selectedMutatedGenesCNV.push({
+          copyNumber: { max: parseInt(cnvMax), min: parseInt(cnvMin) },
+          type: cnvType,
+          genes: code,
+        });
       } else {
         alert("Bitte fügen Sie zuerst die relevanten Parameter hinzu!");
       }
@@ -1929,9 +1953,14 @@ export default {
           i < this.getQueryParametersCopyNumberVariants.length;
           i++
         ) {
-          //alert(i + " CNV " + this.getQueryParametersCopyNumberVariants[i]),
-          //alert(this.getQueryParametersCopyNumberVariants[i]);
-          this.addMutatedGenesCNV(this.getQueryParametersCopyNumberVariants[i]);
+          //alert(i + " CNV " + JSON.stringify(this.getQueryParametersCopyNumberVariants[i])),
+          //alert(JSON.stringify(this.getQueryParametersCopyNumberVariants[i]));
+          //alert("this:" + this.getQueryParametersCopyNumberVariants[i].genes, +" "+ this.getQueryParametersCopyNumberVariants[i].copyNumber.min+" "+ this.getQueryParametersCopyNumberVariants[i].copyNumber.max+" "+ 
+           // this.getQueryParametersCopyNumberVariants[i].genes);
+            //alert(this.getQueryParametersCopyNumberVariants[i].copyNumber);
+          this.reAddMutatedGenesCNV(
+            this.getQueryParametersCopyNumberVariants[i].type, this.getQueryParametersCopyNumberVariants[i].copyNumber.min, this.getQueryParametersCopyNumberVariants[i].copyNumber.max
+            ,this.getQueryParametersCopyNumberVariants[i].genes)
         }
 
       this.diagnosis = this.getQueryParametersDiagnosis;

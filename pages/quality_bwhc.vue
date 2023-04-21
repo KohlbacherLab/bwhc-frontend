@@ -720,7 +720,7 @@
 import axios from "axios";
 import { dirname } from "path";
 import BarChart from "~/components/BarChart";
-//import PieChart from "~/components/PieChart";
+import PieChart from "~/components/PieChart";
 import userPanel from "~/components/userPanel";
 
 let seen = true;
@@ -738,7 +738,7 @@ export default {
   components: {
     userPanel,
     BarChart,
-    //  PieChart,
+    PieChart,
   },
 
   data() {

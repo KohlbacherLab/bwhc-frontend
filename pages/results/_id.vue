@@ -235,16 +235,60 @@
                               }}</span
                             >
                           </li>
-                          <span
-                            v-if="
-                              getQueryParametersCopyNumberVariants.length > 0
-                            "
+                        </span>
+                        <span
+                          v-if="getQueryParametersCopyNumberVariants.length > 0"
+                        >
+                          <strong>Copy Number Variants:</strong>
+                          <li
+                            v-for="(
+                              getQueryParametersCopyNumberVariant, index
+                            ) in getQueryParametersCopyNumberVariants"
+                            :key="index"
                           >
-                            <strong>Copy Number Variants:</strong>
-                            {{
-                              getQueryParametersCopyNumberVariants.join(", ")
-                            }}
-                          </span>
+                          <span
+                          v-for="(
+                              getQueryParametersCopyNumberVariantGene, index2
+                            ) in getQueryParametersCopyNumberVariants[index].genes"
+                            :key="index2"
+                          >
+                          {{ getQueryParametersCopyNumberVariantGene.display }} · {{ getQueryParametersCopyNumberVariantGene.code }}, 
+                        
+                        </span>
+                           
+                            <span
+                              v-if="getQueryParametersCopyNumberVariant.type"
+                            >
+                              
+                              {{
+                                getQueryParametersCopyNumberVariant.type
+                              }}</span
+                            >
+                            <span
+                              v-if="
+                                getQueryParametersCopyNumberVariant.copyNumber
+                                  .min
+                              "
+                            >
+                              -
+                              {{
+                                getQueryParametersCopyNumberVariant.copyNumber
+                                  .min
+                              }}</span
+                            >
+                            <span
+                              v-if="
+                                getQueryParametersCopyNumberVariant.copyNumber
+                                  .max
+                              "
+                            >
+                              -
+                              {{
+                                getQueryParametersCopyNumberVariant.copyNumber
+                                  .max
+                              }}</span
+                            >
+                          </li>
                         </span>
                       </v-card-text>
                     </v-card>
@@ -2137,17 +2181,23 @@ export default {
       }
 
       let getQueryParametersCopyNumberVariants = Array();
+
       for (
         var i = 0;
         i < queryparams.data.parameters.copyNumberVariants.length;
         i++
       ) {
-        for (var j = 0; j < genesCat.length; j++) {
-          for (
-            var k = 0;
-            k < queryparams.data.parameters.copyNumberVariants[i].genes.length;
-            k++
-          ) {
+        let getGenes = [];
+        console.log(
+          "Test1 : " +
+            JSON.stringify(queryparams.data.parameters.copyNumberVariants)
+        );
+        for (
+          var j = 0;
+          j < queryparams.data.parameters.copyNumberVariants[i].genes.length;
+          j++
+        ) {
+          /*
             if (
               genesCat[j].includes(
                 queryparams.data.parameters.copyNumberVariants[i].genes[k]
@@ -2157,9 +2207,24 @@ export default {
                     .code
               )
             )
-              getQueryParametersCopyNumberVariants.push(genesCat[j]);
-          }
+            */
+          // getQueryParametersCopyNumberVariants.push(genesCat[j]);
+          getGenes.push(
+            queryparams.data.parameters.copyNumberVariants[i].genes[j]
+          );
         }
+
+        getQueryParametersCopyNumberVariants.push({
+          genes: getGenes,
+
+          type: queryparams.data.parameters.copyNumberVariants[i].type,
+          copyNumber:
+            queryparams.data.parameters.copyNumberVariants[i].copyNumber,
+        });
+
+        console.log(
+          "Test2 : " + JSON.stringify(getQueryParametersCopyNumberVariants)
+        );
       }
 
       let getQueryParametersDnaFusions = Array();
