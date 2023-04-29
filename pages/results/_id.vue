@@ -182,7 +182,7 @@
               <v-card flat>
                 <v-layout row>
                   <v-flex xs2 order-lg1>
-                    <v-card flat>
+                    <v-card class="font-weight-thin" flat>
                       <v-card-text pb-5 small class="font-weight-thin">
                         <strong>Abfragetyp:</strong>
                         {{ getQueryParametersFederated.display }}
@@ -197,9 +197,10 @@
                           <strong>Mutationen:</strong>
                           <li
                             v-for="(
-                              getQueryParametersMutation, index
+                              getQueryParametersMutation, indexMutations
                             ) in getQueryParametersMutations"
-                            :key="index"
+                            :key="indexMutations"
+                            :class="[indexMutations % 2 === 0 ? 'purple lighten-5' : 'white']"
                           >
                             {{ getQueryParametersMutation }}
                           </li>
@@ -207,15 +208,16 @@
                         <span
                           v-if="getQueryParametersSimpleVariants.length > 0"
                         >
-                          <strong>Simple Variants:</strong>
+                          <strong>SNVs</strong>
                           <li
                             v-for="(
-                              getQueryParametersSimpleVariant, index
+                              getQueryParametersSimpleVariant, indexSNV
                             ) in getQueryParametersSimpleVariants"
-                            :key="index"
+                            :key="indexSNV"
+                            :class="[indexSNV % 2 === 0 ? 'grey lighten-4' : 'white']"
                           >
-                            {{ getQueryParametersSimpleVariant.display }} ·
-                            {{ getQueryParametersSimpleVariant.code }}
+                            {{ getQueryParametersSimpleVariant.gene.display }} ·
+                            {{ getQueryParametersSimpleVariant.gene.code }}
                             <span
                               v-if="getQueryParametersSimpleVariant.dnaChange"
                             >
@@ -239,28 +241,34 @@
                         <span
                           v-if="getQueryParametersCopyNumberVariants.length > 0"
                         >
-                          <strong>Copy Number Variants:</strong>
+                          <strong>CNVs</strong>
                           <li
                             v-for="(
-                              getQueryParametersCopyNumberVariant, index
+                              getQueryParametersCopyNumberVariant, indexCNV
                             ) in getQueryParametersCopyNumberVariants"
-                            :key="index"
+                            :key="indexCNV"
+                            :class="[indexCNV % 2 === 0 ? 'grey lighten-4' : 'white']"
                           >
-                          <span
-                          v-for="(
-                              getQueryParametersCopyNumberVariantGene, index2
-                            ) in getQueryParametersCopyNumberVariants[index].genes"
-                            :key="index2"
-                          >
-                          {{ getQueryParametersCopyNumberVariantGene.display }} · {{ getQueryParametersCopyNumberVariantGene.code }}, 
-                        
-                        </span>
-                           
+                            <span
+                              v-for="(
+                                getQueryParametersCopyNumberVariantGene, index2CNV
+                              ) in getQueryParametersCopyNumberVariants[indexCNV]
+                                .genes"
+                              :key="index2CNV"
+                            >
+                              {{
+                                getQueryParametersCopyNumberVariantGene.display
+                              }}
+                              ·
+                              {{
+                                getQueryParametersCopyNumberVariantGene.code
+                              }}
+                            </span>
+
                             <span
                               v-if="getQueryParametersCopyNumberVariant.type"
                             >
-                              
-                              {{
+                            , {{
                                 getQueryParametersCopyNumberVariant.type
                               }}</span
                             >
@@ -300,9 +308,10 @@
                           <strong>Diagnose:</strong>
                           <li
                             v-for="(
-                              getQueryParametersDiagnosis, index
+                              getQueryParametersDiagnosis, indexDiagnosis
                             ) in getQueryParametersDiagnosis"
-                            :key="index"
+                            :key="indexDiagnosis"
+                            :class="[indexDiagnosis % 2 === 0 ? 'indigo lighten-5' : 'white']"
                           >
                             {{ getQueryParametersDiagnosis }}
                           </li>
@@ -314,9 +323,10 @@
 
                           <li
                             v-for="(
-                              getQueryParametersTumorMorphology, index
+                              getQueryParametersTumorMorphology, indexTumorMorphology
                             ) in getQueryParametersTumorMorphology"
-                            :key="index"
+                            :key="indexTumorMorphology"
+                            :class="[indexTumorMorphology % 2 === 0 ? 'indigo lighten-5' : 'white']"
                           >
                             {{ getQueryParametersTumorMorphology }}
                           </li>
@@ -325,9 +335,10 @@
                           <strong>Wirkstoffe:</strong>
                           <li
                             v-for="(
-                              getQueryParametersDrugsDisplay, index
+                              getQueryParametersDrugsDisplay, indexDrugs
                             ) in getQueryParametersDrugsDisplay"
-                            :key="index"
+                            :key="indexDrugs"
+                            :class="[indexDrugs % 2 === 0 ? 'blue lighten-5' : 'white']"
                           >
                             {{ getQueryParametersDrugsDisplay }}
                           </li>
@@ -336,9 +347,10 @@
                           <strong>Responses:</strong>
                           <li
                             v-for="(
-                              getQueryParametersResponse, index
+                              getQueryParametersResponse, indexResponse
                             ) in getQueryParametersResponses"
-                            :key="index"
+                            :key="indexResponse"
+                            :class="[indexResponse % 2 === 0 ? 'cyan lighten-5' : 'white']"
                           >
                             {{ getQueryParametersResponse }}
                           </li>
@@ -783,9 +795,9 @@
                 <span>Sortieren nach Proben-Lokalization</span>
               </v-tooltip>
               <v-tooltip top>
-                <v-btn small flat disabled slot="activator">
-                  <span class="caption text-none"
-                    >{{ itemsGenomicReports.length }} Treffer</span
+                <v-btn small flat color="indigo" slot="activator">
+                  <span class="text-none"
+                    ><b>{{ itemsGenomicReports.length }} Treffer</b></span
                   >
                 </v-btn>
                 <span
@@ -1073,9 +1085,9 @@
                 <span>Sortieren nach Priorität</span>
               </v-tooltip>
               <v-tooltip top>
-                <v-btn small flat disabled slot="activator">
-                  <span class="caption text-none"
-                    >{{ itemsRecommendations.length }} Treffer</span
+                <v-btn small flat color="blue" slot="activator">
+                  <span class="text-none"
+                    ><b>{{ itemsRecommendations.length }} Treffer</b></span
                   >
                 </v-btn>
                 <span
@@ -1500,9 +1512,9 @@
                 <span>Sortieren nach Medikation</span>
               </v-tooltip>
               <v-tooltip top>
-                <v-btn small flat disabled slot="activator">
-                  <span class="caption text-none"
-                    >{{ itemsTherapies.length }} Treffer</span
+                <v-btn small flat color="cyan" slot="activator">
+                  <span class="text-none"
+                    ><b>{{ itemsTherapies.length }} Treffer</b></span
                   >
                 </v-btn>
                 <span
@@ -2071,133 +2083,148 @@ export default {
       let responsesCat = Array();
       let tumorMorphologyCat = Array();
 
-      for (var i = 0; i < diagnosisCatRaw.data.entries.length; i++) {
-        diagnosisCat.push(
-          diagnosisCatRaw.data.entries[i].code +
-            " - " +
-            diagnosisCatRaw.data.entries[i].display
-        );
+      if (diagnosisCatRaw.data.entries) {
+        for (var i = 0; i < diagnosisCatRaw.data.entries.length; i++) {
+          diagnosisCat.push(
+            diagnosisCatRaw.data.entries[i].code +
+              " - " +
+              diagnosisCatRaw.data.entries[i].display
+          );
+        }
       }
 
-      for (var i = 0; i < tumorMorphologyCatRaw.data.entries.length; i++) {
-        tumorMorphologyCat.push(
-          tumorMorphologyCatRaw.data.entries[i].code +
-            " - " +
-            tumorMorphologyCatRaw.data.entries[i].display
-        );
+      if (tumorMorphologyCatRaw.data.entries) {
+        for (var i = 0; i < tumorMorphologyCatRaw.data.entries.length; i++) {
+          tumorMorphologyCat.push(
+            tumorMorphologyCatRaw.data.entries[i].code +
+              " - " +
+              tumorMorphologyCatRaw.data.entries[i].display
+          );
+        }
       }
 
-      for (var i = 0; i < genesCatRaw.data.entries.length; i++) {
-        genesCat.push(
-          genesCatRaw.data.entries[i].symbol +
-            " - " +
-            genesCatRaw.data.entries[i].name +
-            " · " +
-            genesCatRaw.data.entries[i].hgncId
-        );
+      if (genesCatRaw.data.entries) {
+        for (var i = 0; i < genesCatRaw.data.entries.length; i++) {
+          genesCat.push(
+            genesCatRaw.data.entries[i].symbol +
+              " - " +
+              genesCatRaw.data.entries[i].name +
+              " · " +
+              genesCatRaw.data.entries[i].hgncId
+          );
+        }
+
+        for (var i = 0; i < genesCatRaw.data.entries.length; i++) {
+          genesCatSimplified.push(
+            genesCatRaw.data.entries[i].symbol +
+              " · " +
+              genesCatRaw.data.entries[i].hgncId
+          );
+        }
       }
 
-      for (var i = 0; i < genesCatRaw.data.entries.length; i++) {
-        genesCatSimplified.push(
-          genesCatRaw.data.entries[i].symbol +
-            " · " +
-            genesCatRaw.data.entries[i].hgncId
-        );
+      if (cnvTypCatRaw.data.concepts) {
+        for (var i = 0; i < cnvTypCatRaw.data.concepts.length; i++) {
+          cnvTypCat.push(
+            cnvTypCatRaw.data.concepts[i].code
+            //+ " - " +
+            //  cnvTypCatRaw.data.concepts[i].display
+          );
+        }
       }
 
-      for (var i = 0; i < cnvTypCatRaw.data.concepts.length; i++) {
-        cnvTypCat.push(
-          cnvTypCatRaw.data.concepts[i].code
-          //+ " - " +
-          //  cnvTypCatRaw.data.concepts[i].display
-        );
+      if (drugsCatRaw.data.entries) {
+        for (var i = 0; i < drugsCatRaw.data.entries.length; i++) {
+          drugsCat.push(
+            drugsCatRaw.data.entries[i].name +
+              " · " +
+              drugsCatRaw.data.entries[i].code
+          );
+        }
       }
 
-      for (var i = 0; i < drugsCatRaw.data.entries.length; i++) {
-        drugsCat.push(
-          drugsCatRaw.data.entries[i].name +
-            " · " +
-            drugsCatRaw.data.entries[i].code
-        );
-      }
-
-      for (var i = 0; i < responsesCatRaw.data.concepts.length; i++) {
-        responsesCat.push(
-          responsesCatRaw.data.concepts[i].code +
-            " - " +
-            responsesCatRaw.data.concepts[i].display
-        );
+      if (responsesCatRaw.data.concepts) {
+        for (var i = 0; i < responsesCatRaw.data.concepts.length; i++) {
+          responsesCat.push(
+            responsesCatRaw.data.concepts[i].code +
+              " - " +
+              responsesCatRaw.data.concepts[i].display
+          );
+        }
       }
 
       let ageRangeRaw = Array();
+
       ageRangeRaw[0] = filters.patientFilter.ageRange.min;
       ageRangeRaw[1] = filters.patientFilter.ageRange.max;
 
       let getQueryParametersMutations = Array();
-      for (
-        var i = 0;
-        i < queryparams.data.parameters.mutatedGenes.length;
-        i++
-      ) {
-        for (var j = 0; j < genesCat.length; j++) {
-          if (
-            genesCat[j].includes(
-              queryparams.data.parameters.mutatedGenes[i].display +
-                " · " +
-                queryparams.data.parameters.mutatedGenes[i].code
+
+      if (queryparams.data.parameters.mutatedGenes) {
+        for (
+          var i = 0;
+          i < queryparams.data.parameters.mutatedGenes.length;
+          i++
+        ) {
+          for (var j = 0; j < genesCat.length; j++) {
+            if (
+              genesCat[j].includes(
+                queryparams.data.parameters.mutatedGenes[i].display +
+                  " · " +
+                  queryparams.data.parameters.mutatedGenes[i].code
+              )
             )
-          )
-            getQueryParametersMutations.push(genesCat[j]);
+              getQueryParametersMutations.push(genesCat[j]);
+          }
         }
       }
 
       let getQueryParametersSimpleVariants = Array();
 
-      //alert(JSON.stringify(queryparams.data.parameters.simpleVariants));
-
-      for (
-        var i = 0;
-        i < queryparams.data.parameters.simpleVariants.length;
-        i++
-      ) {
-        for (var j = 0; j < genesCat.length; j++) {
-          if (
-            genesCat[j].includes(
-              queryparams.data.parameters.simpleVariants[i].gene.display +
-                " · " +
-                queryparams.data.parameters.simpleVariants[i].gene.code
+      if (queryparams.data.parameters.simpleVariants) {
+        for (
+          var i = 0;
+          i < queryparams.data.parameters.simpleVariants.length;
+          i++
+        ) {
+          for (var j = 0; j < genesCat.length; j++) {
+            if (
+              genesCat[j].includes(
+                queryparams.data.parameters.simpleVariants[i].gene.display +
+                  " · " +
+                  queryparams.data.parameters.simpleVariants[i].gene.code
+              )
             )
-          )
             getQueryParametersSimpleVariants.push({
-              dnaChange:
-                queryparams.data.parameters.simpleVariants[i].dnaChange,
-              aminoAcidChange:
-                queryparams.data.parameters.simpleVariants[i].aminoAcidChange,
-              code: queryparams.data.parameters.simpleVariants[i].gene.code,
-              display:
-                queryparams.data.parameters.simpleVariants[i].gene.display,
-            });
+                dnaChange:
+                  queryparams.data.parameters.simpleVariants[i].dnaChange,
+                aminoAcidChange:
+                  queryparams.data.parameters.simpleVariants[i].aminoAcidChange,
+                gene: {
+                  display: queryparams.data.parameters.simpleVariants[i].gene.display,
+                  name: queryparams.data.parameters.simpleVariants[i].gene.name,
+                  code: queryparams.data.parameters.simpleVariants[i].gene.code,
+                },
+              });
+          }
         }
       }
 
       let getQueryParametersCopyNumberVariants = Array();
 
-      for (
-        var i = 0;
-        i < queryparams.data.parameters.copyNumberVariants.length;
-        i++
-      ) {
-        let getGenes = [];
-        console.log(
-          "Test1 : " +
-            JSON.stringify(queryparams.data.parameters.copyNumberVariants)
-        );
+      if (queryparams.data.parameters.copyNumberVariants) {
         for (
-          var j = 0;
-          j < queryparams.data.parameters.copyNumberVariants[i].genes.length;
-          j++
+          var i = 0;
+          i < queryparams.data.parameters.copyNumberVariants.length;
+          i++
         ) {
-          /*
+          let getGenes = [];
+          for (
+            var j = 0;
+            j < queryparams.data.parameters.copyNumberVariants[i].genes.length;
+            j++
+          ) {
+            /*
             if (
               genesCat[j].includes(
                 queryparams.data.parameters.copyNumberVariants[i].genes[k]
@@ -2208,28 +2235,22 @@ export default {
               )
             )
             */
-          // getQueryParametersCopyNumberVariants.push(genesCat[j]);
-          getGenes.push(
-            queryparams.data.parameters.copyNumberVariants[i].genes[j]
-          );
+            // getQueryParametersCopyNumberVariants.push(genesCat[j]);
+            getGenes.push(
+              queryparams.data.parameters.copyNumberVariants[i].genes[j]
+            );
+          }
+
+          getQueryParametersCopyNumberVariants.push({
+            genes: getGenes,
+            type: queryparams.data.parameters.copyNumberVariants[i].type,
+            copyNumber:
+              queryparams.data.parameters.copyNumberVariants[i].copyNumber,
+          });
         }
-
-        getQueryParametersCopyNumberVariants.push({
-          genes: getGenes,
-
-          type: queryparams.data.parameters.copyNumberVariants[i].type,
-          copyNumber:
-            queryparams.data.parameters.copyNumberVariants[i].copyNumber,
-        });
-
-        console.log(
-          "Test2 : " + JSON.stringify(getQueryParametersCopyNumberVariants)
-        );
       }
 
       let getQueryParametersDnaFusions = Array();
-
-      //alert(JSON.stringify(queryparams.data.parameters.dnaFusions));
 
       /*
 
@@ -2252,8 +2273,6 @@ export default {
         }
       }
       */
-
-      //alert(JSON.stringify(queryparams.data.parameters.rnaFusions));
 
       let getQueryParametersRnaFusions = Array();
 
@@ -2280,154 +2299,169 @@ export default {
       */
 
       let getQueryParametersDiagnosis = Array();
-      for (var i = 0; i < queryparams.data.parameters.diagnoses.length; i++) {
-        getQueryParametersDiagnosis.push(
-          queryparams.data.parameters.diagnoses[i].code +
-            " - " +
-            queryparams.data.parameters.diagnoses[i].display
-        );
+
+      if (queryparams.data.parameters.diagnoses) {
+        for (var i = 0; i < queryparams.data.parameters.diagnoses.length; i++) {
+          getQueryParametersDiagnosis.push(
+            queryparams.data.parameters.diagnoses[i].code +
+              " - " +
+              queryparams.data.parameters.diagnoses[i].display
+          );
+        }
       }
 
       let getQueryParametersTumorMorphology = Array();
-      for (
-        var i = 0;
-        i < queryparams.data.parameters.tumorMorphology.length;
-        i++
-      ) {
-        getQueryParametersTumorMorphology.push(
-          queryparams.data.parameters.tumorMorphology[i].code +
-            " - " +
-            queryparams.data.parameters.tumorMorphology[i].display
-        );
+      if (queryparams.data.parameters.tumorMorphology) {
+        for (
+          var i = 0;
+          i < queryparams.data.parameters.tumorMorphology.length;
+          i++
+        ) {
+          getQueryParametersTumorMorphology.push(
+            queryparams.data.parameters.tumorMorphology[i].code +
+              " - " +
+              queryparams.data.parameters.tumorMorphology[i].display
+          );
+        }
       }
 
       let getQueryParametersDrugs = Array();
       let getQueryParametersDrugsUsage = Array();
       let getQueryParametersDrugsDisplay = Array();
 
-      for (
-        var i = 0;
-        i < queryparams.data.parameters.medicationsWithUsage.length;
-        i++
-      ) {
-        if (
-          queryparams.data.parameters.medicationsWithUsage[i].usage.length === 2
+      if (queryparams.data.parameters.medicationsWithUsage) {
+        for (
+          var i = 0;
+          i < queryparams.data.parameters.medicationsWithUsage.length;
+          i++
         ) {
-          getQueryParametersDrugs.push(
-            queryparams.data.parameters.medicationsWithUsage[i].medication
-              .display +
-              " · " +
+          if (
+            queryparams.data.parameters.medicationsWithUsage[i].usage.length ===
+            2
+          ) {
+            getQueryParametersDrugs.push(
               queryparams.data.parameters.medicationsWithUsage[i].medication
-                .code
-          );
+                .display +
+                " · " +
+                queryparams.data.parameters.medicationsWithUsage[i].medication
+                  .code
+            );
 
-          getQueryParametersDrugsUsage.push("beide");
+            getQueryParametersDrugsUsage.push("beide");
 
-          getQueryParametersDrugsDisplay.push(
-            queryparams.data.parameters.medicationsWithUsage[i].medication
-              .display +
-              " · " +
+            getQueryParametersDrugsDisplay.push(
               queryparams.data.parameters.medicationsWithUsage[i].medication
-                .code +
-              " (" +
-              JSON.stringify(
-                queryparams.data.parameters.medicationsWithUsage[i].usage[0]
-                  .display
-              ) +
-              "+" +
-              JSON.stringify(
-                queryparams.data.parameters.medicationsWithUsage[i].usage[1]
-                  .display
-              ) +
-              ")"
-          );
-        } else if (
-          queryparams.data.parameters.medicationsWithUsage[i].usage.length === 1
-        ) {
-          getQueryParametersDrugs.push(
-            queryparams.data.parameters.medicationsWithUsage[i].medication
-              .display +
-              " · " +
+                .display +
+                " · " +
+                queryparams.data.parameters.medicationsWithUsage[i].medication
+                  .code +
+                " (" +
+                JSON.stringify(
+                  queryparams.data.parameters.medicationsWithUsage[i].usage[0]
+                    .display
+                ) +
+                "+" +
+                JSON.stringify(
+                  queryparams.data.parameters.medicationsWithUsage[i].usage[1]
+                    .display
+                ) +
+                ")"
+            );
+          } else if (
+            queryparams.data.parameters.medicationsWithUsage[i].usage.length ===
+            1
+          ) {
+            getQueryParametersDrugs.push(
               queryparams.data.parameters.medicationsWithUsage[i].medication
-                .code
-          );
+                .display +
+                " · " +
+                queryparams.data.parameters.medicationsWithUsage[i].medication
+                  .code
+            );
 
-          getQueryParametersDrugsUsage.push("used");
+            getQueryParametersDrugsUsage.push("used");
 
-          getQueryParametersDrugsDisplay.push(
-            queryparams.data.parameters.medicationsWithUsage[i].medication
-              .display +
-              " · " +
+            getQueryParametersDrugsDisplay.push(
               queryparams.data.parameters.medicationsWithUsage[i].medication
-                .code +
-              " (" +
-              JSON.stringify(
-                queryparams.data.parameters.medicationsWithUsage[i].usage[0]
-                  .display
-              ) +
-              ")"
-          );
-        } else if (
-          queryparams.data.parameters.medicationsWithUsage[i].usage.length === 0
-        ) {
-          getQueryParametersDrugs.push(
-            queryparams.data.parameters.medicationsWithUsage[i].medication
-              .display +
-              " · " +
+                .display +
+                " · " +
+                queryparams.data.parameters.medicationsWithUsage[i].medication
+                  .code +
+                " (" +
+                JSON.stringify(
+                  queryparams.data.parameters.medicationsWithUsage[i].usage[0]
+                    .display
+                ) +
+                ")"
+            );
+          } else if (
+            queryparams.data.parameters.medicationsWithUsage[i].usage.length ===
+            0
+          ) {
+            getQueryParametersDrugs.push(
               queryparams.data.parameters.medicationsWithUsage[i].medication
-                .code
-          );
+                .display +
+                " · " +
+                queryparams.data.parameters.medicationsWithUsage[i].medication
+                  .code
+            );
 
-          getQueryParametersDrugsUsage.push("egal");
+            getQueryParametersDrugsUsage.push("egal");
 
-          getQueryParametersDrugsDisplay.push(
-            queryparams.data.parameters.medicationsWithUsage[i].medication
-              .display +
-              " · " +
+            getQueryParametersDrugsDisplay.push(
               queryparams.data.parameters.medicationsWithUsage[i].medication
-                .code
-          );
+                .display +
+                " · " +
+                queryparams.data.parameters.medicationsWithUsage[i].medication
+                  .code
+            );
+          }
         }
       }
 
       let getQueryParametersResponses = Array();
-      for (var i = 0; i < queryparams.data.parameters.responses.length; i++) {
-        getQueryParametersResponses.push(
-          queryparams.data.parameters.responses[i].code +
-            " - " +
-            queryparams.data.parameters.responses[i].display
-        );
+      if (queryparams.data.parameters.responses) {
+        for (var i = 0; i < queryparams.data.parameters.responses.length; i++) {
+          getQueryParametersResponses.push(
+            queryparams.data.parameters.responses[i].code +
+              " - " +
+              queryparams.data.parameters.responses[i].display
+          );
+        }
       }
-      if (
-        filesEntries != undefined ||
-        recommendationsEntries != undefined ||
-        genomicReportsEntries != undefined ||
-        indexTherapiesEntries != undefined
-      ) {
-        let x;
-        let y;
-        let z;
-        let w;
 
-        for (var i = 0; i < filesEntries.length; i++) {
-          x = filesEntries[i].id;
+      if (filesEntries) {
+        if (
+          filesEntries != undefined ||
+          recommendationsEntries != undefined ||
+          genomicReportsEntries != undefined ||
+          indexTherapiesEntries != undefined
+        ) {
+          let x;
+          let y;
+          let z;
+          let w;
 
-          for (var j = 0; j < recommendationsEntries.length; j++) {
-            y = recommendationsEntries[j].patient;
-            if (x === y) recommendationsEntries[j].groupIndex = i + 1;
+          for (var i = 0; i < filesEntries.length; i++) {
+            x = filesEntries[i].id;
+
+            for (var j = 0; j < recommendationsEntries.length; j++) {
+              y = recommendationsEntries[j].patient;
+              if (x === y) recommendationsEntries[j].groupIndex = i + 1;
+            }
+
+            for (var k = 0; k < genomicReportsEntries.length; k++) {
+              z = genomicReportsEntries[k].patient;
+              if (x === z) genomicReportsEntries[k].groupIndex = i + 1;
+            }
+
+            for (var l = 0; l < therapiesEntries.length; l++) {
+              w = therapiesEntries[l].patient;
+              if (x === w) therapiesEntries[l].groupIndex = i + 1;
+            }
+
+            filesEntries[i].groupIndex = i + 1;
           }
-
-          for (var k = 0; k < genomicReportsEntries.length; k++) {
-            z = genomicReportsEntries[k].patient;
-            if (x === z) genomicReportsEntries[k].groupIndex = i + 1;
-          }
-
-          for (var l = 0; l < therapiesEntries.length; l++) {
-            w = therapiesEntries[l].patient;
-            if (x === w) therapiesEntries[l].groupIndex = i + 1;
-          }
-
-          filesEntries[i].groupIndex = i + 1;
         }
       }
 

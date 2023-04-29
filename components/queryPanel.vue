@@ -2,7 +2,7 @@
   <v-container fluid grid-list-md>
     <v-layout wrap>
       <v-flex xs12 sm12 md6>
-        <v-card class="mx-auto" flat color="" light max-width="1200">
+        <v-card class="mx-auto" flat light max-width="1200">
           <v-flex d-flex>
             <v-card
               class="mx-auto"
@@ -12,53 +12,8 @@
               max-width="1200"
             >
               <v-card-text class="headline font-weight-thin">
-                <v-icon color="purple" dark>fas fa-dna</v-icon> Alterationen
-
-                <!--
-                        <span class="grey--text">Beliebig</span>
-                -->
-
-                <v-autocomplete
-                  v-if="showAll"
-                  v-model="mutatedGenes"
-                  :items="genesCat"
-                  :loading="isLoading"
-                  item-text="name"
-                  item-value="id"
-                  label="Beliebig · Gen-Name oder HGNC Symbol"
-                  ref="mutatedGenes"
-                  chips
-                  cache-items
-                  deletable-chips
-                  dense
-                  hide-no-data
-                  multiple
-                  @input="
-                    addMutatedGenes(mutatedGenes[mutatedGenes.length - 1])
-                  "
-                >
-                  <template slot="selection" slot-scope="data">
-                    <v-chip
-                      :selected="data.selected"
-                      close
-                      @input="removeMutatedGenes(data.item)"
-                    >
-                      {{ data.item }}
-                    </v-chip>
-                  </template>
-                  <!--           
-              <template v-slot:selection="{ item }">
-                <v-chip>
-                  <span v-text="item[1]"></span>
-                </v-chip>
-              </template>
-              <template v-slot:item="{ item }">
-                <v-list-item-content>
-                  <v-list-item-title v-text="item[1]"></v-list-item-title>
-                </v-list-item-content>
-              </template>
-  -->
-                </v-autocomplete>
+                <v-icon color="purple" dark>fas fa-dna</v-icon
+                ><b> Alterationen</b>
 
                 <v-radio-group v-model="mutationOptions" row>
                   <v-radio
@@ -105,59 +60,66 @@
                     "
                   >
                   </v-radio>
-                  <!--
-                  <v-radio
-                    label="Alle"
-                    value="radioAll"
-                    @change="
-                      (showSNV = true), (showCNV = true), (showFusions = true)
-                    "
-                  >
-                  </v-radio>
-                  -->
                 </v-radio-group>
+
+                <v-autocomplete
+                  v-if="showAll"
+                  v-model="mutatedGenes"
+                  :items="genesCat"
+                  :loading="isLoading"
+                  item-text="name"
+                  item-value="id"
+                  label="Beliebig · Gen-Name oder HGNC Symbol"
+                  ref="mutatedGenes"
+                  chips
+                  cache-items
+                  deletable-chips
+                  dense
+                  hide-no-data
+                  multiple
+                  @input="
+                    addMutatedGenes(mutatedGenes[mutatedGenes.length - 1])
+                  "
+                >
+                  <template slot="selection" slot-scope="data">
+                    <v-chip
+                      :selected="data.selected"
+                      close
+                      @input="removeMutatedGenes(data.item)"
+                    >
+                      {{ data.item }}
+                    </v-chip>
+                  </template>
+                </v-autocomplete>
 
                 <v-flex d-flex v-if="showSNV">
                   <v-card color="grey lighten-3" flat>
                     <v-card-text class="title font-weight-thin">
-                      <div class="grey--text">
+                      <div class="subheading grey--text">
                         Bitte wählen Sie das vom SNV betroffene Gen, und
                         optional cDNA change, protein change aus. Klicken Sie
                         auf die <strong>Hinzufügen</strong> Taste, um die
                         Auswahl in die Suche zu übernehmen.
                       </div>
                       <br />
-                      <!--
-                      <span class="grey--text">SNV</span>>
-                      -->
+
                       <v-autocomplete
                         v-model="mutatedGenesSNV"
                         :items="genesCatSimplified"
                         :loading="isLoading"
                         label="SNV · Gen-Name oder HGNC Symbol"
                         ref="mutatedGenesSNV"
-                        hide-selected
-                        dense
                         chips
                         flat
-                        solo-inverted
+                        cache-items
+                        deletable-chips
+                        dense
+                        hide-selected
                         clearable
-                        hide-no-data
-                        placeholder
+                        solo
                       >
-                        <!--           
-              <template v-slot:selection="{ item }">
-                <v-chip>
-                  <span v-text="item[1]"></span>
-                </v-chip>
-              </template>
-              <template v-slot:item="{ item }">
-                <v-list-item-content>
-                  <v-list-item-title v-text="item[1]"></v-list-item-title>
-                </v-list-item-content>
-              </template>
-              -->
                       </v-autocomplete>
+
                       <v-layout row wrap>
                         <v-flex xs12 sm6 md9>
                           <v-text-field
@@ -165,7 +127,6 @@
                             clearable
                             flat
                             placeholder="cDNA Change"
-                            counter="3"
                             solo-inverted
                             :rules="[rulesSNV.validateDnaChange]"
                           ></v-text-field>
@@ -176,7 +137,6 @@
                             flat
                             placeholder="Protein Change"
                             solo-inverted
-                            counter="7"
                             :rules="[rulesSNV.validateAminoAcidChange]"
                           ></v-text-field>
 
@@ -195,11 +155,13 @@
                             Hinzufügen
                           </v-btn>
                         </v-flex>
+
                         <v-combobox
                           v-model="selectedMutatedGenesSNV"
                           :items="items"
                           label="Das ausgewählte SNV wird hier angezeigt"
                           clearable
+                          flat
                           chips
                           cache-items
                           deletable-chips
@@ -211,17 +173,13 @@
                           <template v-slot:selection="data">
                             <v-chip
                               :selected="data.selected"
+                              flat
                               label
                               close
-                              @input="removeMutatedGenesSNV(data.item)"
+                              @input="removeSelectedMutatedGenesSNV(data.item)"
                             >
-                              <!--
-                                  <v-avatar class="orange darken-3 white--text">
-                                    SNV
-                                  </v-avatar>
-                                -->
                               <strong>
-                                <strong>{{ data.item.gene.code }}</strong>
+                                {{ data.item.gene.display }}
                                 {{ data.item.dnaChange }}
                                 <i>{{ data.item.aminoAcidChange }}</i>
                               </strong>
@@ -236,22 +194,18 @@
                 <v-flex d-flex v-if="showCNV">
                   <v-card color="grey lighten-3" flat>
                     <v-card-text class="title font-weight-thin">
-                      <div class="grey--text">
+                      <div class="subheading grey--text">
                         Bitte wählen Sie ein oder mehrere vom CNV betroffene
                         Gene, und optional CNV-Typ, Min- und Max-Kopienzahl.
                         Klicken Sie auf die <strong>Hinzufügen</strong> Taste,
                         um die Auswahl in die Suche zu übernehmen.
                       </div>
                       <br />
-                      <!-- 
-                        <span class="grey--text">CNV</span>
-                      -->
+
                       <v-autocomplete
                         v-model="mutatedGenesCNV"
                         :items="genesCatSimplified"
                         :loading="isLoading"
-                        item-text="name"
-                        item-value="id"
                         label="CNV · Gen-Name oder HGNC Symbol"
                         ref="mutatedGenesCNV"
                         chips
@@ -263,7 +217,7 @@
                         multiple
                         hide-selected
                         clearable
-                        solo-inverted
+                        solo
                       >
                         <template slot="selection" slot-scope="data">
                           <v-chip
@@ -274,19 +228,8 @@
                             {{ data.item }}
                           </v-chip>
                         </template>
-                        <!--           
-              <template v-slot:selection="{ item }">
-                <v-chip>
-                  <span v-text="item[1]"></span>
-                </v-chip>
-              </template>
-              <template v-slot:item="{ item }">
-                <v-list-item-content>
-                  <v-list-item-title v-text="item[1]"></v-list-item-title>
-                </v-list-item-content>
-              </template>
-              -->
                       </v-autocomplete>
+
                       <v-layout row wrap>
                         <v-flex xs12 sm6 md9>
                           <v-select
@@ -333,8 +276,9 @@
                         <v-combobox
                           v-model="selectedMutatedGenesCNV"
                           :items="items"
-                          clearable
                           label="Das ausgewählte CNV wird hier angezeigt"
+                          clearable
+                          flat
                           chips
                           cache-items
                           deletable-chips
@@ -344,20 +288,22 @@
                           hide-selected
                         >
                           <template v-slot:selection="data">
-                            
                             <v-chip
-                              :selected="data.selected"
+                              :selected="data.item"
                               label
                               close
-                              @input="removeMutatedGenesCNV(data.item)"
+                              flat
+                              @input="
+                                removeSelectedMutatedGenesCNV(data.item.genes)
+                              "
                             >
-                              <!--
-                                  <v-avatar class="red white--text">
-                                    CNV
-                                  </v-avatar>
-                                -->
                               <strong>
-                                <strong>{{ data.item.genes.length }} Gene(s)</strong>
+                                <span
+                                  v-for="gene in data.item.genes"
+                                  v-bind:key="gene.index"
+                                >
+                                · {{ gene.display }}
+                                </span>
                                 {{ data.item.type }}
                                 <i v-if="data.item.copyNumber.max">{{
                                   data.item.copyNumber.max
@@ -377,22 +323,23 @@
                 <v-flex d-flex v-if="showFusions">
                   <v-card color="grey lighten-3" flat>
                     <v-card-text class="title font-weight-thin">
-                      <b>Diese Funktion ist noch nicht vollständig!!</b
-                      ><br /><br />
-                      <div class="grey--text">
-                        <p>
-                          Bitte wählen Sie ein Fusionspartner-Gen und
-                          (5',3')-Zuordnung, sowie den Fusionstyp (DNA, RNA).
-                          Klicken Sie auf die <strong>Hinzufügen</strong> Taste,
-                          um die Auswahl in die Suche zu übernehmen.
-                        </p>
+                      <div class="subheading grey--text">
+                        <b>Diese Funktion ist noch nicht vollständig!</b><br />
+                        Bitte wählen Sie ein Fusionspartner-Gen und
+                        (5',3')-Zuordnung, sowie den Fusionstyp (DNA, RNA).
+                        Klicken Sie auf die <strong>Hinzufügen</strong> Taste,
+                        um die Auswahl in die Suche zu übernehmen.
                       </div>
-                      <br />
 
                       <!-- 
                         <span class="grey--text">CNV</span>
                       -->
+                      <v-radio-group v-model="fusionType" row>
+                        <v-radio label="RNA" value="rnaFusions"></v-radio>
+                        <v-radio label="DNA" value="dnaFusions"></v-radio>
 
+                        <v-radio label="Beide" value="bothFusions"></v-radio>
+                      </v-radio-group>
                       <v-autocomplete
                         v-model="fusions5"
                         :items="genesCatSimplified"
@@ -404,7 +351,7 @@
                         chips
                         flat
                         dense
-                        solo-inverted
+                        solo
                         hide-no-data
                         hide-selected
                         clearable
@@ -447,39 +394,21 @@
                         chips
                         flat
                         dense
-                        solo-inverted
+                        solo
                         hide-no-data
                         hide-selected
                         clearable
                       >
                       </v-autocomplete>
 
+                      <v-radio-group v-model="primeType" row>
+                        <v-radio label="5'" value="fivePrimeGene"></v-radio>
+                        <v-radio label="3'" value="threePrimeGene"></v-radio>
+                        <v-radio label="Beide" value="bothPrimes"></v-radio>
+                      </v-radio-group>
+
                       <v-layout row wrap>
                         <v-flex xs12 sm6 md9>
-                          <v-radio-group v-model="fusionType">
-                            <v-radio label="RNA" value="rnaFusions"></v-radio>
-                            <v-radio label="DNA" value="dnaFusions"></v-radio>
-                            <!-- 
-                            <v-radio
-                              label="Beide"
-                              value="bothFusions"
-                            ></v-radio>
-                            -->
-                          </v-radio-group>
-
-                          <!--
-                        <v-flex xs12 sm6 md3>
-                          <v-radio-group v-model="primeType" row>
-                            <v-radio label="5'" value="fivePrimeGene"></v-radio>
-                            <v-radio
-                              label="3'"
-                              value="threePrimeGene"
-                            ></v-radio>
-                            <v-radio label="Beide" value="bothPrimes"></v-radio>
-                          </v-radio-group>
-                        </v-flex>
-                        -->
-
                           <v-btn
                             large
                             color="grey darken-2"
@@ -574,305 +503,6 @@
                   </v-card>
                 </v-flex>
 
-                <!--
-            <v-radio-group v-model="mutationOptions" row>
-              <v-radio
-                label="All"
-                value="radioAll"
-                @change="
-                  (showSNV = false),
-                    (showCNV = false),
-                    (showSCNV = false),
-                    (showSV = false),
-                    (expansion = false)">
-                    </v-radio>
-              <v-radio
-                label="SNV"
-                value="radioSNV"
-                @change="
-                  (showSNV = true),
-                    (showCNV = false),
-                    (showSCNV = false),
-                    (showSV = false),
-                    (expansion = false)">
-                    </v-radio>
-              <v-radio
-                label="CNV"
-                value="radioCNV"
-                @change="
-                  (showSNV = false),
-                    (showCNV = true),
-                    (showSCNV = false),
-                    (showSV = false),
-                    (expansion = false)">
-                    </v-radio>
-              <v-radio
-                label="Expansion"
-                value="expansion"
-                @change="
-                  (showSNV = false),
-                    (showCNV = false),
-                    (showSCNV = false),
-                    (showSV = false),
-                    (expansion = true)">
-                    </v-radio>
-              <v-radio
-                label="SNV + CNV"
-                value="radioSCNV"
-                @change="
-                  (showSNV = false),
-                    (showCNV = false),
-                    (showSCNV = true),
-                    (showSV = false)">
-                    </v-radio>
-              <v-radio
-                label="SV"
-                value="radioSV"
-                @change="
-                  (showSNV = false),
-                    (showCNV = false),
-                    (showSCNV = false),
-                    (showSV = true)">
-                    </v-radio>
-            </v-radio-group>
-
-
-                <v-layout v-if="showSNV" justify-left row>
-                  <v-card color="grey lighten-4" flat>
-                    <v-container fluid>
-                      <v-layout row wrap>
-                        <v-flex xs12 sm6 md6>
-                          <v-text-field
-                            placeholder="cDNA Change"
-                          ></v-text-field>
-                        </v-flex>
-                        <v-flex xs12 sm6 md6>
-                          <v-text-field
-                            label=""
-                            placeholder="Protein Change"
-                          ></v-text-field>
-                        </v-flex>
-                      </v-layout>
-
-                      
-                    </v-container>
-                  </v-card>
-
-
-              <v-flex xs4>
-                <v-autocomplete
-                  v-model="baseChange"
-                  :items="baseChangeCat"
-                  :loading="isLoading"
-                  item-text="name"
-                  item-value="id"
-                  label="Base Changes"
-                  prepend-icon="vaccine"
-                  chips
-                  deletable-chips
-                  dense
-                  return-object
-                ></v-autocomplete>
-              </v-flex>
-              <v-flex xs4>
-                <v-autocomplete
-                  v-model="aminoAcidChange"
-                  :items="aminoAcidChangesCat"
-                  :loading="isLoading"
-                  item-text="name"
-                  item-value="id"
-                  label="Amino Acid Changes"
-                  chips
-                  deletable-chips
-                  dense
-                  return-object
-                ></v-autocomplete>
-              </v-flex>
-              <v-flex xs4>
-                <v-autocomplete
-                  v-model="variantEffect"
-                  :items="variantEffectsCat"
-                  :loading="isLoading"
-                  item-text="name"
-                  item-value="id"
-                  label="Variant Effects"
-                  chips
-                  deletable-chips
-                  dense
-                  return-object
-                ></v-autocomplete>
-              </v-flex>
-
-                </v-layout>
-
-                <v-layout v-if="showCNV" justify-left row>
-                  <v-card color="blue-grey lighten-4" flat>
-                    <v-container fluid>
-                      <v-layout row wrap>
-                        <v-flex xs12 sm6 md4>
-                          <v-select :items="items" label="Typ"></v-select>
-                        </v-flex>
-                        <v-flex xs12 sm6 md4>
-                          <v-text-field placeholder="Copy# Max"></v-text-field>
-                        </v-flex>
-                        <v-flex xs12 sm6 md4>
-                          <v-text-field placeholder="Copy# Min"></v-text-field>
-                        </v-flex>
-                      </v-layout>
-                    </v-container>
-                  </v-card>
-
-
-                  <v-flex xs4>
-                <v-autocomplete
-                  v-model="baseChange"
-                  :items="baseChangeCat"
-                  :loading="isLoading"
-                  item-text="name"
-                  item-value="id"
-                  label="Type"
-                  prepend-icon="vaccine"
-                  chips
-                  deletable-chips
-                  dense
-                  return-object
-                ></v-autocomplete>
-              </v-flex>
-              <v-flex xs4>
-                <v-autocomplete
-                  v-model="variantEffect"
-                  :items="variantEffectsCat"
-                  :loading="isLoading"
-                  item-text="name"
-                  item-value="id"
-                  label="Variant Effect"
-                  chips
-                  deletable-chips
-                  dense
-                  return-object
-                ></v-autocomplete>
-              </v-flex>
-              <v-flex xs4>
-                <v-autocomplete
-                  v-model="aminoAcidChange"
-                  :items="aminoAcidChangesCat"
-                  :loading="isLoading"
-                  item-text="name"
-                  item-value="id"
-                  label="Genotype"
-                  chips
-                  deletable-chips
-                  dense
-                  return-object
-                ></v-autocomplete>
-              </v-flex>
-
-                </v-layout>
-
-                <v-layout v-if="showSCNV" justify-center row>
-                  <v-flex xs5>
-                    <v-autocomplete
-                      v-model="variantEffect"
-                      :items="variantEffectsCat"
-                      :loading="isLoading"
-                      item-text="name"
-                      item-value="id"
-                      label="Variant Effect"
-                      prepend-icon="vaccine"
-                      chips
-                      deletable-chips
-                      dense
-                      return-object
-                    ></v-autocomplete>
-                  </v-flex>
-                </v-layout>
-
-            <v-layout v-if="showSV" justify-center row>
-              <v-flex xs4>
-                <v-autocomplete
-                  v-model="baseChange"
-                  :items="baseChangeCat"
-                  :loading="isLoading"
-                  item-text="name"
-                  item-value="id"
-                  label="Type"
-                  prepend-icon="vaccine"
-                  chips
-                  deletable-chips
-                  dense
-                  return-object
-                ></v-autocomplete>
-              </v-flex>
-              <v-flex xs4>
-                <v-autocomplete
-                  v-model="aminoAcidChange"
-                  :items="aminoAcidChangesCat"
-                  :loading="isLoading"
-                  item-text="name"
-                  item-value="id"
-                  label="Variant Effect"
-                  chips
-                  deletable-chips
-                  dense
-                  return-object
-                ></v-autocomplete>
-              </v-flex>
-              <v-flex xs4>
-                <v-autocomplete
-                  v-model="variantEffect"
-                  :items="variantEffectsCat"
-                  :loading="isLoading"
-                  item-text="name"
-                  item-value="id"
-                  label="Variant Effect"
-                  chips
-                  deletable-chips
-                  dense
-                  return-object
-                ></v-autocomplete>
-              </v-flex>
-            </v-layout>
-            -->
-                <!--
-            <v-autocomplete
-              v-model="mutatedGenes"
-              :items="genesCat"
-              :loading="isLoading"
-              item-text="name"
-              item-value="id"
-              label="Gen-Name oder HGNC Symbol"
-              ref="mutatedGenes"
-              chips
-              cache-items
-              deletable-chips
-              dense
-              hide-no-data
-              multiple
-              @input="addMutatedGenes(mutatedGenes[mutatedGenes.length - 1])"
-            >
-              <template slot="selection" slot-scope="data">
-                <v-chip
-                  :selected="data.selected"
-                  close
-                  @input="removeMutatedGenes(data.item)"
-                >
-                  {{ data.item }}
-                </v-chip>
-              </template>
-                       
-              <template v-slot:selection="{ item }">
-                <v-chip>
-                  <span v-text="item[1]"></span>
-                </v-chip>
-              </template>
-              <template v-slot:item="{ item }">
-                <v-list-item-content>
-                  <v-list-item-title v-text="item[1]"></v-list-item-title>
-                </v-list-item-content>
-              </template>
-
-            </v-autocomplete>
--->
                 <v-expansion-panel v-if="expansion" inset focusable>
                   <v-expansion-panel-content>
                     <template v-slot:header>
@@ -922,6 +552,81 @@
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-card-text>
+
+              <v-card
+                v-if="
+                  (selectedMutatedGenesSNV.length > 0) |
+                    (selectedMutatedGenesCNV.length > 0)
+                "
+                class="font-weight-thin"
+                flat
+              >
+                <v-card-text small color="#BDBDBD" class="font-weight-thin">
+                  <p class="caption grey-text">
+                    Dieses Feld zeigt die aktuellen SNV-, CNV- und
+                    Fusion-Parameter an, die vor der Übermittlung der Anfrage
+                    hinzugefügt wurden.
+                  </p>
+                  <span v-if="selectedMutatedGenesSNV.length > 0">
+                    <strong>Das ausgewählte SNV(s)</strong><br />
+                    <span
+                      v-for="(
+                        selectedMutatedGenesSNV, indexSNV
+                      ) in selectedMutatedGenesSNV"
+                      :key="indexSNV"
+                      :class="[indexSNV % 2 === 0 ? 'grey lighten-3' : 'white']"
+                    >
+                      {{ selectedMutatedGenesSNV.gene.display }} ·
+                      {{ selectedMutatedGenesSNV.gene.code }}
+
+                      <span v-if="selectedMutatedGenesSNV.dnaChange">
+                        - {{ selectedMutatedGenesSNV.dnaChange }}</span
+                      >
+                      <span v-if="selectedMutatedGenesSNV.aminoAcidChange">
+                        - {{ selectedMutatedGenesSNV.aminoAcidChange }}</span
+                      >
+                      <br
+                    /></span>
+                  </span>
+
+                  <span v-if="selectedMutatedGenesCNV.length > 0">
+                  <span>
+                    <strong>Das ausgewählte CNV(s)</strong></span>
+                    <br />
+                    <span
+                      v-for="(
+                        selectedMutatedGenesCNV, indexCNV
+                      ) in selectedMutatedGenesCNV"
+                      :key="indexCNV"
+                      :class="[indexCNV % 2 === 0 ? 'grey lighten-3' : 'white']"
+                    >
+                      <span
+                        plate
+                        v-for="(
+                          gene, geneIndexCNV
+                        ) in selectedMutatedGenesCNV.genes"
+                        :key="geneIndexCNV"
+                      >
+                        {{ gene.display }} ·
+                        {{ gene.code }}
+                      </span>
+                        <span v-if="selectedMutatedGenesCNV.type">
+                        , {{ selectedMutatedGenesCNV.type }}
+                        </span>
+
+                        <span v-if="selectedMutatedGenesCNV.copyNumber.min">
+                          - {{ selectedMutatedGenesCNV.copyNumber.min }}
+                        </span>
+
+                        <span v-if="selectedMutatedGenesCNV.copyNumber.max">
+                          - {{ selectedMutatedGenesCNV.copyNumber.max }}
+                        
+                       
+                      </span> <br>
+                    </span>
+                  </span>
+                </v-card-text>
+              </v-card>
             </v-card>
           </v-flex>
         </v-card>
@@ -938,7 +643,8 @@
               max-width="1200"
             >
               <v-card-text class="headline font-weight-thin">
-                <v-icon color="indigo" dark>fas fa-diagnoses</v-icon> Diagnose
+                <v-icon color="indigo" dark>fas fa-diagnoses</v-icon
+                ><b> Diagnose</b>
                 <v-autocomplete
                   v-model="diagnosis"
                   :items="diagnosisCat"
@@ -1006,7 +712,14 @@
               max-width="1200"
             >
               <v-card-text class="headline font-weight-thin">
-                <v-icon color="blue">fas fa-pills</v-icon> Wirkstoffe
+                <v-icon color="blue">fas fa-pills</v-icon> <b>Wirkstoffe</b>
+
+                <v-radio-group v-model="drugUsage" row>
+                  <v-radio label="Empfohlen" value="recommended"></v-radio>
+                  <v-radio label="Verabreicht" value="used"></v-radio>
+                  <v-radio label="Beide" value="beide"></v-radio>
+                  <v-radio label="Egal" value="egal"></v-radio>
+                </v-radio-group>
 
                 <v-autocomplete
                   v-model="drugs"
@@ -1045,13 +758,6 @@
                     </v-chip>
                   </template>
                 </v-autocomplete>
-
-                <v-radio-group v-model="drugUsage" row>
-                  <v-radio label="Empfohlen" value="recommended"></v-radio>
-                  <v-radio label="Verabreicht" value="used"></v-radio>
-                  <v-radio label="Beide" value="beide"></v-radio>
-                  <v-radio label="Egal" value="egal"></v-radio>
-                </v-radio-group>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -1065,7 +771,7 @@
               max-width="1200"
             >
               <v-card-text class="headline font-weight-thin">
-                <v-icon color="cyan">fas fa-vials</v-icon> Response
+                <v-icon color="cyan">fas fa-vials</v-icon> <b>Response</b>
                 <v-autocomplete
                   v-model="responses"
                   :items="responsesCat"
@@ -1095,45 +801,7 @@
           </v-flex>
         </v-card>
       </v-flex>
-      <!--
-      <v-flex d-flex xs12 sm6 md6>
-        <v-select
-          prepend-icon="fas fa-map-marker-alt"
-          v-model="select"
-          :hint="`${select.desc}`"
-          :items="items"
-          item-text="mode"
-          item-value="desc"
-          label="Select"
-          persistent-hint
-          return-object
-          single-line
-        ></v-select>
 
-        <div v-if="localQuery === false">
-          <v-switch
-            class="subheading font-weight-light"
-            prepend-icon="fas fa-map-marker-alt"
-            color="blue"
-            v-model="localQueryValue"
-            :label="`local`"
-            @change="federatedQueryDialog = true"
-          ></v-switch>
-        </div>
-        <div v-else>
-          <strong>
-            <v-switch
-              class="subheading font-weight-medium"
-              color="yellow"
-              prepend-icon="fas fa-compress-arrows-alt"
-              v-model="localQueryValue"
-              :label="`federated`"
-            ></v-switch>
-          </strong>
-        </div>
-        
-      </v-flex>
-      -->
       <v-flex d-flex xs12 sm6 md6>
         <v-btn
           v-if="this.localButton"
@@ -1146,33 +814,6 @@
           @click="submitQuery('local')"
           >Lokal Anfrage senden</v-btn
         >
-        <!--
-        <v-tooltip top>
-          <v-btn
-            v-if="this.getQueryParametersDiagnosis"
-            class="subheading font-weight-regular"
-            block
-            dark
-            large
-            slot="activator"
-            color="red accent-3"
-            @click="setQueryParams"
-            >Reload Query Parameters</v-btn
-          >
-          <span>click 'red' to reload your previous bwHC query parameters</span>
-          <v-btn
-            class="subheading font-weight-regular"
-            block
-            dark
-            large
-            slot="activator"
-            color="blue accent-3"
-            @click="submitQuery"
-            >Submit New Query</v-btn
-          >
-          <span>then 'blue' to submit your bwHC query</span>
-        </v-tooltip>
-        -->
       </v-flex>
 
       <v-flex d-flex xs12 sm6 md6>
@@ -1187,19 +828,6 @@
           >Föderiert Anfrage senden</v-btn
         >
       </v-flex>
-
-      <!--
-      <v-btn
-        flat
-        small
-        dark
-        medium
-        color="red accent-3"
-        @click="resetParameters()"
-      >
-        Reset
-      </v-btn>
--->
 
       <v-snackbar
         v-model="snackbarParameters"
@@ -1495,8 +1123,6 @@ export default {
             },
           };
 
-          //alert(JSON.stringify(request));
-
           let Response = await axios.post(
             process.env.baseUrl +
               process.env.port +
@@ -1553,72 +1179,65 @@ export default {
     },
 
     addMutatedGenesSNV(dnaChange, aminoAcidChange, mutatedGenesSNV) {
-      //this.selectedMutatedGenesSNV = [];
-      if (mutatedGenesSNV.length > 0) {
+      if (mutatedGenesSNV) {
         this.selectedMutatedGenesSNV.push({
           dnaChange: dnaChange,
           aminoAcidChange: aminoAcidChange,
-          gene: { code: mutatedGenesSNV.split(" · ")[1] },
+          gene: {
+            display: mutatedGenesSNV.split(" · ")[0],
+            code: mutatedGenesSNV.split(" · ")[1],
+          },
         });
-
-        this.mutatedGenesSNV = this.selectedMutatedGenesSNV;
+        this.mutatedGenesSNV = [];
       } else {
         alert("Bitte fügen Sie zuerst die relevanten Parameter hinzu!");
       }
     },
 
-    reAddMutatedGenesSNV(dnaChange, aminoAcidChange, code) {
-      if (code) {
+    reAddMutatedGenesSNV(dnaChange, aminoAcidChange, gene) {
+      if (gene) {
         this.selectedMutatedGenesSNV.push({
           dnaChange: dnaChange,
           aminoAcidChange: aminoAcidChange,
-          gene: { code: code },
+          gene: { display: gene.display, code: gene.code },
         });
-
-        this.mutatedGenesSNV = this.selectedMutatedGenesSNV;
       } else {
         alert(
-          "Beim Anzeigen der SVN-Abfrageparameter ist ein Problem aufgetreten"
+          "Beim Anzeigen der SNV-Abfrageparameter ist ein Problem aufgetreten"
         );
       }
     },
-    
 
     addMutatedGenesCNV(cnvType, cnvMax, cnvMin, mutatedGenesCNV) {
-      if (mutatedGenesCNV.length > 0) {
+      if (mutatedGenesCNV) {
         let code = Array();
-        //alert(JSON.stringify(mutatedGenesCNV));
         for (var i = 0; i < mutatedGenesCNV.length; i++) {
-          code.push({ code: mutatedGenesCNV[i].split(" · ")[1] });
-          //console.log("code:" + mutatedGenesCNV[i].split(" · ")[1]);
+          code.push({
+            display: mutatedGenesCNV[i].split(" · ")[0],
+            code: mutatedGenesCNV[i].split(" · ")[1],
+          });
         }
-        //console.log(JSON.stringify(mutatedGenesCNV));
-        //console.log("CNV length " + code.length + " and code: " + code);
 
-        //alert(JSON.stringify(code));
-        
         this.selectedMutatedGenesCNV.push({
           copyNumber: { max: parseInt(cnvMax), min: parseInt(cnvMin) },
           type: cnvType,
           genes: code,
         });
-
-        //console.log("code array " + this.selectedMutatedGenesCNV);
-
-        
+        this.mutatedGenesCNV = [];
       } else {
         alert("Bitte fügen Sie zuerst die relevanten Parameter hinzu!");
       }
     },
 
-    reAddMutatedGenesCNV(cnvType, cnvMax, cnvMin, codes) {
-      //alert(JSON.stringify(codes));
-
-      if (codes) {
+    reAddMutatedGenesCNV(cnvType, cnvMax, cnvMin, genesCNV) {
+      if (genesCNV) {
         let code = Array();
-        for (var i = 0; i < codes.length; i++) {
-         code.push({ code: codes.code });
-      }
+        for (var i = 0; i < genesCNV.length; i++) {
+          code.push({
+            display: genesCNV[i].display,
+            code: genesCNV[i].code,
+          });
+        }
 
         this.selectedMutatedGenesCNV.push({
           copyNumber: { max: parseInt(cnvMax), min: parseInt(cnvMin) },
@@ -1777,10 +1396,22 @@ export default {
       this.mutatedGenesSNV.splice(index, 1);
     },
 
+    removeSelectedMutatedGenesSNV(item) {
+      const index = this.selectedMutatedGenesSNV.indexOf(item);
+      if (index >= 0) this.selectedMutatedGenesSNV.splice(index, 1);
+      this.selectedMutatedGenesSNV.splice(index, 1);
+    },
+
     removeMutatedGenesCNV(item) {
       const index = this.mutatedGenesCNV.indexOf(item);
-      if (index >= 0) this.selectedMutatedGenesCNV.splice(index, 1);
+      if (index >= 0) this.mutatedGenesCNV.splice(index, 1);
       this.mutatedGenesCNV.splice(index, 1);
+    },
+
+    removeSelectedMutatedGenesCNV(item) {
+      const index = this.selectedMutatedGenesCNV.indexOf(item);
+      if (index >= 0) this.selectedMutatedGenesCNV.splice(index, 1);
+      this.selectedMutatedGenesCNV.splice(index, 1);
     },
 
     removeFusions(item) {
@@ -1877,7 +1508,6 @@ export default {
           });
         }
       }
-      //alert(JSON.stringify(this.selectedDrugs));
     },
 
     addDrug() {
@@ -1921,55 +1551,47 @@ export default {
 
     setQueryParams() {
       this.mutatedGenes = this.getQueryParametersMutations;
+
       if (this.getQueryParametersMutations)
         for (var i = 0; i < this.getQueryParametersMutations.length; i++) {
           this.addMutatedGenes(this.getQueryParametersMutations[i]);
         }
 
-      this.mutatedGenesSNV = this.getQueryParametersSimpleVariants;
+      //this.mutatedGenesSNV = this.getQueryParametersSimpleVariants;
+
       if (this.getQueryParametersSimpleVariants)
         for (var i = 0; i < this.getQueryParametersSimpleVariants.length; i++) {
-          console.log(
-            "SNV: " +
-              this.getQueryParametersSimpleVariants[i].dnaChange +
-              " " +
-              this.getQueryParametersSimpleVariants[i].aminoAcidChange +
-              " " +
-              this.getQueryParametersSimpleVariants[i].code +
-              " " +
-              this.getQueryParametersSimpleVariants[i].display
-          );
           this.reAddMutatedGenesSNV(
             this.getQueryParametersSimpleVariants[i].dnaChange,
             this.getQueryParametersSimpleVariants[i].aminoAcidChange,
-            this.getQueryParametersSimpleVariants[i].code
+            this.getQueryParametersSimpleVariants[i].gene
           );
         }
 
-      this.mutatedGenesCNV = this.getQueryParametersCopyNumberVariants;
+      //this.mutatedGenesCNV = this.getQueryParametersCopyNumberVariants;
+
       if (this.getQueryParametersCopyNumberVariants)
         for (
           var i = 0;
           i < this.getQueryParametersCopyNumberVariants.length;
           i++
         ) {
-          //alert(i + " CNV " + JSON.stringify(this.getQueryParametersCopyNumberVariants[i])),
-          //alert(JSON.stringify(this.getQueryParametersCopyNumberVariants[i]));
-          //alert("this:" + this.getQueryParametersCopyNumberVariants[i].genes, +" "+ this.getQueryParametersCopyNumberVariants[i].copyNumber.min+" "+ this.getQueryParametersCopyNumberVariants[i].copyNumber.max+" "+ 
-           // this.getQueryParametersCopyNumberVariants[i].genes);
-            //alert(this.getQueryParametersCopyNumberVariants[i].copyNumber);
           this.reAddMutatedGenesCNV(
-            this.getQueryParametersCopyNumberVariants[i].type, this.getQueryParametersCopyNumberVariants[i].copyNumber.min, this.getQueryParametersCopyNumberVariants[i].copyNumber.max
-            ,this.getQueryParametersCopyNumberVariants[i].genes)
+            this.getQueryParametersCopyNumberVariants[i].type,
+            this.getQueryParametersCopyNumberVariants[i].copyNumber.min,
+            this.getQueryParametersCopyNumberVariants[i].copyNumber.max,
+            this.getQueryParametersCopyNumberVariants[i].genes
+          );
         }
 
       this.diagnosis = this.getQueryParametersDiagnosis;
+
       if (this.getQueryParametersDiagnosis)
         for (var i = 0; i < this.getQueryParametersDiagnosis.length; i++) {
           this.addDiagnosis(this.getQueryParametersDiagnosis[i]);
         }
-
       this.tumorMorphology = this.getQueryParametersTumorMorphology;
+
       if (this.getQueryParametersTumorMorphology)
         for (
           var i = 0;
@@ -1978,8 +1600,8 @@ export default {
         ) {
           this.addTumorMorphology(this.getQueryParametersTumorMorphology[i]);
         }
-
       this.drugs = this.getQueryParametersDrugs;
+
       if (this.getQueryParametersDrugs)
         for (var i = 0; i < this.getQueryParametersDrugs.length; i++) {
           this.addDrugs(
@@ -1987,8 +1609,8 @@ export default {
             this.getQueryParametersDrugsUsage[i]
           );
         }
-
       this.responses = this.getQueryParametersResponses;
+
       if (this.getQueryParametersResponses)
         for (var i = 0; i < this.getQueryParametersResponses.length; i++) {
           this.addResponses(this.getQueryParametersResponses[i]);
