@@ -3,9 +3,7 @@
     <v-container fluid grid-list-md>
       <userPanel />
       <v-flex>
-        <h3 class="display-3">
-          <strong>bwHealthCloud</strong> Qualitätskontrolle Statistik
-        </h3>
+        <h3 class="display-3"><strong>bwHealthCloud</strong> Berichtwesen</h3>
 
         <span class="subheading subheading font-weight-thin">
           <v-btn
@@ -22,454 +20,296 @@
         <v-divider class="my-3"></v-divider>
       </v-flex>
 
-      <v-tabs
-    fixed-tabs
-    color="grey lighten-5"
-  >
-    <v-tab @click="$router.push('/quality_bwhc')">
-      Datenqualität
-    </v-tab>
-    <v-tab @click="$router.push('/quality_reporting')">
-      Berichtswesen
-    </v-tab>
-  </v-tabs>
-  <v-divider class="my-3"></v-divider>
+      <v-tabs fixed-tabs color="grey lighten-5">
+        <v-tab @click="$router.push('/quality_reporting')">
+          Berichtswesen
+        </v-tab>
+        <v-tab @click="$router.push('/quality_bwhc')"> Datenqualität </v-tab>
+      </v-tabs>
 
-      <v-layout wrap>
-        <v-flex d-flex xs12 sm6 md3>
-          <v-card
-            class="mx-auto"
-            flat
-            color="yellow darken-1"
-            light
-            max-width="400"
-            v-ripple="{ center: true }"
-          >
-            <v-card-text class="headline font-weight-thin">
-              <v-icon color="yellow accent-1" dark>fas fa-street-view</v-icon>
-              <br />
-              <strong>{{ globalReport.data.patientTotal }}</strong> Gesamtzahl
-              Patienten in bwHC
-            </v-card-text>
-          </v-card>
-        </v-flex>
-      </v-layout>
       <v-divider class="my-3"></v-divider>
 
-      <div id="globale-übersicht"></div>
-
-      <v-icon color="yellow darken-1">fas fa-globe-europe</v-icon>
-
-      <v-card-title class="title font-weight-light"
-        >Globale Übersicht</v-card-title
-      >
+      <v-card-title primary-title>
+        <div>
+          <div class="headline">Umgesetzte MTB–Therapien</div><br>
+          <h3>Verabreichte Wirkstoffklassen</h3>
+        </div>
+      </v-card-title>
 
       <v-layout wrap fluid>
-        <v-flex d-flex xs12 sm6 md3>
-          <v-card
-            flat
-            color="grey lighten-2"
-            light
-            width="250"
-            v-ripple="{ center: true }"
-          >
-            <v-card-text class="title font-weight-thin">
-              <p>
-                <v-icon style="font-size: 1.4rem">fas fa-file-alt</v-icon>
-              </p>
-              <strong
-                >{{ globalCompletionStats[0].patient.count }} ({{
-                  globalCompletionStats[0].patient.percent.toFixed(1)
-                }}%)</strong
-              >
-              <br />{{ globalCompletionStats[0].id }}
-            </v-card-text>
-          </v-card>
+        <v-flex xs12 sm3 md12>
+          <bar-chart
+            v-if="barChartDataGlobalMedicationDistribution[0]"
+            :data="barChartDataGlobalMedicationDistribution[0]"
+            :options="barChartOptionsGlobalMedicationDistribution"
+            :height="100"
+          />
+
+          <!--
+
+          <pie-chart
+            v-if="barChartDataGlobalMedicationDistribution[0]"
+            :data="barChartDataGlobalMedicationDistribution[0]"
+            :options="barChartOptionsGlobalMedicationDistribution"
+            :height="100"
+          />
+
+          -->
         </v-flex>
 
-        <v-flex d-flex xs12 sm6 md3>
-          <v-card
-            flat
-            color="grey lighten-2"
-            light
-            width="250"
-            v-ripple="{ center: true }"
+        <v-card-title primary-title>
+        <div>
+          <h3>Verabreichte Wirkstoffe</h3>
+        </div>
+      </v-card-title>
+
+        <v-flex d-flex xs12 sm12 md12>
+          <v-autocomplete
+            v-model="drugsGroup"
+            :items="drugsGroupCat"
+            :itemscope="used"
+            :loading="isLoading"
+            label="Wirkstoff-Klassen oder ATC Code"
+            ref="drugUsage"
+            chips
+            deletable-chips
+            hide-selected
+            dense
+            placeholder
+            @input="compileGlobalMedicationDistributionDetails(drugsGroup)"
           >
-            <v-card-text class="title font-weight-thin">
-              <p>
-                <v-icon style="font-size: 1.6rem"
-                  >fas fa-clipboard-check</v-icon
-                >
-              </p>
-              <strong
-                >{{ globalCompletionStats[1].patient.count }} ({{
-                  globalCompletionStats[1].patient.percent.toFixed(1)
-                }}%)</strong
-              >
-              <br />{{ globalCompletionStats[1].id }}
-            </v-card-text>
-          </v-card>
+          </v-autocomplete
+        ></v-flex>
+
+        <v-card class="mx-auto" v-if="drugsGroup != undefined" flat>
+          <v-card-text small class="font-weight-thin">
+            <v-icon style="font-size: 1.1rem">fas fa-pills</v-icon>
+            <strong>ausgewählter Wirkstoff-Klasse:</strong>
+            {{ drugsGroup }}
+          </v-card-text>
+        </v-card>
+
+        <v-flex xs12 sm3 md12>
+          <bar-chart
+            v-if="barChartDataGlobalMedicationDistributionDetailsOnDemand[0]"
+            :data="barChartDataGlobalMedicationDistributionDetailsOnDemand[0]"
+            :options="barChartOptionsGlobalMedicationDistributionDetails"
+            :height="100"
+          />
         </v-flex>
 
-        <v-flex d-flex xs12 sm6 md3>
-          <v-card
-            flat
-            color="grey lighten-2"
-            light
-            width="250"
-            v-ripple="{ center: true }"
-          >
-            <v-card-text class="title font-weight-thin">
-              <p>
-                <v-icon style="font-size: 1.6rem">fas fa-id-badge</v-icon>
-              </p>
-              <strong
-                >{{ globalCompletionStats[2].patient.count }} ({{
-                  globalCompletionStats[2].patient.percent.toFixed(1)
-                }}%)</strong
-              >
-              <br />{{ globalCompletionStats[2].id }}
-            </v-card-text>
-          </v-card>
+        <!--
+        <v-flex xs12 sm3 md12>
+          <bar-chart
+            v-if="barChartDataGlobalMedicationDistributionDetails[0]"
+            :data="barChartDataGlobalMedicationDistributionDetails[0]"
+            :options="barChartOptionsGlobalMedicationDistributionDetails"
+            :height="150"
+          />
         </v-flex>
 
-        <v-flex d-flex xs12 sm6 md3>
-          <v-card
-            flat
-            color="grey lighten-2"
-            light
-            width="250"
-            v-ripple="{ center: true }"
+        -->
+
+        
+
+        <v-card-title primary-title>
+        <div>
+          <div class="headline">Tumorentitätsvereilung für verabreichte Wirkstoffe oder Wirkstoffklassen</div><br>
+        </div>
+      </v-card-title>
+
+        <v-flex d-flex xs12 sm12 md12>
+          <v-autocomplete
+            v-model="drugs"
+            :items="drugsCat"
+            :itemscope="used"
+            :loading="isLoading"
+            label="Wirkstoff-Name oder ATC Code"
+            ref="drugUsage"
+            chips
+            deletable-chips
+            hide-selected
+            dense
+            placeholder
+            @input="compileGlobalTumorEntityDistribution(drugs)"
           >
-            <v-card-text class="title font-weight-thin">
-              <p>
-                <v-icon style="font-size: 1.4rem"
-                  >fas fa-exclamation-triangle</v-icon
-                >
-              </p>
-              <strong
-                >{{ globalCompletionStats[3].patient.count }} ({{
-                  globalCompletionStats[3].patient.percent.toFixed(1)
-                }}%)</strong
-              >
-              <br />{{ globalCompletionStats[3].id }}
-            </v-card-text>
-          </v-card>
-        </v-flex>
-      </v-layout>
+          </v-autocomplete
+        ></v-flex>
 
-      <v-flex d-flex>
-        <v-switch
-          v-model="displayCompletionStats"
-          :label="`Mittlere Dauern einblenden`"
-        ></v-switch>
-      </v-flex>
+        <v-card-title primary-title v-if="drugs != undefined">
+        <div>
+          <h3>ICD-10 Kategorien</h3>
+        </div>
+      </v-card-title>
 
-      <v-card-title
-        v-if="displayCompletionStats"
-        class="title font-weight-light"
-        >Globale Mittlere Dauern</v-card-title
-      >
-      <v-layout v-if="displayCompletionStats" wrap fluid>
-        <v-flex d-flex xs12 sm6 md3>
-          <v-card
-            flat
-            color="grey lighten-2"
-            light
-            width="250"
-            v-ripple="{ center: true }"
-          >
-            <v-card-text class="title font-weight-thin">
-              <p>
-                <v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon>
-              </p>
-              <strong
-                >{{ globalAverageDurations[0].patient.value }}
-                {{ globalAverageDurations[0].patient.unit }}</strong
-              >
+        <v-card class="mx-auto" v-if="drugs != undefined" flat>
+          <v-card-text small class="font-weight-thin">
+            <v-icon style="font-size: 1.1rem">fas fa-pills</v-icon>
+            <strong>ausgewählter Wirkstoff:</strong>
+            {{ drugs }}
+          </v-card-text>
+        </v-card>
 
-              <br />{{ globalAverageDurations[0].id }}
-            </v-card-text>
-          </v-card>
+        <v-flex d-flex xs12 sm3 md12>
+          <bar-chart
+            v-if="barChartDataGlobalTumorEntityDistribution[0]"
+            :data="barChartDataGlobalTumorEntityDistribution[0]"
+            :options="barChartOptionsGlobalTumorEntityDistribution"
+            :height="100"
+          />
         </v-flex>
 
-        <v-flex d-flex xs12 sm6 md3>
-          <v-card
-            flat
-            color="grey lighten-2"
-            light
-            width="250"
-            v-ripple="{ center: true }"
-          >
-            <v-card-text class="title font-weight-thin">
-              <p>
-                <v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon
-                ><v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon>
-              </p>
-              <strong
-                >{{ globalAverageDurations[1].patient.value }}
-                {{ globalAverageDurations[1].patient.unit }}</strong
-              >
-              <br />{{ globalAverageDurations[1].id }}
-            </v-card-text>
-          </v-card>
-        </v-flex>
+        <v-card-title primary-title v-if="drugs != undefined">
+        <div>
+          <h3>ICD-10 Codes (Detailansicht)</h3>
+        </div>
+      </v-card-title>
 
-        <v-flex d-flex xs12 sm6 md3>
-          <v-card
-            flat
-            color="grey lighten-2"
-            light
-            width="250"
-            v-ripple="{ center: true }"
-          >
-            <v-card-text class="title font-weight-thin">
-              <p>
-                <v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon
-                ><v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon
-                ><v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon>
-              </p>
-              <strong
-                >{{ globalAverageDurations[2].patient.value }}
-                {{ globalAverageDurations[2].patient.unit }}</strong
-              >
-              <br />{{ globalAverageDurations[2].id }}
-            </v-card-text>
-          </v-card>
+        <v-flex d-flex xs12 sm3 md12>
+          <bar-chart
+            v-if="barChartDataGlobalTumorEntityDistributionDetails[0]"
+            :data="barChartDataGlobalTumorEntityDistributionDetails[0]"
+            :options="barChartOptionsGlobalTumorEntityDistributionDetails"
+            :height="100"
+          />
         </v-flex>
       </v-layout>
 
-      <v-divider class="my-3"></v-divider>
+      <v-layout flex-child wrap>
+        <!--
+          <v-flex xs12 md1 d-flex> </v-flex>
+          -->
+        <v-flex xs12 md12>
+          <v-layout v-if="itemsFiles.length > 0" row justify-start class="my-3">
+            <v-tooltip top>
+              <v-btn
+                small
+                flat
+                color="grey"
+                @click="sortBy(itemsFiles, 'groupIndex')"
+                slot="activator"
+              >
+                <v-icon small left>sort</v-icon>
+                <span class="caption text-none">Index</span>
+              </v-btn>
+              <span>Sortieren nach Index</span>
+            </v-tooltip>
+          </v-layout>
 
-      <v-col
-        v-for="(globalConstituentReport, i) in globalConstituentReports"
-        :key="i"
-      >
-        <v-flex d-flex xs12 sm6 md3>
-          <v-card-title class="title font-weight-light"
-            >ZPM {{ globalConstituentReport.zpm }}
-            <div class="caption">
-              <p>
-                Gesamtzahl Patienten: {{ globalConstituentReport.patientTotal }}
-              </p>
-            </div></v-card-title
-          ></v-flex
-        >
-        <v-layout wrap fluid>
-          <v-flex d-flex xs12 sm6 md3>
-            <v-card
-              flat
-              color="grey lighten-4"
-              light
-              width="250"
-              v-ripple="{ center: true }"
-            >
-              <v-card-text class="title font-weight-thin">
-                <p>
-                  <v-icon style="font-size: 1.4rem">fas fa-file-alt</v-icon>
-                </p>
-                <strong
-                  >{{
-                    globalConstituentReport.completionStats[0].frequency.count
-                  }}
-                  ({{
-                    globalConstituentReport.completionStats[0].frequency.percent.toFixed(
-                      1
-                    )
-                  }}%)</strong
-                >
-                <br />{{ globalConstituentReport.completionStats[0].level }}
-              </v-card-text>
-            </v-card>
-          </v-flex>
-
-          <v-flex d-flex xs12 sm6 md3>
-            <v-card
-              flat
-              color="grey lighten-4"
-              light
-              width="250"
-              v-ripple="{ center: true }"
-            >
-              <v-card-text class="title font-weight-thin">
-                <p>
-                  <v-icon style="font-size: 1.4rem"
-                    >fas fa-clipboard-check</v-icon
-                  >
-                </p>
-                <strong
-                  >{{
-                    globalConstituentReport.completionStats[1].frequency.count
-                  }}
-                  ({{
-                    globalConstituentReport.completionStats[1].frequency.percent.toFixed(
-                      1
-                    )
-                  }}%)</strong
-                >
-                <br />{{ globalConstituentReport.completionStats[1].level }}
-              </v-card-text>
-            </v-card>
-          </v-flex>
-          <v-flex d-flex xs12 sm6 md3>
-            <v-card
-              flat
-              color="grey lighten-4"
-              light
-              width="250"
-              v-ripple="{ center: true }"
-            >
-              <v-card-text class="title font-weight-thin">
-                <p>
-                  <v-icon style="font-size: 1.4rem">fas fa-id-badge</v-icon>
-                </p>
-                <strong
-                  >{{
-                    globalConstituentReport.completionStats[2].frequency.count
-                  }}
-                  ({{
-                    globalConstituentReport.completionStats[2].frequency.percent.toFixed(
-                      1
-                    )
-                  }}%)</strong
-                >
-                <br />{{ globalConstituentReport.completionStats[2].level }}
-              </v-card-text>
-            </v-card>
-          </v-flex>
-
-          <v-flex d-flex xs12 sm6 md3>
-            <v-card
-              flat
-              color="grey lighten-4"
-              light
-              width="250"
-              v-ripple="{ center: true }"
-            >
-              <v-card-text class="title font-weight-thin">
-                <p>
-                  <v-icon style="font-size: 1.4rem"
-                    >fas fa-exclamation-triangle</v-icon
-                  >
-                </p>
-                <strong
-                  >{{
-                    globalConstituentReport.completionStats[3].frequency.count
-                  }}
-                  ({{
-                    globalConstituentReport.completionStats[3].frequency.percent.toFixed(
-                      1
-                    )
-                  }}%)</strong
-                >
-                <br />{{ globalConstituentReport.completionStats[3].level }}
-              </v-card-text>
-            </v-card>
-          </v-flex>
-        </v-layout>
-        <v-flex d-flex xs12 sm6 md3>
-          <v-card-title v-if="displayCompletionStats" class="title font-weight-light"
-            >Mittlere Dauern</v-card-title
+          <v-card
+            flat
+            hover
+            v-for="itemsFile in itemsFiles"
+            :key="itemsFile.patient.id"
           >
+            <v-layout row wrap :class="`pa-3`">
+              <v-flex xs12 sm4 md2>
+                <div class="caption grey--text">Index</div>
+                <div>{{ itemsFile.groupIndex }}</div>
+              </v-flex>
+              <v-flex xs12 sm4 md2>
+                <div class="caption grey--text">ZPM</div>
+                {{ itemsFile.patient.managingZPM }}
+              </v-flex>
+              <v-flex xs12 sm4 md2>
+                <div class="caption grey--text">Geburtsdatum</div>
+                <div>{{ itemsFile.patient.birthDate }}</div>
+              </v-flex>
+              <v-flex xs12 sm4 md2>
+                <div class="caption grey--text">Geschlecht</div>
+                <div>{{ itemsFile.patient.gender }}</div>
+              </v-flex>
+              <v-flex xs12 sm4 md2>
+                <div class="caption grey--text">Versicherung</div>
+                <div>{{ itemsFile.patient.insurance }}</div>
+              </v-flex>
+
+              <v-flex xs12 sm4 md2>
+                <div>
+                  <v-tooltip top>
+                    <v-btn
+                      icon
+                      @click="
+                        routeToPatient(
+                          itemsFile.patient.id +
+                            '&' +
+                            itemsFile.patient.managingZPM
+                        )
+                      "
+                      slot="activator"
+                    >
+                      <v-icon color="blue">folder</v-icon>
+                    </v-btn>
+                    <span>öffne die Datei</span>
+                  </v-tooltip>
+                </div>
+              </v-flex>
+            </v-layout>
+            <v-divider class="my-3"></v-divider>
+            <div flat v-for="focus in itemsFile.therapies" :key="focus.id">
+              <v-layout wrap :class="`pa-3`">
+                <v-flex xs12 sm4 md2>
+                  <div class="caption grey--text">Therapie Status</div>
+                  <div>{{ focus.therapy.status }}</div>
+                </v-flex>
+                <v-flex xs12 sm4 md2>
+                  <div class="caption grey--text">Therapie Anfang</div>
+                  <div>{{ focus.therapy.period.start }}</div>
+                </v-flex>
+                <v-flex xs12 sm4 md2>
+                  <div class="caption grey--text">Therapie Ende</div>
+                  <div>{{ focus.therapy.period.end }}</div>
+                </v-flex>
+                <v-flex xs12 sm4 md2>
+                  <div class="caption grey--text">Wirkstoff</div>
+                  <div v-for="med in focus.therapy.medication" :key="med.id">
+                    {{ med.display }}
+                  </div>
+                </v-flex>
+                <v-flex xs12 sm4 md2>
+                  <div class="caption grey--text">Response</div>
+                  <div>{{ focus.response.value.code }}</div>
+                </v-flex>
+
+                <v-flex xs12 sm4 md12>
+                  <div class="caption grey--text">
+                    Stützende Molekulare Alteration(en)
+                  </div>
+
+                  <div
+                    v-for="variant in focus.supportingVariants"
+                    :key="variant.id"
+                  >
+                    {{ variant }}<br />
+                  </div>
+                </v-flex>
+              </v-layout>
+            </div>
+          </v-card>
+
+          <span v-if="itemsFiles.length == 0">
+            <br />
+            <v-alert :value="true" type="warning">
+              <span class="subheading font-weight-light"
+                >Keine ergebnisse gefunden.</span
+              >
+            </v-alert></span
+          >
+          <span v-if="itemsFiles.length > 0">
+            <v-btn
+              small
+              icon
+              @click="$vuetify.goTo('#globale-übersicht', options)"
+              flat
+              color="grey"
+            >
+              <v-icon style="font-size: 1.2rem"
+                >fas fa-arrow-alt-circle-up</v-icon
+              >
+            </v-btn>
+          </span>
         </v-flex>
-        <v-layout v-if="displayCompletionStats" wrap fluid>
-          <v-flex d-flex xs12 sm6 md3>
-            <v-card
-              flat
-              color="grey lighten-4"
-              light
-              width="250"
-              v-ripple="{ center: true }"
-            >
-              <v-card-text class="title font-weight-thin">
-                <p>
-                  <v-icon style="font-size: 1.4rem"
-                    >fas fa-chevron-right</v-icon
-                  >
-                </p>
-                <strong
-                  >{{
-                    globalConstituentReport.averageDurations[0].duration.value
-                  }}
-                  {{
-                    globalConstituentReport.averageDurations[0].duration.unit
-                  }}</strong
-                >
-
-                <br />{{ globalConstituentReport.averageDurations[0].timeSpan }}
-              </v-card-text>
-            </v-card>
-          </v-flex>
-
-          <v-flex d-flex xs12 sm6 md3>
-            <v-card
-              flat
-              color="grey lighten-4"
-              light
-              width="250"
-              v-ripple="{ center: true }"
-            >
-              <v-card-text class="title font-weight-thin">
-                <p>
-                  <v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon
-                  ><v-icon style="font-size: 1.4rem"
-                    >fas fa-chevron-right</v-icon
-                  >
-                </p>
-                <strong
-                  >{{
-                    globalConstituentReport.averageDurations[1].duration.value
-                  }}
-                  {{
-                    globalConstituentReport.averageDurations[1].duration.unit
-                  }}</strong
-                >
-
-                <br />{{ globalConstituentReport.averageDurations[1].timeSpan }}
-              </v-card-text>
-            </v-card>
-          </v-flex>
-
-          <v-flex d-flex xs12 sm6 md3>
-            <v-card
-              flat
-              color="grey lighten-4"
-              light
-              width="250"
-              v-ripple="{ center: true }"
-            >
-              <v-card-text class="title font-weight-thin">
-                <p>
-                  <v-icon style="font-size: 1.4rem">fas fa-chevron-right</v-icon
-                  ><v-icon style="font-size: 1.4rem"
-                    >fas fa-chevron-right</v-icon
-                  ><v-icon style="font-size: 1.4rem"
-                    >fas fa-chevron-right</v-icon
-                  >
-                </p>
-                <strong
-                  >{{
-                    globalConstituentReport.averageDurations[2].duration.value
-                  }}
-                  {{
-                    globalConstituentReport.averageDurations[2].duration.unit
-                  }}</strong
-                >
-
-                <br />{{ globalConstituentReport.averageDurations[2].timeSpan }}
-              </v-card-text>
-            </v-card>
-          </v-flex>
-        </v-layout>
-        <v-divider class="my-3"></v-divider>
-      </v-col>
-
-      <!--
-      <v-card-title class="title font-weight-light">Fehler</v-card-title>
-      -->
-      <v-col v-for="(issue, i) in issues" :key="i">
-        <div class="caption">{{ issue.details }}</div>
-      </v-col>
+      </v-layout>
     </v-container>
     <template></template>
   </v-responsive>
@@ -637,8 +477,6 @@ export default {
 
       this.itemsFiles = therapyData.data.data;
 
-      console.log(JSON.stringify(therapyData.data.data));
-
       if (this.itemsFiles != undefined) {
         let x;
 
@@ -718,7 +556,7 @@ export default {
                     colorsGlobalMedicationDistributionDetailsOnDemand,
                   borderColor:
                     colorsGlobalMedicationDistributionDetailsOnDemand,
-                  borderWidth: 1,
+                  borderWidth: 1
                 },
               ],
             };
