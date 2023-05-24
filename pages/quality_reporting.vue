@@ -18,6 +18,7 @@
           <strong @click="$router.push('help')">Hilfe?</strong>
         </span>
         <v-divider class="my-3"></v-divider>
+        <div id="berichtswesen"></div>
       </v-flex>
 
       <v-tabs fixed-tabs color="grey lighten-5">
@@ -31,7 +32,8 @@
 
       <v-card-title primary-title>
         <div>
-          <div class="headline">Umgesetzte MTB–Therapien</div><br>
+          <div class="headline">Umgesetzte MTB–Therapien</div>
+          <br />
           <h3>Verabreichte Wirkstoffklassen</h3>
         </div>
       </v-card-title>
@@ -58,10 +60,10 @@
         </v-flex>
 
         <v-card-title primary-title>
-        <div>
-          <h3>Verabreichte Wirkstoffe</h3>
-        </div>
-      </v-card-title>
+          <div>
+            <h3>Verabreichte Wirkstoffe</h3>
+          </div>
+        </v-card-title>
 
         <v-flex d-flex xs12 sm12 md12>
           <v-autocomplete
@@ -110,13 +112,15 @@
 
         -->
 
-        
-
         <v-card-title primary-title>
-        <div>
-          <div class="headline">Tumorentitätsvereilung für verabreichte Wirkstoffe oder Wirkstoffklassen</div><br>
-        </div>
-      </v-card-title>
+          <div>
+            <div class="headline">
+              Tumorentitätsvereilung für verabreichte Wirkstoffe oder
+              Wirkstoffklassen
+            </div>
+            <br />
+          </div>
+        </v-card-title>
 
         <v-flex d-flex xs12 sm12 md12>
           <v-autocomplete
@@ -137,10 +141,10 @@
         ></v-flex>
 
         <v-card-title primary-title v-if="drugs != undefined">
-        <div>
-          <h3>ICD-10 Kategorien</h3>
-        </div>
-      </v-card-title>
+          <div>
+            <h3>ICD-10 Kategorien</h3>
+          </div>
+        </v-card-title>
 
         <v-card class="mx-auto" v-if="drugs != undefined" flat>
           <v-card-text small class="font-weight-thin">
@@ -160,10 +164,10 @@
         </v-flex>
 
         <v-card-title primary-title v-if="drugs != undefined">
-        <div>
-          <h3>ICD-10 Codes (Detailansicht)</h3>
-        </div>
-      </v-card-title>
+          <div>
+            <h3>ICD-10 Codes (Detailansicht)</h3>
+          </div>
+        </v-card-title>
 
         <v-flex d-flex xs12 sm3 md12>
           <bar-chart
@@ -194,6 +198,20 @@
               </v-btn>
               <span>Sortieren nach Index</span>
             </v-tooltip>
+
+            <v-tooltip top>
+              <v-btn
+                small
+                flat
+                color="green"
+                @click="downloadCsv"
+                slot="activator"
+              >
+                <v-icon small left>fas fa-download</v-icon>
+                <span class="caption text-none">Exportieren als CSV</span>
+              </v-btn>
+              <span>Den aktuellen Bericht als Comma Separated Values (.csv) herunterladen</span>
+            </v-tooltip>
           </v-layout>
 
           <v-card
@@ -203,7 +221,7 @@
             :key="itemsFile.patient.id"
           >
             <v-layout row wrap :class="`pa-3`">
-              <v-flex xs12 sm4 md2>
+              <v-flex xs12 sm4 md1>
                 <div class="caption grey--text">Index</div>
                 <div>{{ itemsFile.groupIndex }}</div>
               </v-flex>
@@ -216,6 +234,13 @@
                 <div>{{ itemsFile.patient.birthDate }}</div>
               </v-flex>
               <v-flex xs12 sm4 md2>
+                <div class="caption grey--text">Todesdatum</div>
+                <div v-if="itemsFile.patient.dateOfDeath">
+                  {{ itemsFile.patient.dateOfDeath }}
+                </div>
+                <div v-else>N/A</div>
+              </v-flex>
+              <v-flex xs12 sm4 md2>
                 <div class="caption grey--text">Geschlecht</div>
                 <div>{{ itemsFile.patient.gender }}</div>
               </v-flex>
@@ -224,7 +249,7 @@
                 <div>{{ itemsFile.patient.insurance }}</div>
               </v-flex>
 
-              <v-flex xs12 sm4 md2>
+              <v-flex xs12 sm4 md1>
                 <div>
                   <v-tooltip top>
                     <v-btn
@@ -252,6 +277,15 @@
                   <div class="caption grey--text">Therapie Status</div>
                   <div>{{ focus.therapy.status }}</div>
                 </v-flex>
+                <v-flex xs12 sm4 md3>
+                  <div class="caption grey--text">Entität</div>
+                  <div v-if="focus.therapy.reason">
+                    {{ focus.therapy.reason.code }}<br />{{
+                      focus.therapy.reason.display
+                    }}
+                </div>
+                <div v-else>N/A</div>
+                </v-flex>
                 <v-flex xs12 sm4 md2>
                   <div class="caption grey--text">Therapie Anfang</div>
                   <div>{{ focus.therapy.period.start }}</div>
@@ -266,9 +300,20 @@
                     {{ med.display }}
                   </div>
                 </v-flex>
+
                 <v-flex xs12 sm4 md2>
+                  <div class="caption grey--text">Effective Date</div>
+                  <div>{{ focus.response.effectiveDate }}</div>
+                </v-flex>
+
+                <v-flex xs12 sm4 md3>
                   <div class="caption grey--text">Response</div>
                   <div>{{ focus.response.value.code }}</div>
+                </v-flex>
+
+                <v-flex xs12 sm4 md7>
+                  <div class="caption grey--text">Notes on Therapie</div>
+                  <div>{{ focus.therapy.note }}</div>
                 </v-flex>
 
                 <v-flex xs12 sm4 md12>
@@ -299,7 +344,7 @@
             <v-btn
               small
               icon
-              @click="$vuetify.goTo('#globale-übersicht', options)"
+              @click="$vuetify.goTo('#berichtswesen', options)"
               flat
               color="grey"
             >
@@ -330,6 +375,7 @@ let globalMedicationDistribution = Array();
 let barChartDataGlobalMedicationDistributionDetailsOnDemand = Array();
 let itemsFiles = 0;
 let limitNumberItemsFiles = 20;
+const downloadEndpoint = "";
 
 export default {
   loading: "~/components/loading.vue",
@@ -448,6 +494,52 @@ export default {
   },
 
   methods: {
+    async downloadCsv() {
+      try {
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${localStorage.token}`;
+
+        const response = await axios.get(this.downloadEndpoint, {
+          headers: {
+            Accept: "text/csv",
+          },
+        });
+
+        let blob = new Blob([response.data], {
+          type: "text/csv",
+        });
+        
+        const fileName = "data_"+ (new Date()).toISOString().replace(/\D/g, "").slice(0, 14).replace(/(\d{8})(\d{6})/, "$1_$2");
+
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+          // For IE browser
+          window.navigator.msSaveOrOpenBlob(blob, fileName);
+        } else {
+          // For other browsers
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", fileName);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+
+        /*
+
+        let blob = new Blob([JSON.stringify(response.data)], {
+            type: "text/csv",
+          }),
+          url = window.URL.createObjectURL(blob);
+
+        window.open(url);
+        */
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
     goBack() {
       return window.history.back();
     },
@@ -465,7 +557,7 @@ export default {
         "Authorization"
       ] = `Bearer ${localStorage.token}`;
 
-      let therapyData = await axios.post(
+      let therapyData = await axios.get(
         process.env.baseUrl +
           process.env.port +
           process.env.reporting +
@@ -488,6 +580,7 @@ export default {
     },
 
     async compileGlobalMedicationDistributionDetails(code) {
+      if (code == undefined) return;
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${localStorage.token}`;
@@ -502,7 +595,7 @@ export default {
       let green = 0;
       let blue = 0;
 
-      globalMedicationDistribution = await axios.post(
+      globalMedicationDistribution = await axios.get(
         process.env.baseUrl +
           process.env.port +
           process.env.reporting +
@@ -556,7 +649,7 @@ export default {
                     colorsGlobalMedicationDistributionDetailsOnDemand,
                   borderColor:
                     colorsGlobalMedicationDistributionDetailsOnDemand,
-                  borderWidth: 1
+                  borderWidth: 1,
                 },
               ],
             };
@@ -576,6 +669,7 @@ export default {
     },
 
     async compileGlobalTumorEntityDistribution(code) {
+      if (code == undefined) return;
       this.compileTherapyData(code);
 
       axios.defaults.headers.common[
@@ -597,7 +691,7 @@ export default {
           };
           */
 
-        let globalTumorEntityDistribution = await axios.post(
+        let globalTumorEntityDistribution = await axios.get(
           process.env.baseUrl +
             process.env.port +
             process.env.reporting +
@@ -606,6 +700,15 @@ export default {
             "&version=" +
             code.split(" · ")[2]
         );
+
+        this.downloadEndpoint =
+          process.env.baseUrl +
+          process.env.port +
+          process.env.reporting +
+          "/patient-therapies?code=" +
+          code.split(" · ")[1] +
+          "&version=" +
+          code.split(" · ")[2];
 
         let labelsGlobalTumorEntityDistribution = Array();
         let countGlobalTumorEntityDistribution = Array();
@@ -748,7 +851,7 @@ export default {
           "/GlobalQCReport"
       );
 
-      globalMedicationDistribution = await axios.post(
+      globalMedicationDistribution = await axios.get(
         process.env.baseUrl +
           process.env.port +
           process.env.reporting +
@@ -877,49 +980,9 @@ export default {
         barChartDataGlobalMedicationDistributionDetails.push(itemDetails);
       }
 
-      // GLOBAL COMPLETION STATS
-      let rawGlobalCompletionStats = Array();
-      if (globalReport.data.completionStats) {
-        for (var i = 0; i < globalReport.data.completionStats.length; i++) {
-          let item = {
-            id: globalReport.data.completionStats[i].level,
-            patient: globalReport.data.completionStats[i].frequency,
-          };
-          rawGlobalCompletionStats.push(item);
-        }
-      }
-
-      // GLOBAL AVERAGE DURATIONS
-      let rawGlobalAverageDurations = Array();
-      if (globalReport.data.averageDurations) {
-        for (var i = 0; i < globalReport.data.averageDurations.length; i++) {
-          let item = {
-            id: globalReport.data.averageDurations[i].timeSpan,
-            patient: globalReport.data.averageDurations[i].duration,
-          };
-          rawGlobalAverageDurations.push(item);
-        }
-      }
-
-      // GLOBAL CONSTITUENT REPORTS
-      /*
-      let rawGlobalConstituentReports = Array();
-      if (globalReport.data.constituentReports) {
-        for (var i = 0; i < globalReport.data.constituentReports.length; i++) {
-          let item = {
-            id: globalReport.data.constituentReports[i].timeSpan,
-            patient: globalReport.data.constituentReports[i].duration,
-          };
-          rawGlobalConstituentReports.push(item);
-        }
-      }
-      */
 
       return {
         globalReport,
-        globalCompletionStats: rawGlobalCompletionStats,
-        globalAverageDurations: rawGlobalAverageDurations,
-        globalConstituentReports: globalReport.data.constituentReports,
         issues: globalReport.data._issues,
         barChartDataGlobalMedicationDistribution,
         barChartDataGlobalMedicationDistributionDetails,
