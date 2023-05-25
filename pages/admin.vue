@@ -248,6 +248,8 @@
                   v-model="select"
                   :items="roles"
                   :error-messages="errors"
+                  item-text="display"
+                  item-value="code"
                   chips
                   deletable-chips
                   multiple
@@ -299,6 +301,8 @@
                 <v-select
                   v-model="selectEdit"
                   :items="roles"
+                  item-text="display"
+                  item-value="code"
                   :error-messages="errors"
                   chips
                   deletable-chips
@@ -488,16 +492,6 @@ export default {
       },
     },
 
-    roles: [
-      "Admin",
-      "Documentarist",
-      "LocalZPMCoordinator",
-      "GlobalZPMCoordinator",
-      "MTBCoordinator",
-      "Researcher",
-      "ApprovedResearcher",
-    ],
-
     headerUsers: [
       { text: "Benutzeridentifikation", value: "id" },
       //{ text: "Avatar", value: "avatar" },
@@ -586,7 +580,6 @@ export default {
         this.addNewUser = false;
         window.location.reload();
       } catch (err) {
-        alert("catch");
         if (response.status === 404) {
           return redirect("/");
         }
@@ -772,13 +765,17 @@ export default {
       let peerStatusReport = await axios.get(
         process.env.baseUrl + process.env.port + process.env.peerStatusReport
       );
-      
+
+      let roles = await axios.get(
+          process.env.baseUrl + process.env.port + "/bwhc/catalogs/api/ValueSet?name=nutzer-rollen"
+        );
 
       return {
         itemsUsers: users.data.entries,
         registeredUsers: users.data.total,
         me: whoami.data,
         peers: peerStatusReport.data.peerStatus,
+        roles: roles.data.concepts,
       };
     } catch (err) {
       if (err.response.status === 401) {
