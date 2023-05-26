@@ -59,12 +59,6 @@
           -->
         </v-flex>
 
-        <v-card-title primary-title>
-          <div>
-            <h3>Verabreichte Wirkstoffe</h3>
-          </div>
-        </v-card-title>
-
         <v-flex d-flex xs12 sm12 md12>
           <v-autocomplete
             v-model="drugsGroup"
@@ -83,11 +77,23 @@
           </v-autocomplete
         ></v-flex>
 
+        <v-card-title v-if="drugsGroup != undefined" primary-title>
+          <div>
+            <h3>Verabreichte Wirkstoffe</h3>
+          </div>
+        </v-card-title>
+
         <v-card class="mx-auto" v-if="drugsGroup != undefined" flat>
           <v-card-text small class="font-weight-thin">
             <v-icon style="font-size: 1.1rem">fas fa-pills</v-icon>
             <strong>ausgewählter Wirkstoff-Klasse:</strong>
-            {{ drugsGroup }}
+            {{ drugsGroup }}<br /><v-icon style="font-size: 1.1rem"
+              >fas fa-hashtag</v-icon
+            >
+            <strong>Gesamtanzahl der umgesetzten Therapien: </strong>
+            {{ barChartDataGlobalMedicationDistributionDetailsOnDemandCount }}
+            <br>
+            <div class="caption grey--text"><strong>Info:</strong> Bei Wirkstoffkombinationen werden die Wirkstoffe einzeln berücksichtigt.</div>
           </v-card-text>
         </v-card>
 
@@ -149,8 +155,12 @@
         <v-card class="mx-auto" v-if="drugs != undefined" flat>
           <v-card-text small class="font-weight-thin">
             <v-icon style="font-size: 1.1rem">fas fa-pills</v-icon>
-            <strong>ausgewählter Wirkstoff:</strong>
-            {{ drugs }}
+            <strong>Ausgewählter Wirkstoff:</strong>
+            {{ drugs }}<br /><v-icon style="font-size: 1.1rem"
+              >fas fa-hashtag</v-icon
+            >
+            <strong>Gesamtanzahl der umgesetzten Therapien: </strong>
+            {{ barChartDataGlobalTumorEntityDistributionCount }}
           </v-card-text>
         </v-card>
 
@@ -168,7 +178,13 @@
             <h3>ICD-10 Codes (Detailansicht)</h3>
           </div>
         </v-card-title>
-
+        <!--
+        <v-card class="mx-auto" v-if="drugs != undefined" flat>
+          <v-card-text small class="font-weight-thin">
+            <v-icon style="font-size: 1.1rem">fas fa-hashtag</v-icon> <strong>Gesamtanzahl der umgesetzten Therapien: </strong> {{ barChartDataGlobalTumorEntityDistributionDetailsCount }}
+          </v-card-text>
+        </v-card>
+-->
         <v-flex d-flex xs12 sm3 md12>
           <bar-chart
             v-if="barChartDataGlobalTumorEntityDistributionDetails[0]"
@@ -210,7 +226,10 @@
                 <v-icon small left>fas fa-download</v-icon>
                 <span class="caption text-none">Exportieren als CSV</span>
               </v-btn>
-              <span>Den aktuellen Bericht als Comma Separated Values (.csv) herunterladen</span>
+              <span
+                >Den aktuellen Bericht als Comma Separated Values (.csv)
+                herunterladen</span
+              >
             </v-tooltip>
           </v-layout>
 
@@ -283,8 +302,8 @@
                     {{ focus.therapy.reason.code }}<br />{{
                       focus.therapy.reason.display
                     }}
-                </div>
-                <div v-else>N/A</div>
+                  </div>
+                  <div v-else>N/A</div>
                 </v-flex>
                 <v-flex xs12 sm4 md2>
                   <div class="caption grey--text">Therapie Anfang</div>
@@ -370,9 +389,12 @@ import userPanel from "~/components/userPanel";
 let seen = true;
 
 let barChartDataGlobalTumorEntityDistribution = Array();
+let barChartDataGlobalTumorEntityDistributionCount = 0;
 let barChartDataGlobalTumorEntityDistributionDetails = Array();
+//let barChartDataGlobalTumorEntityDistributionDetailsCount = Array();
 let globalMedicationDistribution = Array();
 let barChartDataGlobalMedicationDistributionDetailsOnDemand = Array();
+let barChartDataGlobalMedicationDistributionDetailsOnDemandCount = 0;
 let itemsFiles = 0;
 let limitNumberItemsFiles = 20;
 const downloadEndpoint = "";
@@ -509,8 +531,14 @@ export default {
         let blob = new Blob([response.data], {
           type: "text/csv",
         });
-        
-        const fileName = "data_"+ (new Date()).toISOString().replace(/\D/g, "").slice(0, 14).replace(/(\d{8})(\d{6})/, "$1_$2");
+
+        const fileName =
+          "data_" +
+          new Date()
+            .toISOString()
+            .replace(/\D/g, "")
+            .slice(0, 14)
+            .replace(/(\d{8})(\d{6})/, "$1_$2");
 
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {
           // For IE browser
@@ -586,6 +614,7 @@ export default {
       ] = `Bearer ${localStorage.token}`;
 
       this.barChartDataGlobalMedicationDistributionDetailsOnDemand = [];
+      this.barChartDataGlobalMedicationDistributionDetailsOnDemandCount = 0;
 
       let labelsGlobalMedicationDistributionDetailsOnDemand = Array();
       let countGlobalMedicationDistributionDetailsOnDemand = Array();
@@ -636,6 +665,8 @@ export default {
                 colorsGlobalMedicationDistributionDetailsOnDemand.push(
                   "rgba(" + red + ", " + green + ", " + blue + ", 0.4)"
                 );
+                this.barChartDataGlobalMedicationDistributionDetailsOnDemandCount +=
+                  globalMedicationDistribution.data.data[i].components[j].count;
               }
             }
 
@@ -677,7 +708,9 @@ export default {
       ] = `Bearer ${localStorage.token}`;
 
       this.barChartDataGlobalTumorEntityDistribution = [];
+      this.barChartDataGlobalTumorEntityDistributionCount = 0;
       this.barChartDataGlobalTumorEntityDistributionDetails = [];
+      //this.barChartDataGlobalTumorEntityDistributionDetailsCount = 0;
 
       try {
         /*
@@ -764,6 +797,7 @@ export default {
               colorsGlobalTumorEntityDistributionDetails.push(
                 "rgba(" + red + ", " + green + ", " + blue + ", 0.4)"
               );
+              //this.barChartDataGlobalTumorEntityDistributionDetailsCount += globalTumorEntityDistribution.data.data[i].components[j].count;
             }
 
             let item = {
@@ -778,6 +812,9 @@ export default {
                 },
               ],
             };
+
+            this.barChartDataGlobalTumorEntityDistributionCount +=
+              globalTumorEntityDistribution.data.data[i].count;
 
             let itemDetails = {
               labels: labelsGlobalTumorEntityDistributionDetails,
@@ -980,15 +1017,17 @@ export default {
         barChartDataGlobalMedicationDistributionDetails.push(itemDetails);
       }
 
-
       return {
         globalReport,
         issues: globalReport.data._issues,
         barChartDataGlobalMedicationDistribution,
         barChartDataGlobalMedicationDistributionDetails,
         barChartDataGlobalTumorEntityDistribution,
+        barChartDataGlobalTumorEntityDistributionCount,
         barChartDataGlobalTumorEntityDistributionDetails,
+        //barChartDataGlobalTumorEntityDistributionDetailsCount,
         barChartDataGlobalMedicationDistributionDetailsOnDemand,
+        barChartDataGlobalMedicationDistributionDetailsOnDemandCount,
         drugsCat,
         drugsGroupCat,
         itemsFiles,
