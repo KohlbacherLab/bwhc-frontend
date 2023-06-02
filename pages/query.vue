@@ -32,6 +32,7 @@
         :aminoAcidChangesCat="aminoAcidChangesCat"
         :variantEffectsCat="variantEffectsCat"
         :diagnosis="diagnosis"
+        :getSavedQueries="getSavedQueries"
         clipped-right
       />
       <v-divider class="my-3"></v-divider>
@@ -136,6 +137,10 @@ export default {
           "/RECIST"
       );
 
+      let getSavedQueries = await axios.get(
+        process.env.baseUrl + process.env.port + process.env.preparedQueries
+      );
+
       let diagnosisCat = Array();
       let tumorMorphologyCat = Array();
       let genesCat = Array();
@@ -210,6 +215,7 @@ export default {
         cnvTypCat,
         drugsCat,
         responsesCat,
+        getSavedQueries,
       };
     } catch (err) {
       if (err.status === 401) {

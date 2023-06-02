@@ -302,7 +302,7 @@
                                   v-for="gene in data.item.genes"
                                   v-bind:key="gene.index"
                                 >
-                                · {{ gene.display }}
+                                  · {{ gene.display }}
                                 </span>
                                 {{ data.item.type }}
                                 <i v-if="data.item.copyNumber.max">{{
@@ -590,8 +590,7 @@
                   </span>
 
                   <span v-if="selectedMutatedGenesCNV.length > 0">
-                  <span>
-                    <strong>Das ausgewählte CNV(s)</strong></span>
+                    <span> <strong>Das ausgewählte CNV(s)</strong></span>
                     <br />
                     <span
                       v-for="(
@@ -610,19 +609,18 @@
                         {{ gene.display }} ·
                         {{ gene.code }}
                       </span>
-                        <span v-if="selectedMutatedGenesCNV.type">
+                      <span v-if="selectedMutatedGenesCNV.type">
                         , {{ selectedMutatedGenesCNV.type }}
-                        </span>
+                      </span>
 
-                        <span v-if="selectedMutatedGenesCNV.copyNumber.min">
-                          - {{ selectedMutatedGenesCNV.copyNumber.min }}
-                        </span>
+                      <span v-if="selectedMutatedGenesCNV.copyNumber.min">
+                        - {{ selectedMutatedGenesCNV.copyNumber.min }}
+                      </span>
 
-                        <span v-if="selectedMutatedGenesCNV.copyNumber.max">
-                          - {{ selectedMutatedGenesCNV.copyNumber.max }}
-                        
-                       
-                      </span> <br>
+                      <span v-if="selectedMutatedGenesCNV.copyNumber.max">
+                        - {{ selectedMutatedGenesCNV.copyNumber.max }}
+                      </span>
+                      <br />
                     </span>
                   </span>
                 </v-card-text>
@@ -828,6 +826,47 @@
           >Föderiert Anfrage senden</v-btn
         >
       </v-flex>
+      <v-flex xs12 sm3 md12>
+        <v-divider class="my-3"></v-divider>
+      </v-flex>
+
+      <v-flex d-flex xs12 sm3 md3>
+        <v-radio-group v-model="savedQueryType" row>
+          <v-radio
+            v-if="this.localButton"
+            label="Lokal"
+            value="local"
+          ></v-radio>
+          <v-radio
+            v-if="this.federatedButton"
+            label="Föderiert"
+            value="federated"
+          ></v-radio>
+        </v-radio-group>
+      </v-flex>
+      <v-flex d-flex xs12 sm3 md9>
+        <v-card class="mx-auto" flat light max-width="1200">
+          <v-card-text class="headline font-weight-thin">
+            <v-icon color="grey">fas fa-save</v-icon>
+            <b>Gespeicherten Abfragen</b>
+            <v-autocomplete
+              v-model="queryName"
+              :items="getSavedQueries.data.entries"
+              :loading="isLoading"
+              item-text="name"
+              item-value="parameters"
+              label="Auswahl und Ausführung einer vorgespeicherten Abfrage."
+              ref="queries"
+              chips
+              hide-selected
+              dense
+              placeholder
+              @input="accessSavedQuery(savedQueryType,queryName)"
+            >
+            </v-autocomplete>
+          </v-card-text>
+        </v-card>
+      </v-flex>
 
       <v-snackbar
         v-model="snackbarParameters"
@@ -896,6 +935,7 @@ export default {
     "baseChangeCat",
     "aminoAcidChangesCat",
     "variantEffectsCat",
+    "getSavedQueries",
     "getQueryParametersMutations",
     "getQueryParametersSimpleVariants",
     "getQueryParametersCopyNumberVariants",
@@ -958,6 +998,8 @@ export default {
     drugUsage: "egal",
     fusionType: "bothFusions",
     primeType: "bothPrimes",
+
+    savedQueryType: "local",
 
     federatedQueryDialog: false,
 
@@ -1545,6 +1587,60 @@ export default {
 
     resetResponses() {
       this.selectedResponses = [];
+    },
+
+    async accessSavedQuery(queryType, savedQueryParameters) {
+
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${localStorage.token}`;
+
+      try {
+        let request = {
+          mode: {
+            code: queryType,
+          },
+          parameters: savedQueryParameters,
+        };
+
+        let Response = await axios.post(
+          process.env.baseUrl + process.env.port + `/bwhc/mtb/api/query/`,
+          request
+        );
+
+        localStorage.setItem(
+            "mutatedGenes",
+            JSON.stringify(this.mutatedGenes)
+          );
+          localStorage.setItem("diagnosis", JSON.stringify(this.diagnosis));
+          localStorage.setItem(
+            "tumorMorphology",
+            JSON.stringify(this.tumorMorphology)
+          );
+          localStorage.setItem(
+            "selectedDrugs",
+            JSON.stringify(this.medicationsWithUsage)
+          );
+          localStorage.setItem("responses", JSON.stringify(this.responses));
+
+          if (JSON.stringify(Response.data._issues) != undefined) {
+            let connectionErrors = "";
+            for (var i = 0; i < Response.data._issues.length; i++) {
+              connectionErrors += Response.data._issues[i].details + " · ";
+            }
+
+            localStorage.setItem("issues", connectionErrors);
+          } else localStorage.removeItem("issues");
+
+          this.$router.push(`/results/${Response.data.id}`);
+
+      } catch (err) {
+        if (err.status === 401) {
+          this.$router.push("/");
+        } else if (err.response.status === 403) {
+          this.$router.push("/403");
+        }
+      }
     },
 
     // QUERY PARAMETERS

@@ -171,9 +171,56 @@
     </v-flex>
     -->
 
+    <v-dialog v-model="saveQueryDialog" width="500">
+      <v-card>
+        <v-card-title class="headline grey lighten-2" primary-title>
+          <strong>Benennen Sie Ihre Abfrage.</strong></v-card-title
+        >
+        <v-container grid-list-md>
+          <form @submit.prevent="saveThisQuery">
+            <v-layout wrap>
+              <v-flex d-flex xs12 sm12>
+                <v-text-field
+                  v-model="queryName"
+                  :error-messages="errors"
+                  label="Abfrage Name"
+                  required
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+          </form>
+        </v-container>
+
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="black"
+            type="addNewUser"
+            :disabled="invalid"
+            flat
+            @click="saveQueryDialog = false"
+            >Abbrechen</v-btn
+          >
+          <v-btn
+            dark
+            color="blue accent-2"
+            type="addNewUser"
+            @click="saveQuery"
+            :disabled="invalid"
+            width="140"
+            >Speichern</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-expansion-panel popout>
       <v-expansion-panel-content>
         <template v-slot:actions>
+          <v-btn fab flat small color="blue" @click="saveQueryDialog = true" dark>
+            <v-icon color="dark-grey">fas fa-save</v-icon></v-btn
+          >
           <v-btn small color="red" dark> Suche ändern ?</v-btn>
         </template>
         <template v-slot:header>
@@ -200,7 +247,11 @@
                               getQueryParametersMutation, indexMutations
                             ) in getQueryParametersMutations"
                             :key="indexMutations"
-                            :class="[indexMutations % 2 === 0 ? 'purple lighten-5' : 'white']"
+                            :class="[
+                              indexMutations % 2 === 0
+                                ? 'purple lighten-5'
+                                : 'white',
+                            ]"
                           >
                             {{ getQueryParametersMutation }}
                           </li>
@@ -214,7 +265,9 @@
                               getQueryParametersSimpleVariant, indexSNV
                             ) in getQueryParametersSimpleVariants"
                             :key="indexSNV"
-                            :class="[indexSNV % 2 === 0 ? 'grey lighten-4' : 'white']"
+                            :class="[
+                              indexSNV % 2 === 0 ? 'grey lighten-4' : 'white',
+                            ]"
                           >
                             {{ getQueryParametersSimpleVariant.gene.display }} ·
                             {{ getQueryParametersSimpleVariant.gene.code }}
@@ -247,28 +300,31 @@
                               getQueryParametersCopyNumberVariant, indexCNV
                             ) in getQueryParametersCopyNumberVariants"
                             :key="indexCNV"
-                            :class="[indexCNV % 2 === 0 ? 'grey lighten-4' : 'white']"
+                            :class="[
+                              indexCNV % 2 === 0 ? 'grey lighten-4' : 'white',
+                            ]"
                           >
                             <span
                               v-for="(
-                                getQueryParametersCopyNumberVariantGene, index2CNV
-                              ) in getQueryParametersCopyNumberVariants[indexCNV]
-                                .genes"
+                                getQueryParametersCopyNumberVariantGene,
+                                index2CNV
+                              ) in getQueryParametersCopyNumberVariants[
+                                indexCNV
+                              ].genes"
                               :key="index2CNV"
                             >
                               {{
                                 getQueryParametersCopyNumberVariantGene.display
                               }}
                               ·
-                              {{
-                                getQueryParametersCopyNumberVariantGene.code
-                              }}
+                              {{ getQueryParametersCopyNumberVariantGene.code }}
                             </span>
 
                             <span
                               v-if="getQueryParametersCopyNumberVariant.type"
                             >
-                            , {{
+                              ,
+                              {{
                                 getQueryParametersCopyNumberVariant.type
                               }}</span
                             >
@@ -311,7 +367,11 @@
                               getQueryParametersDiagnosis, indexDiagnosis
                             ) in getQueryParametersDiagnosis"
                             :key="indexDiagnosis"
-                            :class="[indexDiagnosis % 2 === 0 ? 'indigo lighten-5' : 'white']"
+                            :class="[
+                              indexDiagnosis % 2 === 0
+                                ? 'indigo lighten-5'
+                                : 'white',
+                            ]"
                           >
                             {{ getQueryParametersDiagnosis }}
                           </li>
@@ -323,10 +383,15 @@
 
                           <li
                             v-for="(
-                              getQueryParametersTumorMorphology, indexTumorMorphology
+                              getQueryParametersTumorMorphology,
+                              indexTumorMorphology
                             ) in getQueryParametersTumorMorphology"
                             :key="indexTumorMorphology"
-                            :class="[indexTumorMorphology % 2 === 0 ? 'indigo lighten-5' : 'white']"
+                            :class="[
+                              indexTumorMorphology % 2 === 0
+                                ? 'indigo lighten-5'
+                                : 'white',
+                            ]"
                           >
                             {{ getQueryParametersTumorMorphology }}
                           </li>
@@ -338,7 +403,9 @@
                               getQueryParametersDrugsDisplay, indexDrugs
                             ) in getQueryParametersDrugsDisplay"
                             :key="indexDrugs"
-                            :class="[indexDrugs % 2 === 0 ? 'blue lighten-5' : 'white']"
+                            :class="[
+                              indexDrugs % 2 === 0 ? 'blue lighten-5' : 'white',
+                            ]"
                           >
                             {{ getQueryParametersDrugsDisplay }}
                           </li>
@@ -350,7 +417,11 @@
                               getQueryParametersResponse, indexResponse
                             ) in getQueryParametersResponses"
                             :key="indexResponse"
-                            :class="[indexResponse % 2 === 0 ? 'cyan lighten-5' : 'white']"
+                            :class="[
+                              indexResponse % 2 === 0
+                                ? 'cyan lighten-5'
+                                : 'white',
+                            ]"
                           >
                             {{ getQueryParametersResponse }}
                           </li>
@@ -447,6 +518,7 @@
           :baseChangeCat="baseChangeCat"
           :aminoAcidChangesCat="aminoAcidChangesCat"
           :variantEffectsCat="variantEffectsCat"
+          :getSavedQueries="getSavedQueries"
           :getQueryParametersMutations="getQueryParametersMutations"
           :getQueryParametersSimpleVariants="getQueryParametersSimpleVariants"
           :getQueryParametersCopyNumberVariants="
@@ -1749,6 +1821,7 @@ export default {
 
   data() {
     return {
+      saveQueryDialog: false,
       diagnosis: Array(),
 
       limitNumberItemsFiles: 20,
@@ -1909,6 +1982,37 @@ export default {
   },
 
   methods: {
+    async saveQuery({ params, redirect, error }) {
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${localStorage.token}`;
+
+      try {
+        if (this.queryName == undefined)
+          this.queryName = "abfrage_" +
+            new Date()
+              .toISOString()
+              .replace(/\D/g, "")
+              .slice(0, 14)
+              .replace(/(\d{8})(\d{6})/, "$1_$2");
+
+        let request = {
+          name: this.queryName,
+          parameters: this.queryParameters,
+        };
+        
+        let response = await axios.post(
+          process.env.baseUrl + process.env.port + process.env.preparedQueries,
+          request
+        );
+
+        this.saveQueryDialog = false;
+        window.location.reload();
+      } catch (err) {
+        alert(err);
+      }
+    },
+
     routeToPatient(queryAndPatientId) {
       this.$router.push("patient/" + queryAndPatientId);
     },
@@ -2011,6 +2115,8 @@ export default {
 
       let queryparams = await axios.get(`${serverBaseURL}/${params.id}`);
       let filters = queryparams.data.filters;
+
+      let getSavedQueries = await axios.get(process.env.baseUrl + process.env.port + process.env.preparedQueries);
 
       localStorage.setItem("queryId", queryparams.data.id);
 
@@ -2195,13 +2301,14 @@ export default {
                   queryparams.data.parameters.simpleVariants[i].gene.code
               )
             )
-            getQueryParametersSimpleVariants.push({
+              getQueryParametersSimpleVariants.push({
                 dnaChange:
                   queryparams.data.parameters.simpleVariants[i].dnaChange,
                 aminoAcidChange:
                   queryparams.data.parameters.simpleVariants[i].aminoAcidChange,
                 gene: {
-                  display: queryparams.data.parameters.simpleVariants[i].gene.display,
+                  display:
+                    queryparams.data.parameters.simpleVariants[i].gene.display,
                   name: queryparams.data.parameters.simpleVariants[i].gene.name,
                   code: queryparams.data.parameters.simpleVariants[i].gene.code,
                 },
@@ -2524,6 +2631,8 @@ export default {
         responsesCat,
         tumorMorphologyCat,
 
+        queryParameters: queryparams.data.parameters,
+        getSavedQueries,
         getQueryParametersMutations,
         getQueryParametersSimpleVariants,
         getQueryParametersCopyNumberVariants,
