@@ -1,4 +1,4 @@
-FROM node:10-alpine
+FROM node:16-alpine
 
 # nuxt host and port to be replaced in package.json. (See 2.3 in bwHCPrototypeManual)
 # NUXT_HOST should have a value with public available IP address from within container.
