@@ -218,7 +218,14 @@
     <v-expansion-panel popout>
       <v-expansion-panel-content>
         <template v-slot:actions>
-          <v-btn fab flat small color="blue" @click="saveQueryDialog = true" dark>
+          <v-btn
+            fab
+            flat
+            small
+            color="blue"
+            @click="saveQueryDialog = true"
+            dark
+          >
             <v-icon color="dark-grey">fas fa-save</v-icon></v-btn
           >
           <v-btn small color="red" dark> Suche ändern ?</v-btn>
@@ -553,6 +560,10 @@
       <v-tab class="subheading font-weight-regular" :key="therapies"
         >Systemische Therapien
         <v-icon color="cyan" dark>fas fa-file-medical</v-icon></v-tab
+      >
+
+      <v-tab class="subheading font-weight-regular" :key="variants"
+        >Varianten <v-icon color="red" dark>fas fa-dna</v-icon></v-tab
       >
 
       <!-- CASES -->
@@ -913,6 +924,7 @@
                   <div class="caption grey--text">Tumor-Zellgehalt</div>
                   <div>{{ itemsGenomicReport.tumorCellContent }}</div>
                 </v-flex>
+
                 <v-flex xs2 sm4 md1>
                   <div>
                     <v-tooltip top>
@@ -1774,6 +1786,338 @@
           </v-flex>
         </v-layout>
       </v-tab-item>
+
+      <!-- VARIANTS -->
+
+      <v-tab-item>
+        <v-layout flex-child wrap>
+          <!--
+          <v-flex xs12 md1 d-flex> </v-flex>
+          -->
+          <v-flex xs12 md12>
+            <v-card-title class="font-weight-normal"
+              >Einfache Varianten</v-card-title
+            >
+
+            <v-card
+              flat
+              color="#e8e8e8"
+              v-for="simpleVariant in itemsVariantsOfInterest.simpleVariants"
+              :key="simpleVariant.id"
+            >
+              <v-divider></v-divider>
+              <v-layout row wrap :class="`pa-3`">
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Chr</div>
+                  <div>{{ simpleVariant.chromosome }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Gen</div>
+                  {{ simpleVariant.gene }}
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Start/Ende</div>
+                  <div>{{ simpleVariant.startEnd }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Ref Allel</div>
+                  {{ simpleVariant.refAllele }}
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Alt Allel</div>
+                  <div>{{ simpleVariant.altAllele }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">DNA Change</div>
+                  <div>{{ simpleVariant.dnaChange }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Amino Acid Change</div>
+                  <div>{{ simpleVariant.aminoAcidChange }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Read Depth</div>
+                  {{ simpleVariant.readDepth }}
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Allel-Frequenz</div>
+                  <div>{{ simpleVariant.allelicFrequency }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">COSMIC ID</div>
+                  <div>{{ simpleVariant.cosmicId }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">dbSNP ID</div>
+                  <div>{{ simpleVariant.dbSNPId }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Interpretation</div>
+                  <div>{{ simpleVariant.interpretation }}</div>
+                </v-flex>
+                <v-flex xs2 sm4 md1>
+                  <div>
+                    <v-tooltip top>
+                      <v-btn
+                        icon
+                        @click="
+                          routeToPatient(queryId + '&' + simpleVariant.patient)
+                        "
+                        slot="activator"
+                      >
+                        <v-icon color="blue">folder</v-icon>
+                      </v-btn>
+                      <span>öffne die Datei</span>
+                    </v-tooltip>
+                  </div>
+                </v-flex>
+              </v-layout>
+            </v-card>
+
+            <span v-if="itemsVariantsOfInterest.simpleVariants.length == 0">
+              <v-alert :value="true" type="warning">
+                <span class="subheading font-wei ght-light"
+                  >Keine ergebnisse gefunden.</span
+                >
+              </v-alert></span
+            >
+
+            <v-card-title class="font-weight-normal"
+              >Copy Number Varianten</v-card-title
+            >
+            <v-card
+              flat
+              color="#f0f0f0"
+              v-for="copyNumberVariant in itemsVariantsOfInterest.copyNumberVariants"
+              :key="copyNumberVariant.id"
+            >
+              <v-divider></v-divider>
+              <v-layout row wrap :class="`pa-3`">
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Chr</div>
+                  <div>{{ copyNumberVariant.chromosome }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Reported Affected Genes</div>
+                  {{ copyNumberVariant.reportedAffectedGenes }}
+                </v-flex>
+                <v-flex xs6 sm4 md4>
+                  <div class="caption grey--text">Anfangsbereich</div>
+                  <div>{{ copyNumberVariant.startRange }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md4>
+                  <div class="caption grey--text">Endbereich</div>
+                  {{ copyNumberVariant.endRange }}
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Kopienzahl</div>
+                  <div>{{ copyNumberVariant.totalCopyNumber }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Rel. Kopienzahl</div>
+                  <div>{{ copyNumberVariant.relativeCopyNumber }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md1>
+                  <div class="caption grey--text">CNA</div>
+                  <div>{{ copyNumberVariant.cnA }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md1>
+                  <div class="caption grey--text">CNB</div>
+                  {{ copyNumberVariant.cnB }}
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Reported Focality</div>
+                  <div>{{ copyNumberVariant.reportedFocality }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Art</div>
+                  <div>{{ copyNumberVariant.type }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Copy Number Neutral LoH</div>
+                  <div>{{ copyNumberVariant.copyNumberNeutralLoH }}</div>
+                </v-flex>
+                <v-flex xs2 sm4 md1>
+                  <div>
+                    <v-tooltip top>
+                      <v-btn
+                        icon
+                        @click="
+                          routeToPatient(
+                            queryId + '&' + copyNumberVariant.patient
+                          )
+                        "
+                        slot="activator"
+                      >
+                        <v-icon color="blue">folder</v-icon>
+                      </v-btn>
+                      <span>öffne die Datei</span>
+                    </v-tooltip>
+                  </div>
+                </v-flex>
+              </v-layout>
+            </v-card>
+
+            <span v-if="itemsVariantsOfInterest.copyNumberVariants.length == 0">
+              <v-alert :value="true" type="warning">
+                <span class="subheading font-wei ght-light"
+                  >Keine ergebnisse gefunden.</span
+                >
+              </v-alert></span
+            >
+
+            <v-card-title class="font-weight-normal">DNA-Fusions</v-card-title>
+            <v-card
+              flat
+              color="#e8e8e8"
+              v-for="dnaFusion in itemsVariantsOfInterest.dnaFusions"
+              :key="dnaFusion.id"
+            >
+              <v-divider></v-divider>
+              <v-layout row wrap :class="`pa-3`">
+                <v-flex xs6 sm4 md10>
+                  <div class="caption grey--text">Chr</div>
+                  <div>{{ dnaFusion.representation }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Reported Affected Genes</div>
+                  {{ dnaFusion.reportedNumReads }}
+                </v-flex>
+                <v-flex xs2 sm4 md1>
+                  <div>
+                    <v-tooltip top>
+                      <v-btn
+                        icon
+                        @click="
+                          routeToPatient(queryId + '&' + dnaFusion.patient)
+                        "
+                        slot="activator"
+                      >
+                        <v-icon color="blue">folder</v-icon>
+                      </v-btn>
+                      <span>öffne die Datei</span>
+                    </v-tooltip>
+                  </div>
+                </v-flex>
+              </v-layout>
+            </v-card>
+
+            <span v-if="itemsVariantsOfInterest.dnaFusions.length == 0">
+              <v-alert :value="true" type="warning">
+                <span class="subheading font-wei ght-light"
+                  >Keine ergebnisse gefunden.</span
+                >
+              </v-alert></span
+            >
+
+            <v-card-title class="font-weight-normal">RNA-Fusions</v-card-title>
+            <v-card
+              flat
+              color="#f0f0f0"
+              v-for="rnaFusion in itemsVariantsOfInterest.rnaFusions"
+              :key="rnaFusion.id"
+            >
+              <v-divider></v-divider>
+              <v-layout row wrap :class="`pa-3`">
+                <v-flex xs6 sm4 md12>
+                  <div class="caption grey--text">Formatierte Darstellung</div>
+                  <div>{{ rnaFusion.representation }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">5' Pos.</div>
+                  {{ rnaFusion.position5pr }}
+                </v-flex>
+                <v-flex xs6 sm4 md1>
+                  <div class="caption grey--text">5' Strand</div>
+                  <div>{{ rnaFusion.strand5pr }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">3' Pos.</div>
+                  {{ rnaFusion.position3pr }}
+                </v-flex>
+                <v-flex xs6 sm4 md1>
+                  <div class="caption grey--text">3' Strand</div>
+                  <div>{{ rnaFusion.strand3pr }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Effekt</div>
+                  {{ rnaFusion.effect }}
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">COSMIC ID</div>
+                  <div>{{ rnaFusion.cosmicId }}</div>
+                </v-flex>
+                <v-flex xs6 sm4 md2>
+                  <div class="caption grey--text">Anzahl Reads</div>
+                  {{ rnaFusion.reportedNumReads }}
+                </v-flex>
+                <v-flex xs2 sm4 md1>
+                  <div>
+                    <v-tooltip top>
+                      <v-btn
+                        icon
+                        @click="
+                          routeToPatient(queryId + '&' + rnaFusion.patient)
+                        "
+                        slot="activator"
+                      >
+                        <v-icon color="blue">folder</v-icon>
+                      </v-btn>
+                      <span>öffne die Datei</span>
+                    </v-tooltip>
+                  </div>
+                </v-flex>
+              </v-layout>
+            </v-card>
+
+            <span v-if="itemsVariantsOfInterest.rnaFusions.length == 0">
+              <v-alert :value="true" type="warning">
+                <span class="subheading font-wei ght-light"
+                  >Keine ergebnisse gefunden.</span
+                >
+              </v-alert></span
+            >
+
+            <span v-if="itemsVariantsOfInterest.length > 0">
+              <v-btn
+                small
+                icon
+                @click="$vuetify.goTo('#ergebnisse', options)"
+                flat
+                color="grey"
+              >
+                <v-icon style="font-size: 1.2rem"
+                  >fas fa-arrow-alt-circle-up</v-icon
+                >
+              </v-btn>
+            </span>
+            <!--
+        <v-card flat light>
+          <v-data-table
+            :headers="headerFiles"
+            :items="itemsFiles"
+            no-data-text="Keine Daten verfügbar"
+            rows-per-page-text="Zeilen pro Seite"
+          >
+            <template slot="items" slot-scope="props" no-data>
+              <tr @click="routeToPatient(queryId + '&' + props.item.id)">
+                <td>{{ props.item.groupIndex }}</td>
+                <td>{{ props.item.managingZPM }}</td>
+                <td>{{ props.item.gender }}</td>
+                <td>{{ props.item.age }}</td>
+                <td>{{ props.item.diagnosis }}</td>
+                <td>{{ props.item.vitalStatus }}</td>
+              </tr>
+            </template>
+            <v-alert :value="true" color="error" icon="warning"
+              >Your search for "{{ search }}" found no results.</v-alert
+            >
+          </v-data-table>
+        </v-card>
+        -->
+          </v-flex>
+        </v-layout>
+      </v-tab-item>
     </v-tabs>
 
     <v-divider class="my-3"></v-divider>
@@ -1784,7 +2128,6 @@
       :ageRange="ageRange"
       clipped-right
     />
-
     <v-col>
       <div class="caption">{{ issues }}</div>
     </v-col>
@@ -1795,7 +2138,7 @@
 import axios from "axios";
 import { stringify } from "querystring";
 import { Line } from "vue-chartjs";
-
+import BarChart from "~/components/BarChart";
 import userPanel from "~/components/userPanel";
 import filterPanel from "~/components/filterPanel";
 import queryPanel from "~/components/queryPanel";
@@ -1817,6 +2160,7 @@ export default {
     userPanel,
     filterPanel,
     queryPanel,
+    BarChart,
   },
 
   data() {
@@ -1989,7 +2333,8 @@ export default {
 
       try {
         if (this.queryName == undefined)
-          this.queryName = "abfrage_" +
+          this.queryName =
+            "abfrage_" +
             new Date()
               .toISOString()
               .replace(/\D/g, "")
@@ -2000,7 +2345,7 @@ export default {
           name: this.queryName,
           parameters: this.queryParameters,
         };
-        
+
         let response = await axios.post(
           process.env.baseUrl + process.env.port + process.env.preparedQueries,
           request
@@ -2066,6 +2411,8 @@ export default {
           this.$router.push(`/`);
         } else if (err.response.status === 403) {
           return redirect("/403");
+        } else if (err.response.status === 404) {
+          return redirect("/404");
         } else {
           return redirect("/" + err.response.status);
         }
@@ -2114,9 +2461,12 @@ export default {
       );
 
       let queryparams = await axios.get(`${serverBaseURL}/${params.id}`);
+
       let filters = queryparams.data.filters;
 
-      let getSavedQueries = await axios.get(process.env.baseUrl + process.env.port + process.env.preparedQueries);
+      let getSavedQueries = await axios.get(
+        process.env.baseUrl + process.env.port + process.env.preparedQueries
+      );
 
       localStorage.setItem("queryId", queryparams.data.id);
 
@@ -2137,7 +2487,7 @@ export default {
         files = await axios.get(`${baseURL}` + patients);
         filesEntries = files.data.entries;
       }
-
+      
       let hide = false;
 
       let ngsSummaries;
@@ -2179,6 +2529,27 @@ export default {
         therapies = await axios.get(`${baseURL}` + molecularTherapies);
         therapiesEntries = therapies.data.entries;
         therapiesCount = therapiesEntries.length;
+      }
+      /*
+      let molecularTherapies;
+      let therapies;
+      let therapiesEntries;
+      let therapiesCount;
+
+      if (queryparams.data._links["molecular-therapies"]) {
+        molecularTherapies =
+          queryparams.data._links["molecular-therapies"].href;
+        therapies = await axios.get(`${baseURL}` + molecularTherapies);
+        therapiesEntries = therapies.data.entries;
+        therapiesCount = therapiesEntries.length;
+      }*/
+
+      let variantsOverview;
+      let variantsOfInterest;
+
+      if (queryparams.data._links["variants-of-interest"]) {
+        variantsOverview = queryparams.data._links["variants-of-interest"].href;
+        variantsOfInterest = await axios.get(`${baseURL}` + variantsOverview);
       }
 
       let diagnosisCat = Array();
@@ -2596,6 +2967,8 @@ export default {
         itemsRecommendationsCount: recommendationsCount,
         itemsGenomicReportsCount: genomicReportsCount,
 
+        itemsVariantsOfInterest: variantsOfInterest.data,
+
         // Patient Filters
         gender: filters.patientFilter.gender,
         vitalStatus: filters.patientFilter.vitalStatus,
@@ -2649,14 +3022,26 @@ export default {
         issues: connectionIssues,
       };
     } catch (err) {
-      if (err.status === 401) {
-        this.$router.push(`/`);
-      } else if (err.status === 403) {
-        return redirect("/403");
-      } else {
-        return redirect("/" + err.status);
-      }
-    }
+  if (err.status === 401) {
+    // If the error status is 401, redirect to the root route ("/")
+    this.$router.push(`/`);
+  } else if (err.status === 403) {
+    // If the error status is 403, redirect to the "/403" route
+    this.$router.push("/403");
+  } else if (err.status === 404) {
+    // If the error status is 404, redirect to the "/404" route
+    this.$router.push("/404");
+  } else if (err.status === 500) {
+    // If the error status is 500, redirect to the "/500" route
+    this.$router.push("/500");
+  } else {
+    // For any other error status, redirect to a route based on the status
+    // For example, if err.status is 418, redirect to the "/418" route
+    this.$router.push("/" + err.status);
+  }
+}
+
+
   },
 };
 </script>

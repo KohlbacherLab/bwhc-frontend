@@ -32,8 +32,10 @@
     <v-tab @click="$router.push('/quality_reporting')">
       Berichtswesen
     </v-tab>
+    <v-tab @click="$router.push('/quality_top10')">
+          Top 10
+        </v-tab>
   </v-tabs>
-  <v-divider class="my-3"></v-divider>
 
       <v-layout wrap>
         <v-flex d-flex xs12 sm6 md3>
@@ -467,9 +469,16 @@
       <!--
       <v-card-title class="title font-weight-light">Fehler</v-card-title>
       -->
-      <v-col v-for="(issue, i) in issues" :key="i">
-        <div class="caption">{{ issue.details }}</div>
-      </v-col>
+      <v-col v-if="issues">
+          <div v-if="issues.length">
+            <ul>
+              <li v-for="(issue, index) in issues" :key="index">
+                <strong>{{ issue.severity }}:</strong> {{ issue.details }}
+              </li>
+            </ul>
+          </div>
+          <div v-else>No issues to display.</div>
+        </v-col>
     </v-container>
     <template></template>
   </v-responsive>

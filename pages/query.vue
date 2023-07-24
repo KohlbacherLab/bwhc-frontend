@@ -223,7 +223,7 @@ export default {
       } else if (err.status === 403) {
         return redirect("/403");
       } else {
-        return redirect("/file");
+        return redirect("/undefined");
       }
     }
   },

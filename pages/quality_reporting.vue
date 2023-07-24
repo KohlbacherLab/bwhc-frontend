@@ -21,11 +21,12 @@
         <div id="berichtswesen"></div>
       </v-flex>
 
-      <v-tabs fixed-tabs color="grey lighten-5">
+      <v-tabs fixed-tabs color="grey lighten-5" v-model="selectedTabIndex">
+        <v-tab @click="$router.push('/quality_bwhc')"> Datenqualität </v-tab>
         <v-tab @click="$router.push('/quality_reporting')">
           Berichtswesen
         </v-tab>
-        <v-tab @click="$router.push('/quality_bwhc')"> Datenqualität </v-tab>
+        <v-tab @click="$router.push('/quality_top10')"> Top 10 </v-tab>
       </v-tabs>
 
       <v-divider class="my-3"></v-divider>
@@ -44,13 +45,16 @@
             v-if="barChartDataGlobalMedicationDistribution[0]"
             :data="barChartDataGlobalMedicationDistribution[0]"
             :options="barChartOptionsGlobalMedicationDistribution"
-            :height="100"
+            :height="
+              50 +
+              barChartDataGlobalMedicationDistribution[0].labels.length * 10
+            "
           />
 
           <!--
 
           <pie-chart
-            v-if="barChartDataGlobalMedicationDistribution[0]"
+            v-if="barChartDataGlobalMedicationDistibution[0]"
             :data="barChartDataGlobalMedicationDistribution[0]"
             :options="barChartOptionsGlobalMedicationDistribution"
             :height="100"
@@ -92,8 +96,11 @@
             >
             <strong>Gesamtanzahl der umgesetzten Therapien: </strong>
             {{ barChartDataGlobalMedicationDistributionDetailsOnDemandCount }}
-            <br>
-            <div class="caption grey--text"><strong>Info:</strong> Bei Wirkstoffkombinationen werden die Wirkstoffe einzeln berücksichtigt.</div>
+            <br />
+            <div class="caption grey--text">
+              <strong>Info:</strong> Bei Wirkstoffkombinationen werden die
+              Wirkstoffe einzeln berücksichtigt.
+            </div>
           </v-card-text>
         </v-card>
 
@@ -102,7 +109,12 @@
             v-if="barChartDataGlobalMedicationDistributionDetailsOnDemand[0]"
             :data="barChartDataGlobalMedicationDistributionDetailsOnDemand[0]"
             :options="barChartOptionsGlobalMedicationDistributionDetails"
-            :height="100"
+            :height="
+              50 +
+              barChartDataGlobalMedicationDistributionDetailsOnDemand[0].labels
+                .length *
+                10
+            "
           />
         </v-flex>
 
@@ -121,7 +133,7 @@
         <v-card-title primary-title>
           <div>
             <div class="headline">
-              Tumorentitätsvereilung für verabreichte Wirkstoffe oder
+              Tumorentitätsverteilung für verabreichte Wirkstoffe oder
               Wirkstoffklassen
             </div>
             <br />
@@ -134,7 +146,7 @@
             :items="drugsCat"
             :itemscope="used"
             :loading="isLoading"
-            label="Wirkstoff-Name oder ATC Code"
+            label="Wirkstoff(-Klasse) oder ATC Code"
             ref="drugUsage"
             chips
             deletable-chips
@@ -155,7 +167,7 @@
         <v-card class="mx-auto" v-if="drugs != undefined" flat>
           <v-card-text small class="font-weight-thin">
             <v-icon style="font-size: 1.1rem">fas fa-pills</v-icon>
-            <strong>Ausgewählter Wirkstoff:</strong>
+            <strong>Ausgewählter Wirkstoff(-Klasse):</strong>
             {{ drugs }}<br /><v-icon style="font-size: 1.1rem"
               >fas fa-hashtag</v-icon
             >
@@ -169,7 +181,10 @@
             v-if="barChartDataGlobalTumorEntityDistribution[0]"
             :data="barChartDataGlobalTumorEntityDistribution[0]"
             :options="barChartOptionsGlobalTumorEntityDistribution"
-            :height="100"
+            :height="
+              50 +
+              barChartDataGlobalTumorEntityDistribution[0].labels.length * 10
+            "
           />
         </v-flex>
 
@@ -190,7 +205,12 @@
             v-if="barChartDataGlobalTumorEntityDistributionDetails[0]"
             :data="barChartDataGlobalTumorEntityDistributionDetails[0]"
             :options="barChartOptionsGlobalTumorEntityDistributionDetails"
-            :height="100"
+            :height="
+              50 +
+              barChartDataGlobalTumorEntityDistributionDetails[0].labels
+                .length *
+                10
+            "
           />
         </v-flex>
       </v-layout>
@@ -242,15 +262,21 @@
             <v-layout row wrap :class="`pa-3`">
               <v-flex xs12 sm4 md1>
                 <div class="caption grey--text">Index</div>
-                <div>{{ itemsFile.groupIndex }}</div>
+                <div v-if="itemsFile.groupIndex">
+                  {{ itemsFile.groupIndex }}
+                </div>
               </v-flex>
               <v-flex xs12 sm4 md2>
                 <div class="caption grey--text">ZPM</div>
-                {{ itemsFile.patient.managingZPM }}
+                <div v-if="itemsFile.patient.managingZPM">
+                  {{ itemsFile.patient.managingZPM }}
+                </div>
               </v-flex>
               <v-flex xs12 sm4 md2>
                 <div class="caption grey--text">Geburtsdatum</div>
-                <div>{{ itemsFile.patient.birthDate }}</div>
+                <div v-if="itemsFile.patient.birthDate">
+                  {{ itemsFile.patient.birthDate }}
+                </div>
               </v-flex>
               <v-flex xs12 sm4 md2>
                 <div class="caption grey--text">Todesdatum</div>
@@ -261,11 +287,15 @@
               </v-flex>
               <v-flex xs12 sm4 md2>
                 <div class="caption grey--text">Geschlecht</div>
-                <div>{{ itemsFile.patient.gender }}</div>
+                <div v-if="itemsFile.patient.gender">
+                  {{ itemsFile.patient.gender }}
+                </div>
               </v-flex>
               <v-flex xs12 sm4 md2>
                 <div class="caption grey--text">Versicherung</div>
-                <div>{{ itemsFile.patient.insurance }}</div>
+                <div v-if="itemsFile.patient.insurance">
+                  {{ itemsFile.patient.insurance }}
+                </div>
               </v-flex>
 
               <v-flex xs12 sm4 md1>
@@ -290,12 +320,17 @@
               </v-flex>
             </v-layout>
             <v-divider class="my-3"></v-divider>
+
             <div flat v-for="focus in itemsFile.therapies" :key="focus.id">
               <v-layout wrap :class="`pa-3`">
                 <v-flex xs12 sm4 md2>
                   <div class="caption grey--text">Therapie Status</div>
-                  <div>{{ focus.therapy.status }}</div>
+                  <div v-if="focus.therapy.status">
+                    {{ focus.therapy.status }}
+                  </div>
+                  <div v-else>-</div>
                 </v-flex>
+
                 <v-flex xs12 sm4 md3>
                   <div class="caption grey--text">Entität</div>
                   <div v-if="focus.therapy.reason">
@@ -303,36 +338,55 @@
                       focus.therapy.reason.display
                     }}
                   </div>
-                  <div v-else>N/A</div>
+                  <div v-else>-</div>
                 </v-flex>
+
                 <v-flex xs12 sm4 md2>
                   <div class="caption grey--text">Therapie Anfang</div>
-                  <div>{{ focus.therapy.period.start }}</div>
+                  <div v-if="focus.therapy.period.start">
+                    {{ focus.therapy.period.start }}
+                  </div>
+                  <div v-else>-</div>
                 </v-flex>
+
                 <v-flex xs12 sm4 md2>
                   <div class="caption grey--text">Therapie Ende</div>
-                  <div>{{ focus.therapy.period.end }}</div>
+                  <div v-if="focus.therapy.period.end">
+                    {{ focus.therapy.period.end }}
+                  </div>
+                  <div v-else>-</div>
                 </v-flex>
+
                 <v-flex xs12 sm4 md2>
                   <div class="caption grey--text">Wirkstoff</div>
-                  <div v-for="med in focus.therapy.medication" :key="med.id">
-                    {{ med.display }}
+                  <div v-if="focus.therapy.medication">
+                    <div v-for="med in focus.therapy.medication" :key="med.id">
+                      {{ med.display }}
+                    </div>
                   </div>
+                  <div v-else>-</div>
                 </v-flex>
 
                 <v-flex xs12 sm4 md2>
                   <div class="caption grey--text">Effective Date</div>
-                  <div>{{ focus.response.effectiveDate }}</div>
+                  <div v-if="focus.response">
+                    {{ focus.response.effectiveDate }}
+                  </div>
+                  <div v-else>-</div>
                 </v-flex>
 
                 <v-flex xs12 sm4 md3>
                   <div class="caption grey--text">Response</div>
-                  <div>{{ focus.response.value.code }}</div>
+                  <div v-if="focus.response">
+                    {{ focus.response.value.code }}
+                  </div>
+                  <div v-else>-</div>
                 </v-flex>
 
                 <v-flex xs12 sm4 md7>
                   <div class="caption grey--text">Notes on Therapie</div>
-                  <div>{{ focus.therapy.note }}</div>
+                  <div v-if="focus.therapy.note">{{ focus.therapy.note }}</div>
+                  <div v-else>-</div>
                 </v-flex>
 
                 <v-flex xs12 sm4 md12>
@@ -340,12 +394,15 @@
                     Stützende Molekulare Alteration(en)
                   </div>
 
-                  <div
-                    v-for="variant in focus.supportingVariants"
-                    :key="variant.id"
-                  >
-                    {{ variant }}<br />
+                  <div v-if="focus.supportingVariants">
+                    <div
+                      v-for="variant in focus.supportingVariants"
+                      :key="variant.id"
+                    >
+                      {{ variant }}<br />
+                    </div>
                   </div>
+                  <div v-else>-</div>
                 </v-flex>
               </v-layout>
             </div>
@@ -373,6 +430,19 @@
             </v-btn>
           </span>
         </v-flex>
+        <v-flex xs12 md12>
+        <v-divider class="my-3"></v-divider>
+        <v-col v-if="issues">
+          <div v-if="issues.length">
+            <ul>
+              <li v-for="(issue, index) in issues" :key="index">
+                <strong>{{ issue.severity }}:</strong> {{ issue.details }}
+              </li>
+            </ul>
+          </div>
+          <div v-else>No issues to display.</div>
+        </v-col>
+      </v-flex>
       </v-layout>
     </v-container>
     <template></template>
@@ -410,6 +480,7 @@ export default {
 
   data() {
     return {
+      selectedTabIndex: 1,
       barChartOptionsGlobalMedicationDistribution: {
         responsive: true,
         maintainAspectRatio: true,
@@ -477,7 +548,8 @@ export default {
               },
               scaleLabel: {
                 display: true,
-                labelString: "Anzahl der umgesetzten Therapien",
+                labelString:
+                  "Häufigkeit der Tumor-Entität  bei Patienten mit dem/der gegebenen Wirkstoff(-Klasse)",
               },
             },
           ],
@@ -500,7 +572,8 @@ export default {
               },
               scaleLabel: {
                 display: true,
-                labelString: "Anzahl der umgesetzten Therapien",
+                labelString:
+                  "Häufigkeit der Tumor-Entität  bei Patienten mit dem/der gegebenen Wirkstoff(-Klasse)",
               },
             },
           ],
@@ -597,12 +670,32 @@ export default {
 
       this.itemsFiles = therapyData.data.data;
 
+      console.log(JSON.stringify(this.itemsFiles));
+
       if (this.itemsFiles != undefined) {
         let x;
+
+        console.log(JSON.stringify(this.itemsFiles));
 
         for (var i = 0; i < this.itemsFiles.length; i++) {
           x = this.itemsFiles[i].id;
           this.itemsFiles[i].groupIndex = i + 1;
+
+          if (this.itemsFiles[i].response === undefined) {
+            this.itemsFiles[i].response = "";
+          }
+          if (this.itemsFiles[i].supportingVariants === undefined) {
+            this.itemsFiles[i].supportingVariants = "";
+          }
+
+          for (var j = 0; j < this.itemsFiles[i].therapies.length; j++) {
+            if (this.itemsFiles[i].therapies[j].medication === undefined) {
+              this.itemsFiles[i].therapies[j].medication = "";
+            }
+            if (this.itemsFiles[i].therapies[j].therapy.period === undefined) {
+              this.itemsFiles[i].therapies[j].therapy.period = "";
+            }
+          }
         }
       }
     },
