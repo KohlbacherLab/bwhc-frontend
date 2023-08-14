@@ -14,7 +14,7 @@
             @click="$router.push('/main')"
           >
             <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-          >bwHC breit ZPM Statistiken finden Sie weiter unten.
+          >bwHC Statistiken finden Sie weiter unten.
           <strong @click="$router.push('help')">Hilfe?</strong>
         </span>
         <v-divider class="my-3"></v-divider>
@@ -24,16 +24,20 @@
       <v-tabs fixed-tabs color="grey lighten-5" v-model="selectedTabIndex">
         <v-tab @click="$router.push('/quality_bwhc')"> Datenqualität </v-tab>
         <v-tab @click="$router.push('/quality_reporting')">
-          Berichtswesen
+          <i class="fas fa-chart-bar"></i>&nbsp;MTB-Therapien
         </v-tab>
-        <v-tab @click="$router.push('/quality_top10')"> Top 10 </v-tab>
+        <v-tab @click="$router.push('/quality_top10')"
+          ><i class="fas fa-chart-bar"></i>&nbsp;Tumorentitäten</v-tab
+        >
       </v-tabs>
 
       <v-divider class="my-3"></v-divider>
 
       <v-card-title primary-title>
         <div>
-          <div class="headline">Umgesetzte MTB–Therapien</div>
+          <div class="headline">
+            <i class="fas fa-chart-bar"></i> Umgesetzte MTB–Therapien
+          </div>
           <br />
           <h3>Verabreichte Wirkstoffklassen</h3>
         </div>
@@ -133,8 +137,8 @@
         <v-card-title primary-title>
           <div>
             <div class="headline">
-              Tumorentitätsverteilung für verabreichte Wirkstoffe oder
-              Wirkstoffklassen
+              <i class="fas fa-chart-bar"></i> Tumorentitätsverteilung für
+              verabreichte Wirkstoffe oder Wirkstoffklassen
             </div>
             <br />
           </div>
@@ -189,9 +193,20 @@
         </v-flex>
 
         <v-card-title primary-title v-if="drugs != undefined">
-          <div>
-            <h3>ICD-10 Codes (Detailansicht)</h3>
-          </div>
+          <v-flex d-flex
+            ><h3>
+              <v-switch
+                v-if="icd10CodesDetailansicht"
+                v-model="icd10CodesDetailansicht"
+                :label="`ICD-10 Codes (Detailansicht) ausblenden`"
+              ></v-switch>
+              <v-switch
+                v-else
+                v-model="icd10CodesDetailansicht"
+                :label="`ICD-10 Codes (Detailansicht) einblenden`"
+              ></v-switch>
+            </h3>
+          </v-flex>
         </v-card-title>
         <!--
         <v-card class="mx-auto" v-if="drugs != undefined" flat>
@@ -200,7 +215,7 @@
           </v-card-text>
         </v-card>
 -->
-        <v-flex d-flex xs12 sm3 md12>
+        <v-flex v-if="icd10CodesDetailansicht" d-flex xs12 sm3 md12>
           <bar-chart
             v-if="barChartDataGlobalTumorEntityDistributionDetails[0]"
             :data="barChartDataGlobalTumorEntityDistributionDetails[0]"
@@ -214,6 +229,64 @@
           />
         </v-flex>
       </v-layout>
+
+      <v-card-title primary-title>
+        <div>
+          <div class="headline">
+            <i class="fas fa-table"></i> Tumorentitätsverteilung Tabellenansicht
+          </div>
+          <br />
+        </div>
+      </v-card-title>
+
+      <v-tooltip top>
+            <v-btn
+              small
+              flat
+              color="green"
+              @click="downloadAllCsv"
+              slot="activator"
+            >
+              <v-icon small left>fas fa-download</v-icon>
+              <span class="caption text-none">Alles als CSV exportieren</span>
+            </v-btn>
+            <span
+              >Alle Berichte als Comma Separated Values (.csv)
+              herunterladen</span
+            >
+          </v-tooltip><br><br>
+
+      <v-flex d-flex xs12 sm12 md12>
+        <v-autocomplete
+          v-model="drugsTable"
+          :items="drugsTableCat"
+          :itemscope="used"
+          :loading="isLoading"
+          label="Wirkstoff(-Klasse) oder ATC Code"
+          ref="drugUsage"
+          chips
+          deletable-chips
+          hide-selected
+          dense
+          placeholder
+          @input="compileGlobalTumorEntityDistributionTable(drugsTable)"
+        >
+        </v-autocomplete
+      ></v-flex>
+
+      
+
+      <v-card class="mx-auto" v-if="drugsTable != undefined" flat>
+        <v-card-text small class="font-weight-thin">
+          <v-icon style="font-size: 1.1rem">fas fa-pills</v-icon>
+          <strong>Ausgewählter Wirkstoff(-Klasse):</strong>
+          {{ drugsTable }}<br /><v-icon style="font-size: 1.1rem"
+            >fas fa-hashtag</v-icon
+          >
+          <strong>Gesamtanzahl der Tabelleneinträge: </strong>
+          {{ itemsFiles.length }}
+        </v-card-text>
+      </v-card>
 
       <v-layout flex-child wrap>
         <!--
@@ -244,7 +317,7 @@
                 slot="activator"
               >
                 <v-icon small left>fas fa-download</v-icon>
-                <span class="caption text-none">Exportieren als CSV</span>
+                <span class="caption text-none">Auswahl als CSV Exportieren</span>
               </v-btn>
               <span
                 >Den aktuellen Bericht als Comma Separated Values (.csv)
@@ -431,18 +504,18 @@
           </span>
         </v-flex>
         <v-flex xs12 md12>
-        <v-divider class="my-3"></v-divider>
-        <v-col v-if="issues">
-          <div v-if="issues.length">
-            <ul>
-              <li v-for="(issue, index) in issues" :key="index">
-                <strong>{{ issue.severity }}:</strong> {{ issue.details }}
-              </li>
-            </ul>
-          </div>
-          <div v-else>No issues to display.</div>
-        </v-col>
-      </v-flex>
+          <v-divider class="my-3"></v-divider>
+          <v-col v-if="issues">
+            <div v-if="issues.length">
+              <ul>
+                <li v-for="(issue, index) in issues" :key="index">
+                  <strong>{{ issue.severity }}:</strong> {{ issue.details }}
+                </li>
+              </ul>
+            </div>
+            <div v-else>No issues to display.</div>
+          </v-col>
+        </v-flex>
       </v-layout>
     </v-container>
     <template></template>
@@ -641,6 +714,65 @@ export default {
       }
     },
 
+    async downloadAllCsv() {
+
+      try {
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${localStorage.token}`;
+
+        const response = await axios.get(
+          process.env.baseUrl +
+            process.env.port +
+            process.env.reporting +
+            "/patient-therapies/",
+          {
+            headers: {
+              Accept: "text/csv",
+            },
+          }
+        );
+
+        let blob = new Blob([response.data], {
+          type: "text/csv",
+        });
+
+        const fileName =
+          "data_" +
+          new Date()
+            .toISOString()
+            .replace(/\D/g, "")
+            .slice(0, 14)
+            .replace(/(\d{8})(\d{6})/, "$1_$2");
+
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+          // For IE browser
+          window.navigator.msSaveOrOpenBlob(blob, fileName);
+        } else {
+          // For other browsers
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", fileName);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+
+        /*
+
+        let blob = new Blob([JSON.stringify(response.data)], {
+            type: "text/csv",
+          }),
+          url = window.URL.createObjectURL(blob);
+
+        window.open(url);
+        */
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
     goBack() {
       return window.history.back();
     },
@@ -670,12 +802,8 @@ export default {
 
       this.itemsFiles = therapyData.data.data;
 
-      console.log(JSON.stringify(this.itemsFiles));
-
       if (this.itemsFiles != undefined) {
         let x;
-
-        console.log(JSON.stringify(this.itemsFiles));
 
         for (var i = 0; i < this.itemsFiles.length; i++) {
           x = this.itemsFiles[i].id;
@@ -794,7 +922,6 @@ export default {
 
     async compileGlobalTumorEntityDistribution(code) {
       if (code == undefined) return;
-      this.compileTherapyData(code);
 
       axios.defaults.headers.common[
         "Authorization"
@@ -848,7 +975,9 @@ export default {
         let green = 0;
         let blue = 0;
 
+
         if (globalTumorEntityDistribution.data.data) {
+  
           for (
             var i = 0;
             i < globalTumorEntityDistribution.data.data.length;
@@ -950,6 +1079,34 @@ export default {
         }
       }
     },
+
+    async compileGlobalTumorEntityDistributionTable(code) {
+      if (code == undefined) return;
+      this.compileTherapyData(code);
+
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${localStorage.token}`;
+
+      try {
+        /*
+          let request = {
+            mode: {
+              code: queryMode,
+            },
+            parameters: {
+              medicationsWithUsage: this.selectedDrugs,
+            },
+          };
+          */
+      } catch (err) {
+        if (err.status === 401) {
+          this.$router.push("/");
+        } else if (err.response.status === 403) {
+          this.$router.push("/403");
+        }
+      }
+    },
   },
 
   async asyncData({ params, redirect, error }) {
@@ -992,6 +1149,7 @@ export default {
 
       let drugsCat = Array();
       let drugsGroupCat = Array();
+      let drugsTableCat = Array();
 
       let labelsGlobalMedicationDistribution = Array();
       let countGlobalMedicationDistribution = Array();
@@ -1033,6 +1191,14 @@ export default {
               globalMedicationDistribution.data.data[i].concept.version
           );
 
+          drugsTableCat.push(
+            globalMedicationDistribution.data.data[i].concept.display +
+              " · " +
+              globalMedicationDistribution.data.data[i].concept.code +
+              " · " +
+              globalMedicationDistribution.data.data[i].concept.version
+          );
+
           labelsGlobalMedicationDistribution.push(
             globalMedicationDistribution.data.data[i].concept.display +
               " (" +
@@ -1053,6 +1219,16 @@ export default {
             j++
           ) {
             drugsCat.push(
+              globalMedicationDistribution.data.data[i].components[j].concept
+                .display +
+                " · " +
+                globalMedicationDistribution.data.data[i].components[j].concept
+                  .code +
+                " · " +
+                globalMedicationDistribution.data.data[i].components[j].concept
+                  .version
+            );
+            drugsTableCat.push(
               globalMedicationDistribution.data.data[i].components[j].concept
                 .display +
                 " · " +
@@ -1123,9 +1299,10 @@ export default {
         barChartDataGlobalMedicationDistributionDetailsOnDemandCount,
         drugsCat,
         drugsGroupCat,
+        drugsTableCat,
         itemsFiles,
         limitNumberItemsFiles,
-        displayCompletionStats: false,
+        icd10CodesDetailansicht: false,
       };
     } catch (err) {
       if (err.response.status === 401) {

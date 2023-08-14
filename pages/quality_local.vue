@@ -140,7 +140,11 @@
       </v-layout>
 
       <v-flex d-flex>
-        <v-switch
+        <v-switch v-if="displayCompletionStats"
+          v-model="displayCompletionStats"
+          :label="`Mittlere Dauern ausblenden`"
+        ></v-switch>
+        <v-switch v-else
           v-model="displayCompletionStats"
           :label="`Mittlere Dauern einblenden`"
         ></v-switch>

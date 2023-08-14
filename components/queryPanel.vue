@@ -844,6 +844,7 @@
           ></v-radio>
         </v-radio-group>
       </v-flex>
+
       <v-flex d-flex xs12 sm3 md9>
         <v-card class="mx-auto" flat light max-width="1200">
           <v-card-text class="headline font-weight-thin">

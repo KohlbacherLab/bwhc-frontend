@@ -18,8 +18,17 @@
 
           <v-list-tile-content>
             <v-list-tile-title>{{ showName }}</v-list-tile-title>
-            <v-list-tile-sub-title><strong>{{ showUsername }}</strong> _ {{ version }} </v-list-tile-sub-title>
+            <v-list-tile-sub-title
+              ><strong>{{ showUsername }}</strong> _ {{ version }}
+            </v-list-tile-sub-title>
           </v-list-tile-content>
+          
+
+          <v-card absolute flat class="session-timer-card">
+            <v-list>
+              <sessionTimer @timerExpired="refreshData" />
+            </v-list>
+          </v-card>
 
           <span v-if="iconMenu">
             <v-tooltip top>
@@ -220,6 +229,7 @@
 
 <script>
 import axios from "axios";
+import sessionTimer from "~/components/sessionTimer";
 
 export default {
   data: () => ({
@@ -242,11 +252,19 @@ export default {
     showUsername: "",
   }),
 
+  components: {
+    sessionTimer,
+  },
+
   mounted() {
     this.setMenu();
   },
 
   methods: {
+    async refreshData() {
+      await this.setMenu();
+    },
+
     async setMenu() {
       let whoami = await axios.get(
         process.env.baseUrl + process.env.port + process.env.me

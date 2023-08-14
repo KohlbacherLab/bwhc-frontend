@@ -8,7 +8,8 @@
           <v-btn dark icon color="blue accent-2" align-end @click="goBack">
             <v-icon dark>fas fa-arrow-left</v-icon>
           </v-btn>
-          bwHC breit ZPM Statistiken finden Sie weiter unten.
+          
+          bwHC Statistiken finden Sie weiter unten.
           <strong @click="$router.push('help')">Hilfe?</strong>
         </span>
         <v-divider class="my-3"></v-divider>
@@ -18,14 +19,16 @@
       <v-tabs fixed-tabs color="grey lighten-5" v-model="selectedTabIndex">
         <v-tab @click="$router.push('/quality_bwhc')"> Datenqualität </v-tab>
         <v-tab @click="$router.push('/quality_reporting')">
-          Berichtswesen
+          <i class="fas fa-chart-bar"></i>&nbsp;MTB-Therapien
         </v-tab>
-        <v-tab @click="$router.push('/quality_top10')">Top 10</v-tab>
+        <v-tab @click="$router.push('/quality_top10')"
+          ><i class="fas fa-chart-bar"></i>&nbsp;Tumorentitäten</v-tab
+        >
       </v-tabs>
 
       <v-divider class="my-3"></v-divider>
       <v-layout wrap fluid>
-        <!--     
+        <!--
         <v-flex xs12 sm3 md12>
           <div v-if="displayChartData">
             <bar-chart
@@ -50,10 +53,9 @@
           </div>
         </v-flex>
         -->
-
         <v-card-title primary-title>
         <div>
-          <div class="headline">Rangliste der Diagnosen an allen Standorten</div>
+          <div class="headline">Anzahl der Top 10 Tumorentitäten an den Standorten</div>
           <br />
           <h3>Top 10 ICD10-Codes für medizinische Diagnosen (kumuliert über alle Standorte) in gestapeltem Diagramm</h3>
         </div>
@@ -69,6 +71,18 @@
               :options="chartOptions"
               :height="450"
             ></bar-chart>
+          </div>
+        </v-flex>
+
+        <v-flex xs12 sm3 md12>
+          <div v-if="displayTop10ChartData">
+            <pie-chart
+              :key="`${JSON.stringify(
+                displayTop10ChartData
+              )}-${new Date().getTime()}`"
+              :data="displayTop10ChartData"
+              :height="200"
+            ></pie-chart>
           </div>
         </v-flex>
 
@@ -104,7 +118,7 @@ export default {
   components: {
     userPanel,
     BarChart,
-    PieChart,
+    PieChart
   },
 
   computed: {
@@ -131,6 +145,12 @@ export default {
 
     goBack() {
       return window.history.back();
+    },
+
+    async refreshData() {
+      // Call the backend API or any other data-refreshing logic here
+      // For example, you can call your drawCharts() method to refresh the data
+      await this.drawCharts(this.queryType); // Make sure to pass the correct queryType parameter
     },
 
     async drawCharts(queryType) {

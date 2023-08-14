@@ -133,6 +133,8 @@
       </v-flex>
     </v-layout>
 
+    <div v-if="issues" class="caption"><b>Achtung! </b>{{ issues }}</div>
+
     <v-divider v-if="hide" class="my-3"></v-divider>
     <!--
     <v-flex d-flex>
@@ -170,7 +172,7 @@
       </v-card>
     </v-flex>
     -->
-
+    
     <v-dialog v-model="saveQueryDialog" width="500">
       <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>
@@ -217,7 +219,9 @@
 
     <v-expansion-panel popout>
       <v-expansion-panel-content>
+
         <template v-slot:actions>
+    
           <v-btn
             fab
             flat
@@ -228,6 +232,7 @@
           >
             <v-icon color="dark-grey">fas fa-save</v-icon></v-btn
           >
+
           <v-btn small color="red" dark> Suche ändern ?</v-btn>
         </template>
         <template v-slot:header>
@@ -238,6 +243,11 @@
                   <v-flex xs2 order-lg1>
                     <v-card class="font-weight-thin" flat>
                       <v-card-text pb-5 small class="font-weight-thin">
+             
+           
+           <queryTimer @timerExpired="refreshData" />
+      
+
                         <strong>Abfragetyp:</strong>
                         {{ getQueryParametersFederated.display }}
                       </v-card-text>
@@ -2142,6 +2152,7 @@ import BarChart from "~/components/BarChart";
 import userPanel from "~/components/userPanel";
 import filterPanel from "~/components/filterPanel";
 import queryPanel from "~/components/queryPanel";
+import queryTimer from "~/components/queryTimer";
 
 import util from "~/assets/js/util";
 
@@ -2161,6 +2172,7 @@ export default {
     filterPanel,
     queryPanel,
     BarChart,
+    queryTimer
   },
 
   data() {
@@ -2326,6 +2338,9 @@ export default {
   },
 
   methods: {
+    async refreshData() {
+      await this.setMenu();
+    },
     async saveQuery({ params, redirect, error }) {
       axios.defaults.headers.common[
         "Authorization"

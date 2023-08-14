@@ -149,6 +149,7 @@
     <v-card-title class="headline font-weight-light">
       Meine gespeicherten Abfragen
     </v-card-title>
+
     <v-data-table
       :headers="headerSavedQueries"
       :items="savedQueries"
@@ -179,7 +180,8 @@
           </td>
         </tr>
       </template>
-    </v-data-table>
+    </v-data-table>    
+
     <v-btn small icon @click="$vuetify.goTo('#me', options)" flat color="grey">
       <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>
     </v-btn>

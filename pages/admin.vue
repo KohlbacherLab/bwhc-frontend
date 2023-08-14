@@ -453,7 +453,7 @@
             @click="wipeUser"
             :disabled="invalid"
             width="140"
-            >Delete</v-btn
+            >Löschen</v-btn
           >
         </v-card-actions>
       </v-card>

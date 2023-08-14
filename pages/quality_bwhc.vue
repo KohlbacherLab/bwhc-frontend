@@ -16,26 +16,21 @@
             @click="$router.push('/main')"
           >
             <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-          >bwHC breit ZPM Statistiken finden Sie weiter unten.
+          >bwHC Statistiken finden Sie weiter unten.
           <strong @click="$router.push('help')">Hilfe?</strong>
         </span>
         <v-divider class="my-3"></v-divider>
       </v-flex>
 
-      <v-tabs
-    fixed-tabs
-    color="grey lighten-5"
-  >
-    <v-tab @click="$router.push('/quality_bwhc')">
-      Datenqualität
-    </v-tab>
-    <v-tab @click="$router.push('/quality_reporting')">
-      Berichtswesen
-    </v-tab>
-    <v-tab @click="$router.push('/quality_top10')">
-          Top 10
+      <v-tabs fixed-tabs color="grey lighten-5">
+        <v-tab @click="$router.push('/quality_bwhc')"> Datenqualität </v-tab>
+        <v-tab @click="$router.push('/quality_reporting')">
+          <i class="fas fa-chart-bar"></i>&nbsp;MTB-Therapien
         </v-tab>
-  </v-tabs>
+        <v-tab @click="$router.push('/quality_top10')"
+          ><i class="fas fa-chart-bar"></i>&nbsp;Tumorentitäten</v-tab
+        >
+      </v-tabs>
 
       <v-layout wrap>
         <v-flex d-flex xs12 sm6 md3>
@@ -160,8 +155,12 @@
         </v-flex>
       </v-layout>
 
-      <v-flex d-flex>
-        <v-switch
+      <v-flex d-flex> 
+        <v-switch v-if="displayCompletionStats"
+          v-model="displayCompletionStats"
+          :label="`Mittlere Dauern ausblenden`"
+        ></v-switch>
+        <v-switch v-else
           v-model="displayCompletionStats"
           :label="`Mittlere Dauern einblenden`"
         ></v-switch>
@@ -370,7 +369,9 @@
           </v-flex>
         </v-layout>
         <v-flex d-flex xs12 sm6 md3>
-          <v-card-title v-if="displayCompletionStats" class="title font-weight-light"
+          <v-card-title
+            v-if="displayCompletionStats"
+            class="title font-weight-light"
             >Mittlere Dauern</v-card-title
           >
         </v-flex>
@@ -470,15 +471,15 @@
       <v-card-title class="title font-weight-light">Fehler</v-card-title>
       -->
       <v-col v-if="issues">
-          <div v-if="issues.length">
-            <ul>
-              <li v-for="(issue, index) in issues" :key="index">
-                <strong>{{ issue.severity }}:</strong> {{ issue.details }}
-              </li>
-            </ul>
-          </div>
-          <div v-else>No issues to display.</div>
-        </v-col>
+        <div v-if="issues.length">
+          <ul>
+            <li v-for="(issue, index) in issues" :key="index">
+              <strong>{{ issue.severity }}:</strong> {{ issue.details }}
+            </li>
+          </ul>
+        </div>
+        <div v-else>No issues to display.</div>
+      </v-col>
     </v-container>
     <template></template>
   </v-responsive>
@@ -499,7 +500,7 @@ export default {
   loading: "~/components/loading.vue",
 
   components: {
-    userPanel
+    userPanel,
   },
 
   computed: {
@@ -528,7 +529,6 @@ export default {
     ] = `Bearer ${localStorage.token}`;
 
     try {
-
       let globalReport = await axios.get(
         process.env.baseUrl +
           process.env.port +
