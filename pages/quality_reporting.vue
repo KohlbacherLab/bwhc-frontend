@@ -26,12 +26,27 @@
         <v-tab @click="$router.push('/quality_reporting')">
           <i class="fas fa-chart-bar"></i>&nbsp;MTB-Therapien
         </v-tab>
+        <!--
         <v-tab @click="$router.push('/quality_top10')"
           ><i class="fas fa-chart-bar"></i>&nbsp;Tumorentitäten</v-tab
         >
+        -->
       </v-tabs>
 
       <v-divider class="my-3"></v-divider>
+      <v-flex xs12 md12>
+        <v-col v-if="issues">
+          <div v-if="issues.length">
+            <ul>
+              <li v-for="(issue, index) in issues" :key="index">
+                <strong>{{ issue.severity }}:</strong> {{ issue.details }}
+              </li>
+            </ul>
+            <v-divider class="my-3"></v-divider>
+          </div>
+          <div v-else>No issues to display.</div>
+        </v-col>
+      </v-flex>
 
       <v-card-title primary-title>
         <div>
@@ -240,21 +255,20 @@
       </v-card-title>
 
       <v-tooltip top>
-            <v-btn
-              small
-              flat
-              color="green"
-              @click="downloadAllCsv"
-              slot="activator"
-            >
-              <v-icon small left>fas fa-download</v-icon>
-              <span class="caption text-none">Alles als CSV exportieren</span>
-            </v-btn>
-            <span
-              >Alle Berichte als Comma Separated Values (.csv)
-              herunterladen</span
-            >
-          </v-tooltip><br><br>
+        <v-btn
+          small
+          flat
+          color="green"
+          @click="downloadAllCsv"
+          slot="activator"
+        >
+          <v-icon small left>fas fa-download</v-icon>
+          <span class="caption text-none">Alles als CSV exportieren</span>
+        </v-btn>
+        <span
+          >Alle Berichte als Comma Separated Values (.csv) herunterladen</span
+        > </v-tooltip
+      ><br /><br />
 
       <v-flex d-flex xs12 sm12 md12>
         <v-autocomplete
@@ -273,8 +287,6 @@
         >
         </v-autocomplete
       ></v-flex>
-
-      
 
       <v-card class="mx-auto" v-if="drugsTable != undefined" flat>
         <v-card-text small class="font-weight-thin">
@@ -317,7 +329,9 @@
                 slot="activator"
               >
                 <v-icon small left>fas fa-download</v-icon>
-                <span class="caption text-none">Auswahl als CSV Exportieren</span>
+                <span class="caption text-none"
+                  >Auswahl als CSV Exportieren</span
+                >
               </v-btn>
               <span
                 >Den aktuellen Bericht als Comma Separated Values (.csv)
@@ -502,19 +516,6 @@
               >
             </v-btn>
           </span>
-        </v-flex>
-        <v-flex xs12 md12>
-          <v-divider class="my-3"></v-divider>
-          <v-col v-if="issues">
-            <div v-if="issues.length">
-              <ul>
-                <li v-for="(issue, index) in issues" :key="index">
-                  <strong>{{ issue.severity }}:</strong> {{ issue.details }}
-                </li>
-              </ul>
-            </div>
-            <div v-else>No issues to display.</div>
-          </v-col>
         </v-flex>
       </v-layout>
     </v-container>
@@ -715,7 +716,6 @@ export default {
     },
 
     async downloadAllCsv() {
-
       try {
         axios.defaults.headers.common[
           "Authorization"
@@ -975,9 +975,7 @@ export default {
         let green = 0;
         let blue = 0;
 
-
         if (globalTumorEntityDistribution.data.data) {
-  
           for (
             var i = 0;
             i < globalTumorEntityDistribution.data.data.length;

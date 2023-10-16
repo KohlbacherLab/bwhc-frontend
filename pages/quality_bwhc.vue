@@ -27,10 +27,25 @@
         <v-tab @click="$router.push('/quality_reporting')">
           <i class="fas fa-chart-bar"></i>&nbsp;MTB-Therapien
         </v-tab>
+        <!--
         <v-tab @click="$router.push('/quality_top10')"
           ><i class="fas fa-chart-bar"></i>&nbsp;Tumorentitäten</v-tab
         >
+        -->
       </v-tabs>
+
+      <v-divider class="my-3"></v-divider>
+      <v-col v-if="issues">
+        <div v-if="issues.length">
+          <ul>
+            <li v-for="(issue, index) in issues" :key="index">
+              <strong>{{ issue.severity }}:</strong> {{ issue.details }}
+            </li>
+          </ul>
+          <v-divider class="my-3"></v-divider>
+        </div>
+        <div v-else>No issues to display.</div>
+      </v-col>
 
       <v-layout wrap>
         <v-flex d-flex xs12 sm6 md3>
@@ -40,7 +55,6 @@
             color="yellow darken-1"
             light
             max-width="400"
-            v-ripple="{ center: true }"
           >
             <v-card-text class="headline font-weight-thin">
               <v-icon color="yellow accent-1" dark>fas fa-street-view</v-icon>
@@ -51,6 +65,7 @@
           </v-card>
         </v-flex>
       </v-layout>
+
       <v-divider class="my-3"></v-divider>
 
       <div id="globale-übersicht"></div>
@@ -68,7 +83,6 @@
             color="grey lighten-2"
             light
             width="250"
-            v-ripple="{ center: true }"
           >
             <v-card-text class="title font-weight-thin">
               <p>
@@ -90,7 +104,6 @@
             color="grey lighten-2"
             light
             width="250"
-            v-ripple="{ center: true }"
           >
             <v-card-text class="title font-weight-thin">
               <p>
@@ -114,7 +127,6 @@
             color="grey lighten-2"
             light
             width="250"
-            v-ripple="{ center: true }"
           >
             <v-card-text class="title font-weight-thin">
               <p>
@@ -136,7 +148,7 @@
             color="grey lighten-2"
             light
             width="250"
-            v-ripple="{ center: true }"
+            
           >
             <v-card-text class="title font-weight-thin">
               <p>
@@ -155,12 +167,14 @@
         </v-flex>
       </v-layout>
 
-      <v-flex d-flex> 
-        <v-switch v-if="displayCompletionStats"
+      <v-flex d-flex>
+        <v-switch
+          v-if="displayCompletionStats"
           v-model="displayCompletionStats"
           :label="`Mittlere Dauern ausblenden`"
         ></v-switch>
-        <v-switch v-else
+        <v-switch
+          v-else
           v-model="displayCompletionStats"
           :label="`Mittlere Dauern einblenden`"
         ></v-switch>
@@ -178,7 +192,6 @@
             color="grey lighten-2"
             light
             width="250"
-            v-ripple="{ center: true }"
           >
             <v-card-text class="title font-weight-thin">
               <p>
@@ -200,7 +213,6 @@
             color="grey lighten-2"
             light
             width="250"
-            v-ripple="{ center: true }"
           >
             <v-card-text class="title font-weight-thin">
               <p>
@@ -222,7 +234,6 @@
             color="grey lighten-2"
             light
             width="250"
-            v-ripple="{ center: true }"
           >
             <v-card-text class="title font-weight-thin">
               <p>
@@ -263,7 +274,6 @@
               color="grey lighten-4"
               light
               width="250"
-              v-ripple="{ center: true }"
             >
               <v-card-text class="title font-weight-thin">
                 <p>
@@ -290,7 +300,6 @@
               color="grey lighten-4"
               light
               width="250"
-              v-ripple="{ center: true }"
             >
               <v-card-text class="title font-weight-thin">
                 <p>
@@ -318,7 +327,6 @@
               color="grey lighten-4"
               light
               width="250"
-              v-ripple="{ center: true }"
             >
               <v-card-text class="title font-weight-thin">
                 <p>
@@ -345,7 +353,6 @@
               color="grey lighten-4"
               light
               width="250"
-              v-ripple="{ center: true }"
             >
               <v-card-text class="title font-weight-thin">
                 <p>
@@ -382,7 +389,6 @@
               color="grey lighten-4"
               light
               width="250"
-              v-ripple="{ center: true }"
             >
               <v-card-text class="title font-weight-thin">
                 <p>
@@ -410,7 +416,6 @@
               color="grey lighten-4"
               light
               width="250"
-              v-ripple="{ center: true }"
             >
               <v-card-text class="title font-weight-thin">
                 <p>
@@ -439,7 +444,6 @@
               color="grey lighten-4"
               light
               width="250"
-              v-ripple="{ center: true }"
             >
               <v-card-text class="title font-weight-thin">
                 <p>
@@ -470,16 +474,6 @@
       <!--
       <v-card-title class="title font-weight-light">Fehler</v-card-title>
       -->
-      <v-col v-if="issues">
-        <div v-if="issues.length">
-          <ul>
-            <li v-for="(issue, index) in issues" :key="index">
-              <strong>{{ issue.severity }}:</strong> {{ issue.details }}
-            </li>
-          </ul>
-        </div>
-        <div v-else>No issues to display.</div>
-      </v-col>
     </v-container>
     <template></template>
   </v-responsive>

@@ -21,7 +21,7 @@
         </span>
         <v-divider class="my-3"></v-divider>
       </v-flex>
-      
+
       <v-layout wrap>
         <v-flex d-flex xs12 sm6 md3>
           <v-card
@@ -30,7 +30,6 @@
             color="red darken-4"
             dark
             max-width="400"
-            v-ripple="{ center: true }"
           >
             <v-card-text class="headline font-weight-thin">
               <v-icon color="red accent-1" dark>fas fa-street-view</v-icon
@@ -54,7 +53,6 @@
             color="grey lighten-4"
             light
             width="250"
-            v-ripple="{ center: true }"
           >
             <v-card-text class="title font-weight-thin">
               <p><v-icon style="font-size: 1.4rem">fas fa-file-alt</v-icon></p>
@@ -74,7 +72,6 @@
             color="grey lighten-4"
             light
             width="250"
-            v-ripple="{ center: true }"
           >
             <v-card-text class="title font-weight-thin">
               <p>
@@ -98,7 +95,6 @@
             color="grey lighten-4"
             light
             width="250"
-            v-ripple="{ center: true }"
           >
             <v-card-text class="title font-weight-thin">
               <p>
@@ -120,7 +116,6 @@
             color="grey lighten-4"
             light
             width="250"
-            v-ripple="{ center: true }"
           >
             <v-card-text class="title font-weight-thin">
               <p>
@@ -140,17 +135,21 @@
       </v-layout>
 
       <v-flex d-flex>
-        <v-switch v-if="displayCompletionStats"
+        <v-switch
+          v-if="displayCompletionStats"
           v-model="displayCompletionStats"
           :label="`Mittlere Dauern ausblenden`"
         ></v-switch>
-        <v-switch v-else
+        <v-switch
+          v-else
           v-model="displayCompletionStats"
           :label="`Mittlere Dauern einblenden`"
         ></v-switch>
       </v-flex>
 
-      <v-card-title v-if="displayCompletionStats" class="title font-weight-light"
+      <v-card-title
+        v-if="displayCompletionStats"
+        class="title font-weight-light"
         >Mittlere Dauern</v-card-title
       >
 
@@ -161,7 +160,6 @@
             color="grey lighten-4"
             light
             width="250"
-            v-ripple="{ center: true }"
           >
             <v-card-text class="title font-weight-thin">
               <p>
@@ -182,7 +180,6 @@
             color="grey lighten-4"
             light
             width="250"
-            v-ripple="{ center: true }"
           >
             <v-card-text class="title font-weight-thin">
               <p>
@@ -204,7 +201,6 @@
             color="grey lighten-4"
             light
             width="250"
-            v-ripple="{ center: true }"
           >
             <v-card-text class="title font-weight-thin">
               <p>

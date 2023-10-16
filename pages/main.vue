@@ -3,8 +3,8 @@
     <userPanel />
     <v-flex>
       <h3 class="display-3"><strong>bwHealthCloud</strong></h3>
-      <v-btn dark icon color="blue accent-2" align-end
-        ><v-icon dark>fas fa-certificate</v-icon>
+      <v-btn disabled icon color="blue accent-2" align-end
+        ><v-icon dark>fas fa-cloud</v-icon>
       </v-btn>
       <span class="subheading font-weight-thin">
         bwHC Abfrage-Portal, Statistiken, Validierung und Management.
@@ -73,7 +73,7 @@
                         <td></td>
                         <td>
                           <v-tooltip top>
-                            <v-btn icon slot="activator">
+                            <v-btn disabled icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-user-shield</v-icon
                               >
@@ -88,7 +88,7 @@
                         <td></td>
                         <td>
                           <v-tooltip top>
-                            <v-btn icon slot="activator">
+                            <v-btn disabled icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-server</v-icon
                               >
@@ -103,7 +103,7 @@
                         <td></td>
                         <td>
                           <v-tooltip top>
-                            <v-btn icon slot="activator">
+                            <v-btn disabled icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-check-double</v-icon
                               >
@@ -113,7 +113,7 @@
                         </td>
                         <td>
                           <v-tooltip top>
-                            <v-btn icon slot="activator">
+                            <v-btn disabled icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-search</v-icon
                               >
@@ -127,7 +127,7 @@
                         <td></td>
                         <td>
                           <v-tooltip top>
-                            <v-btn icon slot="activator">
+                            <v-btn disabled icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-check-double</v-icon
                               >
@@ -137,7 +137,7 @@
                         </td>
                         <td>
                           <v-tooltip top>
-                            <v-btn icon slot="activator">
+                            <v-btn disabled icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-globe-europe</v-icon
                               >
@@ -147,7 +147,7 @@
                         </td>
                         <td>
                           <v-tooltip top>
-                            <v-btn icon slot="activator">
+                            <v-btn disabled icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-search</v-icon
                               >
@@ -161,7 +161,7 @@
                         <td></td>
                         <td>
                           <v-tooltip top>
-                            <v-btn icon slot="activator">
+                            <v-btn disabled icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-check-double</v-icon
                               >
@@ -172,11 +172,11 @@
                         <td></td>
                       </tr>
                       <tr>
-                        <td>Fortgeschrittene/r Forscher/in</td>
+                        <td>MTB-Mitarbeiter/in</td>
                         <td></td>
                         <td>
                           <v-tooltip top>
-                            <v-btn icon slot="activator">
+                            <v-btn disabled icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-search</v-icon
                               >
@@ -191,7 +191,7 @@
                         <td></td>
                         <td>
                           <v-tooltip top>
-                            <v-btn icon slot="activator">
+                            <v-btn disabled icon slot="activator">
                               <v-icon style="font-size: 1.4rem"
                                 >fas fa-search</v-icon
                               >
