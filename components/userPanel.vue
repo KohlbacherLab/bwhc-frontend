@@ -299,6 +299,7 @@ export default {
         await axios.post(
           process.env.baseUrl + process.env.port + process.env.logout
         );
+        localStorage.clear();
         let toast = this.$toasted.success("Abmeldung erfolgreich!", {
           theme: "bubble",
           icon: "check_circle",

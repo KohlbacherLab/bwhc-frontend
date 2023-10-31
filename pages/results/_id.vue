@@ -172,7 +172,7 @@
       </v-card>
     </v-flex>
     -->
-    
+
     <v-dialog v-model="saveQueryDialog" width="500">
       <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>
@@ -219,9 +219,7 @@
 
     <v-expansion-panel popout>
       <v-expansion-panel-content>
-
         <template v-slot:actions>
-    
           <v-btn
             fab
             flat
@@ -243,10 +241,7 @@
                   <v-flex xs2 order-lg1>
                     <v-card class="font-weight-thin" flat>
                       <v-card-text pb-5 small class="font-weight-thin">
-             
-           
-           <queryTimer @timerExpired="refreshData" />
-      
+                        <queryTimer @timerExpired="refreshData" />
 
                         <strong>Abfragetyp:</strong>
                         {{ getQueryParametersFederated.display }}
@@ -1103,6 +1098,29 @@
                   </div>
                 </v-card-title>
 
+                <v-btn
+                  depressed
+                  small
+                  outline
+                  @click="
+                    unselectAllCheckboxes(
+                      therapyRecommendationMedicationFilter.items
+                    )
+                  "
+                  >Alles abwählen</v-btn
+                >
+                <v-btn
+                  depressed
+                  small
+                  outline
+                  @click="
+                    selectAllCheckboxes(
+                      therapyRecommendationMedicationFilter.items
+                    )
+                  "
+                  >Alles auswählen</v-btn
+                >
+
                 <v-flex
                   class="mx-4"
                   v-for="therapyRecommendationMedicationFilter in therapyRecommendationMedicationFilter.items"
@@ -1386,6 +1404,27 @@
                     <h3>{{ molecularTherapyMedicationFilter.name }}</h3>
                   </div>
                 </v-card-title>
+
+                <v-btn
+                  depressed
+                  small
+                  outline
+                  @click="
+                    unselectAllCheckboxes(
+                      molecularTherapyMedicationFilter.items
+                    )
+                  "
+                  >Alles abwählen</v-btn
+                >
+                <v-btn
+                  depressed
+                  small
+                  outline
+                  @click="
+                    selectAllCheckboxes(molecularTherapyMedicationFilter.items)
+                  "
+                  >Alles auswählen</v-btn
+                >
 
                 <v-flex
                   class="mx-4"
@@ -2172,7 +2211,7 @@ export default {
     filterPanel,
     queryPanel,
     BarChart,
-    queryTimer
+    queryTimer,
   },
 
   data() {
@@ -2338,6 +2377,18 @@ export default {
   },
 
   methods: {
+    unselectAllCheckboxes(selectedItems) {
+      for (const item of selectedItems) {
+        item.selected = false;
+      }
+    },
+
+    selectAllCheckboxes(selectedItems) {
+      for (const item of selectedItems) {
+        item.selected = true;
+      }
+    },
+
     async refreshData() {
       await this.setMenu();
     },
@@ -2477,6 +2528,11 @@ export default {
 
       let queryparams = await axios.get(`${serverBaseURL}/${params.id}`);
 
+      localStorage.setItem(
+        "queryExpiresIn",
+        JSON.stringify(queryparams.data.expiresIn)
+      );
+
       let filters = queryparams.data.filters;
 
       let getSavedQueries = await axios.get(
@@ -2502,7 +2558,7 @@ export default {
         files = await axios.get(`${baseURL}` + patients);
         filesEntries = files.data.entries;
       }
-      
+
       let hide = false;
 
       let ngsSummaries;
@@ -3037,26 +3093,24 @@ export default {
         issues: connectionIssues,
       };
     } catch (err) {
-  if (err.status === 401) {
-    // If the error status is 401, redirect to the root route ("/")
-    this.$router.push(`/`);
-  } else if (err.status === 403) {
-    // If the error status is 403, redirect to the "/403" route
-    this.$router.push("/403");
-  } else if (err.status === 404) {
-    // If the error status is 404, redirect to the "/404" route
-    this.$router.push("/404");
-  } else if (err.status === 500) {
-    // If the error status is 500, redirect to the "/500" route
-    this.$router.push("/500");
-  } else {
-    // For any other error status, redirect to a route based on the status
-    // For example, if err.status is 418, redirect to the "/418" route
-    this.$router.push("/" + err.status);
-  }
-}
-
-
+      if (err.status === 401) {
+        // If the error status is 401, redirect to the root route ("/")
+        this.$router.push(`/`);
+      } else if (err.status === 403) {
+        // If the error status is 403, redirect to the "/403" route
+        this.$router.push("/403");
+      } else if (err.status === 404) {
+        // If the error status is 404, redirect to the "/404" route
+        this.$router.push("/404");
+      } else if (err.status === 500) {
+        // If the error status is 500, redirect to the "/500" route
+        this.$router.push("/500");
+      } else {
+        // For any other error status, redirect to a route based on the status
+        // For example, if err.status is 418, redirect to the "/418" route
+        this.$router.push("/" + err.status);
+      }
+    }
   },
 };
 </script>

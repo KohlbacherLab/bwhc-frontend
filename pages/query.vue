@@ -53,7 +53,8 @@
       >
         Abfrageparameter zurückgesetzt
         <v-btn color="blue" flat @click="snackbarParameters = false"
-          >Schließen</v-btn
+          ><i class="fa fa-times-circle"></i
+      ></v-btn
         >
       </v-snackbar>
     </v-container>

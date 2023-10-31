@@ -2,11 +2,30 @@
   <div>
     <v-tooltip top>
       <template v-slot:activator="{ on }">
-        <v-icon style="font-size: 1.1em" color="primary" dark v-on="on">far fa-clock</v-icon>
+        <v-icon style="font-size: 1.1em" color="primary" dark v-on="on"
+          >far fa-clock</v-icon
+        >
       </template>
-      <span>Die Abfrageergebnisse werden in {{ formattedTime }} Minuten entfernt werden.</span>
+      <span
+        >Die Abfrageergebnisse werden in {{ formattedTime }} Minuten entfernt
+        werden.</span
+      >
     </v-tooltip>
     {{ formattedTime }}
+
+    <v-snackbar
+      v-model="snackbarQueryExpiresIn"
+      :color="'red'"
+      top
+      :timeout="59000"
+    >
+      Die Abfrageergebnisse werden in weniger als 1 Minute entfernt!
+      <!--
+      <v-btn color="black" flat @click="snackbarQueryExpiresIn = false"
+        ><i class="fa fa-times-circle"></i
+      ></v-btn>
+      -->
+    </v-snackbar>
   </div>
 </template>
 
@@ -14,8 +33,9 @@
 export default {
   data() {
     return {
-      timeLeft: 600, // set query results expiration time - default 10 minutes
+      timeLeft: localStorage.getItem("queryExpiresIn"),
       intervalId: null,
+      snackbarQueryExpiresIn: false,
     };
   },
   mounted() {
@@ -28,6 +48,9 @@ export default {
     startTimer() {
       this.intervalId = setInterval(() => {
         if (this.timeLeft > 0) {
+          if (this.timeLeft === 60) {
+            this.snackbarQueryExpiresIn = true;
+          }
           this.timeLeft--;
         } else {
           clearInterval(this.intervalId);

@@ -44,6 +44,11 @@ export default {
         process.env.baseUrl + process.env.port + `/bwhc/user/api/login`,
         credentials
       );
+      console.log();
+      localStorage.setItem(
+        "sessionExpiresIn",
+        JSON.stringify(response.data.expires_in)
+      );
       return dispatch("attempt", response.data.access_token);
     },
 

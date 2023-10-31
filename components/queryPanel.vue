@@ -1094,7 +1094,6 @@ export default {
         }
 
         this.queryId = localStorage.getItem("queryId");
-        const expiresIn = 600;
         if (this.queryId == undefined) {
           let request = {
             mode: {
@@ -1110,7 +1109,7 @@ export default {
               tumorMorphology: this.selectedTumorMorphology,
               medicationsWithUsage: this.selectedDrugs,
               responses: this.selectedResponses,
-              expiresIn: expiresIn,
+              //expiresIn: expiresIn,
               //mutation:[{genes:this.genes,variant:{type:"SNV"}}],
               //medicationsWithUsage: [{usage:"recommended",drug:"something"}],
               //drugs:[{usage:"recommended",drug:"something"}],
@@ -1150,7 +1149,6 @@ export default {
 
           this.$router.push(`/results/${Response.data.id}`);
         } else {
-          const expiresIn = 600;
           let request = {
             mode: {
               code: queryMode,
@@ -1164,7 +1162,7 @@ export default {
               tumorMorphology: this.selectedTumorMorphology,
               medicationsWithUsage: this.selectedDrugs,
               responses: this.selectedResponses,
-              expiresIn: expiresIn,
+              //expiresIn: expiresIn,
               //mutation:[{genes:this.genes,variant:{type:"SNV"}}],
               //medicationsWithUsage: [{usage:"recommended",drug:"something"}],
               //drugs:[{usage:"recommended",drug:"something"}],
@@ -1596,10 +1594,10 @@ export default {
     },
 
     async accessSavedQuery(queryType, savedQueryParameters) {
-
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${localStorage.token}`;
+
 
       try {
         let request = {

@@ -14,7 +14,7 @@
 export default {
   data() {
     return {
-      timeLeft: 3600, // set access token expiration time - default 3600 minutes
+      timeLeft: localStorage.getItem("sessionExpiresIn"),
       intervalId: null,
     };
   },
@@ -29,9 +29,11 @@ export default {
       this.intervalId = setInterval(() => {
         if (this.timeLeft > 0) {
           this.timeLeft--;
-        } else {
+        } 
+        else {
           clearInterval(this.intervalId);
           this.$router.push("/");
+          localStorage.clear();
         }
       }, 1000);
     },
