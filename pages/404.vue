@@ -36,7 +36,35 @@
     <v-flex d-flex xs12 sm6 md12>
       <span class="headline font-weight-thin"
         ><strong>Das ist ein Fehler!</strong><br />Es tut uns leid, aber Sie haben keinen Zugriff auf diese Seite oder Ressource.
+        <br /><br /><b><v-icon color="black" style="font-size: 1.1em">far fa-clock</v-icon> Umleitung in {{ timer }} Sekunden...</b>
       </span>
     </v-flex>
   </v-container>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      timer: 10,
+    };
+  },
+  mounted() {
+    this.startTimer();
+  },
+  methods: {
+    startTimer() {
+      setInterval(() => {
+        if (this.timer > 0) {
+          this.timer--;
+        } else {
+          this.redirectToIndex();
+        }
+      }, 1000);
+    },
+    redirectToIndex() {
+      window.location.href = "/";
+    },
+  },
+};
+</script>

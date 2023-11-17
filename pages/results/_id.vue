@@ -220,19 +220,37 @@
     <v-expansion-panel popout>
       <v-expansion-panel-content>
         <template v-slot:actions>
-          <v-btn
-            fab
-            flat
-            small
-            color="blue"
-            @click="saveQueryDialog = true"
-            dark
-          >
-            <v-icon color="dark-grey">fas fa-save</v-icon></v-btn
-          >
+          <!--
+          <v-btn fab flat small color="blue" @click="saveQueryDialog = true">
+            <v-icon color="blue" style="font-size: 2rem">fas fa-save</v-icon>
+          </v-btn>
+        -->
+
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                fab
+                flat
+                small
+                color="blue"
+                @click="saveQueryDialog = true"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon color="blue" style="font-size: 2rem"
+                  >fas fa-save</v-icon
+                >
+              </v-btn>
+            </template>
+            <span
+              >Klicken Sie hier, um die aktuellen Suchparameter für spätere
+              Verwendung zu speichern.</span
+            >
+          </v-tooltip>
 
           <v-btn small color="red" dark> Suche ändern ?</v-btn>
         </template>
+
         <template v-slot:header>
           <span>
             <v-hover>
@@ -1128,7 +1146,11 @@
                 >
                   <v-checkbox
                     v-model="therapyRecommendationMedicationFilter.selected"
-                    :label="therapyRecommendationMedicationFilter.value.display"
+                    :label="
+                      therapyRecommendationMedicationFilter.value.display +
+                      ' ' +
+                      therapyRecommendationMedicationFilter.value.version
+                    "
                     hide-details
                   >
                   </v-checkbox>
@@ -1433,7 +1455,11 @@
                 >
                   <v-checkbox
                     v-model="molecularTherapyMedicationFilter.selected"
-                    :label="molecularTherapyMedicationFilter.value.display"
+                    :label="
+                      molecularTherapyMedicationFilter.value.display +
+                      ' ' +
+                      molecularTherapyMedicationFilter.value.version
+                    "
                     hide-details
                   >
                   </v-checkbox>
@@ -1840,6 +1866,24 @@
 
       <v-tab-item>
         <v-layout flex-child wrap>
+          <v-flex xs12 md12>
+            <v-card flat>
+              <v-card-title primary-title>
+                <div>
+                  <div class="subheadline">
+                    Varianten nur für 'Alterationen' angezeigt
+                  </div>
+                  <span class="grey--text"
+                    >Die Varianten-Tabelle wird Daten anzeigen, wenn Sie den
+                    Parameter 'Alterationen' auswählen (sofern Daten vorhanden
+                    sind).<br />Wenn Sie jedoch andere Suchkriterien gewählt
+                    haben, beachten Sie bitte, dass die Varianten-Tabelle leer
+                    bleibt.</span
+                  >
+                </div>
+              </v-card-title>
+            </v-card>
+          </v-flex>
           <!--
           <v-flex xs12 md1 d-flex> </v-flex>
           -->
@@ -2480,7 +2524,7 @@ export default {
         } else if (err.response.status === 404) {
           return redirect("/404");
         } else {
-          return redirect("/" + err.response.status);
+          return redirect("/undefined");
         }
       }
     },
@@ -2504,7 +2548,10 @@ export default {
       );
 
       let drugsCatRaw = await axios.get(
-        process.env.baseUrl + process.env.port + process.env.coding + `/ATC`
+        process.env.baseUrl +
+          process.env.port +
+          process.env.coding +
+          `?system=atc`
       );
 
       let tumorMorphologyCatRaw = await axios.get(
@@ -2686,7 +2733,9 @@ export default {
           drugsCat.push(
             drugsCatRaw.data.entries[i].name +
               " · " +
-              drugsCatRaw.data.entries[i].code
+              drugsCatRaw.data.entries[i].code +
+              " · " +
+              drugsCatRaw.data.entries[i].version
           );
         }
       }
@@ -2893,7 +2942,10 @@ export default {
                 .display +
                 " · " +
                 queryparams.data.parameters.medicationsWithUsage[i].medication
-                  .code
+                  .code +
+                " · " +
+                queryparams.data.parameters.medicationsWithUsage[i].medication
+                  .version
             );
 
             getQueryParametersDrugsUsage.push("beide");
@@ -2904,6 +2956,9 @@ export default {
                 " · " +
                 queryparams.data.parameters.medicationsWithUsage[i].medication
                   .code +
+                " · " +
+                queryparams.data.parameters.medicationsWithUsage[i].medication
+                  .version +
                 " (" +
                 JSON.stringify(
                   queryparams.data.parameters.medicationsWithUsage[i].usage[0]
@@ -2925,7 +2980,10 @@ export default {
                 .display +
                 " · " +
                 queryparams.data.parameters.medicationsWithUsage[i].medication
-                  .code
+                  .code +
+                " · " +
+                queryparams.data.parameters.medicationsWithUsage[i].medication
+                  .version
             );
 
             getQueryParametersDrugsUsage.push("used");
@@ -2936,6 +2994,9 @@ export default {
                 " · " +
                 queryparams.data.parameters.medicationsWithUsage[i].medication
                   .code +
+                " · " +
+                queryparams.data.parameters.medicationsWithUsage[i].medication
+                  .version +
                 " (" +
                 JSON.stringify(
                   queryparams.data.parameters.medicationsWithUsage[i].usage[0]
@@ -2952,7 +3013,10 @@ export default {
                 .display +
                 " · " +
                 queryparams.data.parameters.medicationsWithUsage[i].medication
-                  .code
+                  .code +
+                " · " +
+                queryparams.data.parameters.medicationsWithUsage[i].medication
+                  .version
             );
 
             getQueryParametersDrugsUsage.push("egal");
@@ -2962,7 +3026,10 @@ export default {
                 .display +
                 " · " +
                 queryparams.data.parameters.medicationsWithUsage[i].medication
-                  .code
+                  .code +
+                " · " +
+                queryparams.data.parameters.medicationsWithUsage[i].medication
+                  .version
             );
           }
         }
@@ -3094,21 +3161,15 @@ export default {
       };
     } catch (err) {
       if (err.status === 401) {
-        // If the error status is 401, redirect to the root route ("/")
-        this.$router.push(`/`);
+        return redirect("/");
       } else if (err.status === 403) {
-        // If the error status is 403, redirect to the "/403" route
-        this.$router.push("/403");
+        return redirect("/403");
       } else if (err.status === 404) {
-        // If the error status is 404, redirect to the "/404" route
-        this.$router.push("/404");
+        return redirect("/404");
       } else if (err.status === 500) {
-        // If the error status is 500, redirect to the "/500" route
-        this.$router.push("/500");
+        return redirect("/500");
       } else {
-        // For any other error status, redirect to a route based on the status
-        // For example, if err.status is 418, redirect to the "/418" route
-        this.$router.push("/" + err.status);
+        return redirect("/undefined");
       }
     }
   },

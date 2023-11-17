@@ -14,8 +14,149 @@
             @click="$router.push('/main')"
           >
             <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-          >Ohne Such-Kriterien, wird die Anfrage alles zurückliefern.
-          <strong @click="$router.push('help')">Hilfe?</strong>
+          >Ohne Such-Kriterien, wird die Anfrage alles zurückliefern. <strong>Wie funktioniert die Auswahl von Parametern</strong>
+          <v-dialog
+            v-model="dialog"
+            fullscreen
+            hide-overlay
+            transition="dialog-bottom-transition"
+          >
+            <template v-slot:activator="{ on }">
+              <v-btn icon color="grey accent-2" dark v-on="on"
+                ><v-icon dark>fas fa-question</v-icon></v-btn
+              > 
+            </template> 
+            <v-card>
+              <v-toolbar dark color="grey accent-2">
+                <v-btn icon dark @click="dialog = false">
+                  <v-icon>close</v-icon>
+                </v-btn>
+                <v-toolbar-title
+                  >Hilfe! Wie funktioniert die Auswahl von Parametern, um eine
+                  Abfrage durchzuführen?</v-toolbar-title
+                >
+                <v-spacer></v-spacer>
+              </v-toolbar>
+              <v-flex d-flex xs12 sm6 md12>
+                <v-card flat>
+                  <v-card-title primary class="headline font-weight-thin"
+                    >Abfrageparameter</v-card-title
+                  >
+                  <v-card-text class="subheading font-weight-thin">
+                    Alterationen <v-icon color="purple" dark>fas fa-dna</v-icon>
+                  </v-card-text>
+                  <v-card-text class="subheading grey--text font-weight-light">
+                    Alternationen ermöglicht es den Benutzern, nach Gen-Symbolen
+                    zu suchen. Wenn Sie in den Feldern zu tippen beginnen,
+                    werden die Kataloge die Liste minimieren, um Ihnen mögliche
+                    Auswahlmöglichkeiten anzuzeigen.
+
+                    <br />
+                    Die Abfrage mit SNV oder CNV erfordert die Erstellung eines
+                    Bündels. Klicken Sie also auf die Option SNV oder CNV,
+                    wählen Sie dann ein Gen aus, fügen Sie optional weitere
+                    Optionen hinzu und klicken Sie dann auf 'Hinzufügen', um die
+                    Parameter zu bündeln.
+                    <br />
+                  </v-card-text>
+                  </v-card>
+              </v-flex>
+
+              <template>
+                <v-stepper v-model="e6" vertical>
+                  <v-stepper-step :complete="e6 > 1" step="1">
+                    Wählen Sie ein beliebiges Gen aus.
+                    <small>Wählen Sie 'beliebig' aus den Optionsfeldern</small>
+                  </v-stepper-step>
+
+                  <v-stepper-content step="1">
+                    <v-card flat class="mb-5" height="130px"
+                      ><img width="400px" src="alterationen_beliebig01.png"
+                    /></v-card>
+                    <v-btn dark round depressed color="purple" @click="e6 = 2"
+                      >Weiter</v-btn
+                    >
+                  </v-stepper-content>
+
+                  <v-stepper-step :complete="e6 > 2" step="2"
+                    >Geben Sie den Gennamen ein.</v-stepper-step
+                  >
+
+                  <v-stepper-content step="2">
+                    <v-card flat class="mb-5" height="210px"
+                      ><img width="400px" src="alterationen_beliebig02.png"
+                    /></v-card>
+                    <v-btn dark round depressed color="purple" @click="e6 = 3"
+                      >Weiter</v-btn
+                    >
+                  </v-stepper-content>
+
+                  <v-stepper-step :complete="e6 > 3" step="3"
+                    >Es ist möglich, den Chip jederzeit zu
+                    löschen.</v-stepper-step
+                  >
+
+                  <v-stepper-content step="3">
+                    <v-card flat class="mb-5" height="135px"
+                      ><img width="400px" src="alterationen_beliebig03.png"
+                    /></v-card>
+                    <v-btn dark round depressed color="purple" @click="e6 = 4"
+                      >Weiter</v-btn
+                    >
+                  </v-stepper-content>
+
+                  <v-stepper-step step="4"
+                    >Es ist auch möglich, mehrere Gene
+                    hinzuzufügen.</v-stepper-step
+                  >
+                  <v-stepper-content step="4">
+                    <v-card flat class="mb-5" height="165px"
+                      ><img width="400px" src="alterationen_beliebig04.png"
+                    /></v-card>
+                    <v-btn dark round depressed color="purple" @click="e6 = 1"
+                      >Neustart</v-btn
+                    >
+                  </v-stepper-content>
+                </v-stepper>
+              </template>
+
+              <!--
+              <v-card-text class="subheading font-weight-thin">
+                    Diagnose
+                    <v-icon color="indigo" dark>fas fa-diagnoses</v-icon>
+                  </v-card-text>
+                  <v-card-text class="subheading grey--text font-weight-light">
+                    Text for ICD-10
+                    <br />
+                    ...
+                    <br />
+                  </v-card-text>
+                  <v-card-text class="subheading font-weight-thin">
+                    Wirkstoffe
+                    <v-icon color="blue">fas fa-pills</v-icon>
+                  </v-card-text>
+                  <v-card-text class="subheading grey--text font-weight-light">
+                    Text for selections
+                    <br />
+                    Text for medicine
+                    <br />
+                  </v-card-text>
+                  <v-card-text class="subheading font-weight-thin">
+                    Response
+                    <v-icon color="cyan">fas fa-vials</v-icon>
+                  </v-card-text>
+                  <v-card-text class="subheading grey--text font-weight-light">
+                    Text for response
+                    <br />
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+              <img width="400px" src="alterationen_beliebig.jpg" />
+              <img width="291px" src="alterationen_snv.jpg" />
+              -->
+              
+            </v-card>
+          </v-dialog>
         </span>
         <v-divider class="my-3"></v-divider>
       </v-flex>
@@ -54,8 +195,7 @@
         Abfrageparameter zurückgesetzt
         <v-btn color="blue" flat @click="snackbarParameters = false"
           ><i class="fa fa-times-circle"></i
-      ></v-btn
-        >
+        ></v-btn>
       </v-snackbar>
     </v-container>
   </v-responsive>
@@ -80,6 +220,8 @@ export default {
     isLoading: false,
     search: null,
     snackbarParameters: false,
+    dialog: false,
+    e6: 0,
     y: "top",
   }),
 
@@ -128,7 +270,7 @@ export default {
       );
 
       let drugsCatRaw = await axios.get(
-        process.env.baseUrl + process.env.port + process.env.coding + "/ATC"
+        process.env.baseUrl + process.env.port + process.env.coding + "?system=atc"
       );
 
       let responsesCatRaw = await axios.get(
@@ -196,7 +338,9 @@ export default {
         drugsCat.push(
           drugsCatRaw.data.entries[i].name +
             " · " +
-            drugsCatRaw.data.entries[i].code
+            drugsCatRaw.data.entries[i].code +
+            " · " +
+            drugsCatRaw.data.entries[i].version
         );
       }
 
@@ -223,6 +367,12 @@ export default {
         return redirect("/");
       } else if (err.status === 403) {
         return redirect("/403");
+      } else if (err.status === 400) {
+        return redirect("/400");
+      } else if (err.status === 500) {
+        return redirect("/500");
+      } else if (err.status === 404) {
+        return redirect("/404");
       } else {
         return redirect("/undefined");
       }
@@ -317,7 +467,7 @@ export default {
       var obj = {
         drug: this.drugs[this.drugs.length - 1],
         usage: this.selectedDrugUsage,
-      };
+      }; alert(obj);
       this.drugQuery.push(obj);
     },
 

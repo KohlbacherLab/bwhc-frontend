@@ -84,10 +84,18 @@ export default {
 
     try {
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err.status === 401) {
         return redirect("/");
-      } else if (err.response.status === 403) {
+      } else if (err.status === 403) {
         return redirect("/403");
+      } else if (err.status === 400) {
+        return redirect("/400");
+      } else if (err.status === 500) {
+        return redirect("/500");
+      } else if (err.status === 404) {
+        return redirect("/404");
+      } else {
+        return redirect("/undefined");
       }
     }
   },

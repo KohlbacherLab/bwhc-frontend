@@ -23,7 +23,7 @@
       </v-flex>
 
       <v-tabs fixed-tabs color="grey lighten-5">
-        <v-tab @click="$router.push('/quality_bwhc')"> Datenqualität </v-tab>
+        <v-tab @click="$router.push('/quality_bwhc')"> <b>Datenqualität</b> </v-tab>
         <v-tab @click="$router.push('/quality_reporting')">
           <i class="fas fa-chart-bar"></i>&nbsp;MTB-Therapien
         </v-tab>
@@ -579,12 +579,18 @@ export default {
         displayCompletionStats: false,
       };
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err.status === 401) {
         return redirect("/");
-      } else if (err.response.status === 403) {
+      } else if (err.status === 403) {
         return redirect("/403");
+      } else if (err.status === 400) {
+        return redirect("/400");
+      } else if (err.status === 500) {
+        return redirect("/500");
+      } else if (err.status === 404) {
+        return redirect("/404");
       } else {
-        return redirect("/" + err.response.status);
+        return redirect("/undefined");
       }
     }
   },

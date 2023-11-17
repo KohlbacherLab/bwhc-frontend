@@ -24,7 +24,7 @@
       <v-tabs fixed-tabs color="grey lighten-5" v-model="selectedTabIndex">
         <v-tab @click="$router.push('/quality_bwhc')"> Datenqualität </v-tab>
         <v-tab @click="$router.push('/quality_reporting')">
-          <i class="fas fa-chart-bar"></i>&nbsp;MTB-Therapien
+          <i class="fas fa-chart-bar"></i><b>&nbsp;MTB-Therapien</b>
         </v-tab>
         <!--
         <v-tab @click="$router.push('/quality_top10')"
@@ -52,6 +52,16 @@
         <div>
           <div class="headline">
             <i class="fas fa-chart-bar"></i> Umgesetzte MTB–Therapien
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn flat icon color="grey accent-2" v-bind="attrs" v-on="on">
+                  <v-icon>fas fa-info-circle</v-icon>
+                </v-btn>
+              </template>
+              <span
+                >Sie können auf den Switch unten klicken, um empfohlenen Wirkstoffklassen zu ein/ausblenden.</span
+              >
+            </v-tooltip>
           </div>
           <br />
           <h3>Verabreichte Wirkstoffklassen</h3>
@@ -60,7 +70,7 @@
 
       <v-layout wrap fluid>
         <v-flex xs12 sm3 md12>
-          <bar-chart
+          <bar-chart 
             v-if="barChartDataGlobalMedicationDistribution[0]"
             :data="barChartDataGlobalMedicationDistribution[0]"
             :options="barChartOptionsGlobalMedicationDistribution"
@@ -82,6 +92,32 @@
           -->
         </v-flex>
 
+        <v-flex d-flex>
+              <v-switch
+                v-if="displayRecommendedDrugs"
+                v-model="displayRecommendedDrugs"
+                :label="`Empfohlene Wirkstoffklassen ausblenden`"
+              ></v-switch>
+              <v-switch
+                v-else
+                v-model="displayRecommendedDrugs"
+                :label="`Empfohlene Wirkstoffklassen einblenden`"
+              ></v-switch>
+          </v-flex>
+
+        
+        <v-flex xs12 sm3 md12 v-if="displayRecommendedDrugs">
+          <bar-chart 
+            v-if="barChartDataGlobalMedicationDistributionRecommended[0]"
+            :data="barChartDataGlobalMedicationDistributionRecommended[0]"
+            :options="barChartOptionsGlobalMedicationDistributionRecommended"
+            :height="
+              50 +
+              barChartDataGlobalMedicationDistributionRecommended[0].labels.length * 10
+            "
+          />
+        </v-flex>
+
         <v-flex d-flex xs12 sm12 md12>
           <v-autocomplete
             v-model="drugsGroup"
@@ -94,7 +130,9 @@
             deletable-chips
             hide-selected
             dense
-            placeholder
+            hint="Klicken Sie oben, um auszuwählen."
+            persistent-hint
+            prepend-icon="fas fa-pills"
             @input="compileGlobalMedicationDistributionDetails(drugsGroup)"
           >
           </v-autocomplete
@@ -171,7 +209,9 @@
             deletable-chips
             hide-selected
             dense
-            placeholder
+            hint="Klicken Sie oben, um auszuwählen."
+            persistent-hint
+            prepend-icon="fas fa-pills"
             @input="compileGlobalTumorEntityDistribution(drugs)"
           >
           </v-autocomplete
@@ -282,7 +322,9 @@
           deletable-chips
           hide-selected
           dense
-          placeholder
+          hint="Klicken Sie oben, um auszuwählen."
+          persistent-hint
+          prepend-icon="fas fa-pills"
           @input="compileGlobalTumorEntityDistributionTable(drugsTable)"
         >
         </v-autocomplete
@@ -537,6 +579,7 @@ let barChartDataGlobalTumorEntityDistributionCount = 0;
 let barChartDataGlobalTumorEntityDistributionDetails = Array();
 //let barChartDataGlobalTumorEntityDistributionDetailsCount = Array();
 let globalMedicationDistribution = Array();
+let globalMedicationDistributionRecommended = Array();
 let barChartDataGlobalMedicationDistributionDetailsOnDemand = Array();
 let barChartDataGlobalMedicationDistributionDetailsOnDemandCount = 0;
 let itemsFiles = 0;
@@ -574,6 +617,30 @@ export default {
               scaleLabel: {
                 display: true,
                 labelString: "Anzahl der umgesetzten Therapien",
+              },
+            },
+          ],
+        },
+      },
+      barChartOptionsGlobalMedicationDistributionRecommended: {
+        responsive: true,
+        maintainAspectRatio: true,
+        legend: {
+          display: false,
+        },
+        title: {
+          display: true,
+          text: "Empfohlene Wirkstoff-Klassen",
+        },
+        scales: {
+          xAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+              },
+              scaleLabel: {
+                display: true,
+                labelString: "Anzahl der Therapien",
               },
             },
           ],
@@ -849,7 +916,7 @@ export default {
         process.env.baseUrl +
           process.env.port +
           process.env.reporting +
-          "/global-medication-distribution"
+          "/global-medication-distribution?usage=used"
       );
 
       try {
@@ -1140,7 +1207,14 @@ export default {
         process.env.baseUrl +
           process.env.port +
           process.env.reporting +
-          "/global-medication-distribution"
+          "/global-medication-distribution?usage=used"
+      );
+
+      globalMedicationDistributionRecommended = await axios.get(
+        process.env.baseUrl +
+          process.env.port +
+          process.env.reporting +
+          "/global-medication-distribution?usage=recommended"
       );
 
       // GLOBAL MEDICATION DISTRUBUTION
@@ -1148,6 +1222,10 @@ export default {
       let drugsCat = Array();
       let drugsGroupCat = Array();
       let drugsTableCat = Array();
+
+      let drugsCatRecommended = Array();
+      let drugsGroupCatRecommended = Array();
+      let drugsTableCatRecommended = Array();
 
       let labelsGlobalMedicationDistribution = Array();
       let countGlobalMedicationDistribution = Array();
@@ -1158,6 +1236,17 @@ export default {
       let countGlobalMedicationDistributionDetails = Array();
       let colorsGlobalMedicationDistributionDetails = Array();
       let barChartDataGlobalMedicationDistributionDetails = Array();
+
+      let labelsGlobalMedicationDistributionRecommended = Array();
+      let countGlobalMedicationDistributionRecommended = Array();
+      let colorsGlobalMedicationDistributionRecommended = Array();
+      let barChartDataGlobalMedicationDistributionRecommended = Array();
+
+      let labelsGlobalMedicationDistributionDetailsRecommended = Array();
+      let countGlobalMedicationDistributionDetailsRecommended = Array();
+      let colorsGlobalMedicationDistributionDetailsRecommended = Array();
+      let barChartDataGlobalMedicationDistributionDetailsRecommended = Array();
+
 
       let red = 0;
       let green = 0;
@@ -1199,9 +1288,9 @@ export default {
 
           labelsGlobalMedicationDistribution.push(
             globalMedicationDistribution.data.data[i].concept.display +
-              " (" +
+              " - " +
               globalMedicationDistribution.data.data[i].concept.code +
-              ")"
+              " (" + globalMedicationDistribution.data.data[i].concept.version + ")"
           );
           countGlobalMedicationDistribution.push(
             globalMedicationDistribution.data.data[i].count
@@ -1284,6 +1373,127 @@ export default {
         barChartDataGlobalMedicationDistributionDetails.push(itemDetails);
       }
 
+      if (globalMedicationDistributionRecommended.data.data) {
+        for (
+          var i = 0;
+          i < globalMedicationDistributionRecommended.data.data.length;
+          i++
+        ) {
+          red = (red + 16) % 255;
+          blue = (blue + 32) % 255;
+          green = (green + 64) % 255;
+
+          drugsGroupCatRecommended.push(
+            globalMedicationDistributionRecommended.data.data[i].concept.display +
+              " · " +
+              globalMedicationDistributionRecommended.data.data[i].concept.code +
+              " · " +
+              globalMedicationDistributionRecommended.data.data[i].concept.version
+          );
+
+          drugsCatRecommended.push(
+            globalMedicationDistributionRecommended.data.data[i].concept.display +
+              " · " +
+              globalMedicationDistributionRecommended.data.data[i].concept.code +
+              " · " +
+              globalMedicationDistributionRecommended.data.data[i].concept.version
+          );
+
+          drugsTableCatRecommended.push(
+            globalMedicationDistributionRecommended.data.data[i].concept.display +
+              " · " +
+              globalMedicationDistributionRecommended.data.data[i].concept.code +
+              " · " +
+              globalMedicationDistributionRecommended.data.data[i].concept.version
+          );
+
+          labelsGlobalMedicationDistributionRecommended.push(
+            globalMedicationDistributionRecommended.data.data[i].concept.display +
+              " - " +
+              globalMedicationDistributionRecommended.data.data[i].concept.code +
+              " (" + globalMedicationDistributionRecommended.data.data[i].concept.version + ")"
+          );
+          countGlobalMedicationDistributionRecommended.push(
+            globalMedicationDistributionRecommended.data.data[i].count
+          );
+
+          colorsGlobalMedicationDistributionRecommended.push(
+            "rgba(" + red + ", " + green + ", " + blue + ", 0.4)"
+          );
+
+          for (
+            var j = 0;
+            j < globalMedicationDistributionRecommended.data.data[i].components.length;
+            j++
+          ) {
+            drugsCatRecommended.push(
+              globalMedicationDistributionRecommended.data.data[i].components[j].concept
+                .display +
+                " · " +
+                globalMedicationDistributionRecommended.data.data[i].components[j].concept
+                  .code +
+                " · " +
+                globalMedicationDistributionRecommended.data.data[i].components[j].concept
+                  .version
+            );
+            drugsTableCatRecommended.push(
+              globalMedicationDistributionRecommended.data.data[i].components[j].concept
+                .display +
+                " · " +
+                globalMedicationDistributionRecommended.data.data[i].components[j].concept
+                  .code +
+                " · " +
+                globalMedicationDistributionRecommended.data.data[i].components[j].concept
+                  .version
+            );
+
+            labelsGlobalMedicationDistributionDetailsRecommended.push(
+              globalMedicationDistributionRecommended.data.data[i].components[j].concept
+                .display +
+                " - " +
+                globalMedicationDistributionRecommended.data.data[i].components[j].concept
+                  .code
+            );
+            countGlobalMedicationDistributionDetailsRecommended.push(
+              globalMedicationDistributionRecommended.data.data[i].components[j].count
+            );
+
+            colorsGlobalMedicationDistributionDetailsRecommended.push(
+              "rgba(" + red + ", " + green + ", " + blue + ", 0.4)"
+            );
+          }
+        }
+
+        let item = {
+          labels: labelsGlobalMedicationDistributionRecommended,
+          datasets: [
+            {
+              label: "Häufigkeit",
+              data: countGlobalMedicationDistributionRecommended,
+              backgroundColor: colorsGlobalMedicationDistributionRecommended,
+              borderColor: colorsGlobalMedicationDistributionRecommended,
+              borderWidth: 1,
+            },
+          ],
+        };
+
+        let itemDetails = {
+          labels: labelsGlobalMedicationDistributionDetailsRecommended,
+          datasets: [
+            {
+              label: "Häufigkeit",
+              data: countGlobalMedicationDistributionDetailsRecommended,
+              backgroundColor: colorsGlobalMedicationDistributionDetailsRecommended,
+              borderColor: colorsGlobalMedicationDistributionDetailsRecommended,
+              borderWidth: 1,
+            },
+          ],
+        };
+
+        barChartDataGlobalMedicationDistributionRecommended.push(item);
+        barChartDataGlobalMedicationDistributionDetailsRecommended.push(itemDetails);
+      }
+
       return {
         globalReport,
         issues: globalReport.data._issues,
@@ -1292,6 +1502,8 @@ export default {
         barChartDataGlobalTumorEntityDistribution,
         barChartDataGlobalTumorEntityDistributionCount,
         barChartDataGlobalTumorEntityDistributionDetails,
+        barChartDataGlobalMedicationDistributionRecommended,
+        barChartDataGlobalMedicationDistributionDetailsRecommended,
         //barChartDataGlobalTumorEntityDistributionDetailsCount,
         barChartDataGlobalMedicationDistributionDetailsOnDemand,
         barChartDataGlobalMedicationDistributionDetailsOnDemandCount,
@@ -1301,14 +1513,21 @@ export default {
         itemsFiles,
         limitNumberItemsFiles,
         icd10CodesDetailansicht: false,
+        displayRecommendedDrugs: false,
       };
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err.status === 401) {
         return redirect("/");
-      } else if (err.response.status === 403) {
+      } else if (err.status === 403) {
         return redirect("/403");
+      } else if (err.status === 400) {
+        return redirect("/400");
+      } else if (err.status === 500) {
+        return redirect("/500");
+      } else if (err.status === 404) {
+        return redirect("/404");
       } else {
-        return redirect("/" + err.response.status);
+        return redirect("/undefined");
       }
     }
   },

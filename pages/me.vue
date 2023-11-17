@@ -143,11 +143,42 @@
       </v-flex>
       -->
     </v-layout>
-    <!-- SAVED QUERIES TABLE -->
-
     <v-divider class="my-3"></v-divider>
+    <!-- PREPARED QUERIES TABLE -->
+   
+    <v-flex d-flex xs12 sm6 md3>
+        <v-card
+          class="mx-auto"
+          flat
+          color="teal darken-3"
+          dark
+          max-width="400"
+          v-ripple="{ center: true }"
+        >
+          <v-card-text class="headline font-weight-thin">
+            <v-icon color="teal accent-1" dark>fas fa-save</v-icon>
+            <br />
+            <strong>{{ savedQueries.length }}</strong> Abfragen
+          </v-card-text>
+        </v-card>
+      </v-flex>
+      <v-divider class="my-3"></v-divider>
     <v-card-title class="headline font-weight-light">
-      Meine gespeicherten Abfragen
+      Meine vorbereiteten Abfragen<v-flex xs12 sm3 md1>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn flat icon color="grey accent-2" v-bind="attrs" v-on="on">
+              <v-icon>fas fa-info-circle</v-icon>
+            </v-btn>
+          </template>
+          <span
+            >Hier können Sie Ihre zuvor vorbereiteten Abfragen sehen.<br />
+            Wenn Sie einen Parameter als 'undefined' sehen, bedeutet dies, dass
+            das entsprechende Feld während der Parametererfassung leer gelassen
+            wurde.</span
+          >
+        </v-tooltip>
+      </v-flex>
     </v-card-title>
 
     <v-data-table
@@ -160,19 +191,120 @@
     >
       <template slot="items" slot-scope="props">
         <tr>
-
-          <td>{{ props.item.creationDateTime.replace("T", " ").slice(0, 19) }}</td>
-          <td>{{ props.item.name }}</td>
-          <td>{{ props.item.parameters.diagnoses && props.item.parameters.diagnoses.length > 0 ? props.item.parameters.diagnoses.map(diagnosis => `${diagnosis.code} - ${diagnosis.display}`).join(", ") : '' }}
-          {{ props.item.parameters.tumorMorphology && props.item.parameters.tumorMorphology.length > 0 ? props.item.parameters.tumorMorphology.map(morphology => `${morphology.code} - ${morphology.display}`).join(", ") : '' }}</td>
-          <td>{{ props.item.parameters.mutatedGenes && props.item.parameters.mutatedGenes.length > 0 ? props.item.parameters.mutatedGenes.map(gene => `${gene.code} - ${gene.display}`).join(", ") : '' }}
-            {{ props.item.parameters.simpleVariants && props.item.parameters.simpleVariants.length > 0 ? props.item.parameters.simpleVariants.join(", ") : '' }}
-            {{ props.item.parameters.copyNumberVariants && props.item.parameters.copyNumberVariants.length > 0 ? 'Available' : '' }}
-            {{ props.item.parameters.dnaFusions && props.item.parameters.dnaFusions.length > 0 ? props.item.parameters.dnaFusions.join(", ") : '' }}
-            {{ props.item.parameters.rnaFusions && props.item.parameters.rnaFusions.length > 0 ? props.item.parameters.rnaFusions.join(", ") : '' }}
+          <td>
+            {{ props.item.creationDateTime.replace("T", " ").slice(0, 19) }}
           </td>
-            <td>{{ props.item.parameters.medicationsWithUsage && props.item.parameters.medicationsWithUsage.length > 0 ? props.item.parameters.medicationsWithUsage.map(medication => medication.medication.display).join(", ") : '' }}</td>
-            <td>{{ props.item.parameters.responses && props.item.parameters.responses.length > 0 ? props.item.parameters.responses.map(response => `${response.code} - ${response.display}`).join(", ") : '' }}</td>
+          <td>{{ props.item.name }}</td>
+          <td>
+            {{
+              props.item.parameters.diagnoses &&
+              props.item.parameters.diagnoses.length > 0
+                ? props.item.parameters.diagnoses
+                    .map(
+                      (diagnosis) => `${diagnosis.code} - ${diagnosis.display}`
+                    )
+                    .join(", ")
+                : ""
+            }}
+            {{
+              props.item.parameters.tumorMorphology &&
+              props.item.parameters.tumorMorphology.length > 0
+                ? props.item.parameters.tumorMorphology
+                    .map(
+                      (morphology) =>
+                        `${morphology.code} - ${morphology.display}`
+                    )
+                    .join(", ")
+                : ""
+            }}
+          </td>
+          <td>
+            {{
+              props.item.parameters.mutatedGenes &&
+              props.item.parameters.mutatedGenes.length > 0
+                ? props.item.parameters.mutatedGenes
+                    .map((gene) => `${gene.code} - ${gene.display}`)
+                    .join(", ")
+                : ""
+            }}
+            {{
+              props.item.parameters.simpleVariants &&
+              props.item.parameters.simpleVariants.length > 0
+                ? props.item.parameters.simpleVariants
+                    .map(
+                      (simpleVariant) =>
+                        `${
+                          simpleVariant.gene
+                            ? `${simpleVariant.gene.code} - ${simpleVariant.gene.display}`
+                            : ""
+                        }, ${simpleVariant.dnaChange}, ${
+                          simpleVariant.aminoAcidChange
+                        }`
+                    )
+                    .join(", ")
+                : ""
+            }}
+            {{
+              props.item.parameters.copyNumberVariants &&
+              props.item.parameters.copyNumberVariants.length > 0
+                ? props.item.parameters.copyNumberVariants
+                    .map(
+                      (copyNumberVariant) =>
+                        `${
+                          copyNumberVariant.genes
+                            ? copyNumberVariant.genes
+                                .map((gene) => `${gene.code} - ${gene.display}`)
+                                .join(", ")
+                            : ""
+                        }, ${copyNumberVariant.type}, ${
+                          copyNumberVariant.copyNumber
+                            ? `${copyNumberVariant.copyNumber.min}-${copyNumberVariant.copyNumber.max}`
+                            : ""
+                        }`
+                    )
+                    .join(", ")
+                : ""
+            }}
+            {{
+              props.item.parameters.dnaFusions &&
+              props.item.parameters.dnaFusions.length > 0
+                ? props.item.parameters.dnaFusions.join(", ")
+                : ""
+            }}
+            {{
+              props.item.parameters.rnaFusions &&
+              props.item.parameters.rnaFusions.length > 0
+                ? props.item.parameters.rnaFusions.join(", ")
+                : ""
+            }}
+          </td>
+          <td>
+            {{
+              props.item.parameters.medicationsWithUsage &&
+              props.item.parameters.medicationsWithUsage.length > 0
+                ? props.item.parameters.medicationsWithUsage
+                    .map(
+                      (medication) =>
+                        medication.medication.display +
+                        " · " +
+                        medication.medication.code +
+                        " · " +
+                        medication.medication.version
+                    )
+                    .join(", ")
+                : ""
+            }}
+          </td>
+          <td>
+            {{
+              props.item.parameters.responses &&
+              props.item.parameters.responses.length > 0
+                ? props.item.parameters.responses
+                    .map((response) => `${response.code} - ${response.display}`)
+                    .join(", ")
+                : ""
+            }}
+          </td>
           <td class="text-xs-right">
             <v-icon small class="mr-2" @click="deleteQuery(props.item)"
               >fas fa-trash</v-icon
@@ -180,7 +312,7 @@
           </td>
         </tr>
       </template>
-    </v-data-table>    
+    </v-data-table>
 
     <v-btn small icon @click="$vuetify.goTo('#me', options)" flat color="grey">
       <v-icon style="font-size: 1.2rem">fas fa-arrow-alt-circle-up</v-icon>

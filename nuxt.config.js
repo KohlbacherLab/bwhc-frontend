@@ -49,7 +49,7 @@ module.exports = {
     me: process.env.me || '/bwhc/user/api/whoami',
     logout: process.env.logout || '/bwhc/user/api/logout',
 
-    version: 'v.2023-08'
+    version: 'v.2023-11'
 
   },
 

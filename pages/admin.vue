@@ -19,36 +19,67 @@
 
     <v-divider class="my-3"></v-divider>
 
-    <v-card-title class="headline font-weight-light"
-      >bwHC-Knoten · Verbindungsstatus</v-card-title
-    >
-    <div class="peers">
-      <v-layout row wrap>
-        <v-flex v-for="peer in peers" :key="peer.site">
-          <v-card flat class="text-xs-center ma-0">
-            <v-responsive class="pt-4">
-              <v-avatar size="70" class="grey lighten-2">
-                <div v-if="peer.status == 'Online'">
-                  <v-icon style="font-size: 2.5rem" color="green accent-4"
-                    >fas fa-satellite-dish</v-icon
-                  >
-                </div>
-                <div v-else>
-                  <v-icon style="font-size: 2.5rem" color="red accent-4"
-                    >fas fa-satellite-dish</v-icon
-                  >
-                </div>
-              </v-avatar>
-            </v-responsive>
-            <v-card-text>
-              <div class="subheading">{{ peer.site }}</div>
-              <div color="grey" class="grey--text">{{ peer.status }}</div>
-            </v-card-text>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </div>
+    <span v-if="peers.length > 0">
+      <v-card-title class="headline font-weight-light"
+        >bwHC-Knoten · Verbindungsstatus</v-card-title
+      ><v-card-text class="subheading grey--text font-weight-light"
+        ><v-icon style="font-size: 1.5rem" color="green accent-4"
+          >fas fa-satellite-dish</v-icon
+        >
+        Online ·
+        <v-icon style="font-size: 1.5rem" color="red accent-4"
+          >fas fa-satellite-dish</v-icon
+        >
+        Offline</v-card-text
+      >
 
+      <div class="peers">
+        <v-layout row wrap>
+          <v-flex v-for="peer in peers" :key="peer.site">
+            <v-card flat class="text-xs-center ma-0">
+              <v-responsive class="pt-4">
+                <v-avatar size="40" class="grey lighten-2">
+                  <div v-if="peer.status == 'Online'">
+                    <v-icon style="font-size: 1.5rem" color="green accent-4"
+                      >fas fa-satellite-dish</v-icon
+                    >
+                  </div>
+                  <div v-else>
+                    <v-icon style="font-size: 1.5rem" color="red accent-4"
+                      >fas fa-satellite-dish</v-icon
+                    >
+                  </div>
+                </v-avatar>
+              </v-responsive>
+              <v-card-text>
+                <div class="subheading">{{ peer.site }}</div>
+                <div color="grey" class="grey--text">{{ peer.status }}</div>
+              </v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </div>
+
+      <v-divider class="my-3"></v-divider>
+    </span>
+
+    <v-flex d-flex xs12 sm6 md3>
+      <v-card
+        class="mx-auto"
+        flat
+        color="blue darken-3"
+        dark
+        max-width="400"
+        v-ripple="{ center: true }"
+      >
+        <v-card-text class="headline font-weight-thin">
+          <v-icon color="blue accent-1" dark>fas fa-users</v-icon>
+          <br />
+          <strong>{{ itemsUsers.length }}</strong> Benutzer
+        </v-card-text>
+      </v-card>
+    </v-flex>
+    
     <v-divider class="my-3"></v-divider>
 
     <v-card-title class="headline font-weight-light"
@@ -119,12 +150,12 @@
     <v-divider class="my-3"></v-divider>
 
     <v-flex d-flex>
-                <v-card flat>
-                  <v-card-text class="subheading grey--text font-weight-light">
-                    Frontend {{version}}<br>
-                  </v-card-text>
-                </v-card>
-              </v-flex>
+      <v-card flat>
+        <v-card-text class="subheading grey--text font-weight-light">
+          Frontend {{ version }}<br />
+        </v-card-text>
+      </v-card>
+    </v-flex>
 
     <v-dialog v-model="editOwnDetailsDialog" width="500">
       <v-card>
@@ -484,7 +515,8 @@ export default {
     rules: {
       required: (value) => !!value || "Required.",
       password: (value) => {
-        const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!?._,@#\$%\^&\*?])(?=.{8,})/;
+        const pattern =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!?._,@#\$%\^&\*?])(?=.{8,})/;
         return (
           pattern.test(value) ||
           "Mindest. 8 Zeichen, inkl. ein Großbuchstabe, eine Zahl und ein Sonderzeichen."
@@ -760,15 +792,16 @@ export default {
       let users = await axios.get(
         process.env.baseUrl + process.env.port + process.env.users
       );
-      
 
       let peerStatusReport = await axios.get(
         process.env.baseUrl + process.env.port + process.env.peerStatusReport
       );
 
       let roles = await axios.get(
-          process.env.baseUrl + process.env.port + "/bwhc/catalogs/api/ValueSet?name=nutzer-rollen"
-        );
+        process.env.baseUrl +
+          process.env.port +
+          "/bwhc/catalogs/api/ValueSet?name=nutzer-rollen"
+      );
 
       return {
         itemsUsers: users.data.entries,
@@ -778,12 +811,18 @@ export default {
         roles: roles.data.concepts,
       };
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err.status === 401) {
         return redirect("/");
-      } else if (err.response.status === 403) {
+      } else if (err.status === 403) {
         return redirect("/403");
+      } else if (err.status === 400) {
+        return redirect("/400");
+      } else if (err.status === 500) {
+        return redirect("/500");
+      } else if (err.status === 404) {
+        return redirect("/404");
       } else {
-        return redirect("/" + err.response.status);
+        return redirect("/undefined");
       }
     }
   },

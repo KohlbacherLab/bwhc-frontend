@@ -15,6 +15,24 @@
                 <v-icon color="purple" dark>fas fa-dna</v-icon
                 ><b> Alterationen</b>
 
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn flat icon color="white" v-bind="attrs" v-on="on">
+                      <v-icon>fas fa-info-circle</v-icon>
+                    </v-btn>
+                  </template>
+                  <span
+                    >Wählen Sie den Typ der Änderungen aus und fügen Sie
+                    anschließend Gene, SNV und/oder CNV hinzu, bevor Sie die
+                    Abfrage starten.<br />
+                    Für weitere Unterstützung klicken Sie auf das
+                    <v-icon dark style="font-size: 1rem"
+                      >fas fa-question</v-icon
+                    >
+                    oben.</span
+                  >
+                </v-tooltip>
+
                 <v-radio-group v-model="mutationOptions" row>
                   <v-radio
                     label="SNV"
@@ -95,11 +113,9 @@
                 <v-flex d-flex v-if="showSNV">
                   <v-card color="grey lighten-3" flat>
                     <v-card-text class="title font-weight-thin">
-                      <div class="subheading grey--text">
+                      <div class="subheading">
                         Bitte wählen Sie das vom SNV betroffene Gen, und
-                        optional cDNA change, protein change aus. Klicken Sie
-                        auf die <strong>Hinzufügen</strong> Taste, um die
-                        Auswahl in die Suche zu übernehmen.
+                        optional cDNA change, protein change aus.
                       </div>
                       <br />
 
@@ -139,6 +155,13 @@
                             solo-inverted
                             :rules="[rulesSNV.validateAminoAcidChange]"
                           ></v-text-field>
+
+                          <div class="subheading">
+                            Klicken Sie auf die
+                            <strong>Hinzufügen</strong> Taste, um die Auswahl in
+                            die Suche zu übernehmen.
+                          </div>
+                          <br />
 
                           <v-btn
                             large
@@ -194,11 +217,9 @@
                 <v-flex d-flex v-if="showCNV">
                   <v-card color="grey lighten-3" flat>
                     <v-card-text class="title font-weight-thin">
-                      <div class="subheading grey--text">
+                      <div class="subheading">
                         Bitte wählen Sie ein oder mehrere vom CNV betroffene
                         Gene, und optional CNV-Typ, Min- und Max-Kopienzahl.
-                        Klicken Sie auf die <strong>Hinzufügen</strong> Taste,
-                        um die Auswahl in die Suche zu übernehmen.
                       </div>
                       <br />
 
@@ -255,6 +276,13 @@
                             solo-inverted
                             label="Max Copy Number"
                           ></v-text-field>
+
+                          <div class="subheading">
+                            Klicken Sie auf die
+                            <strong>Hinzufügen</strong> Taste, um die Auswahl in
+                            die Suche zu übernehmen.
+                          </div>
+                          <br />
 
                           <v-btn
                             large
@@ -323,12 +351,10 @@
                 <v-flex d-flex v-if="showFusions">
                   <v-card color="grey lighten-3" flat>
                     <v-card-text class="title font-weight-thin">
-                      <div class="subheading grey--text">
+                      <div class="subheading">
                         <b>Diese Funktion ist noch nicht vollständig!</b><br />
                         Bitte wählen Sie ein Fusionspartner-Gen und
                         (5',3')-Zuordnung, sowie den Fusionstyp (DNA, RNA).
-                        Klicken Sie auf die <strong>Hinzufügen</strong> Taste,
-                        um die Auswahl in die Suche zu übernehmen.
                       </div>
 
                       <!-- 
@@ -406,6 +432,12 @@
                         <v-radio label="3'" value="threePrimeGene"></v-radio>
                         <v-radio label="Beide" value="bothPrimes"></v-radio>
                       </v-radio-group>
+
+                      <div class="subheading">
+                        <b>Diese Funktion ist noch nicht vollständig!</b><br />
+                        Klicken Sie auf die <strong>Hinzufügen</strong> Taste,
+                        um die Auswahl in die Suche zu übernehmen.
+                      </div>
 
                       <v-layout row wrap>
                         <v-flex xs12 sm6 md9>
@@ -712,6 +744,22 @@
               <v-card-text class="headline font-weight-thin">
                 <v-icon color="blue">fas fa-pills</v-icon> <b>Wirkstoffe</b>
 
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn flat icon color="white" v-bind="attrs" v-on="on">
+                      <v-icon>fas fa-info-circle</v-icon>
+                    </v-btn>
+                  </template>
+                  <span
+                    >Beginnen Sie damit, die entsprechende Verwendungskategorie
+                    aus den Optionsfeldern auszuwählen. <br />Anschließend geben
+                    Sie den Wirkstoffnamen oder -code ein; automatische
+                    Vorschläge erscheinen während der Eingabe. <br />Zuletzt
+                    überprüfen Sie und wählen Sie die korrekte Katalogversion
+                    (Jahr) aus.</span
+                  >
+                </v-tooltip>
+
                 <v-radio-group v-model="drugUsage" row>
                   <v-radio label="Empfohlen" value="recommended"></v-radio>
                   <v-radio label="Verabreicht" value="used"></v-radio>
@@ -732,6 +780,8 @@
                   dense
                   multiple
                   placeholder
+                  hint="Wählen Sie die Anwendung, dann geben Sie den Wirkstoff, Code und die Version ein."
+                  persistent-hint
                   @input="addDrugs(drugs[drugs.length - 1], drugUsage)"
                 >
                   <!--
@@ -829,8 +879,22 @@
       <v-flex xs12 sm3 md12>
         <v-divider class="my-3"></v-divider>
       </v-flex>
-
-      <v-flex d-flex xs12 sm3 md3>
+      <v-flex xs12 sm3 md1>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn flat icon color="grey accent-2" v-bind="attrs" v-on="on">
+              <v-icon>fas fa-info-circle</v-icon>
+            </v-btn>
+          </template>
+          <span
+            >Wählen Sie den Abfragetyp im Voraus, bevor Sie die gespeicherte
+            Abfrage auswählen.<br>Sie finden alle gespeicherten Abfragen unter
+            <v-icon dark style="font-size: 1rem">fas fa-user</v-icon>
+            "Nutzerdetails".</span
+          >
+        </v-tooltip>
+      </v-flex>
+      <v-flex d-flex xs12 sm3 md2>
         <v-radio-group v-model="savedQueryType" row>
           <v-radio
             v-if="this.localButton"
@@ -848,21 +912,22 @@
       <v-flex d-flex xs12 sm3 md9>
         <v-card class="mx-auto" flat light max-width="1200">
           <v-card-text class="headline font-weight-thin">
-            <v-icon color="grey">fas fa-save</v-icon>
-            <b>Gespeicherten Abfragen</b>
             <v-autocomplete
               v-model="queryName"
               :items="getSavedQueries.data.entries"
               :loading="isLoading"
               item-text="name"
               item-value="parameters"
-              label="Auswahl und Ausführung einer vorgespeicherten Abfrage."
+              label="Vorbereiteten Abfragen"
+              placeholder="Wählen Sie eine vorgespeicherte Abfrage zur Ausführung aus."
+              hint="Stellen Sie sicher, den Abfragetyp im Voraus auszuwählen."
+              persistent-hint
               ref="queries"
+              prepend-icon="fas fa-save"
               chips
               hide-selected
               dense
-              placeholder
-              @input="accessSavedQuery(savedQueryType,queryName)"
+              @input="accessSavedQuery(savedQueryType, queryName)"
             >
             </v-autocomplete>
           </v-card-text>
@@ -1206,9 +1271,17 @@ export default {
         }
       } catch (err) {
         if (err.status === 401) {
-          this.$router.push("/");
-        } else if (err.response.status === 403) {
-          this.$router.push("/403");
+          return redirect("/");
+        } else if (err.status === 403) {
+          return redirect("/403");
+        } else if (err.status === 400) {
+          return redirect("/400");
+        } else if (err.status === 500) {
+          return redirect("/500");
+        } else if (err.status === 404) {
+          return redirect("/404");
+        } else {
+          return redirect("/undefined");
         }
       }
     },
@@ -1521,35 +1594,56 @@ export default {
     addDrugs(drug, usage) {
       if (usage == "beide") {
         this.selectedDrugs.push({
-          medication: { code: drug.split(" · ")[1] },
+          medication: {
+            code: drug.split(" · ")[1],
+            version: drug.split(" · ")[2],
+          },
           usage: [{ code: "used" }, { code: "recommended" }],
         });
         this.selectedDrugsDisplay.push({
-          medication: { code: drug.split(" · ")[1] },
+          medication: {
+            code: drug.split(" · ")[1],
+            version: drug.split(" · ")[2],
+          },
           usage: "(v+e)",
         });
       } else if (usage == "egal") {
         this.selectedDrugs.push({
-          medication: { code: drug.split(" · ")[1] },
+          medication: {
+            code: drug.split(" · ")[1],
+            version: drug.split(" · ")[2],
+          },
           usage: [],
         });
         this.selectedDrugsDisplay.push({
-          medication: { code: drug.split(" · ")[1] },
+          medication: {
+            code: drug.split(" · ")[1],
+            version: drug.split(" · ")[2],
+          },
           usage: "",
         });
       } else {
         this.selectedDrugs.push({
-          medication: { code: drug.split(" · ")[1] },
+          medication: {
+            code: drug.split(" · ")[1],
+            version: drug.split(" · ")[2],
+          },
           usage: [{ code: usage }],
         });
         if (usage === "used") {
           this.selectedDrugsDisplay.push({
-            medication: { code: drug.split(" · ")[1] },
+            medication: {
+              code: drug.split(" · ")[1],
+              version: drug.split(" · ")[2],
+            },
             usage: "(v)",
           });
         } else {
           this.selectedDrugsDisplay.push({
-            medication: { code: drug.split(" · ")[1] },
+            medication: {
+              code: drug.split(" · ")[1],
+              version: code.split(" · ")[2],
+            },
             usage: "(e)",
           });
         }
@@ -1598,7 +1692,6 @@ export default {
         "Authorization"
       ] = `Bearer ${localStorage.token}`;
 
-
       try {
         let request = {
           mode: {
@@ -1612,37 +1705,41 @@ export default {
           request
         );
 
+        localStorage.setItem("mutatedGenes", JSON.stringify(this.mutatedGenes));
+        localStorage.setItem("diagnosis", JSON.stringify(this.diagnosis));
         localStorage.setItem(
-            "mutatedGenes",
-            JSON.stringify(this.mutatedGenes)
-          );
-          localStorage.setItem("diagnosis", JSON.stringify(this.diagnosis));
-          localStorage.setItem(
-            "tumorMorphology",
-            JSON.stringify(this.tumorMorphology)
-          );
-          localStorage.setItem(
-            "selectedDrugs",
-            JSON.stringify(this.medicationsWithUsage)
-          );
-          localStorage.setItem("responses", JSON.stringify(this.responses));
+          "tumorMorphology",
+          JSON.stringify(this.tumorMorphology)
+        );
+        localStorage.setItem(
+          "selectedDrugs",
+          JSON.stringify(this.medicationsWithUsage)
+        );
+        localStorage.setItem("responses", JSON.stringify(this.responses));
 
-          if (JSON.stringify(Response.data._issues) != undefined) {
-            let connectionErrors = "";
-            for (var i = 0; i < Response.data._issues.length; i++) {
-              connectionErrors += Response.data._issues[i].details + " · ";
-            }
+        if (JSON.stringify(Response.data._issues) != undefined) {
+          let connectionErrors = "";
+          for (var i = 0; i < Response.data._issues.length; i++) {
+            connectionErrors += Response.data._issues[i].details + " · ";
+          }
 
-            localStorage.setItem("issues", connectionErrors);
-          } else localStorage.removeItem("issues");
+          localStorage.setItem("issues", connectionErrors);
+        } else localStorage.removeItem("issues");
 
-          this.$router.push(`/results/${Response.data.id}`);
-
+        this.$router.push(`/results/${Response.data.id}`);
       } catch (err) {
         if (err.status === 401) {
-          this.$router.push("/");
-        } else if (err.response.status === 403) {
-          this.$router.push("/403");
+          return redirect("/");
+        } else if (err.status === 403) {
+          return redirect("/403");
+        } else if (err.status === 400) {
+          return redirect("/400");
+        } else if (err.status === 500) {
+          return redirect("/500");
+        } else if (err.status === 404) {
+          return redirect("/404");
+        } else {
+          return redirect("/undefined");
         }
       }
     },
