@@ -26,9 +26,9 @@
         max-width="500"
       >
         <v-card-text class="headline font-weight-thin">
-          <p>🚷</p>
-          <strong>403</strong>
-          <br />Verboten. Zugriff untersagt.
+          <p>🔧</p>
+          <strong>503</strong>
+          <br />Dienst vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.
         </v-card-text>
       </v-card>
     </v-flex>
@@ -41,6 +41,7 @@
     </v-flex>
   </v-container>
 </template>
+
 <script>
 export default {
   data() {

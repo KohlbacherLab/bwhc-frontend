@@ -3,12 +3,7 @@
     <v-container fluid grid-list-md>
       <userPanel />
       <v-flex>
-        <h3 class="display-3">
-          <strong>bwHealthCloud</strong> Qualitätskontrolle Statistik
-        </h3>
-
-        <span class="subheading subheading font-weight-thin">
-          <v-btn
+        <h3 class="display-1"><v-btn
             dark
             icon
             color="blue accent-2"
@@ -16,13 +11,10 @@
             @click="$router.push('/main')"
           >
             <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-          >bwHC Statistiken finden Sie weiter unten.
-          <strong @click="$router.push('help')">Hilfe?</strong>
-        </span>
-        <v-divider class="my-3"></v-divider>
-      </v-flex>
-
-      <v-tabs fixed-tabs color="grey lighten-5">
+          > Qualitätskontrolle Statistik
+        </h3>
+        <div class="custom-tabs-container">
+        <v-tabs class="custom-tabs" fixed-tabs color="grey lighten-5" >
         <v-tab @click="$router.push('/quality_bwhc')"> <b>Datenqualität</b> </v-tab>
         <v-tab @click="$router.push('/quality_reporting')">
           <i class="fas fa-chart-bar"></i>&nbsp;MTB-Therapien
@@ -32,7 +24,8 @@
           ><i class="fas fa-chart-bar"></i>&nbsp;Tumorentitäten</v-tab
         >
         -->
-      </v-tabs>
+      </v-tabs></div>
+      </v-flex>
 
       <v-divider class="my-3"></v-divider>
       <v-col v-if="issues">
@@ -596,3 +589,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.custom-tabs-container {
+  display: flex;
+  justify-content: flex-end;
+}
+</style>

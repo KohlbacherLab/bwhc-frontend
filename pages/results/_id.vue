@@ -1,14 +1,12 @@
 <template>
   <v-container fluid grid-list-md>
     <userPanel />
-    <h3 class="display-3"><strong>bwHealthCloud</strong> Ergebnisse</h3>
-
-    <span class="subheading font-weight-light">
+    <h3 class="display-1">
       <v-btn dark icon color="blue accent-2" align-end @click="goBack">
-        <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-      >Abfrageergebnisse werden unten angezeigt.
-      <strong @click="$router.push('../help')">Hilfe?</strong>
-    </span>
+        <v-icon dark>fas fa-arrow-left</v-icon>
+      </v-btn>
+      <b>Ergebnisse</b>
+    </h3>
 
     <v-divider class="my-3"></v-divider>
 
@@ -21,7 +19,7 @@
           dark
           max-width="400"
         >
-          <v-card-text class="headline font-weight-thin">
+          <v-card-text class="title font-weight-thin">
             <v-icon color="purple" dark>fas fa-street-view</v-icon>
             <strong>{{ displayResults.patientCount }}</strong> Patienten
           </v-card-text>
@@ -36,7 +34,7 @@
           dark
           max-width="400"
         >
-          <v-card-text class="headline font-weight-thin">
+          <v-card-text class="title font-weight-thin">
             <v-icon color="indigo">fas fa-stethoscope</v-icon>
             <strong>{{ displayResults.ngsReportCount }}</strong> Molekulare
             Diagnostik
@@ -52,7 +50,7 @@
           dark
           max-width="400"
         >
-          <v-card-text class="headline font-weight-thin">
+          <v-card-text class="title font-weight-thin">
             <v-icon color="blue">fas fa-comment-medical</v-icon>
             <strong>{{ displayResults.therapyRecommendationCount }}</strong>
             Therapie-Empfehlungen
@@ -68,7 +66,7 @@
           dark
           max-width="400"
         >
-          <v-card-text class="headline font-weight-thin">
+          <v-card-text class="title font-weight-thin">
             <v-icon color="cyan" dark>fas fa-file-medical</v-icon>
             <strong>{{ displayResults.therapyCount }}</strong> Systemische
             Therapien
@@ -269,7 +267,7 @@
 
                   <v-flex order-lg2>
                     <v-card flat>
-                      <v-card-text small class="font-weight-thin">
+                      <v-card-text small class="caption font-weight-thin">
                         <span v-if="getQueryParametersMutations.length > 0">
                           <strong>Mutationen:</strong>
                           <li
@@ -389,7 +387,7 @@
                   </v-flex>
                   <v-flex order-lg3>
                     <v-card flat>
-                      <v-card-text small class="font-weight-thin">
+                      <v-card-text small class="caption font-weight-thin">
                         <span v-if="getQueryParametersDiagnosis.length > 0">
                           <strong>Diagnose:</strong>
                           <li
@@ -568,7 +566,13 @@
       </v-expansion-panel-content>
     </v-expansion-panel>
 
-    <v-tabs v-if="hide" color="blue-grey lighten-5" fixed-tabs icons-and-text>
+    <v-tabs
+      v-model="selectedTab"
+      v-if="hide"
+      color="blue-grey lighten-5"
+      fixed-tabs
+      icons-and-text
+    >
       <v-tab class="subheading font-weight-regular" :key="cases"
         >Patienten <v-icon color="purple" dark>fas fa-street-view</v-icon>
       </v-tab>
@@ -2243,19 +2247,17 @@ let baseURL = process.env.baseUrl + process.env.port;
 let serverBaseURL = process.env.baseUrl + process.env.port + process.env.query;
 
 export default {
+  
   loading: "~/components/loading.vue",
-
   name: "ProfilePage",
-
   menuMin: false,
   menuMax: false,
-
   components: {
     userPanel,
     filterPanel,
     queryPanel,
     BarChart,
-    queryTimer,
+    queryTimer
   },
 
   data() {
@@ -2273,6 +2275,7 @@ export default {
       gender: [],
       ageRange: [],
       vitalStatus: [],
+      selectedTab: 0,
 
       headerFiles: [
         { text: "Index", align: "left", value: "groupIndex" },
@@ -2386,6 +2389,34 @@ export default {
   },
 
   computed: {
+
+    chartData() {
+
+      const genderData = this.countOccurrences(this.itemsFiles, 'gender');
+      const ageData = this.calculateAgeDistribution(this.itemsFiles);
+      const vitalStatusData = this.countOccurrences(this.itemsFiles, 'vitalStatus');
+
+      return {
+        labels: ['Male', 'Female', 'Other'],
+        datasets: [
+          {
+            label: 'Gender Distribution',
+            backgroundColor: '#3498db',
+            data: genderData,
+          },
+          {
+            label: 'Age Distribution',
+            backgroundColor: '#2ecc71',
+            data: ageData,
+          },
+          {
+            label: 'Vital Status Distribution',
+            backgroundColor: '#e74c3c',
+            data: vitalStatusData,
+          },
+        ],
+      }
+    },
     dataExists() {
       return this.itemsFiles.length > 0;
     },
@@ -2417,6 +2448,12 @@ export default {
         0,
         this.limitNumberItemsRecommendations
       );
+    },
+  },
+
+  watch: {
+    selectedTab(newVal) {
+      localStorage.setItem("selectedTab", newVal.toString());
     },
   },
 
@@ -2528,6 +2565,21 @@ export default {
         }
       }
     },
+  },
+
+  async fetch() {
+    const storedTab = localStorage.getItem("selectedTab");
+    if (storedTab !== null) {
+      this.selectedTab = parseInt(storedTab, 10);
+    }
+  },
+
+  beforeDestroy() {
+    localStorage.setItem("selectedTab", this.selectedTab.toString());
+  },
+  beforeRouteLeave(to, from, next) {
+    localStorage.setItem("selectedTab", this.selectedTab.toString());
+    next();
   },
 
   async asyncData({ params, redirect, error }) {
@@ -3158,6 +3210,11 @@ export default {
         getQueryParametersFederated,
 
         issues: connectionIssues,
+        filesEntries: {
+        age: [
+         filesEntries.map((item) => item.age),
+        ],
+      },
       };
     } catch (err) {
       if (err.status === 401) {

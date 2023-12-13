@@ -26,7 +26,7 @@
         max-width="500"
       >
         <v-card-text class="headline font-weight-thin">
-          <p>🙅🏻‍♂️</p>
+          <p>❌</p>
           <strong>400</strong>
           <br />Ungültige Anforderung.
         </v-card-text>

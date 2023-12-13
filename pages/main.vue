@@ -2,14 +2,11 @@
   <v-container fluid grid-list-md>
     <userPanel />
     <v-flex>
-      <h3 class="display-3"><strong>bwHealthCloud</strong></h3>
-      <v-btn disabled icon color="blue accent-2" align-end
-        ><v-icon dark>fas fa-cloud</v-icon>
-      </v-btn>
-      <span class="subheading font-weight-thin">
-        bwHC Abfrage-Portal, Statistiken, Validierung und Management.
-        <strong @click="$router.push('/help')">Hilfe?</strong>
-      </span>
+      <h3 class="display-3">
+        <v-btn disabled icon color="blue accent-2" align-end
+          ><v-icon style="font-size: 2.5rem" dark>fas fa-cloud</v-icon> </v-btn
+        ><strong>bwHealthCloud</strong>
+      </h3>
       <v-divider class="my-3"></v-divider>
     </v-flex>
     <v-layout row wrap>
@@ -25,21 +22,23 @@
             <strong>{{ me.roles.join(", ") }}</strong>
           </v-card-text>
           <v-card-text class="subheading grey--text font-weight-light">
-            <i class="fas fa-user-tag"></i> Bitte überprüfen Sie Ihre Rollen unten und werfen Sie einen Blick
-            auf die entsprechenden Zugriffsrechte rechts.
-            
+            <i class="fas fa-user-tag"></i> Bitte überprüfen Sie Ihre Rollen
+            unten und werfen Sie einen Blick auf die entsprechenden
+            Zugriffsrechte rechts.
+
             <br /><br />
-            <i class="fas fa-user-shield"></i> Falls Sie denken, dass Ihre Rollen nicht vollständig sind, nehmen
-            Sie bitte Kontakt mit Ihrem lokalen bwHealthCloud Administrator auf.
+            <i class="fas fa-user-shield"></i> Falls Sie denken, dass Ihre
+            Rollen nicht vollständig sind, nehmen Sie bitte Kontakt mit Ihrem
+            lokalen bwHealthCloud Administrator auf.
             <br />
             <br />
-            <i class="fas fa-envelope"></i> Falls Sie Fragen oder Anregungen in Bezug auf die Bedienung des
-            bwHealthCloud Portals haben, zögern Sie bitte nicht, uns zu
-            kontaktieren. Sie können eine E-Mail an
+            <i class="fas fa-envelope"></i> Falls Sie Fragen oder Anregungen in
+            Bezug auf die Bedienung des bwHealthCloud Portals haben, zögern Sie
+            bitte nicht, uns zu kontaktieren. Sie können eine E-Mail an
             <a href="mailto:aydin-can.polatkan@uni-tuebingen.de">uns</a>
             senden. <br /><br />
-            <i class="fas fa-bug"></i> Falls Sie einen Fehler
-            entdecken,<br />füllen Sie bitte das
+            <i class="fas fa-bug"></i> Falls Sie einen Fehler entdecken,<br />füllen
+            Sie bitte das
             <a href="https://forms.gle/w8Z3CnB3zLN6iNMb7" target="_blank"
               >Bug-Report-Formular</a
             >
@@ -117,12 +116,10 @@
                           Zeigt die Anzahl der Patienten im MTB mit verfügbaren
                           Sequenzdaten an. <br /><b>MTB-Beschluss:</b> Gibt an,
                           wie viele der sequenzierten Patienten an MTB
-                          überwiesen wurden. <br /><b
-                            >FollowUp:</b
-                          >
-                          Zeigt an, wie viele Patienten eine follow-up
-                          erhalten haben. <br /><b>Sterbedaten:</b> Zeigt die
-                          Anzahl der verstorbenen Patienten an.</v-card-text
+                          überwiesen wurden. <br /><b>FollowUp:</b> Zeigt an,
+                          wie viele Patienten eine follow-up erhalten haben.
+                          <br /><b>Sterbedaten:</b> Zeigt die Anzahl der
+                          verstorbenen Patienten an.</v-card-text
                         >
                       </v-card>
                     </v-expansion-panel-content>
@@ -497,6 +494,8 @@ export default {
       let whoami = await axios.get(
         process.env.baseUrl + process.env.port + process.env.me
       );
+
+      localStorage.setItem("displayAdvancedSearch", false);
 
       localStorage.removeItem("diagnosis");
       localStorage.removeItem("tumorMorphology");

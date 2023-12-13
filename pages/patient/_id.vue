@@ -3,10 +3,7 @@
     <userPanel />
 
     <v-flex>
-      <h3 class="display-3"><strong>bwHealthCloud</strong> Datenvalidierung</h3>
-
-      <span class="subheading font-weight-light">
-        <v-btn
+      <h3 class="display-1"><v-btn
           dark
           icon
           color="blue accent-2"
@@ -14,9 +11,7 @@
           @click="$router.push('/validate')"
         >
           <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-        >Überprüfen Sie die Daten-Qualitätsprobleme!
-        <strong @click="$router.push('../help')">Hilfe?</strong>
-      </span>
+        > Datenvalidierung</h3>
     </v-flex>
 
     <v-divider class="my-3"></v-divider>
@@ -245,9 +240,7 @@
           <td>{{ props.item.recordedOn }}</td>
           <td>{{ props.item.icd10 }}</td>
           <td>{{ props.item.icdO3T }}</td>
-          <td>
-            {{ props.item.whoGrade }}
-          </td>
+          <td>{{ props.item.whoGrade }}</td>
           <td>{{ props.item.statusHistory }}</td>
           <td>{{ props.item.guidelineTreatmentStatus }}</td>
         </tr>
@@ -963,6 +956,7 @@ export default {
   loading: "~/components/loading.vue",
   data: () => ({
     expand: true,
+    
     headerIssues: [
       {
         text: "Schweregrad",

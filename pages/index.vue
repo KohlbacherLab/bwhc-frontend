@@ -234,7 +234,8 @@ export default {
           })
           .catch((e) => {
             let toast = this.$toasted.show(
-              "Error! ungültiger Benutzername oder Passwort.",
+              "Error: ungültiger Benutzername oder Passwort · "
+              + e,
               {
                 theme: "bubble",
                 icon: "error",

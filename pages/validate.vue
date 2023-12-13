@@ -2,10 +2,7 @@
   <v-container fluid grid-list-md>
     <userPanel />
     <v-flex>
-      <h3 class="display-3"><strong>bwHealthCloud</strong> Datenvalidierung</h3>
-
-      <span class="subheading font-weight-light">
-        <v-btn
+      <h3 class="display-1"><v-btn
           dark
           icon
           color="blue accent-2"
@@ -13,9 +10,8 @@
           @click="$router.push('/main')"
         >
           <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-        >Patienten mit inkohärenten Daten sind unten aufgeführt.
-        <strong @click="$router.push('help')">Hilfe?</strong>
-      </span>
+        > Datenvalidierung</h3>
+
       <v-divider class="my-3"></v-divider>
     </v-flex>
 

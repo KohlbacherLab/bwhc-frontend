@@ -3,10 +3,9 @@
     <v-container fluid grid-list-md>
       <userPanel />
       <v-flex>
-        <h3 class="display-3"><strong>bwHealthCloud</strong> Abfrage-Portal</h3>
 
         <span class="subheading subheading font-weight-thin">
-          <v-btn
+          <h3 class="display-1"><v-btn
             dark
             icon
             color="blue accent-2"
@@ -14,8 +13,7 @@
             @click="$router.push('/main')"
           >
             <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-          >Ohne Such-Kriterien, wird die Anfrage alles zurückliefern. <strong>Wie funktioniert die Auswahl von Parametern</strong>
-          <v-dialog
+          > Abfrage-Portal <v-dialog
             v-model="dialog"
             fullscreen
             hide-overlay
@@ -156,9 +154,8 @@
               -->
               
             </v-card>
-          </v-dialog>
+          </v-dialog></h3>
         </span>
-        <v-divider class="my-3"></v-divider>
       </v-flex>
 
       <queryPanel
@@ -488,6 +485,7 @@ export default {
       localStorage.removeItem("selectedDrugs");
       localStorage.removeItem("responses");
       localStorage.removeItem("queryId");
+      localStorage.removeItem("selectedTab");
     },
   },
 

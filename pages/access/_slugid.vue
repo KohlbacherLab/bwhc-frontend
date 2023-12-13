@@ -1,13 +1,20 @@
 <template>
   <v-container fluid grid-list-md>
     <userPanel />
-    <h3 class="display-3"><strong>bwHealthCloud</strong> Patient</h3>
-    <span class="subheading font-weight-light">
-      <v-btn dark icon color="blue accent-2" align-end @click="goBack">
-        <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-      >Patientendirektzugriff.
-      <strong @click="$router.push('../../help')">Hilfe?</strong>
-    </span>
+    <v-flex>
+      <h3 class="display-1">
+        <v-btn
+          dark
+          icon
+          color="blue accent-2"
+          align-end
+          @click="$router.push('/file')"
+        >
+          <v-icon dark>fas fa-arrow-left</v-icon>
+        </v-btn>
+        Patient
+      </h3>
+    </v-flex>
 
     <v-divider class="my-3"></v-divider>
     <div id="patientCard"></div>

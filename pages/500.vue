@@ -26,9 +26,9 @@
         max-width="500"
       >
         <v-card-text class="headline font-weight-thin">
-          <p>🙅🏻‍♂️</p>
+          <p>⚠️</p>
           <strong>500</strong>
-          <br />Interner Serverfehler.
+          <br />Interner Serverfehler. Bitte versuchen Sie es später erneut.
         </v-card-text>
       </v-card>
     </v-flex>

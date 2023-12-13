@@ -26,9 +26,9 @@
         max-width="500"
       >
         <v-card-text class="headline font-weight-thin">
-          <p>🚷</p>
-          <strong>403</strong>
-          <br />Verboten. Zugriff untersagt.
+          <p>🙅🏻‍♂️</p>
+          <strong>401</strong>
+          <br />Zugriff nicht autorisiert.
         </v-card-text>
       </v-card>
     </v-flex>
@@ -41,6 +41,7 @@
     </v-flex>
   </v-container>
 </template>
+
 <script>
 export default {
   data() {

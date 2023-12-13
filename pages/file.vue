@@ -2,11 +2,7 @@
   <v-container fluid grid-list-md>
     <userPanel />
     <v-flex>
-      <h3 class="display-3">
-        <strong>bwHealthCloud</strong> Patientendirektzugriff
-      </h3>
-
-      <span class="subheading font-weight-light">
+      <h3 class="display-1">
         <v-btn
           dark
           icon
@@ -15,9 +11,9 @@
           @click="$router.push('/main')"
         >
           <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-        >Zugriff nach Patientenakten mit ID im gesamten bwHC.
-        <strong @click="$router.push('help')">Hilfe?</strong>
-      </span>
+        > Patientendirektzugriff
+      </h3>
+
       <v-divider class="my-3"></v-divider>
     </v-flex>
 

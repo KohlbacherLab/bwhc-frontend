@@ -2,9 +2,7 @@
   <v-container fluid grid-list-md>
     <userPanel />
     <v-flex>
-      <h3 class="display-3"><strong>bwHealthCloud</strong> Nutzerdetails</h3>
-      <span class="subheading subheading font-weight-thin">
-        <v-btn
+      <h3 class="display-1"><v-btn
           dark
           icon
           color="blue accent-2"
@@ -12,10 +10,7 @@
           @click="$router.push('/main')"
         >
           <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-        >Benutzerdetails. Klicken Sie auf das unten stehende Feld Ihre
-        Benutzerdaten und Passwort zu bearbeiten.
-        <strong @click="$router.push('help')">Hilfe?</strong>
-      </span>
+        > Nutzerdetails</h3>
     </v-flex>
     <v-divider class="my-3"></v-divider>
 
@@ -31,7 +26,7 @@
                   <v-icon style="font-size: 1rem" slot="activator" class="mr-1"
                     >fas fa-user</v-icon
                   >
-                  Name
+                  <br />Name
                 </div>
                 <div>{{ me.givenName }} {{ me.familyName }}</div>
               </v-flex>
@@ -43,7 +38,7 @@
                     class="mr-1"
                     >fas fa-calendar-week</v-icon
                   >
-                  Benutzername
+                  <br />Benutzername
                 </div>
                 <div>{{ me.username }}</div>
               </v-flex>
@@ -56,7 +51,7 @@
                     class="mr-1"
                     >fas fa-user-check</v-icon
                   >
-                  Rollen
+                  <br />Rollen
                 </div>
                 <div>
                   <v-chip
@@ -72,7 +67,7 @@
                   </v-chip>
                 </div>
               </v-flex>
-              <v-flex xs6 sm4 md2>
+              <v-flex xs6 sm4 md1>
                 <div @click="editOwnDetails()" class="caption">
                   <v-icon
                     color="blue"
@@ -81,26 +76,25 @@
                     class="mr-1"
                     @click="editOwnDetails()"
                     >fas fa-user-edit</v-icon
-                  >
+                  ><br>
                   Bearbeiten
-                  <v-slide-y-transition>
-                    <v-card-text class="caption grey--text" v-show="show">
-                      Zum Bearbeiten bitte auf das Symbol oben links klicken,
-                      dann 'Speichern'.<br />
-                      Das Passwort muss mind. 8 Zeichen haben, davon mind. ein
-                      Großbuchstabe, eine Ziffer und ein Sonderzeichen
-                    </v-card-text>
-                  </v-slide-y-transition>
-                </div>
-
-                <div class="caption">
-                  <v-btn flat color="grey" icon @click="show = !show">
-                    <v-icon>{{
-                      show ? "keyboard_arrow_up" : "keyboard_arrow_down"
-                    }}</v-icon>
-                  </v-btn>
                 </div>
               </v-flex>
+
+              <v-flex xs6 sm4 md1>
+                <div @click="editOwnPassword()" class="caption">
+                  <v-icon
+                    color="blue"
+                    style="font-size: 1.1rem"
+                    slot="activator"
+                    class="mr-1"
+                    @click="editOwnPassword()"
+                    >fas fa-key</v-icon
+                  ><br />
+                  Passwort
+                </div>
+              </v-flex>
+              <v-flex xs6 class="grey--text caption">Klicken Sie auf die blauen Symbole, um Ihre Benutzerdaten und Ihr Passwort zu bearbeiten.</v-flex>
             </v-layout>
           </v-card>
         </v-flex>
@@ -145,24 +139,24 @@
     </v-layout>
     <v-divider class="my-3"></v-divider>
     <!-- PREPARED QUERIES TABLE -->
-   
+
     <v-flex d-flex xs12 sm6 md3>
-        <v-card
-          class="mx-auto"
-          flat
-          color="teal darken-3"
-          dark
-          max-width="400"
-          v-ripple="{ center: true }"
-        >
-          <v-card-text class="headline font-weight-thin">
-            <v-icon color="teal accent-1" dark>fas fa-save</v-icon>
-            <br />
-            <strong>{{ savedQueries.length }}</strong> Abfragen
-          </v-card-text>
-        </v-card>
-      </v-flex>
-      <v-divider class="my-3"></v-divider>
+      <v-card
+        class="mx-auto"
+        flat
+        color="teal darken-3"
+        dark
+        max-width="400"
+        v-ripple="{ center: true }"
+      >
+        <v-card-text class="headline font-weight-thin">
+          <v-icon color="teal accent-1" dark>fas fa-save</v-icon>
+          <br />
+          <strong>{{ savedQueries.length }}</strong> Abfragen
+        </v-card-text>
+      </v-card>
+    </v-flex>
+    <v-divider class="my-3"></v-divider>
     <v-card-title class="headline font-weight-light">
       Meine vorbereiteten Abfragen<v-flex xs12 sm3 md1>
         <v-tooltip top>
@@ -320,7 +314,7 @@
 
     <v-divider class="my-3"></v-divider>
 
-    <v-dialog v-model="editOwnDetailsDialog" width="500">
+    <v-dialog v-model="editOwnDetailsDialog" width="400">
       <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>
           <strong>Details bearbeiten</strong></v-card-title
@@ -328,7 +322,7 @@
         <v-container grid-list-md>
           <form>
             <v-layout wrap>
-              <v-flex d-flex xs12 sm6 md6>
+              <v-flex d-flex xs12 sm12 md12>
                 <v-text-field
                   v-model="usernameOwn"
                   :error-messages="errors"
@@ -336,19 +330,8 @@
                   required
                 ></v-text-field>
               </v-flex>
-              <v-flex d-flex xs12 sm6 md6>
-                <v-text-field
-                  autocomplete="current-password"
-                  :value="passwordOwn"
-                  label="Passwort"
-                  :append-icon="value ? 'fas fa-eye-slash' : 'fas fa-eye'"
-                  @click:append="() => (value = !value)"
-                  :type="value ? 'password' : 'text'"
-                  :rules="[rules.password]"
-                  @input="(_) => (password = _)"
-                ></v-text-field>
-              </v-flex>
-              <v-flex d-flex xs12 sm6 md6>
+
+              <v-flex d-flex xs12 sm12 md12>
                 <v-text-field
                   v-model="givenOwn"
                   :error-messages="errors"
@@ -356,7 +339,8 @@
                   required
                 ></v-text-field>
               </v-flex>
-              <v-flex d-flex xs12 sm6 md6>
+
+              <v-flex d-flex xs12 sm12 md12>
                 <v-text-field
                   v-model="familyOwn"
                   :error-messages="errors"
@@ -364,10 +348,19 @@
                   required
                 ></v-text-field>
               </v-flex>
-              <v-card-text class="grey--text">
-                Das Passwort muss mind. 8 Zeichen haben, davon mind. ein
-                Großbuchstabe, eine Ziffer und ein Sonderzeichen
-              </v-card-text>
+
+              <!-- <v-flex d-flex xs12 sm12 md12>
+                <v-text-field
+                  autocomplete="current-password"
+                  :value="passwordEdit"
+                  label="Password"
+                  :append-icon="value ? 'fas fa-eye-slash' : 'fas fa-eye'"
+                  @click:append="() => (value = !value)"
+                  :type="value ? 'password' : 'text'"
+                  :rules="[currentRules.password]"
+                  @input="(_) => (password = _)"
+                ></v-text-field>
+              </v-flex>-->
             </v-layout>
           </form>
         </v-container>
@@ -395,27 +388,34 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="addNewUserDialog" width="500">
+    <v-dialog v-model="editOwnPasswordDialog" width="400">
       <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>
-          <strong>Add New User</strong></v-card-title
+          <strong>Passwort bearbeiten</strong></v-card-title
         >
         <v-container grid-list-md>
-          <form @submit.prevent="addNewUser">
+          <form>
             <v-layout wrap>
-              <v-flex d-flex xs12 sm6 md6>
-                <v-text-field
-                  v-model="username"
-                  :error-messages="errors"
-                  label="Username"
-                  required
-                ></v-text-field>
-              </v-flex>
-              <v-flex d-flex xs12 sm6 md6>
+              <v-flex d-flex xs12 sm6 md12>
                 <v-text-field
                   autocomplete="current-password"
-                  :value="password"
-                  label="Password"
+                  v-model="oldPasswordOwn"
+                  :value="oldPasswordOwn"
+                  label="Altes Passwort"
+                  :append-icon="value ? 'fas fa-eye-slash' : 'fas fa-eye'"
+                  @click:append="() => (value = !value)"
+                  :type="value ? 'password' : 'text'"
+                  :rules="[oldRules.password]"
+                  @input="(_) => (password = _)"
+                ></v-text-field>
+              </v-flex>
+
+              <v-flex d-flex xs12 sm6 md12>
+                <v-text-field
+                  autocomplete="current-password"
+                  v-model="passwordOwn"
+                  :value="passwordOwn"
+                  label="Neues Passwort"
                   :append-icon="value ? 'fas fa-eye-slash' : 'fas fa-eye'"
                   @click:append="() => (value = !value)"
                   :type="value ? 'password' : 'text'"
@@ -423,86 +423,13 @@
                   @input="(_) => (password = _)"
                 ></v-text-field>
               </v-flex>
-              <v-flex d-flex xs12 sm6 md6>
-                <v-text-field
-                  v-model="given"
-                  :error-messages="errors"
-                  label="Name"
-                  required
-                ></v-text-field>
-              </v-flex>
-              <v-flex d-flex xs12 sm6 md6>
-                <v-text-field
-                  v-model="family"
-                  :error-messages="errors"
-                  label="Surname"
-                  required
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-layout wrap>
-              <v-flex d-flex xs12 sm6 md12>
-                <v-select
-                  v-model="select"
-                  :items="roles"
-                  :error-messages="errors"
-                  chips
-                  deletable-chips
-                  multiple
-                  label="Role"
-                  data-vv-name="select"
-                  required
-                ></v-select>
-              </v-flex>
-            </v-layout>
-          </form>
-        </v-container>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="black"
-            type="addNewUser"
-            :disabled="invalid"
-            flat
-            @click="addNewUserDialog = false"
-            >Cancel</v-btn
-          >
-          <v-btn
-            dark
-            color="indigo darken-1"
-            type="addNewUser"
-            @click="addNewUser"
-            :disabled="invalid"
-            width="140"
-            >Save</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
 
-    <v-dialog v-model="editUserDetailsDialog" width="500">
-      <v-card>
-        <v-card-title class="headline grey lighten-2" primary-title>
-          <strong>Edit User Details</strong></v-card-title
-        >
-        <v-container grid-list-md>
-          <form>
-            <v-layout wrap>
-              <v-flex d-flex xs12 sm6 md6>
-                <v-text-field
-                  v-model="usernameEdit"
-                  :counter="20"
-                  :error-messages="errors"
-                  label="Username"
-                  required
-                ></v-text-field>
-              </v-flex>
-              <v-flex d-flex xs12 sm6 md6>
+              <v-flex d-flex xs12 sm6 md12>
                 <v-text-field
                   autocomplete="current-password"
-                  :value="passwordEdit"
-                  label="Password"
+                  v-model="passwordOwnAgain"
+                  :value="passwordOwnAgain"
+                  label="Neues Passwort bestätigen"
                   :append-icon="value ? 'fas fa-eye-slash' : 'fas fa-eye'"
                   @click:append="() => (value = !value)"
                   :type="value ? 'password' : 'text'"
@@ -510,23 +437,11 @@
                   @input="(_) => (password = _)"
                 ></v-text-field>
               </v-flex>
-              <v-flex d-flex xs12 sm6 md6>
-                <v-text-field
-                  v-model="givenEdit"
-                  :counter="10"
-                  :error-messages="errors"
-                  label="Name"
-                  required
-                ></v-text-field>
-              </v-flex>
-              <v-flex d-flex xs12 sm6 md6>
-                <v-text-field
-                  v-model="familyEdit"
-                  :error-messages="errors"
-                  label="Surname"
-                  required
-                ></v-text-field>
-              </v-flex>
+
+              <v-card-text class="grey--text">
+                Das Passwort muss mind. 8 Zeichen haben, davon mind. ein
+                Großbuchstabe, eine Ziffer und ein Sonderzeichen (!?._,@#$%^&*).
+              </v-card-text>
             </v-layout>
           </form>
         </v-container>
@@ -535,117 +450,41 @@
           <v-spacer></v-spacer>
           <v-btn
             color="black"
-            type="editUserDetails"
+            type="editUserPassword"
             :disabled="invalid"
             flat
-            @click="editUserDetailsDialog = false"
-            >Cancel</v-btn
+            @click="editOwnPasswordDialog = false"
+            >Abbrechen</v-btn
           >
           <v-btn
             dark
             color="blue accent-2"
-            type="editUserDetails"
-            @click="updateUserDetails"
+            type="editUserPassword"
+            @click="updateOwnPassword"
             :disabled="invalid"
             width="140"
-            >Save</v-btn
+            >Speichern</v-btn
           >
         </v-card-actions>
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="deleteUserDialog" width="500">
-      <v-card>
-        <v-card-title class="headline grey lighten-2" primary-title>
-          <strong>Delete User</strong></v-card-title
-        >
-        <v-container grid-list-md>
-          <form>
-            <v-layout wrap>
-              <v-flex d-flex xs12 sm6 md12>
-                <v-card-text class="font-weight-medium">
-                  <v-icon>fas fa-exclamation-triangle</v-icon>
-                  Warning!<br /><br />
-                  <p class="font-weight-black">
-                    Clicking "Delete" will deactivate this account.
-                  </p>
-                  <p>Are you really sure?</p>
-                </v-card-text>
-              </v-flex>
-            </v-layout>
-          </form>
-        </v-container>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="black"
-            type="editUserDetails"
-            :disabled="invalid"
-            flat
-            @click="deleteUserDialog = false"
-            >Cancel</v-btn
-          >
-          <v-btn
-            dark
-            color="red darken-1"
-            type="editUserDetails"
-            @click="wipeUser"
-            :disabled="invalid"
-            width="140"
-            >Delete</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <v-snackbar v-model="snackbarNotMatched" :color="'red'" top :timeout="5000">
+      Die neuen Passwörter stimmen nicht überein!
+    </v-snackbar>
 
-    <v-dialog v-model="editUserRolesDialog" width="500">
-      <v-card>
-        <v-card-title class="headline grey lighten-2" primary-title>
-          <strong>Edit User Roles</strong></v-card-title
-        >
-        <v-container grid-list-md>
-          <form>
-            <v-layout wrap>
-              <v-flex d-flex xs12 sm6 md12>
-                <v-select
-                  v-model="selectEdit"
-                  :items="roles"
-                  :error-messages="errors"
-                  chips
-                  deletable-chips
-                  multiple
-                  label="Role"
-                  data-vv-name="select"
-                  required
-                ></v-select>
-              </v-flex>
-            </v-layout>
-          </form>
-        </v-container>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="black"
-            type="editUserRoles"
-            :disabled="invalid"
-            flat
-            @click="editUserRolesDialog = false"
-            >Cancel</v-btn
-          >
-          <v-btn
-            dark
-            color="blue accent-2"
-            type="editUserRoles"
-            @click="updateUserRoles"
-            :disabled="invalid"
-            width="140"
-            >Save</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <v-snackbar v-model="snackbarEmpty" :color="'red'" top :timeout="5000">
+      Füllen Sie bitte alle Passwortfelder aus!
+    </v-snackbar>
+
+    <v-snackbar
+      v-model="snackbarWrongPassword"
+      :color="'red'"
+      top
+      :timeout="5000"
+    >
+      Ungültiges aktuelles oder neues Passwort! Bitte versuchen Sie es erneut.
+    </v-snackbar>
 
     <v-dialog v-model="deleteQueryDialog" width="500">
       <v-card>
@@ -704,22 +543,46 @@ export default {
   //middleware: 'bwhc-admin',
   data: () => ({
     show: false,
-    addNewUserDialog: false,
     editOwnDetailsDialog: false,
-    editUserDetailsDialog: false,
-    editUserRolesDialog: false,
+    editOwnPasswordDialog: false,
     deleteQueryDialog: false,
+    passwordsMatch: true,
     password: "",
+    snackbarNotMatched: false,
+    snackbarEmpty: false,
+    snackbarWrongPassword: false,
     valid: true,
     value: true,
+    currentRules: {
+      required: (value) => !!value || "Required.",
+      password: (value) => {
+        const pattern =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!?.-_,@#\$%\^&\*?])(?=.{8,})/;
+        return (
+          pattern.test(value) ||
+          "Das Passwort muss mind. 8 Zeichen haben, davon mind. ein Großbuchstabe, eine Ziffer und ein Sonderzeichen (!?._,@#$%^&*)"
+        );
+      },
+    },
     rules: {
       required: (value) => !!value || "Required.",
       password: (value) => {
         const pattern =
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!?.-_,@#\$%\^&\*?])(?=.{8,})/;
         return (
           pattern.test(value) ||
-          "Das Passwort muss mind. 8 Zeichen haben, davon mind. ein Großbuchstabe, eine Ziffer und ein Sonderzeichen"
+          "Das neue Passwort muss mind. 8 Zeichen haben, davon mind. ein Großbuchstabe, eine Ziffer und ein Sonderzeichen (!?._,@#$%^&*)"
+        );
+      },
+    },
+    oldRules: {
+      required: (value) => !!value || "Required.",
+      password: (value) => {
+        const pattern =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!?.-_,@#\$%\^&\*?])(?=.{8,})/;
+        return (
+          pattern.test(value) ||
+          "Das alte Passwort muss mind. 8 Zeichen haben, davon mind. ein Großbuchstabe, eine Ziffer und ein Sonderzeichen (!?._,@#$%^&*)"
         );
       },
     },
@@ -747,6 +610,100 @@ export default {
   },
 
   methods: {
+    handleError(error) {
+      if (error && error.response) {
+        const statusCode = error.response.status;
+        if (statusCode === 400) {
+          this.$router.push("/400");
+        } else if (statusCode === 401) {
+          this.$router.push("/401");
+        } else if (statusCode === 403) {
+          this.$router.push("/403");
+        } else if (statusCode === 404) {
+          this.$router.push("/404");
+        } else if (statusCode === 422) {
+          this.snackbarWrongPassword = true;
+          return;
+        } else if (statusCode === 500) {
+          this.$router.push("/500");
+        } else if (statusCode === 503) {
+          this.$router.push("/503");
+        } else {
+          console.error("Ein Fehler ist aufgetreten: ", error);
+          this.$router.push("/undefined");
+        }
+      } else if (error) {
+        console.error("Ein Fehler ist aufgetreten:", error);
+        alert(
+          "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
+        );
+      } else {
+        this.$router.push("/undefined");
+      }
+    },
+
+    async updateOwnPassword({ params, redirect, error }) {
+      if (
+        this.oldPasswordOwn == undefined ||
+        this.passwordOwn == undefined ||
+        this.passwordOwnAgain == undefined ||
+        this.oldPasswordOwn.trim() === "" ||
+        this.passwordOwn.trim() === "" ||
+        this.passwordOwnAgain.trim() === ""
+      ) {
+        this.snackbarEmpty = true;
+        return;
+      }
+
+      if (this.passwordOwn === this.passwordOwnAgain) {
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${localStorage.token}`;
+
+        let oldPass = null;
+        let newPass = null;
+        let newPassAgain = null;
+
+        if (this.oldPasswordOwn) {
+          oldPass = this.oldPasswordOwn;
+        }
+        if (this.passwordOwn) {
+          newPass = this.passwordOwn;
+        }
+        if (this.passwordOwnAgain) {
+          newPassAgain = this.passwordOwnAgain;
+        }
+
+        try {
+          let request = {
+            id: this.id,
+            username: this.usernameOwn,
+            currentPassword: oldPass,
+            newPassword1: newPass,
+            newPassword2: newPassAgain,
+          };
+
+          let Response = await axios.put(
+            process.env.baseUrl +
+              process.env.port +
+              process.env.users +
+              "/" +
+              this.id +
+              "/change-password",
+            request
+          );
+
+          this.editOwnPasswordDialog = false;
+          window.location.reload(true);
+        } catch (error) {
+          this.handleError(error);
+        }
+      } else {
+        this.snackbarNotMatched = true;
+        return;
+      }
+    },
+
     async updateOwnDetails({ params, redirect, error }) {
       axios.defaults.headers.common[
         "Authorization"
@@ -777,10 +734,8 @@ export default {
 
         this.editOwnDetailsDialog = false;
         window.location.reload(true);
-      } catch (err) {
-        if (err.response.status === 401) {
-          return redirect("/");
-        }
+      } catch (error) {
+        this.handleError(error);
       }
     },
 
@@ -798,7 +753,21 @@ export default {
         this.usernameOwn = "";
         this.givenOwn = "";
         this.familyOwn = "";
-      }, 15000);
+      }, 30000);
+    },
+
+    editOwnPassword() {
+      this.id = this.me.id;
+      this.editOwnPasswordDialog = true;
+
+      setTimeout(() => {
+        this.editOwnPasswordDialog = false;
+        this.id = "";
+        this.oldPasswordOwn = "";
+        this.passwordOwn = "";
+        this.passwordOwnAgain = "";
+        this.editOwnPasswordDialog = false;
+      }, 60000);
     },
 
     deleteQuery(item) {
@@ -809,7 +778,7 @@ export default {
         this.deleteQueryDialog = false;
 
         this.id = "";
-      }, 15000);
+      }, 20000);
     },
 
     async wipeQuery({ params, redirect, error }) {
@@ -832,10 +801,8 @@ export default {
 
         this.deleteUserDialog = false;
         window.location.reload(true);
-      } catch (err) {
-        if (err.response.status === 401) {
-          return redirect("/");
-        }
+      } catch (error) {
+        this.handleError(error);
       }
     },
   },
@@ -859,14 +826,8 @@ export default {
         me: whoami.data,
         roles: whoami.data.roles,
       };
-    } catch (err) {
-      if (err.response.status === 401) {
-        return redirect("/");
-      } else if (err.response.status === 403) {
-        return redirect("/403");
-      } else {
-        return redirect("/" + err.response.status);
-      }
+    } catch (error) {
+      this.handleError(error);
     }
   },
 };

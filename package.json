@@ -28,11 +28,13 @@
     "nuxt-highcharts": "^3.0.8",
     "nuxt-material-design-icons": "^1.0.4",
     "nuxt-vue-material": "^1.2.0",
+    "universal-cookie": "^6.1.1",
     "vue-chartjs": "^3.5.1",
     "vue-material": "^1.0.0-beta-15",
     "vue-material-design-icons": "^4.11.0",
     "vue-plugin-axios": "^1.0.14",
     "vue-toasted": "^1.1.28",
+    "vuedraggable": "^2.24.3",
     "vuetify": "^1.5.19",
     "vuetify-loader": "^1.0.8"
   },

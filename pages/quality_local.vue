@@ -3,11 +3,7 @@
     <v-container fluid grid-list-md>
       <userPanel />
       <v-flex>
-        <h3 class="display-3">
-          <strong>bwHealthCloud</strong> Qualitätskontrolle Statistik
-        </h3>
-
-        <span class="subheading subheading font-weight-thin">
+        <h3 class="display-1">
           <v-btn
             dark
             icon
@@ -16,9 +12,8 @@
             @click="$router.push('/main')"
           >
             <v-icon dark>fas fa-arrow-left</v-icon> </v-btn
-          >Lokale ZPM Statistiken finden Sie weiter unten.
-          <strong @click="$router.push('help')">Hilfe?</strong>
-        </span>
+          > Qualitätskontrolle Statistik - Lokal
+        </h3>
         <v-divider class="my-3"></v-divider>
       </v-flex>
 

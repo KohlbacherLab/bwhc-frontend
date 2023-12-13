@@ -26,9 +26,9 @@
         max-width="500"
       >
         <v-card-text class="headline font-weight-thin">
-          <p>🙅🏻‍♂️</p>
+          <p>🤷🏻‍♂️</p>
           <strong>404</strong>
-          <br />Nicht gefunden / benutzer existiert nicht.
+          <br />Die angeforderte Seite wurde nicht gefunden.
         </v-card-text>
       </v-card>
     </v-flex>

@@ -1,203 +1,179 @@
 <template>
   <v-container fluid grid-list-md>
     <v-layout wrap>
-      <v-flex xs12 sm12 md6>
+      <v-flex xs12 sm12 md12>
+        <v-checkbox
+  color="blue accent-2"
+  v-if="displayAdvancedSearch"
+  v-model="displayAdvancedSearch"
+  :label="`Erweiterte Suche`"
+  @change="updateLocalStorage"
+></v-checkbox>
+<v-checkbox
+  v-else
+  v-model="displayAdvancedSearch"
+  :label="`Erweiterte Suche`"
+  @change="updateLocalStorage"
+></v-checkbox>
+
         <v-card class="mx-auto" flat light max-width="1200">
-          <v-flex d-flex>
-            <v-card
-              class="mx-auto"
-              flat
-              color="purple lighten-4"
-              light
-              max-width="1200"
-            >
-              <v-card-text class="headline font-weight-thin">
-                <v-icon color="purple" dark>fas fa-dna</v-icon
-                ><b> Alterationen</b>
-
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn flat icon color="white" v-bind="attrs" v-on="on">
-                      <v-icon>fas fa-info-circle</v-icon>
-                    </v-btn>
-                  </template>
-                  <span
-                    >Wählen Sie den Typ der Änderungen aus und fügen Sie
-                    anschließend Gene, SNV und/oder CNV hinzu, bevor Sie die
-                    Abfrage starten.<br />
-                    Für weitere Unterstützung klicken Sie auf das
-                    <v-icon dark style="font-size: 1rem"
-                      >fas fa-question</v-icon
-                    >
-                    oben.</span
-                  >
-                </v-tooltip>
-
-                <v-radio-group v-model="mutationOptions" row>
-                  <v-radio
-                    label="SNV"
-                    value="radioSNV"
-                    @change="
-                      (showSNV = true),
-                        (showCNV = false),
-                        (showFusions = false),
-                        (showAll = false)
-                    "
-                  >
-                  </v-radio>
-                  <v-radio
-                    label="CNV"
-                    value="radioCNV"
-                    @change="
-                      (showSNV = false),
-                        (showCNV = true),
-                        (showFusions = false),
-                        (showAll = false)
-                    "
-                  >
-                  </v-radio>
-                  <v-radio
-                    label="Fusionen"
-                    value="radioFusions"
-                    @change="
-                      (showSNV = false),
-                        (showCNV = false),
-                        (showFusions = true),
-                        (showAll = false)
-                    "
-                  >
-                  </v-radio>
-                  <v-radio
-                    label="Beliebig"
-                    value="radioBeliebig"
-                    @change="
-                      (showSNV = false),
-                        (showCNV = false),
-                        (showFusions = false),
-                        (showAll = true)
-                    "
-                  >
-                  </v-radio>
-                </v-radio-group>
-
-                <v-autocomplete
-                  v-if="showAll"
-                  v-model="mutatedGenes"
-                  :items="genesCat"
-                  :loading="isLoading"
-                  item-text="name"
-                  item-value="id"
-                  label="Beliebig · Gen-Name oder HGNC Symbol"
-                  ref="mutatedGenes"
-                  chips
-                  cache-items
-                  deletable-chips
-                  dense
-                  hide-no-data
-                  multiple
-                  @input="
-                    addMutatedGenes(mutatedGenes[mutatedGenes.length - 1])
-                  "
-                >
-                  <template slot="selection" slot-scope="data">
-                    <v-chip
-                      :selected="data.selected"
-                      close
-                      @input="removeMutatedGenes(data.item)"
-                    >
-                      {{ data.item }}
-                    </v-chip>
-                  </template>
-                </v-autocomplete>
-
-                <v-flex d-flex v-if="showSNV">
-                  <v-card color="grey lighten-3" flat>
-                    <v-card-text class="title font-weight-thin">
-                      <div class="subheading">
-                        Bitte wählen Sie das vom SNV betroffene Gen, und
-                        optional cDNA change, protein change aus.
-                      </div>
-                      <br />
-
-                      <v-autocomplete
-                        v-model="mutatedGenesSNV"
-                        :items="genesCatSimplified"
-                        :loading="isLoading"
-                        label="SNV · Gen-Name oder HGNC Symbol"
-                        ref="mutatedGenesSNV"
-                        chips
-                        flat
-                        cache-items
-                        deletable-chips
-                        dense
-                        hide-selected
-                        clearable
-                        solo
+          <v-card
+            class="mx-auto"
+            flat
+            color="purple lighten-5"
+            light
+            max-width="1200"
+          >
+            <v-card-text class="title font-weight-thin">
+              <div v-if="displayAdvancedSearch" class="d-inline-flex">
+                <v-flex xs12 sm6 md2>
+                  <v-tooltip v-if="displayAdvancedSearch" top>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn flat icon color="red" v-bind="attrs" v-on="on">
+                        <v-icon>fas fa-info-circle</v-icon>
+                      </v-btn>
+                    </template>
+                    <span
+                      >Wählen Sie den Typ der Änderungen aus und fügen Sie
+                      anschließend Gene, SNV und/oder CNV hinzu, bevor Sie die
+                      Abfrage starten.<br />
+                      Für weitere Unterstützung klicken Sie auf das
+                      <v-icon dark style="font-size: 1rem"
+                        >fas fa-question</v-icon
                       >
-                      </v-autocomplete>
+                      oben.</span
+                    >
+                  </v-tooltip>
+                </v-flex>
 
-                      <v-layout row wrap>
-                        <v-flex xs12 sm6 md9>
-                          <v-text-field
-                            v-model="dnaChange"
-                            clearable
-                            flat
-                            placeholder="cDNA Change"
-                            solo-inverted
-                            :rules="[rulesSNV.validateDnaChange]"
-                          ></v-text-field>
+                <v-flex xs12 sm6 md11>
+                  <v-select
+                    v-if="displayAdvancedSearch"
+                    v-model="selectedMutationOption"
+                    :items="advancedMutationOptions"
+                    label="Mutationsart auswählen"
+                    @input="handleMutationOptionChange"
+                    box
+                    hint="Achten Sie darauf, zusätzliche Optionen wie SNV oder CNV hinzuzufügen."
+                    persistent-hint
+                  ></v-select>
+                </v-flex>
+              </div>
 
-                          <v-text-field
-                            v-model="aminoAcidChange"
-                            clearable
-                            flat
-                            placeholder="Protein Change"
-                            solo-inverted
-                            :rules="[rulesSNV.validateAminoAcidChange]"
-                          ></v-text-field>
+              <v-autocomplete
+                v-if="showAll"
+                v-model="mutatedGenes"
+                :items="genesCat"
+                :loading="isLoading"
+                item-text="name"
+                item-value="id"
+                label="Alterationen"
+                ref="mutatedGenes"
+                small-chips
+                cache-items
+                deletable-chips
+                dense
+                prepend-icon="fas fa-dna"
+                hide-no-data
+                multiple
+                hint="Beliebig · Gen-Name oder HGNC Symbol"
+                persistent-hint
+                @input="addMutatedGenes(mutatedGenes[mutatedGenes.length - 1])"
+              >
+                <template slot="selection" slot-scope="data">
+                  <v-chip
+                    :selected="data.selected"
+                    close
+                    @input="removeMutatedGenes(data.item)"
+                  >
+                    {{ data.item }}
+                  </v-chip>
+                </template>
+              </v-autocomplete>
 
-                          <div class="subheading">
-                            Klicken Sie auf die
-                            <strong>Hinzufügen</strong> Taste, um die Auswahl in
-                            die Suche zu übernehmen.
-                          </div>
-                          <br />
+              <v-flex d-flex v-if="showSNV">
+                <v-card color="grey lighten-4" flat>
+                  <v-card-text class="title font-weight-thin">
+                    <v-autocomplete
+                      v-model="mutatedGenesSNV"
+                      :items="genesCatSimplified"
+                      :loading="isLoading"
+                      label="SNV · Gen-Name oder HGNC Symbol"
+                      ref="mutatedGenesSNV"
+                      small-chips
+                      style="margin-bottom: 10px"
+                      flat
+                      cache-items
+                      deletable-chips
+                      dense
+                      hide-selected
+                      clearable
+                      autofocus
+                      prepend-icon="fas fa-dna"
+                      hint="Bitte wählen Sie das vom SNV betroffene Gen, und optional cDNA change, protein change aus."
+                      persistent-hint
+                    >
+                    </v-autocomplete>
 
-                          <v-btn
-                            large
-                            color="grey darken-1"
-                            @click="
-                              addMutatedGenesSNV(
-                                dnaChange,
-                                aminoAcidChange,
-                                mutatedGenesSNV
-                              )
-                            "
-                            dark
-                          >
-                            Hinzufügen
-                          </v-btn>
-                        </v-flex>
+                    <v-layout row wrap fluid>
+                      <v-flex xs12 sm6 md4>
+                        <v-text-field
+                          v-model="dnaChange"
+                          clearable
+                          flat
+                          placeholder="cDNA Change"
+                          solo-inverted
+                          :rules="[rulesSNV.validateDnaChange]"
+                        ></v-text-field>
+                      </v-flex>
+                      <v-flex xs12 sm6 md5>
+                        <v-text-field
+                          v-model="aminoAcidChange"
+                          clearable
+                          flat
+                          placeholder="Protein Change"
+                          solo-inverted
+                          :rules="[rulesSNV.validateAminoAcidChange]"
+                        ></v-text-field>
+                      </v-flex>
 
+                      <v-btn
+                        large
+                        class="font-weight-thin"
+                        color="red darken-2"
+                        @click="
+                          addMutatedGenesSNV(
+                            dnaChange,
+                            aminoAcidChange,
+                            mutatedGenesSNV
+                          )
+                        "
+                        dark
+                      >
+                        Hinzufügen
+                      </v-btn>
+
+                      <div v-if="selectedMutatedGenesSNV.length > 0">
                         <v-combobox
                           v-model="selectedMutatedGenesSNV"
                           :items="items"
                           label="Das ausgewählte SNV wird hier angezeigt"
                           clearable
                           flat
-                          chips
+                          small-chips
                           cache-items
                           deletable-chips
                           dense
                           hide-no-data
                           multiple
                           hide-selected
+                          hint="Klicken Sie auf die Hinzufügen Taste (oben), um die Auswahl in die Suche zu übernehmen."
+                          persistent-hint
                         >
                           <template v-slot:selection="data">
                             <v-chip
                               :selected="data.selected"
                               flat
-                              label
                               close
                               @input="removeSelectedMutatedGenesSNV(data.item)"
                             >
@@ -209,116 +185,112 @@
                             </v-chip>
                           </template>
                         </v-combobox>
-                      </v-layout>
-                    </v-card-text>
-                  </v-card>
-                </v-flex>
-
-                <v-flex d-flex v-if="showCNV">
-                  <v-card color="grey lighten-3" flat>
-                    <v-card-text class="title font-weight-thin">
-                      <div class="subheading">
-                        Bitte wählen Sie ein oder mehrere vom CNV betroffene
-                        Gene, und optional CNV-Typ, Min- und Max-Kopienzahl.
                       </div>
-                      <br />
+                    </v-layout>
+                  </v-card-text>
+                </v-card>
+              </v-flex>
 
-                      <v-autocomplete
-                        v-model="mutatedGenesCNV"
-                        :items="genesCatSimplified"
-                        :loading="isLoading"
-                        label="CNV · Gen-Name oder HGNC Symbol"
-                        ref="mutatedGenesCNV"
-                        chips
-                        flat
-                        cache-items
-                        deletable-chips
-                        dense
-                        hide-no-data
-                        multiple
-                        hide-selected
-                        clearable
-                        solo
+              <v-flex d-flex v-if="showCNV">
+                <v-card color="grey lighten-4" flat>
+                  <v-card-text class="title font-weight-thin">
+                    <v-autocomplete
+                      v-model="mutatedGenesCNV"
+                      :items="genesCatSimplified"
+                      :loading="isLoading"
+                      label="CNV · Gen-Name oder HGNC Symbol"
+                      ref="mutatedGenesCNV"
+                      style="margin-bottom: 10px"
+                      flat
+                      cache-items
+                      deletable-chips
+                      dense
+                      hide-no-data
+                      multiple
+                      small-chips
+                      autofocus
+                      hide-selected
+                      clearable
+                      prepend-icon="fas fa-dna"
+                      hint="Bitte wählen Sie das vom CNV betroffene Gen, und optional CNV-Typ, Min- und Max-Kopienzahl."
+                      persistent-hint
+                    >
+                      <template slot="selection" slot-scope="data">
+                        <v-chip
+                          :selected="data.selected"
+                          close
+                          @input="removeMutatedGenesCNV(data.item)"
+                        >
+                          {{ data.item }}
+                        </v-chip>
+                      </template>
+                    </v-autocomplete>
+
+                    <v-layout row wrap fluid>
+                      <v-flex xs12 sm6 md3>
+                        <v-select
+                          flat
+                          v-model="cnvType"
+                          :items="cnvTypCat"
+                          solo-inverted
+                          label="CNV Typ"
+                        ></v-select>
+                      </v-flex>
+                      <v-flex xs12 sm6 md3>
+                        <v-text-field
+                          flat
+                          v-model="cnvMin"
+                          clearable
+                          solo-inverted
+                          label="Min Copy Number"
+                        ></v-text-field>
+                      </v-flex>
+                      <v-flex xs12 sm6 md3>
+                        <v-text-field
+                          flat
+                          v-model="cnvMax"
+                          clearable
+                          solo-inverted
+                          label="Max Copy Number"
+                        ></v-text-field>
+                      </v-flex>
+
+                      <v-btn
+                        large
+                        class="font-weight-thin"
+                        color="red darken-2"
+                        @click="
+                          addMutatedGenesCNV(
+                            cnvType,
+                            cnvMax,
+                            cnvMin,
+                            mutatedGenesCNV
+                          )
+                        "
+                        dark
                       >
-                        <template slot="selection" slot-scope="data">
-                          <v-chip
-                            :selected="data.selected"
-                            close
-                            @input="removeMutatedGenesCNV(data.item)"
-                          >
-                            {{ data.item }}
-                          </v-chip>
-                        </template>
-                      </v-autocomplete>
+                        Hinzufügen
+                      </v-btn>
 
-                      <v-layout row wrap>
-                        <v-flex xs12 sm6 md9>
-                          <v-select
-                            flat
-                            v-model="cnvType"
-                            :items="cnvTypCat"
-                            solo-inverted
-                            label="CNV Typ"
-                          ></v-select>
-
-                          <v-text-field
-                            flat
-                            v-model="cnvMin"
-                            clearable
-                            solo-inverted
-                            label="Min Copy Number"
-                          ></v-text-field>
-
-                          <v-text-field
-                            flat
-                            v-model="cnvMax"
-                            clearable
-                            solo-inverted
-                            label="Max Copy Number"
-                          ></v-text-field>
-
-                          <div class="subheading">
-                            Klicken Sie auf die
-                            <strong>Hinzufügen</strong> Taste, um die Auswahl in
-                            die Suche zu übernehmen.
-                          </div>
-                          <br />
-
-                          <v-btn
-                            large
-                            color="grey darken-2"
-                            @click="
-                              addMutatedGenesCNV(
-                                cnvType,
-                                cnvMax,
-                                cnvMin,
-                                mutatedGenesCNV
-                              )
-                            "
-                            dark
-                          >
-                            Hinzufügen
-                          </v-btn>
-                        </v-flex>
-
+                      <div v-if="selectedMutatedGenesCNV.length > 0">
                         <v-combobox
                           v-model="selectedMutatedGenesCNV"
                           :items="items"
                           label="Das ausgewählte CNV wird hier angezeigt"
                           clearable
                           flat
-                          chips
+                          small-chips
                           cache-items
                           deletable-chips
                           dense
                           hide-no-data
                           multiple
                           hide-selected
+                          hint="Klicken Sie auf die Hinzufügen Taste (oben), um die Auswahl in die Suche zu übernehmen."
                         >
                           <template v-slot:selection="data">
                             <v-chip
                               :selected="data.item"
-                              label
                               close
                               flat
                               @input="
@@ -343,448 +315,429 @@
                             </v-chip>
                           </template>
                         </v-combobox>
-                      </v-layout>
-                    </v-card-text>
-                  </v-card>
-                </v-flex>
-
-                <v-flex d-flex v-if="showFusions">
-                  <v-card color="grey lighten-3" flat>
-                    <v-card-text class="title font-weight-thin">
-                      <div class="subheading">
-                        <b>Diese Funktion ist noch nicht vollständig!</b><br />
-                        Bitte wählen Sie ein Fusionspartner-Gen und
-                        (5',3')-Zuordnung, sowie den Fusionstyp (DNA, RNA).
                       </div>
+                    </v-layout>
+                  </v-card-text>
+                </v-card>
+              </v-flex>
 
-                      <!-- 
-                        <span class="grey--text">CNV</span>
-                      -->
-                      <v-radio-group v-model="fusionType" row>
-                        <v-radio label="RNA" value="rnaFusions"></v-radio>
-                        <v-radio label="DNA" value="dnaFusions"></v-radio>
+              <v-flex d-flex v-if="showFusions">
+                <v-card color="grey lighten-3" flat>
+                  <v-card-text class="title font-weight-thin">
+                    <div class="subheading">
+                      <b>Diese Funktion ist noch nicht vollständig!</b><br />
+                      <!--
+           
+                      Bitte wählen Sie ein Fusionspartner-Gen und
+                      (5',3')-Zuordnung, sowie den Fusionstyp (DNA, RNA).
+                    </div>
 
-                        <v-radio label="Beide" value="bothFusions"></v-radio>
-                      </v-radio-group>
-                      <v-autocomplete
-                        v-model="fusions5"
-                        :items="genesCatSimplified"
-                        :loading="isLoading"
-                        item-text="name"
-                        item-value="id"
-                        label="RNA & DNA Fusions · Gen-Name oder HGNC Symbol"
-                        ref="fusions"
-                        chips
-                        flat
-                        dense
-                        solo
-                        hide-no-data
-                        hide-selected
+                    <v-radio-group v-model="fusionType" row>
+                      <v-radio label="RNA" value="rnaFusions"></v-radio>
+                      <v-radio label="DNA" value="dnaFusions"></v-radio>
+
+                      <v-radio label="Beide" value="bothFusions"></v-radio>
+                    </v-radio-group>
+                    <v-autocomplete
+                      v-model="fusions5"
+                      :items="genesCatSimplified"
+                      :loading="isLoading"
+                      item-text="name"
+                      item-value="id"
+                      label="RNA & DNA Fusions · Gen-Name oder HGNC Symbol"
+                      ref="fusions"
+                      small-chips
+                      flat
+                      dense
+                      prepend-icon="fas fa-dna"
+                      hide-no-data
+                      hide-selected
+                      clearable
+                    >
+                    </v-autocomplete>
+
+                    <v-autocomplete
+                      v-model="fusions3"
+                      :items="genesCatSimplified"
+                      :loading="isLoading"
+                      item-text="name"
+                      item-value="id"
+                      label="RNA & DNA Fusions · Gen-Name oder HGNC Symbol"
+                      ref="fusions3"
+                      chips
+                      flat
+                      dense
+                      prepend-icon="fas fa-dna"
+                      hide-no-data
+                      hide-selected
+                      clearable
+                    >
+                    </v-autocomplete>
+
+                    <v-radio-group v-model="primeType" row>
+                      <v-radio label="5'" value="fivePrimeGene"></v-radio>
+                      <v-radio label="3'" value="threePrimeGene"></v-radio>
+                      <v-radio label="Beide" value="bothPrimes"></v-radio>
+                    </v-radio-group>
+                    
+
+                    <div class="subheading">
+                      <b>Diese Funktion ist noch nicht vollständig!</b><br />
+                      Klicken Sie auf die <strong>Hinzufügen</strong> Taste, um
+                      die Auswahl in die Suche zu übernehmen.
+                    </div>
+
+                    <v-layout row wrap>
+                      <v-flex xs12 sm6 md9>
+                        <v-btn
+                          large
+                          class="font-weight-thin"
+                          color="red darken-2"
+                          @click="addFusions(fusions5, fusions3, fusionType)"
+                          dark
+                        >
+                          Hinzufügen
+                        </v-btn>
+                      </v-flex>
+
+                      <v-combobox
+                        v-model="selectedDnaFusions"
+                        :items="items"
                         clearable
+                        label="Das ausgewählte DNA Fusion wird hier angezeigt"
+                        small-chips
+                        cache-items
+                        deletable-chips
+                        dense
+                        hide-no-data
+                        multiple
+                        hide-selected
                       >
-                        <!--
-                        <template slot="selection" slot-scope="data">
+                        <template v-slot:selection="data">
                           <v-chip
                             :selected="data.selected"
+                            label
                             close
-                            @input="removeFusions(data.item)"
+                            @input="removeSelectedDnaFusions(data.item)"
                           >
-                            {{ data.item }}
+                            <strong
+                              ><strong v-if="data.item.fivePrimeGene"
+                                >{{ data.item.fivePrimeGene.code }}
+                              </strong>
+                            </strong>
+                            <i v-if="data.item.fivePrimeGene">
+                              5' <br /><br />
+                            </i>
+                            <strong
+                              ><strong v-if="data.item.threePrimeGene"
+                                >{{ data.item.threePrimeGene.code }}
+                              </strong></strong
+                            >
+                            <i v-if="data.item.threePrimeGene">
+                              3' <br /><br />
+                            </i>
                           </v-chip>
                         </template>
-
-                        -->
-
-                        <!--           
-              <template v-slot:selection="{ item }">
-                <v-chip>
-                  <span v-text="item[1]"></span>
-                </v-chip>
-              </template>
-              <template v-slot:item="{ item }">
-                <v-list-item-content>
-                  <v-list-item-title v-text="item[1]"></v-list-item-title>
-                </v-list-item-content>
-              </template>
-              -->
-                      </v-autocomplete>
-
-                      <v-autocomplete
-                        v-model="fusions3"
-                        :items="genesCatSimplified"
-                        :loading="isLoading"
-                        item-text="name"
-                        item-value="id"
-                        label="RNA & DNA Fusions · Gen-Name oder HGNC Symbol"
-                        ref="fusions3"
-                        chips
-                        flat
-                        dense
-                        solo
-                        hide-no-data
-                        hide-selected
+                      </v-combobox>
+                
+                      <v-combobox
+                        v-model="selectedRnaFusions"
+                        :items="items"
                         clearable
+                        label="Das ausgewählte RNA Fusion wird hier angezeigt"
+                        ref="selectedRnaFusions"
+                        small-chips
+                        cache-items
+                        deletable-chips
+                        dense
+                        hide-no-data
+                        multiple
+                        hide-selected
                       >
-                      </v-autocomplete>
-
-                      <v-radio-group v-model="primeType" row>
-                        <v-radio label="5'" value="fivePrimeGene"></v-radio>
-                        <v-radio label="3'" value="threePrimeGene"></v-radio>
-                        <v-radio label="Beide" value="bothPrimes"></v-radio>
-                      </v-radio-group>
-
-                      <div class="subheading">
-                        <b>Diese Funktion ist noch nicht vollständig!</b><br />
-                        Klicken Sie auf die <strong>Hinzufügen</strong> Taste,
-                        um die Auswahl in die Suche zu übernehmen.
-                      </div>
-
-                      <v-layout row wrap>
-                        <v-flex xs12 sm6 md9>
-                          <v-btn
-                            large
-                            color="grey darken-2"
-                            @click="addFusions(fusions5, fusions3, fusionType)"
-                            dark
+                        <template v-slot:selection="data">
+                          <v-chip
+                            :selected="data.selected"
+                            label
+                            close
+                            @input="removeSelectedRnaFusions(data.item)"
                           >
-                            Hinzufügen
-                          </v-btn>
+                            <strong
+                              ><strong v-if="data.item.fivePrimeGene"
+                                >{{ data.item.fivePrimeGene.code }}
+                              </strong>
+                            </strong>
+                            <i v-if="data.item.fivePrimeGene">
+                              5' <br /><br />
+                            </i>
+                            <strong
+                              ><strong v-if="data.item.threePrimeGene"
+                                >{{ data.item.threePrimeGene.code }}
+                              </strong></strong
+                            >
+                            <i v-if="data.item.threePrimeGene">
+                              3' <br /><br />
+                            </i>
+                          </v-chip>
+                        </template>
+                      </v-combobox>
+                    </v-layout>
+                          -->
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+
+              <v-expansion-panel v-if="expansion" inset focusable>
+                <v-expansion-panel-content>
+                  <template v-slot:header>
+                    <div class="caption">SNVs</div>
+                  </template>
+                  <v-card color="pink lighten-4" flat>
+                    <v-container flat fluid>
+                      <v-layout row wrap>
+                        <v-flex xs12 sm6 md6>
+                          <v-text-field
+                            placeholder="cDNA Change"
+                          ></v-text-field>
                         </v-flex>
-
-                        <v-combobox
-                          v-model="selectedDnaFusions"
-                          :items="items"
-                          clearable
-                          label="Das ausgewählte DNA Fusion wird hier angezeigt"
-                          chips
-                          cache-items
-                          deletable-chips
-                          dense
-                          hide-no-data
-                          multiple
-                          hide-selected
-                        >
-                          <template v-slot:selection="data">
-                            <v-chip
-                              :selected="data.selected"
-                              label
-                              close
-                              @input="removeSelectedDnaFusions(data.item)"
-                            >
-                              <strong
-                                ><strong v-if="data.item.fivePrimeGene"
-                                  >{{ data.item.fivePrimeGene.code }}
-                                </strong>
-                              </strong>
-                              <i v-if="data.item.fivePrimeGene">
-                                5' <br /><br />
-                              </i>
-                              <strong
-                                ><strong v-if="data.item.threePrimeGene"
-                                  >{{ data.item.threePrimeGene.code }}
-                                </strong></strong
-                              >
-                              <i v-if="data.item.threePrimeGene">
-                                3' <br /><br />
-                              </i>
-                            </v-chip>
-                          </template>
-                        </v-combobox>
-                        <v-combobox
-                          v-model="selectedRnaFusions"
-                          :items="items"
-                          clearable
-                          label="Das ausgewählte RNA Fusion wird hier angezeigt"
-                          ref="selectedRnaFusions"
-                          chips
-                          cache-items
-                          deletable-chips
-                          dense
-                          hide-no-data
-                          multiple
-                          hide-selected
-                        >
-                          <template v-slot:selection="data">
-                            <v-chip
-                              :selected="data.selected"
-                              label
-                              close
-                              @input="removeSelectedRnaFusions(data.item)"
-                            >
-                              <strong
-                                ><strong v-if="data.item.fivePrimeGene"
-                                  >{{ data.item.fivePrimeGene.code }}
-                                </strong>
-                              </strong>
-                              <i v-if="data.item.fivePrimeGene">
-                                5' <br /><br />
-                              </i>
-                              <strong
-                                ><strong v-if="data.item.threePrimeGene"
-                                  >{{ data.item.threePrimeGene.code }}
-                                </strong></strong
-                              >
-                              <i v-if="data.item.threePrimeGene">
-                                3' <br /><br />
-                              </i>
-                            </v-chip>
-                          </template>
-                        </v-combobox>
+                        <v-flex xs12 sm6 md6>
+                          <v-text-field
+                            label=""
+                            placeholder="Protein Change"
+                          ></v-text-field>
+                        </v-flex>
                       </v-layout>
-                    </v-card-text>
+                    </v-container>
                   </v-card>
-                </v-flex>
+                </v-expansion-panel-content>
+                <v-expansion-panel-content>
+                  <template v-slot:header>
+                    <div class="caption">CNVs</div>
+                  </template>
+                  <v-card color="pink lighten-4" flat>
+                    <v-container fluid>
+                      <v-layout row wrap>
+                        <v-flex xs12 sm6 md6>
+                          <v-select :items="items" label="Typ"></v-select>
+                        </v-flex>
+                        <v-flex xs12 sm6 md3>
+                          <v-text-field placeholder="Copy# Max"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md3>
+                          <v-text-field placeholder="Copy# Min"></v-text-field>
+                        </v-flex>
+                      </v-layout>
+                    </v-container>
+                  </v-card>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-card-text>
 
-                <v-expansion-panel v-if="expansion" inset focusable>
-                  <v-expansion-panel-content>
-                    <template v-slot:header>
-                      <div class="caption">SNVs</div>
-                    </template>
-                    <v-card color="pink lighten-4" flat>
-                      <v-container flat fluid>
-                        <v-layout row wrap>
-                          <v-flex xs12 sm6 md6>
-                            <v-text-field
-                              placeholder="cDNA Change"
-                            ></v-text-field>
-                          </v-flex>
-                          <v-flex xs12 sm6 md6>
-                            <v-text-field
-                              label=""
-                              placeholder="Protein Change"
-                            ></v-text-field>
-                          </v-flex>
-                        </v-layout>
-                      </v-container>
-                    </v-card>
-                  </v-expansion-panel-content>
-                  <v-expansion-panel-content>
-                    <template v-slot:header>
-                      <div class="caption">CNVs</div>
-                    </template>
-                    <v-card color="pink lighten-4" flat>
-                      <v-container fluid>
-                        <v-layout row wrap>
-                          <v-flex xs12 sm6 md6>
-                            <v-select :items="items" label="Typ"></v-select>
-                          </v-flex>
-                          <v-flex xs12 sm6 md3>
-                            <v-text-field
-                              placeholder="Copy# Max"
-                            ></v-text-field>
-                          </v-flex>
-                          <v-flex xs12 sm6 md3>
-                            <v-text-field
-                              placeholder="Copy# Min"
-                            ></v-text-field>
-                          </v-flex>
-                        </v-layout>
-                      </v-container>
-                    </v-card>
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-              </v-card-text>
+            <v-card
+              v-if="
+                (selectedMutatedGenesSNV.length > 0) |
+                  (selectedMutatedGenesCNV.length > 0)
+              "
+              class="font-weight-thin"
+              flat
+            >
+              <v-card-text small color="#BDBDBD" class="font-weight-thin">
+                <p class="caption grey-text">
+                  Dieses Feld zeigt die aktuellen SNV-, CNV- und
+                  Fusion-Parameter an, die vor der Übermittlung der Anfrage
+                  hinzugefügt wurden.
+                </p>
+                <span v-if="selectedMutatedGenesSNV.length > 0">
+                  <strong>Das ausgewählte SNV(s)</strong><br />
+                  <span
+                    v-for="(
+                      selectedMutatedGenesSNV, indexSNV
+                    ) in selectedMutatedGenesSNV"
+                    :key="indexSNV"
+                    :class="[indexSNV % 2 === 0 ? 'grey lighten-3' : 'white']"
+                  >
+                    {{ selectedMutatedGenesSNV.gene.display }} ·
+                    {{ selectedMutatedGenesSNV.gene.code }}
 
-              <v-card
-                v-if="
-                  (selectedMutatedGenesSNV.length > 0) |
-                    (selectedMutatedGenesCNV.length > 0)
-                "
-                class="font-weight-thin"
-                flat
-              >
-                <v-card-text small color="#BDBDBD" class="font-weight-thin">
-                  <p class="caption grey-text">
-                    Dieses Feld zeigt die aktuellen SNV-, CNV- und
-                    Fusion-Parameter an, die vor der Übermittlung der Anfrage
-                    hinzugefügt wurden.
-                  </p>
-                  <span v-if="selectedMutatedGenesSNV.length > 0">
-                    <strong>Das ausgewählte SNV(s)</strong><br />
-                    <span
-                      v-for="(
-                        selectedMutatedGenesSNV, indexSNV
-                      ) in selectedMutatedGenesSNV"
-                      :key="indexSNV"
-                      :class="[indexSNV % 2 === 0 ? 'grey lighten-3' : 'white']"
+                    <span v-if="selectedMutatedGenesSNV.dnaChange">
+                      - {{ selectedMutatedGenesSNV.dnaChange }}</span
                     >
-                      {{ selectedMutatedGenesSNV.gene.display }} ·
-                      {{ selectedMutatedGenesSNV.gene.code }}
-
-                      <span v-if="selectedMutatedGenesSNV.dnaChange">
-                        - {{ selectedMutatedGenesSNV.dnaChange }}</span
-                      >
-                      <span v-if="selectedMutatedGenesSNV.aminoAcidChange">
-                        - {{ selectedMutatedGenesSNV.aminoAcidChange }}</span
-                      >
-                      <br
-                    /></span>
-                  </span>
-
-                  <span v-if="selectedMutatedGenesCNV.length > 0">
-                    <span> <strong>Das ausgewählte CNV(s)</strong></span>
-                    <br />
-                    <span
-                      v-for="(
-                        selectedMutatedGenesCNV, indexCNV
-                      ) in selectedMutatedGenesCNV"
-                      :key="indexCNV"
-                      :class="[indexCNV % 2 === 0 ? 'grey lighten-3' : 'white']"
+                    <span v-if="selectedMutatedGenesSNV.aminoAcidChange">
+                      - {{ selectedMutatedGenesSNV.aminoAcidChange }}</span
                     >
-                      <span
-                        plate
-                        v-for="(
-                          gene, geneIndexCNV
-                        ) in selectedMutatedGenesCNV.genes"
-                        :key="geneIndexCNV"
-                      >
-                        {{ gene.display }} ·
-                        {{ gene.code }}
-                      </span>
-                      <span v-if="selectedMutatedGenesCNV.type">
-                        , {{ selectedMutatedGenesCNV.type }}
-                      </span>
+                    <br
+                  /></span>
+                </span>
 
-                      <span v-if="selectedMutatedGenesCNV.copyNumber.min">
-                        - {{ selectedMutatedGenesCNV.copyNumber.min }}
-                      </span>
-
-                      <span v-if="selectedMutatedGenesCNV.copyNumber.max">
-                        - {{ selectedMutatedGenesCNV.copyNumber.max }}
-                      </span>
-                      <br />
+                <span v-if="selectedMutatedGenesCNV.length > 0">
+                  <span> <strong>Das ausgewählte CNV(s)</strong></span>
+                  <br />
+                  <span
+                    v-for="(
+                      selectedMutatedGenesCNV, indexCNV
+                    ) in selectedMutatedGenesCNV"
+                    :key="indexCNV"
+                    :class="[indexCNV % 2 === 0 ? 'grey lighten-3' : 'white']"
+                  >
+                    <span
+                      plate
+                      v-for="(
+                        gene, geneIndexCNV
+                      ) in selectedMutatedGenesCNV.genes"
+                      :key="geneIndexCNV"
+                    >
+                      {{ gene.display }} ·
+                      {{ gene.code }}
                     </span>
+                    <span v-if="selectedMutatedGenesCNV.type">
+                      , {{ selectedMutatedGenesCNV.type }}
+                    </span>
+
+                    <span v-if="selectedMutatedGenesCNV.copyNumber.min">
+                      - {{ selectedMutatedGenesCNV.copyNumber.min }}
+                    </span>
+
+                    <span v-if="selectedMutatedGenesCNV.copyNumber.max">
+                      - {{ selectedMutatedGenesCNV.copyNumber.max }}
+                    </span>
+                    <br />
                   </span>
-                </v-card-text>
-              </v-card>
+                </span>
+              </v-card-text>
             </v-card>
-          </v-flex>
+          </v-card>
         </v-card>
       </v-flex>
 
-      <v-flex xs12 sm12 md6>
-        <v-card class="mx-auto" flat color="" light max-width="1200">
-          <v-flex d-flex>
-            <v-card
-              class="mx-auto"
-              flat
-              color="indigo lighten-4"
-              light
-              max-width="1200"
+      <v-flex xs12 sm12 md12>
+        <v-card
+          class="mx-auto"
+          flat
+          color="indigo lighten-5"
+          light
+          max-width="1200"
+        >
+          <v-card-text class="title font-weight-thin">
+            <v-autocomplete
+              v-model="diagnosis"
+              :items="diagnosisCat"
+              :loading="isLoading"
+              label="Diagnose"
+              ref="diagnosis"
+              small-chips
+              cache-items
+              deletable-chips
+              dense
+              hide-no-data
+              multiple
+              placeholder
+              prepend-icon="fas fa-diagnoses"
+              persistent-hint
+              hint="Diagnose-Text oder ICD-10 Code"
+              @input="addDiagnosis(diagnosis[diagnosis.length - 1])"
             >
-              <v-card-text class="headline font-weight-thin">
-                <v-icon color="indigo" dark>fas fa-diagnoses</v-icon
-                ><b> Diagnose</b>
-                <v-autocomplete
-                  v-model="diagnosis"
-                  :items="diagnosisCat"
-                  :loading="isLoading"
-                  label="Diagnose-Text oder ICD-10 Code"
-                  ref="diagnosis"
-                  chips
-                  cache-items
-                  deletable-chips
-                  dense
-                  hide-no-data
-                  multiple
-                  placeholder
-                  @input="addDiagnosis(diagnosis[diagnosis.length - 1])"
+              <template slot="selection" slot-scope="data">
+                <v-chip
+                  :selected="data.selected"
+                  close
+                  @input="removeDiagnosis(data.item)"
                 >
-                  <template slot="selection" slot-scope="data">
-                    <v-chip
-                      :selected="data.selected"
-                      close
-                      @input="removeDiagnosis(data.item)"
-                    >
-                      {{ data.item }}
-                    </v-chip>
-                  </template>
-                </v-autocomplete>
+                  {{ data.item }}
+                </v-chip>
+              </template>
+            </v-autocomplete>
 
-                <v-autocomplete
-                  v-model="tumorMorphology"
-                  :items="tumorMorphologyCat"
-                  :loading="isLoading"
-                  label="Tumor Morphologie oder ICD-O-3-M Code"
-                  ref="tumorMorphology"
-                  chips
-                  deletable-chips
-                  dense
-                  multiple
-                  hide-selected
-                  placeholder
-                  @input="
-                    addTumorMorphology(
-                      tumorMorphology[tumorMorphology.length - 1]
-                    )
-                  "
-                >
-                  <template slot="selection" slot-scope="data">
-                    <v-chip
-                      :selected="data.selected"
-                      close
-                      @input="removeTumorMorphology(data.item)"
-                    >
-                      {{ data.item }}
-                    </v-chip>
-                  </template>
-                </v-autocomplete>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-
-          <v-flex d-flex>
-            <v-card
-              class="mx-auto"
-              flat
-              color="blue lighten-4"
-              light
-              max-width="1200"
+            <v-autocomplete
+              v-model="tumorMorphology"
+              :items="tumorMorphologyCat"
+              :loading="isLoading"
+              label="Diagnose"
+              ref="tumorMorphology"
+              chips
+              deletable-chips
+              dense
+              multiple
+              hide-selected
+              placeholder
+              prepend-icon="fas fa-shapes"
+              persistent-hint
+              hint="Tumor Morphologie oder ICD-O-3-M Code"
+              @input="
+                addTumorMorphology(tumorMorphology[tumorMorphology.length - 1])
+              "
             >
-              <v-card-text class="headline font-weight-thin">
-                <v-icon color="blue">fas fa-pills</v-icon> <b>Wirkstoffe</b>
-
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn flat icon color="white" v-bind="attrs" v-on="on">
-                      <v-icon>fas fa-info-circle</v-icon>
-                    </v-btn>
-                  </template>
-                  <span
-                    >Beginnen Sie damit, die entsprechende Verwendungskategorie
-                    aus den Optionsfeldern auszuwählen. <br />Anschließend geben
-                    Sie den Wirkstoffnamen oder -code ein; automatische
-                    Vorschläge erscheinen während der Eingabe. <br />Zuletzt
-                    überprüfen Sie und wählen Sie die korrekte Katalogversion
-                    (Jahr) aus.</span
-                  >
-                </v-tooltip>
-
-                <v-radio-group v-model="drugUsage" row>
-                  <v-radio label="Empfohlen" value="recommended"></v-radio>
-                  <v-radio label="Verabreicht" value="used"></v-radio>
-                  <v-radio label="Beide" value="beide"></v-radio>
-                  <v-radio label="Egal" value="egal"></v-radio>
-                </v-radio-group>
-
-                <v-autocomplete
-                  v-model="drugs"
-                  :items="drugsCat"
-                  :itemscope="used"
-                  :loading="isLoading"
-                  label="Wirkstoff-Name oder ATC Code"
-                  ref="drugUsage"
-                  chips
-                  deletable-chips
-                  hide-selected
-                  dense
-                  multiple
-                  placeholder
-                  hint="Wählen Sie die Anwendung, dann geben Sie den Wirkstoff, Code und die Version ein."
-                  persistent-hint
-                  @input="addDrugs(drugs[drugs.length - 1], drugUsage)"
+              <template slot="selection" slot-scope="data">
+                <v-chip
+                  :selected="data.selected"
+                  close
+                  @input="removeTumorMorphology(data.item)"
                 >
-                  <!--
+                  {{ data.item }}
+                </v-chip>
+              </template>
+            </v-autocomplete>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+      <v-flex xs12 sm12 md12>
+        <v-card
+          class="mx-auto"
+          flat
+          color="blue lighten-5"
+          light
+          max-width="1200"
+        >
+          <v-card-text class="title font-weight-thin">
+            <div v-if="displayAdvancedSearch" class="d-inline-flex">
+                <v-flex xs12 sm6 md2>
+            <v-tooltip v-if="displayAdvancedSearch" top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn flat icon color="red" v-bind="attrs" v-on="on">
+                  <v-icon>fas fa-info-circle</v-icon>
+                </v-btn>
+              </template>
+              <span
+                >Beginnen Sie damit, die entsprechende Verwendungskategorie aus
+                den Optionsfeldern auszuwählen. <br />Anschließend geben Sie den
+                Wirkstoffnamen oder -code ein; automatische Vorschläge
+                erscheinen während der Eingabe. <br />Zuletzt überprüfen Sie und
+                wählen Sie die korrekte Katalogversion (Jahr) aus.</span
+              >
+            </v-tooltip>
+                </v-flex>
+
+            <v-flex xs12 sm6 md11>
+              <v-select
+                v-if="displayAdvancedSearch"
+                v-model="drugUsage"
+                :items="selectItems"
+                label="Wirkstoffverwendung auswählen"
+                box
+                hint="Diese Auswahl gilt nur für den nächsten ausgewählten Wirkstoff."
+                persistent-hint
+              ></v-select>
+            </v-flex>
+            </div>
+
+            <v-autocomplete
+              v-model="drugs"
+              :items="drugsCat"
+              :itemscope="used"
+              :loading="isLoading"
+              label="Wirkstoffe"
+              ref="drugUsage"
+              chips
+              deletable-chips
+              hide-selected
+              dense
+              multiple
+              placeholder
+              persistent-hint
+              prepend-icon="fas fa-pills"
+              hint="Wirkstoff-Name oder ATC Code"
+              @input="addDrugs(drugs[drugs.length - 1], drugUsage)"
+            >
+              <!--
               <template slot="selection" slot-scope="data">
                 <v-chip :selected="data.selected" close @input="removeDrug(data.item)">
                   <strong>{{ data.item }}</strong>&nbsp;
@@ -793,143 +746,143 @@
               </template>
               -->
 
-                  <template slot="selection" slot-scope="data">
-                    <v-chip
-                      :selected="data.selected"
-                      close
-                      label
-                      @input="removeDrugs(data.item)"
-                    >
-                      <strong>{{ data.item }}</strong>
-                      &nbsp;
-                      {{ selectedDrugsDisplay[data.index].usage }}
-                    </v-chip>
-                  </template>
-                </v-autocomplete>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-
-          <v-flex d-flex>
-            <v-card
-              class="mx-auto"
-              flat
-              color="cyan lighten-4"
-              light
-              max-width="1200"
-            >
-              <v-card-text class="headline font-weight-thin">
-                <v-icon color="cyan">fas fa-vials</v-icon> <b>Response</b>
-                <v-autocomplete
-                  v-model="responses"
-                  :items="responsesCat"
-                  :loading="isLoading"
-                  label="Response oder RECIST Code"
-                  ref="responses"
-                  chips
-                  deletable-chips
-                  hide-selected
-                  dense
-                  multiple
-                  placeholder
-                  @input="addResponses(responses[responses.length - 1])"
+              <template slot="selection" slot-scope="data">
+                <v-chip
+                  :selected="data.selected"
+                  close
+                  @input="removeDrugs(data.item)"
                 >
-                  <template slot="selection" slot-scope="data">
-                    <v-chip
-                      :selected="data.selected"
-                      close
-                      @input="removeResponses(data.item)"
-                    >
-                      {{ data.item }}
-                    </v-chip>
-                  </template>
-                </v-autocomplete>
-              </v-card-text>
-            </v-card>
-          </v-flex>
+                  {{ data.item }}
+                  &nbsp;
+                  {{ selectedDrugsDisplay[data.index].usage }}
+                </v-chip>
+              </template>
+            </v-autocomplete>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+      <v-flex xs12 sm12 md12>
+        <v-card
+          class="mx-auto"
+          flat
+          color="cyan lighten-5"
+          light
+          max-width="1200"
+        >
+          <v-card-text class="title font-weight-thin">
+            <v-autocomplete
+              v-model="responses"
+              :items="responsesCat"
+              :loading="isLoading"
+              label="Response"
+              ref="responses"
+              chips
+              deletable-chips
+              hide-selected
+              dense
+              multiple
+              placeholder
+              persistent-hint
+              prepend-icon="fas fa-vials"
+              hint="Response oder RECIST Code"
+              @input="addResponses(responses[responses.length - 1])"
+            >
+              <template slot="selection" slot-scope="data">
+                <v-chip
+                  :selected="data.selected"
+                  close
+                  @input="removeResponses(data.item)"
+                >
+                  {{ data.item }}
+                </v-chip>
+              </template>
+            </v-autocomplete>
+          </v-card-text>
         </v-card>
       </v-flex>
 
       <v-flex d-flex xs12 sm6 md6>
         <v-btn
           v-if="this.localButton"
-          class="subheading font-weight-regular"
+          class="subheading font-weight-thin"
           dark
           block
           :loading="isLoading"
           slot="activator"
-          color="blue accent-2"
+          color="blue accent-5"
           @click="submitQuery('local')"
-          >Lokal Anfrage senden</v-btn
+          >Lokale Anfrage senden</v-btn
         >
       </v-flex>
 
       <v-flex d-flex xs12 sm6 md6>
         <v-btn
           v-if="this.federatedButton"
-          class="subheading font-weight-regular"
+          class="subheading font-weight-thin"
           dark
           block
           slot="activator"
           color="blue accent-4"
           @click="submitQuery('federated')"
-          >Föderiert Anfrage senden</v-btn
+          >Föderierte Anfrage senden</v-btn
         >
       </v-flex>
+
       <v-flex xs12 sm3 md12>
         <v-divider class="my-3"></v-divider>
       </v-flex>
-      <v-flex xs12 sm3 md1>
-        <v-tooltip top>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn flat icon color="grey accent-2" v-bind="attrs" v-on="on">
-              <v-icon>fas fa-info-circle</v-icon>
-            </v-btn>
-          </template>
-          <span
-            >Wählen Sie den Abfragetyp im Voraus, bevor Sie die gespeicherte
-            Abfrage auswählen.<br>Sie finden alle gespeicherten Abfragen unter
-            <v-icon dark style="font-size: 1rem">fas fa-user</v-icon>
-            "Nutzerdetails".</span
-          >
-        </v-tooltip>
-      </v-flex>
-      <v-flex d-flex xs12 sm3 md2>
-        <v-radio-group v-model="savedQueryType" row>
-          <v-radio
-            v-if="this.localButton"
-            label="Lokal"
-            value="local"
-          ></v-radio>
-          <v-radio
-            v-if="this.federatedButton"
-            label="Föderiert"
-            value="federated"
-          ></v-radio>
-        </v-radio-group>
-      </v-flex>
 
-      <v-flex d-flex xs12 sm3 md9>
+      <v-flex d-flex xs12 sm3 md12>
         <v-card class="mx-auto" flat light max-width="1200">
-          <v-card-text class="headline font-weight-thin">
-            <v-autocomplete
-              v-model="queryName"
-              :items="getSavedQueries.data.entries"
-              :loading="isLoading"
-              item-text="name"
-              item-value="parameters"
-              label="Vorbereiteten Abfragen"
-              placeholder="Wählen Sie eine vorgespeicherte Abfrage zur Ausführung aus."
-              hint="Stellen Sie sicher, den Abfragetyp im Voraus auszuwählen."
-              persistent-hint
-              ref="queries"
-              prepend-icon="fas fa-save"
-              chips
-              hide-selected
-              dense
-              @input="accessSavedQuery(savedQueryType, queryName)"
-            >
-            </v-autocomplete>
+          <v-card-text class="title font-weight-thin">
+            <v-icon color="gray">fas fa-save</v-icon>
+            <b> Vorbereiteten Abfragen</b>
+
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn flat icon color="red" v-bind="attrs" v-on="on">
+                  <v-icon>fas fa-info-circle</v-icon>
+                </v-btn>
+              </template>
+              <span
+                >Wählen Sie den Abfragetyp im Voraus, bevor Sie die gespeicherte
+                Abfrage auswählen.<br />Sie finden alle gespeicherten Abfragen
+                unter
+                <v-icon dark style="font-size: 1rem">fas fa-user</v-icon>
+                "Nutzerdetails".</span
+              >
+            </v-tooltip>
+            <v-flex d-flex xs12 sm6 md12>
+              <v-radio-group v-model="savedQueryType" row>
+                <v-radio
+                  v-if="this.localButton"
+                  label="Lokal"
+                  value="local"
+                ></v-radio>
+                <v-radio
+                  v-if="this.federatedButton"
+                  label="Föderiert"
+                  value="federated"
+                ></v-radio>
+              </v-radio-group>
+
+              <v-autocomplete
+                v-model="queryName"
+                :items="getSavedQueries.data.entries"
+                :loading="isLoading"
+                item-text="name"
+                item-value="parameters"
+                placeholder="Wählen Sie eine vorgespeicherte Abfrage zur Ausführung aus."
+                hint="Stellen Sie sicher, den Abfragetyp im Voraus auszuwählen."
+                persistent-hint
+                ref="queries"
+                small-chips
+                hide-selected
+                dense
+                @input="accessSavedQuery(savedQueryType, queryName)"
+              >
+              </v-autocomplete>
+            </v-flex>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -1015,7 +968,6 @@ export default {
   ],
 
   data: () => ({
-    //mutationOptions: "radioAll",
     showSNV: false,
     showCNV: false,
     showFusions: false,
@@ -1023,6 +975,22 @@ export default {
     showSCNV: false,
     showSV: false,
     expansion: false,
+
+    drugUsage: null,
+    selectItems: [
+      { text: "Empfohlen", value: "recommended" },
+      { text: "Verabreicht", value: "used" },
+      { text: "Empfohlen und Verabreicht", value: "beide" },
+      { text: "Empfohlen oder Verabreicht", value: "egal" },
+    ],
+
+    selectedMutationOption: "radioBeliebig",
+    advancedMutationOptions: [
+      { text: "SNV", value: "radioSNV" },
+      { text: "CNV", value: "radioCNV" },
+      { text: "Fusionen", value: "radioFusions" },
+      { text: "Beliebig", value: "radioBeliebig" },
+    ],
 
     rulesSNV: {
       validateDnaChange: (value) => {
@@ -1033,7 +1001,7 @@ export default {
         const pattern = /^[A-Z][a-z][a-z]\d+[A-Z][a-z][a-z]$/;
         return (
           pattern.test(value) ||
-          "Bitte geben Sie nur Aminosäure-Abkürzungen mit drei Buchstaben ein."
+          "Bitte geben Sie Aminosäure-Abkürzungen mit drei Buchstaben ein."
         );
       },
     },
@@ -1054,6 +1022,8 @@ export default {
     selectedDrugs: Array(),
     selectedDrugsDisplay: Array(),
     selectedResponses: Array(),
+    displayAdvancedSearch:
+      localStorage.getItem("displayAdvancedSearch") === "true" || false,
 
     //localQuery: false,
 
@@ -1079,6 +1049,17 @@ export default {
   },
 
   methods: {
+    updateLocalStorage() {
+      localStorage.setItem("displayAdvancedSearch", this.displayAdvancedSearch);
+    },
+
+    handleMutationOptionChange() {
+      this.showSNV = this.selectedMutationOption === "radioSNV";
+      this.showCNV = this.selectedMutationOption === "radioCNV";
+      this.showFusions = this.selectedMutationOption === "radioFusions";
+      this.showAll = this.selectedMutationOption === "radioBeliebig";
+    },
+
     async checkQueryRights() {
       const queryRights = await axios.get(
         process.env.baseUrl + process.env.port + `/bwhc/mtb/api/query/`
@@ -1307,7 +1288,7 @@ export default {
             code: mutatedGenesSNV.split(" · ")[1],
           },
         });
-        this.mutatedGenesSNV = [];
+        //this.mutatedGenesSNV = [];
       } else {
         alert("Bitte fügen Sie zuerst die relevanten Parameter hinzu!");
       }
@@ -1342,7 +1323,7 @@ export default {
           type: cnvType,
           genes: code,
         });
-        this.mutatedGenesCNV = [];
+        //this.mutatedGenesCNV = [];
       } else {
         alert("Bitte fügen Sie zuerst die relevanten Parameter hinzu!");
       }
@@ -1605,7 +1586,7 @@ export default {
             code: drug.split(" · ")[1],
             version: drug.split(" · ")[2],
           },
-          usage: "(v+e)",
+          usage: "(verabreicht + emphohlen)",
         });
       } else if (usage == "egal") {
         this.selectedDrugs.push({
@@ -1636,15 +1617,15 @@ export default {
               code: drug.split(" · ")[1],
               version: drug.split(" · ")[2],
             },
-            usage: "(v)",
+            usage: "(verabreicht)",
           });
         } else {
           this.selectedDrugsDisplay.push({
             medication: {
               code: drug.split(" · ")[1],
-              version: code.split(" · ")[2],
+              version: drug.split(" · ")[2],
             },
-            usage: "(e)",
+            usage: "(emphohlen)",
           });
         }
       }

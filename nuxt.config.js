@@ -72,6 +72,12 @@ module.exports = {
     '@/plugins/vuetify'
   ],
 
+  serverMiddleware: ['~/middleware/errorHandler.js'],
+
+  generate: {
+    fallback: true, // Allow custom error pages to be generated as HTML files
+  },
+  
   /*
   ** Nuxt.js modules
   */
